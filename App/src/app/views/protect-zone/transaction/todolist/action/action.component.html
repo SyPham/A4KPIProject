@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h4 class="modal-title">Action of KPI Objective ({{data.topic}})</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body p-0">
+
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+  [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
+  <e-columns>
+    <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+      <ng-template #template let-data>
+        {{NO(data.index)}}
+      </ng-template>
+    </e-column>
+    <e-column field='id' headerText='Id' [visible]='false'  type='number'>
+    </e-column>
+    <e-column field='yourObjective' headerText='Your Objective' type='string'>
+    </e-column>
+    <e-column field='action' headerText='Action'>
+
+    </e-column>
+  </e-columns>
+</ejs-grid>
+</div>
+<div class="modal-footer justify-content-end">
+  <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' | translate}}</button>
+  <button type="button" class="btn btn-success" (click)="finish()">{{'Finish' | translate}}</button>
+</div>

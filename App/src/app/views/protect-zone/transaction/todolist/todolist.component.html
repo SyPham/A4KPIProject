@@ -1,0 +1,184 @@
+<div class="card">
+  <div class="card-body">
+    <ejs-tab id="element">
+      <e-tabitems >
+        <ng-container *ngFor="let item of accountGroupData">
+        <e-tabitem [content]='getGridTemplate(item.position)'>
+          <ng-template #headerText>
+            <div> {{item.name}} </div>
+          </ng-template>
+        </e-tabitem>
+      </ng-container>
+      </e-tabitems>
+    </ejs-tab>
+    <div class="e-sample-resize-container">
+      <!-- Render the Toolbar Component -->
+      <!-- <ejs-toolbar #toolbarTodo (created)='createdToolbar()' (clicked)='onClickToolbar($event)'>
+        <e-items>
+          <e-item id='L0' prefixIcon='' text="L0">
+          </e-item>
+          <e-item id='L1' prefixIcon='' text="L1"></e-item>
+          <e-item id='L2' prefixIcon='' text="L2"></e-item>
+          <e-item id='FHO' prefixIcon='' text="FHO"></e-item>
+          <e-item id='GHR' prefixIcon='' text="GHR"></e-item>
+          <e-item id='GM' prefixIcon='' text="GM"></e-item>
+          <e-item align='right'>
+            <ng-template #template>
+              <div class="e-toolbar-item e-search-wrapper e-toolbar-right" aria-disabled="false" title="Search">
+                <div class="e-input-group e-search" role="search"> <input id="toolbar_searchbar" style="width:178px"
+                    autocomplete="off" (change)='onFilter($event)' class="e-input"
+                    placeholder="{{ 'Search' | translate }}">
+                  <span id="toolbar_searchbutton" class="e-input-group-icon fa fa-search e-icons" tabindex="-1"
+                    title="Search" aria-label="search"></span>
+                </div>
+              </div>
+            </ng-template>
+          </e-item>
+        </e-items>
+      </ejs-toolbar> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openActionModalComponent(data)'>Action</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openUpdateResultModalComponent(data)'>Update Result</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openSelfScoreModalComponent(data)'>Self-score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>Attitude Score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
+
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
+
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
+
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
+
+
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+    [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <e-columns>
+      <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+        <ng-template #template let-data>
+          {{NO(data.index)}}
+        </ng-template>
+      </e-column>
+      <e-column field='topic' headerText='KPI Objective' type='string'>
+      </e-column>
+      <e-column field='option' headerText='Option'>
+        <ng-template #template let-data>
+          <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+          </div>
+        </ng-template>
+      </e-column>
+    </e-columns>
+  </ejs-grid>
+</ng-template>
