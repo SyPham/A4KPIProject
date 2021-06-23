@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ScoreKPI.Models
 {
-  
+
     [Table("Objectives")]
     public class Objective : IDateTracking
     {
@@ -24,10 +22,7 @@ namespace ScoreKPI.Models
         public DateTime? ModifiedTime { get; set; }
         public virtual ICollection<ResultOfMonth> ResultOfMonth { get; set; }
         public virtual ICollection<ToDoList> ToDoList { get; set; }
-
         public virtual ICollection<PIC> PICs { get; set; }
-        public virtual ICollection<KPIScore> KPIScores { get; set; }
-        public virtual ICollection<AttitudeScore> AttitudeScores { get; set; }
 
     }
 }

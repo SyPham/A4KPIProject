@@ -19,6 +19,7 @@ import { ActionComponent } from './todolist/action/action.component';
 import { UpdateResultComponent } from './todolist/update-result/update-result.component';
 import { SelfScoreComponent } from './todolist/self-score/self-score.component';
 import { KpiScoreComponent } from './todolist/kpi-score/kpi-score.component';
+import { AttitudeScoreL2Component } from './todolist/attitude-score-l2/attitude-score-l2.component';
 
 
 
@@ -54,7 +55,8 @@ if (lang === 'vi') {
     UpdateResultComponent,
     SelfScoreComponent,
     KpiScoreComponent,
-    AttitudeScoreComponent
+    AttitudeScoreComponent,
+    AttitudeScoreL2Component
   ],
   imports: [
     CommonModule,

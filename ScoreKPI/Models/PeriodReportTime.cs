@@ -12,9 +12,11 @@ namespace ScoreKPI.Models
     [Table("PeriodReportTimes")]
     public class PeriodReportTime: IDateTracking
     {
-        [Key]
+       [Key]
         public int Id { get; set; }
         public int PeriodId { get; set; }
+        public string Months { get; set; }
+        public int PeriodOfYear { get; set; }
         public DateTime ReportTime { get; set; }
         public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }

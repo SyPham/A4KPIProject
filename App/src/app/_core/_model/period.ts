@@ -1,7 +1,11 @@
-import { AccountGroup } from "./account.group";
-import { PeriodReportTime } from "./period.report.time";
-
 export interface Period {
   id: number;
-  name: string;
+  periodTypeId: number;
+  months: string;
+  value: number;
+  title: string;
+  reportTime: string;
+  modifiedBy: number | null;
+  createdTime: string;
+  modifiedTime: string | null;
 }

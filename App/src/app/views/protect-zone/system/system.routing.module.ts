@@ -5,7 +5,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "src/app/_core/_guards/auth.guard";
 import { AccountComponent } from './account/account.component';
 import { ProgressComponent } from './progress/progress.component';
-import { PeriodComponent } from './period/period.component';
+// import { PeriodComponent } from './period/period.component';
+import { PeriodTypeComponent } from './period-type/period-type.component';
 
 const routes: Routes = [
   {
@@ -47,7 +48,7 @@ const routes: Routes = [
       },
       {
         path: 'period',
-        component: PeriodComponent,
+        component: PeriodTypeComponent,
         data: {
           title: 'Period',
           breadcrumb: 'Period',

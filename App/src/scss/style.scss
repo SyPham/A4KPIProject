@@ -265,3 +265,18 @@
     width: 100%!important;
     z-index: 1052!important;
 }
+.e-ddl ::-webkit-scrollbar,
+.e-grid ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.e-ddl ::-webkit-scrollbar-thumb,
+.e-grid ::-webkit-scrollbar-thumb {
+  background: #DAE1E7;
+  border-radius: 20px;
+}
+.e-ddl ::-webkit-scrollbar-track,
+.e-grid ::-webkit-scrollbar-track {
+  background: #F8F8F8;
+  border-radius: 20px;
+}

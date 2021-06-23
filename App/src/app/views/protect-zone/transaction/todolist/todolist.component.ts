@@ -9,6 +9,9 @@ import { SelfScoreComponent } from './self-score/self-score.component';
 import { UpdateResultComponent } from './update-result/update-result.component';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { AttitudeScoreComponent } from './attitude-score/attitude-score.component';
+import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
+import { SystemRole,ToDoListType } from 'src/app/_core/enum/system';
+import { AttitudeScoreL2Component } from './attitude-score-l2/attitude-score-l2.component';
 
 @Component({
   selector: 'app-todolist',
@@ -23,21 +26,54 @@ export class TodolistComponent implements OnInit {
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   accountGroupData: AccountGroup[];
+  KPI = ToDoListType.KPI as string;
+  Attitude = ToDoListType.Attitude as string;
   constructor(
     private service: ObjectiveService,
+    public todolistService: Todolistv2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
     this.loadAccountGroupData();
-    this.loadData();
+  }
+  selected(args) {
+    const index = args.selectedIndex + 1;
+    switch (index) {
+      case SystemRole.L0:
+      this.loadData();
+      break;
+      case SystemRole.L1:
+        this.loadDataL1L2();
+      break;
+      case SystemRole.L2:
+        this.loadDataL1L2();
+      break;
+      case SystemRole.FHO:
+      break;
+      case SystemRole.GHR:
+        this.loadDataGHR();
+      break;
+      case SystemRole.GM:
+      break;
+    }
   }
   getGridTemplate(index): TemplateRef<any> {
    return this.Gridtemplates.toArray()[index - 1];
   }
   loadData() {
     this.service.getAll().subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataL1L2() {
+    this.todolistService.getAllObjectiveByL1L2().subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataGHR() {
+    this.todolistService.getAllObjectiveByL1L2().subscribe(data => {
       this.gridData = data;
     });
   }
@@ -79,6 +115,13 @@ export class TodolistComponent implements OnInit {
   }
   openAttitudeScoreModalComponent(data) {
     const modalRef = this.modalService.open(AttitudeScoreComponent, { size: 'xl', backdrop : 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openAttitudeScoreL2ModalComponent(data) {
+    const modalRef = this.modalService.open(AttitudeScoreL2Component, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
     modalRef.result.then((result) => {
     }, (reason) => {

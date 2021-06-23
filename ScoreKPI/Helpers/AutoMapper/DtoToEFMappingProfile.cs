@@ -44,6 +44,9 @@ namespace ScoreKPI.Helpers.AutoMapper
             CreateMap<KPIScoreDto, KPIScore>();
 
             CreateMap<AttitudeScoreDto, AttitudeScore>();
+            CreateMap<CommentDto, Comment>();
+            CreateMap<ContributionDto, Contribution>();
+            CreateMap<PeriodTypeDto, PeriodType>();
 
         }
     }

@@ -31,8 +31,8 @@ namespace ScoreKPI.DTO
 
         public int Id { get; set; }
         public string Objective { get; set; }
-        public string L0TargetList { get; set; }
-        public string L0ActionList { get; set; }
+        public List<string> L0TargetList { get; set; }
+        public List<string> L0ActionList { get; set; }
         public string Result1OfMonth { get; set; }
         public string Result2OfMonth { get; set; }
         public string Result3OfMonth { get; set; }

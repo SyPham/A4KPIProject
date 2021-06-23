@@ -1,9 +1,10 @@
+import { PeriodTypeComponent } from './period-type/period-type.component';
 import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountComponent } from './account/account.component';
 import { AccountGroupComponent } from './account-group/account-group.component';
-import { PeriodComponent } from './period/period.component';
+// import { PeriodComponent } from './period/period.component';
 import { SystemRoutingModule } from './system.routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GridAllModule } from '@syncfusion/ej2-angular-grids';
@@ -47,7 +48,8 @@ if (lang === 'vi') {
     AccountComponent,
     AccountGroupComponent,
     ProgressComponent,
-    PeriodComponent,
+    // PeriodComponent,
+    PeriodTypeComponent,
     AccountGroupPeriodComponent
   ],
   imports: [

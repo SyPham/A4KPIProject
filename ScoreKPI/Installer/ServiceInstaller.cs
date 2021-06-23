@@ -27,9 +27,15 @@ namespace ScoreKPI.Installer
 
             services.AddScoped<IKPIService, KPIService>();
             services.AddScoped<IAttitudeService, AttitudeService>();
+            services.AddScoped<IAttitudeScoreService, AttitudeScoreService>();
             services.AddScoped<IResultOfMonthService, ResultOfMonthService>();
             services.AddScoped<IKPIScoreService, KPIScoreService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IContributionService, ContributionService>();
+            services.AddScoped<IOCService, OCService>();
+            services.AddScoped<IPeriodTypeService, PeriodTypeService>();
+
         }
     }
 }

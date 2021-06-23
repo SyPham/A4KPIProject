@@ -1,22 +1,41 @@
 <div class="modal-header">
-  <h4 class="modal-title">Self-score of KPI Objective ({{data.topic}})</h4>
+  <h4 class="modal-title">Self-score of KPI Objective ({{data.objective}})</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body p-0">
-  <ejs-grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+  <ejs-grid #grid [dataSource]='gridData' allowTextWrap='true'  [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
   [toolbar]='toolbarOptions' (queryCellInfo)='queryCellInfoEvent($event)' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
   <e-columns>
-    <e-column field='month' headerText='Month' textAlign='Center' width=80 type='number'></e-column>
-    <e-column field='yourObjective' headerText='Your Objective' type='string'>
+    <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+      <ng-template #template let-data>
+        {{NO(data.index)}}
+      </ng-template>
     </e-column>
-    <e-column field='resultOfMonth' headerText='Result of Month'>
+    <e-column field='objective' headerText='KPI Objective' type='string'></e-column>
+    <e-column field='l0TargetList' headerText='L0 Target' type='string'>
+      <ng-template #template let-data>
+        <ul style="padding: 0 0 0 8px;" *ngFor="let item of data.l0TargetList">
+          <li>{{item}}</li>
+        </ul>
+       </ng-template>
     </e-column>
+    <e-column field='l0ActionList' headerText='L0 Action' type='string'>
+      <ng-template #template let-data>
+        <ul style="padding: 0 0 0 8px;" *ngFor="let item of data.l0ActionList">
+          <li>{{item}}</li>
+        </ul>
+       </ng-template>
+    </e-column>
+    <e-column field='result1OfMonth' headerText='{{getMonthListInCurrentQuarter()[0]}}'></e-column>
+    <e-column field='result2OfMonth' headerText='{{getMonthListInCurrentQuarter()[1]}}'></e-column>
+    <e-column field='result3OfMonth' headerText='{{getMonthListInCurrentQuarter()[2]}}'></e-column>
+
   </e-columns>
 </ejs-grid>
 <div class="row mt-2 d-flex justify-content-center">
-  <div class="col-md-10">
+  <div class="col-md-12">
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -41,9 +60,8 @@
 
 </div>
 
-
 <div class="row mt-2 d-flex justify-content-center">
-  <div class="col-md-10">
+  <div class="col-md-12">
     <table class="table " style="border: none;">
       <thead>
         <tr>
@@ -55,7 +73,7 @@
         <tr>
           <td style="border: none;">
             <div class="form-group">
-              <textarea id="comment" rows="6" type="text" [(ngModel)]="title"
+              <textarea id="comment" rows="6" type="text" [(ngModel)]="content"
               placeholder="Type something!" class="form-control"></textarea>
             </div>
           </td>

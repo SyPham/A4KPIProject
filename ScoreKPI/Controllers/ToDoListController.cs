@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ScoreKPI.DTO;
 using ScoreKPI.Helpers;
 using ScoreKPI.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ScoreKPI.Controllers
@@ -18,7 +15,22 @@ namespace ScoreKPI.Controllers
         {
             _service = service;
         }
+        /// <summary>
+        /// Lấy danh sách cho KPI Score
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns>Danh sách cho KPI Score</returns>
+        [HttpGet]
+        public async Task<ActionResult> GetAllInCurrentQuarterByAccountGroup(int accountId)
+        {
+            return Ok(await _service.GetAllInCurrentQuarterByAccountGroup(accountId));
+        }
 
+        [HttpGet]
+        public async Task<ActionResult> GetAllObjectiveByL1L2()
+        {
+            return Ok(await _service.GetAllObjectiveByL1L2());
+        }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {

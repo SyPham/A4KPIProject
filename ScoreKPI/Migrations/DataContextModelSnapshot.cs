@@ -171,21 +171,20 @@ namespace ScoreKPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ObjectiveId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Period")
                         .HasColumnType("int");
 
-                    b.Property<string>("PeriodType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("PeriodTypeId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Point")
                         .HasColumnType("float");
@@ -195,9 +194,93 @@ namespace ScoreKPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectiveId");
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PeriodTypeId");
+
+                    b.HasIndex("ScoreBy");
 
                     b.ToTable("AttitudeScore");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Period")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PeriodTypeId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.Contribution", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Period")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PeriodTypeId");
+
+                    b.ToTable("Contributions");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.KPI", b =>
@@ -222,21 +305,20 @@ namespace ScoreKPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ObjectiveId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Period")
                         .HasColumnType("int");
 
-                    b.Property<string>("PeriodType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("PeriodTypeId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Point")
                         .HasColumnType("float");
@@ -246,7 +328,11 @@ namespace ScoreKPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ObjectiveId");
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PeriodTypeId");
+
+                    b.HasIndex("ScoreBy");
 
                     b.ToTable("KPIScore");
                 });
@@ -579,24 +665,94 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.AttitudeScore", b =>
                 {
-                    b.HasOne("ScoreKPI.Models.Objective", "Objective")
-                        .WithMany("AttitudeScores")
-                        .HasForeignKey("ObjectiveId")
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Objective");
+                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                        .WithMany()
+                        .HasForeignKey("PeriodTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.Account", "AccountScored")
+                        .WithMany()
+                        .HasForeignKey("ScoreBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("AccountScored");
+
+                    b.Navigation("PeriodType");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.Comment", b =>
+                {
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                        .WithMany()
+                        .HasForeignKey("PeriodTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("PeriodType");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.Contribution", b =>
+                {
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                        .WithMany()
+                        .HasForeignKey("PeriodTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("PeriodType");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.KPIScore", b =>
                 {
-                    b.HasOne("ScoreKPI.Models.Objective", "Objective")
-                        .WithMany("KPIScores")
-                        .HasForeignKey("ObjectiveId")
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Objective");
+                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                        .WithMany()
+                        .HasForeignKey("PeriodTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.Account", "AccountScore")
+                        .WithMany()
+                        .HasForeignKey("ScoreBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("AccountScore");
+
+                    b.Navigation("PeriodType");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.Mailing", b =>
@@ -712,10 +868,6 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.Objective", b =>
                 {
-                    b.Navigation("AttitudeScores");
-
-                    b.Navigation("KPIScores");
-
                     b.Navigation("PICs");
 
                     b.Navigation("ResultOfMonth");

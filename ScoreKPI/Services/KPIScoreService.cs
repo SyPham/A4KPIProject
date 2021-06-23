@@ -42,7 +42,9 @@ namespace ScoreKPI.Services
         }
         public async Task<KPIScoreDto> GetFisrtByObjectiveId(int objectiveId, int scoreBy)
         {
-            return await _repo.FindAll(x => x.ObjectiveId == objectiveId && scoreBy == x.ScoreBy).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
+            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
+
+            return await _repo.FindAll(x => x.Period == currrentQuarter && scoreBy == x.ScoreBy).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
         }
         /// <summary>
         /// Chỉnh sửa thành vừa cập nhật vừa thêm mới

@@ -13,16 +13,19 @@ namespace ScoreKPI.Models
     {
         [Key]
         public int Id { get; set; }
-        [MaxLength(50)]
-        public string PeriodType { get; set; }
         public int Period { get; set; }
         public double Point { get; set; }
-        public int ObjectiveId { get; set; }
+        public int PeriodTypeId { get; set; }
+        public int AccountId { get; set; }
         public int ScoreBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
-        [ForeignKey(nameof(ObjectiveId))]
-        public virtual Objective Objective { get; set; }
+        [ForeignKey(nameof(PeriodTypeId))]
+        public virtual Period PeriodType { get; set; }
+        [ForeignKey(nameof(AccountId))]
+        public virtual Account Account { get; set; }
 
+        [ForeignKey(nameof(ScoreBy))]
+        public virtual Account AccountScored { get; set; }
     }
 }

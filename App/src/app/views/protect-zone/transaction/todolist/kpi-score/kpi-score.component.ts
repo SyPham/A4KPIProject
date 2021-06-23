@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { Objective } from 'src/app/_core/_model/objective';
-import { ToDoList, ToDoListOfQuarter } from 'src/app/_core/_model/todolistv2';
+import { ToDoList, ToDoListL1L2, ToDoListOfQuarter } from 'src/app/_core/_model/todolistv2';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
 
@@ -14,6 +14,9 @@ import { KPIScore } from 'src/app/_core/_model/kpi-score';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { KPIService } from 'src/app/_core/_service/kpi.service';
 import { KPI } from 'src/app/_core/_model/kpi';
+import { Comment } from 'src/app/_core/_model/commentv2';
+import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-kpi-score',
   templateUrl: './kpi-score.component.html',
@@ -21,7 +24,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 })
 export class KpiScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: Objective;
+  @Input() data: ToDoListL1L2;
   gridData: object;
   toolbarOptions = ['Add', 'Delete', 'Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -33,12 +36,14 @@ export class KpiScoreComponent implements OnInit {
   kpiData: KPI[];
   fields: object = { text: 'point', value: 'point' };
   filterSettings = { type: 'Excel' };
-  title = '';
+  content = '';
+  commentModel: Comment;
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
     public kpiScoreService: KPIScoreService,
     public kpiService: KPIService,
+    public commentService: Commentv2Service,
     private alertify: AlertifyService,
     private utilitiesService: UtilitiesService
   ) { }
@@ -53,13 +58,35 @@ export class KpiScoreComponent implements OnInit {
       scoreBy: +JSON.parse(localStorage.getItem('user')).id
 
     }
+    this.commentModel = {
+      id: 0,
+      content: this.content,
+      createdBy: +JSON.parse(localStorage.getItem('user')).id,
+      objectiveId: this.data.id,
+      modifiedBy: null,
+      createdTime: new Date().toDateString(),
+      modifiedTime: null
+    }
+
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
     this.getFisrtByObjectiveIdAndScoreBy();
+    this.getFisrtCommentByObjectiveId();
+  }
+  getMonthListInCurrentQuarter() {
+    const currentQuarter = this.utilitiesService.getQuarter(new Date());
+    const listMonthOfEachQuarter = [
+        ["Result of Feb.","Result of Mar.","Result of Apr."],
+        ["Result of May.","Result of Jun.","Result of Jul."],
+        ["Result of Aug.","Result of Sep.","Result of Oct."],
+        ["Result of Nov.","Result of Dec.","Result of Jan."]
+    ];
+    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[currentQuarter - 1];
+    return listMonthOfCurrentQuarter;
   }
   loadData() {
-    this.service.getAllInCurrentQuarterByObjectiveId(this.data.id).subscribe(data => {
+    this.service.getAllInCurrentQuarterByAccountGroup(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -70,8 +97,14 @@ export class KpiScoreComponent implements OnInit {
   }
   getFisrtByObjectiveIdAndScoreBy() {
     this.kpiScoreService.getFisrtByObjectiveIdAndScoreBy(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
-      this.point = data.point;
-      this.kpiScoreModel.id = data.id;
+      this.point = data?.point;
+      this.kpiScoreModel.id = data?.id;
+    });
+  }
+  getFisrtCommentByObjectiveId() {
+    this.commentService.getFisrtByObjectiveId(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+      this.content = data?.content;
+      this.commentModel.id = data?.id;
     });
   }
   loadKPIData() {
@@ -95,26 +128,33 @@ export class KpiScoreComponent implements OnInit {
   }
 
   addKPIScore() {
+
+    this.kpiScoreModel.point = this.point;
+    return this.kpiScoreService.add(this.kpiScoreModel);
+  }
+  addComment() {
+    this.commentModel.content = this.content;
+    return this.commentService.add(this.commentModel);
+  }
+  finish() {
     if (!this.point) {
       this.alertify.warning('Not yet complete. Can not submit!', true);
       return;
     }
-    this.kpiScoreModel.point = this.point;
-    this.kpiScoreService.add(this.kpiScoreModel).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.getFisrtByObjectiveIdAndScoreBy();
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (error) => {
+    const kpiScore = this.addKPIScore();
+    const comment = this.addComment();
+    forkJoin([kpiScore, comment]).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
-    );
+    })
   }
-  finish() {
-    this.addKPIScore();
+  NO(index) {
+    return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }
 }

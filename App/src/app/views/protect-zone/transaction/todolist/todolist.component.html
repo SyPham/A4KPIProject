@@ -1,9 +1,9 @@
 <div class="card">
   <div class="card-body">
-    <ejs-tab id="element">
-      <e-tabitems >
+    <ejs-tab id="element" (selected)='selected($event)' >
+      <e-tabitems>
         <ng-container *ngFor="let item of accountGroupData">
-        <e-tabitem [content]='getGridTemplate(item.position)'>
+        <e-tabitem  [content]='getGridTemplate(item.position)'>
           <ng-template #headerText>
             <div> {{item.name}} </div>
           </ng-template>
@@ -11,35 +11,10 @@
       </ng-container>
       </e-tabitems>
     </ejs-tab>
-    <div class="e-sample-resize-container">
-      <!-- Render the Toolbar Component -->
-      <!-- <ejs-toolbar #toolbarTodo (created)='createdToolbar()' (clicked)='onClickToolbar($event)'>
-        <e-items>
-          <e-item id='L0' prefixIcon='' text="L0">
-          </e-item>
-          <e-item id='L1' prefixIcon='' text="L1"></e-item>
-          <e-item id='L2' prefixIcon='' text="L2"></e-item>
-          <e-item id='FHO' prefixIcon='' text="FHO"></e-item>
-          <e-item id='GHR' prefixIcon='' text="GHR"></e-item>
-          <e-item id='GM' prefixIcon='' text="GM"></e-item>
-          <e-item align='right'>
-            <ng-template #template>
-              <div class="e-toolbar-item e-search-wrapper e-toolbar-right" aria-disabled="false" title="Search">
-                <div class="e-input-group e-search" role="search"> <input id="toolbar_searchbar" style="width:178px"
-                    autocomplete="off" (change)='onFilter($event)' class="e-input"
-                    placeholder="{{ 'Search' | translate }}">
-                  <span id="toolbar_searchbutton" class="e-input-group-icon fa fa-search e-icons" tabindex="-1"
-                    title="Search" aria-label="search"></span>
-                </div>
-              </div>
-            </ng-template>
-          </e-item>
-        </e-items>
-      </ejs-toolbar> -->
-    </div>
   </div>
 </div>
 
+<!-- L0 -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -63,7 +38,7 @@
     </e-columns>
   </ejs-grid>
 </ng-template>
-
+<!-- L1 -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -73,13 +48,13 @@
           {{NO(data.index)}}
         </ng-template>
       </e-column>
-      <e-column field='topic' headerText='KPI Objective' type='string'>
+      <e-column field='objective' headerText='KPI Objective' type='string'>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>Attitude Score</button>
+            <button type="button" *ngIf="data.type == KPI" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == Attitude" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>Attitude Score</button>
           </div>
         </ng-template>
       </e-column>
@@ -87,7 +62,7 @@
   </ejs-grid>
 </ng-template>
 
-
+<!-- L2 -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -97,13 +72,13 @@
           {{NO(data.index)}}
         </ng-template>
       </e-column>
-      <e-column field='topic' headerText='KPI Objective' type='string'>
+      <e-column field='objective' headerText='KPI Objective' type='string'>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == KPI" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == Attitude" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreL2ModalComponent(data)'>Attitude Score</button>
           </div>
         </ng-template>
       </e-column>
@@ -111,7 +86,7 @@
   </ejs-grid>
 </ng-template>
 
-
+<!-- FHO -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -121,13 +96,13 @@
           {{NO(data.index)}}
         </ng-template>
       </e-column>
-      <e-column field='topic' headerText='KPI Objective' type='string'>
+      <e-column field='objective' headerText='KPI Objective' type='string'>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == KPI" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == Attitude" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreL2ModalComponent(data)'>Attitude Score</button>
           </div>
         </ng-template>
       </e-column>
@@ -135,7 +110,7 @@
   </ejs-grid>
 </ng-template>
 
-
+<!-- GHR -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -145,13 +120,13 @@
           {{NO(data.index)}}
         </ng-template>
       </e-column>
-      <e-column field='topic' headerText='KPI Objective' type='string'>
+      <e-column field='objective' headerText='KPI Objective' type='string'>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == KPI" class="btn btn-sm btn-success mr-2" (click)='openKPIScoreModalComponent(data)'>KPI Score</button>
+            <button type="button" *ngIf="data.type == Attitude" class="btn btn-sm btn-success mr-2" (click)='openAttitudeScoreL2ModalComponent(data)'>Attitude Score</button>
           </div>
         </ng-template>
       </e-column>
@@ -159,7 +134,7 @@
   </ejs-grid>
 </ng-template>
 
-
+<!-- GM -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
     [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -169,7 +144,7 @@
           {{NO(data.index)}}
         </ng-template>
       </e-column>
-      <e-column field='topic' headerText='KPI Objective' type='string'>
+      <e-column field='objective' headerText='KPI Objective' type='string'>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>

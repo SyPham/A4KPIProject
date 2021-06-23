@@ -19,6 +19,7 @@ namespace ScoreKPI.Data
         public DbSet<AccountGroup> AccountGroups { get; set; }
         public DbSet<PeriodReportTime> PeriodReportTimes { get; set; }
         public DbSet<Period> Periods { get; set; }
+        public DbSet<PeriodType> PeriodType { get; set; }
         public DbSet<ToDoList> ToDoList { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Objective> Objectives { get; set; }
@@ -29,6 +30,9 @@ namespace ScoreKPI.Data
         public DbSet<AccountGroupPeriod> AccountGroupPeriods { get; set; }
         public DbSet<KPIScore> KPIScore { get; set; }
         public DbSet<AttitudeScore> AttitudeScore { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Contribution> Contributions { get; set; }
+        public DbSet<OC> OCs { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {  }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
