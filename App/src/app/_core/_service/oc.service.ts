@@ -32,6 +32,9 @@ export class OcService {
   GetUserByOCname(ocName) {
     return this.http.get(`${this.baseUrl}Oc/GetUserByOCname/${ocName}`, {});
   }
+  GetUserByOcID(ocID) {
+    return this.http.get(`${this.baseUrl}Oc/GetUserByOcID/${ocID}`, {});
+  }
   addOC(oc) {
     return this.http.post(`${this.baseUrl}Oc/Add`, oc);
   }

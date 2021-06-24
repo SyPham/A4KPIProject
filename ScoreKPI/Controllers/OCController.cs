@@ -44,7 +44,12 @@ namespace ScoreKPI.Controllers
             var result = await _service.GetUserByOCname(OCname);
             return Ok(result);
         }
-
+        [HttpGet("{ocID}")]
+        public async Task<IActionResult> GetUserByOcID(int ocID)
+        {
+            var result = await _service.GetUserByOcID(ocID);
+            return Ok(result);
+        }
         [HttpPost]
         public async Task<IActionResult> MappingUserOC([FromBody]OcUserDto OcUserDto)
         {
@@ -89,6 +94,8 @@ namespace ScoreKPI.Controllers
         {
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
+
+        
 
     }
 }
