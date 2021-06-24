@@ -45,6 +45,8 @@ namespace ScoreKPI.Services
             return await _repo.FindAll(x=>x.AccountTypeId != 1).Include(x=>x.AccountGroup).ProjectTo<AccountDto>(_configMapper).ToListAsync();
 
         }
+
+
         public async Task<OperationResult> LockAsync(int id)
         {
             var item = await _repo.FindByIdAsync(id);

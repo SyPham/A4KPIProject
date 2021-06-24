@@ -1,12 +1,13 @@
-import { CURDService } from './CURD.service';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { HttpClient } from '@angular/common/http'
+import { catchError } from 'rxjs/operators'
 
-import { HttpClient } from '@angular/common/http';
-import { Account } from '../_model/account';
-import { UtilitiesService } from './utilities.service';
-import { OperationResult } from '../_model/operation.result';
-import { catchError } from 'rxjs/operators';
+import { CURDService } from './CURD.service'
+import { Account } from '../_model/account'
+import { UtilitiesService } from './utilities.service'
+import { OperationResult } from '../_model/operation.result'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,4 +22,6 @@ export class Account2Service extends CURDService<Account> {
       catchError(this.handleError)
     );
   }
+
+
 }

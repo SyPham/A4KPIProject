@@ -1,24 +1,27 @@
-import { PeriodTypeComponent } from './period-type/period-type.component';
-import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AccountComponent } from './account/account.component';
-import { AccountGroupComponent } from './account-group/account-group.component';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { GridAllModule } from '@syncfusion/ej2-angular-grids'
+import { DropDownListModule, MultiSelectModule } from '@syncfusion/ej2-angular-dropdowns'
+import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons'
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
+import { HttpClient } from '@angular/common/http'
+import { TranslateHttpLoader } from '@ngx-translate/http-loader'
+import { loadCldr } from '@syncfusion/ej2-base'
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars'
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs'
+import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid'
+
+import { OcComponent } from './oc/oc.component'
+import { OcUserComponent } from './oc-user/oc-user.component'
+import { PeriodTypeComponent } from './period-type/period-type.component'
+import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component'
+import { AccountComponent } from './account/account.component'
+import { AccountGroupComponent } from './account-group/account-group.component'
+import { SystemRoutingModule } from './system.routing.module'
+import { ProgressComponent } from './progress/progress.component'
+
 // import { PeriodComponent } from './period/period.component';
-import { SystemRoutingModule } from './system.routing.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GridAllModule } from '@syncfusion/ej2-angular-grids';
-import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
-import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { loadCldr } from '@syncfusion/ej2-base';
-import { ProgressComponent } from './progress/progress.component';
-import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
-
-
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -49,6 +52,8 @@ if (lang === 'vi') {
     AccountGroupComponent,
     ProgressComponent,
     // PeriodComponent,
+    OcComponent,
+    OcUserComponent,
     PeriodTypeComponent,
     AccountGroupPeriodComponent
   ],
@@ -56,6 +61,8 @@ if (lang === 'vi') {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    TreeGridAllModule,
+    MultiSelectModule,
     DropDownListModule,
     GridAllModule,
     CheckBoxAllModule,

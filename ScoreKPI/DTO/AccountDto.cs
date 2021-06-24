@@ -13,6 +13,8 @@ namespace ScoreKPI.DTO
         public string Password { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+        public string RoleOC { get; set; }
+        public bool StatusOC { get; set; }
         public bool IsLock { get; set; }
         public int AccountTypeId { get; set; }
         public int CreatedBy { get; set; }

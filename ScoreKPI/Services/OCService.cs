@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using ESS_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -17,19 +18,26 @@ namespace ScoreKPI.Services
 {
     public interface IOCService: IServiceBase<OC, OCDto>
     {
-        Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
-        Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
+        // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
+        // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
+        Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
+        Task<List<AccountDto>> GetUserByOCname(string name);
+        Task<object> MappingUserOC(OcUserDto OcUserDto);
+        Task<object> MappingRangeUserOC(OcUserDto model);
+        Task<object> RemoveUserOC(OcUserDto OcUserDto);
     }
     public class OCService : ServiceBase<OC, OCDto>, IOCService
     {
         private OperationResult operationResult;
 
         private readonly IRepositoryBase<OC> _repo;
+        private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public OCService(
             IRepositoryBase<OC> repo, 
+            IRepositoryBase<Account> repoAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper, 
             MapperConfiguration configMapper
@@ -37,54 +45,129 @@ namespace ScoreKPI.Services
             : base(repo, unitOfWork, mapper,  configMapper)
         {
             _repo = repo;
+             _repoAccount = repoAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public async Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy)
+
+        public async Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView()
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
-            return await _repo.FindAll(x => x.Period == currrentQuarter && x.CreatedBy == createdBy).ProjectTo<OCDto>(_configMapper).FirstOrDefaultAsync();
+            var lists = (await _repo.FindAll().ProjectTo<OCDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).AsHierarchy(x => x.Id, y => y.ParentId);
+            return lists;
         }
-        public async Task<List<OCDto>> GetAllByObjectiveId(int objectiveId)
+
+        public async Task<List<AccountDto>> GetUserByOCname(string name)
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
-            return await _repo.FindAll(x => x.Period == currrentQuarter).ProjectTo<OCDto>(_configMapper).ToListAsync();
+            return await _repoAccount.FindAll().Where(x=> x.RoleOC.Contains(name.ToUpper())).ProjectTo<AccountDto>(_configMapper).ToListAsync();
         }
-        /// <summary>
-        /// Chỉnh sửa thành vừa cập nhật vừa thêm mới
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public override async Task<OperationResult> AddAsync(OCDto model)
+
+        public async Task<object> MappingUserOC(OcUserDto OcUserDto)
         {
-            if (model.Id > 0)
-            {
-                var item = await _repo.FindAll(x => x.Id == model.Id && x.CreatedBy == model.CreatedBy).AsNoTracking().FirstOrDefaultAsync();
-                item.Content = model.Content;
-                _repo.Update(item);
+            var test = _repoAccount.FindById(OcUserDto.UserID) ;
+            if(test == null)
+               return new
+                {
+                    status = false,
+                    message = "Failed on save!"
+                };
+            List<string> list = test.RoleOC.Split(',').ToList();
+            if (!test.RoleOC.Contains(OcUserDto.OCname)) {
+                list.Add(OcUserDto.OCname);
             }
-            else
-            {
-                var itemList = _mapper.Map<OC>(model);
-                _repo.Add(itemList);
-            }
+            test.RoleOC = string.Join(",", list);
             try
             {
-                await _unitOfWork.SaveChangeAsync();
-                operationResult = new OperationResult
+                await _repoAccount.SaveAll();
+                return new
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = MessageReponse.AddSuccess,
-                    Success = true,
-                    Data = model
+                    status = true,
+                    message = "Mapping Successfully!"
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                operationResult = ex.GetMessageError();
+                return new
+                {
+                    status = false,
+                    message = "Failed on save!"
+                };
             }
-            return operationResult;
+        }
+
+        public async Task<object> RemoveUserOC(OcUserDto OcUserDto)
+        {
+            // string[] termsList;
+            var test = _repoAccount.FindById(OcUserDto.UserID) ;
+            // List<string> list = new List<string>(termsList);
+            List<string> list = test.RoleOC.Split(',').ToList();
+            // termsList.Append();
+            if (test.RoleOC.Contains(OcUserDto.OCname)) {
+                list.Remove(OcUserDto.OCname);
+            }
+            test.RoleOC = string.Join(",", list);
+            try
+            {
+                await _repoAccount.SaveAll();
+                return new
+                {
+                    status = true,
+                    message = "Mapping Successfully!"
+                };
+            }
+            catch (Exception)
+            {
+                return new
+                {
+                    status = false,
+                    message = "Failed on save!"
+                };
+            }
+        }
+
+        public async Task<object> MappingRangeUserOC(OcUserDto model)
+        {
+            try
+            {
+                foreach (var item in model.AccountIdList)
+                {
+                    var mapping = _repoAccount.FindById(item);
+                    List<string> list = new List<string>();
+                    if(mapping == null)
+                        return new
+                        {
+                            status = false,
+                            message = "Failed on save!"
+                        };
+                    if (mapping.RoleOC == null || mapping.RoleOC == "")
+                    {
+                        mapping.RoleOC = model.OCname;
+                    } else {
+                        list = mapping.RoleOC.Split(',').ToList();
+                        if (!mapping.RoleOC.Contains(model.OCname)) {
+                            list.Add(model.OCname);
+                        } else {
+                            return new
+                            {
+                                status = false,
+                                message = $"User {mapping.FullName} already exists in the {model.OCname}"
+                            };
+                        }
+                        mapping.RoleOC = string.Join(",", list);
+                    }
+                    await _repoAccount.SaveAll();
+                }
+                return new
+                {
+                    status = true,
+                    message = "Mapping Successfully!"
+                };
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
         }
     }
 }

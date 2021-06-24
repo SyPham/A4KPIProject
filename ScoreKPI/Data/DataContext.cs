@@ -33,6 +33,7 @@ namespace ScoreKPI.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Contribution> Contributions { get; set; }
         public DbSet<OC> OCs { get; set; }
+        public DbSet<OCUser> OCUsers { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {  }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))

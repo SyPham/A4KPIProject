@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { Tutorial } from '../_model/tutorial';
+import { environment } from '../../../environments/environment'
+import { Tutorial } from '../_model/tutorial'
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -23,10 +24,28 @@ export class OcService {
     this.messageSource.next(message);
   }
   constructor(private http: HttpClient) { }
-  delete(id) { return this.http.delete(`${this.baseUrl}Ocs/Delete/${id}`); }
-  rename(edit) { return this.http.post(`${this.baseUrl}Ocs/rename`, edit); }
+  delete(id) { return this.http.delete(`${this.baseUrl}Oc/Delete/${id}`); }
+  rename(edit) { return this.http.put(`${this.baseUrl}Oc/Update`, edit); }
   getOCs() {
-    return this.http.get(`${this.baseUrl}Ocs/GetListTree`);
+    return this.http.get(`${this.baseUrl}Oc/GetAllAsTreeView`);
+  }
+  GetUserByOCname(ocName) {
+    return this.http.get(`${this.baseUrl}Oc/GetUserByOCname/${ocName}`, {});
+  }
+  addOC(oc) {
+    return this.http.post(`${this.baseUrl}Oc/Add`, oc);
+  }
+  updateOC(oc) {
+    return this.http.put(`${this.baseUrl}Oc/Update`, oc);
+  }
+  mapUserOC(model) {
+    return this.http.post(`${this.baseUrl}Oc/MappingUserOC`, model);
+  }
+  mapRangeUserOC(model) {
+    return this.http.post(`${this.baseUrl}Oc/MappingRangeUserOC`, model);
+  }
+  removeUserOC(model) {
+    return this.http.post(`${this.baseUrl}Oc/RemoveUserOC`, model);
   }
   createMainOC(oc) { return this.http.post(`${this.baseUrl}Ocs/CreateOc`, oc); }
   createSubOC(oc) { return this.http.post(`${this.baseUrl}Ocs/CreateSubOC`, oc); }

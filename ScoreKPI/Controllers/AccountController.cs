@@ -25,6 +25,8 @@ namespace ScoreKPI.Controllers
             return Ok(await _service.GetAllAsync());
         }
 
+      
+
         [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] AccountDto model)
         {

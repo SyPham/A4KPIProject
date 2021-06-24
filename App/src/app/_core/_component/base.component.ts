@@ -1,11 +1,13 @@
-import { ActivatedRoute } from "@angular/router";
-import { ActionConstant } from "../_constants";
-import { FunctionSystem } from "../_model/application-user";
+import { ActivatedRoute } from '@angular/router'
+
+import { ActionConstant } from '../_constants'
+import { FunctionSystem } from '../_model/application-user'
 
 export abstract class BaseComponent {
   functions: FunctionSystem[];
   editSettingsTree = { allowEditing: false, allowAdding: false, allowDeleting: false, newRowPosition: 'Child', mode: 'Row' };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
+  editSettingOCs = { showDeleteConfirmDialog: false, allowEditing: false, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   toolbarOptions = ['ExcelExport', 'Add', 'Update','Edit', 'Delete', 'Cancel', 'Search'];
   toolbarOptionsTree = [
   'Add',

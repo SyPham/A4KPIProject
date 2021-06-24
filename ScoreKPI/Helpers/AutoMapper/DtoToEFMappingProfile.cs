@@ -47,6 +47,7 @@ namespace ScoreKPI.Helpers.AutoMapper
             CreateMap<CommentDto, Comment>();
             CreateMap<ContributionDto, Contribution>();
             CreateMap<PeriodTypeDto, PeriodType>();
+            CreateMap<OCDto, OC>();
 
         }
     }

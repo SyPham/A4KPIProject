@@ -1,4 +1,4 @@
-import { INavData } from '@coreui/angular';
+import { INavData } from '@coreui/angular'
 
 // export const navItems: INavData[] = [
 //   {
@@ -306,6 +306,17 @@ export const navItems: INavData[] = [
       {
         name: 'Account Group Period',
         url: '/system/account-group-period',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: 'OC',
+        url: '/system/oc',
+        icon: 'icon-puzzle'
+      },
+
+      {
+        name: 'OC User',
+        url: '/system/oc-user',
         icon: 'icon-puzzle'
       },
     ]

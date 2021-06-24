@@ -62,6 +62,12 @@ namespace ScoreKPI.Migrations
                     b.Property<int?>("ProgressId")
                         .HasColumnType("int");
 
+                    b.Property<string>("RoleOC")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("StatusOC")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Username")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -381,6 +387,51 @@ namespace ScoreKPI.Migrations
                     b.ToTable("Mailings");
                 });
 
+            modelBuilder.Entity("ScoreKPI.Models.OC", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OC");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.OCUser", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OCID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("OCUsers");
+                });
+
             modelBuilder.Entity("ScoreKPI.Models.Objective", b =>
                 {
                     b.Property<int>("Id")
@@ -452,13 +503,35 @@ namespace ScoreKPI.Migrations
                     b.Property<int?>("AccountGroupId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Months")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeriodTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReportTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountGroupId");
+
+                    b.HasIndex("PeriodTypeId");
 
                     b.ToTable("Periods");
                 });
@@ -482,7 +555,16 @@ namespace ScoreKPI.Migrations
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Months")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodOfYear")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodTypeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReportTime")
@@ -492,7 +574,32 @@ namespace ScoreKPI.Migrations
 
                     b.HasIndex("PeriodId");
 
+                    b.HasIndex("PeriodTypeId");
+
                     b.ToTable("PeriodReportTimes");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.PeriodType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PeriodType");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.Plan", b =>
@@ -797,15 +904,27 @@ namespace ScoreKPI.Migrations
                     b.HasOne("ScoreKPI.Models.AccountGroup", null)
                         .WithMany("Periods")
                         .HasForeignKey("AccountGroupId");
+
+                    b.HasOne("ScoreKPI.Models.PeriodType", "PeriodType")
+                        .WithMany()
+                        .HasForeignKey("PeriodTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PeriodType");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.PeriodReportTime", b =>
                 {
                     b.HasOne("ScoreKPI.Models.Period", "Period")
-                        .WithMany("PeriodReportTimes")
+                        .WithMany()
                         .HasForeignKey("PeriodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.PeriodType", null)
+                        .WithMany("PeriodReportTimes")
+                        .HasForeignKey("PeriodTypeId");
 
                     b.Navigation("Period");
                 });
@@ -875,7 +994,7 @@ namespace ScoreKPI.Migrations
                     b.Navigation("ToDoList");
                 });
 
-            modelBuilder.Entity("ScoreKPI.Models.Period", b =>
+            modelBuilder.Entity("ScoreKPI.Models.PeriodType", b =>
                 {
                     b.Navigation("PeriodReportTimes");
                 });

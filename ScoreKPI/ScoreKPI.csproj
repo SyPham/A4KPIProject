@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <Reference Include="NetUtility">
-      <HintPath>..\..\..\sy\library\Net5\Net5\DLL\NetUtility.dll</HintPath>
+      <HintPath>DLL\NetUtility.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -1,22 +1,23 @@
-import { ObjectiveRequest } from './../../../../_core/_model/objective';
-import { ObjectiveService } from './../../../../_core/_service/objective.service';
-import { PeriodReportTime } from './../../../../_core/_model/period.report.time';
-import { AccountGroupService } from './../../../../_core/_service/account.group.service';
-import { Period } from '../../../../_core/_model/period';
-import { BaseComponent } from 'src/app/_core/_component/base.component';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { AlertifyService } from 'src/app/_core/_service/alertify.service';
-import { GridComponent } from '@syncfusion/ej2-angular-grids';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
-import { MessageConstants } from 'src/app/_core/_constants/system';
-import { PeriodService } from 'src/app/_core/_service/period.service';
-import { AccountGroup } from 'src/app/_core/_model/account.group';
-import { DatePipe } from '@angular/common';
-import { PeriodReportTimeService } from 'src/app/_core/_service/period.report.time.service';
-import { Objective } from 'src/app/_core/_model/objective';
-import { Account } from 'src/app/_core/_model/account';
-import { Account2Service } from 'src/app/_core/_service/account2.service';
+import { BaseComponent } from 'src/app/_core/_component/base.component'
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
+import { AlertifyService } from 'src/app/_core/_service/alertify.service'
+import { GridComponent } from '@syncfusion/ej2-angular-grids'
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'
+import { ActivatedRoute } from '@angular/router'
+import { MessageConstants } from 'src/app/_core/_constants/system'
+import { PeriodService } from 'src/app/_core/_service/period.service'
+import { AccountGroup } from 'src/app/_core/_model/account.group'
+import { DatePipe } from '@angular/common'
+import { PeriodReportTimeService } from 'src/app/_core/_service/period.report.time.service'
+import { Objective } from 'src/app/_core/_model/objective'
+import { Account } from 'src/app/_core/_model/account'
+import { Account2Service } from 'src/app/_core/_service/account2.service'
+
+import { ObjectiveRequest } from './../../../../_core/_model/objective'
+import { ObjectiveService } from './../../../../_core/_service/objective.service'
+import { PeriodReportTime } from './../../../../_core/_model/period.report.time'
+import { AccountGroupService } from './../../../../_core/_service/account.group.service'
+import { Period } from '../../../../_core/_model/period'
 
 @Component({
   selector: 'app-objective',
@@ -26,9 +27,9 @@ import { Account2Service } from 'src/app/_core/_service/account2.service';
 })
 export class ObjectiveComponent extends BaseComponent implements OnInit {
   data: Objective[] = [];
-  @ViewChild('addNewModal') public addNewModal: TemplateRef<any>;
   periodReportTimeData: PeriodReportTime[] = [];
   password = '';
+  @ViewChild('addNewModal') public addNewModal: TemplateRef<any>;
   modalReference: NgbModalRef;
   fields: object = { text: 'username', value: 'id' };
   filterSettings = { type: 'Excel' };
@@ -249,7 +250,6 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
   }
   openModal(item) {
     this.modalReference = this.modalService.open(this.addNewModal, { size: 'xl' });
-
   }
 
 }

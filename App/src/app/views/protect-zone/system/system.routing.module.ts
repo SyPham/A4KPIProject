@@ -1,13 +1,16 @@
-import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component';
-import { AccountGroupComponent } from './account-group/account-group.component';
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { AuthGuard } from "src/app/_core/_guards/auth.guard";
-import { AccountComponent } from './account/account.component';
-import { ProgressComponent } from './progress/progress.component';
-// import { PeriodComponent } from './period/period.component';
-import { PeriodTypeComponent } from './period-type/period-type.component';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { AuthGuard } from 'src/app/_core/_guards/auth.guard'
 
+import { OcUserComponent } from './oc-user/oc-user.component'
+import { OcComponent } from './oc/oc.component'
+import { AccountGroupPeriodComponent } from './account-group-period/account-group-period.component'
+import { AccountGroupComponent } from './account-group/account-group.component'
+import { AccountComponent } from './account/account.component'
+import { ProgressComponent } from './progress/progress.component'
+import { PeriodTypeComponent } from './period-type/period-type.component'
+
+// import { PeriodComponent } from './period/period.component';
 const routes: Routes = [
   {
     path: '',
@@ -63,6 +66,26 @@ const routes: Routes = [
           title: 'Account Group Period',
           breadcrumb: 'Account Group Period',
           functionCode: 'account-group-period'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'oc',
+        component: OcComponent,
+        data: {
+          title: 'OC',
+          breadcrumb: 'OC',
+          functionCode: 'oc'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'oc-user',
+        component: OcUserComponent,
+        data: {
+          title: 'OC User',
+          breadcrumb: 'OC User',
+          functionCode: 'oc-user'
         },
         // canActivate: [AuthGuard]
       }
