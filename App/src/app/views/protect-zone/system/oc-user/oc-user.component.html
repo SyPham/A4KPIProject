@@ -37,7 +37,7 @@
 
       <div class="card-body table-responsive p-0">
 
-        <ejs-grid #grid [dataSource]="userData"
+        <ejs-grid #grid id='grid' [dataSource]="userData"
           allowSorting='true'
           gridLines='Both'
           (created)='createdUsers()'

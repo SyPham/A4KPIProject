@@ -8,6 +8,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'
 import { MessageConstants } from 'src/app/_core/_constants/system'
 
 import { OcService } from './../../../../_core/_service/oc.service'
+import { Account } from 'src/app/_core/_model/account'
 
 @Component({
   selector: 'app-oc-user',
@@ -66,7 +67,7 @@ export class OcUserComponent extends BaseComponent implements OnInit {
 
   toolbarClick(args: any): void {
     switch (args.item.id) {
-      case 'grid_1331832070_0_add':
+      case 'grid_add':
         args.cancel = true;
         this.openModal(this.addUserOc);
         break;

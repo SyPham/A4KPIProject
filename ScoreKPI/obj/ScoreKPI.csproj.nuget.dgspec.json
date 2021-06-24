@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Angular\\SYSTEM\\A4KPI\\ScoreKPI\\ScoreKPI.csproj": {}
+    "H:\\a_2021\\ScoreKPI\\ScoreKPI\\ScoreKPI.csproj": {}
   },
   "projects": {
-    "F:\\Angular\\SYSTEM\\A4KPI\\ScoreKPI\\ScoreKPI.csproj": {
+    "H:\\a_2021\\ScoreKPI\\ScoreKPI\\ScoreKPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Angular\\SYSTEM\\A4KPI\\ScoreKPI\\ScoreKPI.csproj",
+        "projectUniqueName": "H:\\a_2021\\ScoreKPI\\ScoreKPI\\ScoreKPI.csproj",
         "projectName": "ScoreKPI",
-        "projectPath": "F:\\Angular\\SYSTEM\\A4KPI\\ScoreKPI\\ScoreKPI.csproj",
-        "packagesPath": "C:\\Users\\leo.doan\\.nuget\\packages\\",
-        "outputPath": "F:\\Angular\\SYSTEM\\A4KPI\\ScoreKPI\\obj\\",
+        "projectPath": "H:\\a_2021\\ScoreKPI\\ScoreKPI\\ScoreKPI.csproj",
+        "packagesPath": "C:\\Users\\sy.pham\\.nuget\\packages\\",
+        "outputPath": "H:\\a_2021\\ScoreKPI\\ScoreKPI\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\leo.doan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sy.pham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
