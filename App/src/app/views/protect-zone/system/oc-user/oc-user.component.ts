@@ -88,7 +88,7 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocService.mapRangeUserOC(this.model).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
-        this.getUserByOcName(this.ocName);
+        this.getUserByOcID(this.ocID);
         this.accountIdList = [];
         this.model = {
           UserID: 0,
@@ -129,7 +129,8 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocID = Number(data.id);
     this.ocName = data.name;
     if (args.isInteracted) {
-      this.getUserByOcName(this.ocName);
+      // this.getUserByOcName(this.ocName);
+      this.getUserByOcID(this.ocID);
     }
   }
 
@@ -143,10 +144,12 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocService.mapUserOC(obj).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(res.message);
-        this.getUserByOcName(this.ocName);
+        // this.getUserByOcName(this.ocName);
+        this.getUserByOcID(this.ocID);
       } else {
         this.alertify.warning(res.message);
-        this.getUserByOcName(this.ocName);
+        // this.getUserByOcName(this.ocName);
+        this.getUserByOcID(this.ocID);
       }
     });
   }
@@ -155,10 +158,13 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocService.removeUserOC(obj).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(res.message);
-        this.getUserByOcName(this.ocName);
+        //this.getUserByOcName(this.ocName);
+        this.getUserByOcID(this.ocID);
       } else {
         this.alertify.warning(res.message);
-        this.getUserByOcName(this.ocName);
+        //this.getUserByOcName(this.ocName);
+        this.getUserByOcID(this.ocID);
+
       }
     });
   }
@@ -186,10 +192,17 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     });
   }
 
+  getUserByOcID(ocID) {
+    this.ocService.GetUserByOcID(ocID).subscribe(res => {
+      this.OcUserData = res || [];
+      this.getAllUsers();
+    });
+  }
+
   checkStatus(userID) {
     this.OcUserData = this.OcUserData || [];
     const item = this.OcUserData.filter(i => {
-      return i.id === userID && i.roleOC.includes(this.ocName);
+      return i.userID === userID && i.ocid === this.ocID;
     });
     if (item.length <= 0) {
       return false;

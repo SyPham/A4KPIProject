@@ -47,6 +47,7 @@ namespace ScoreKPI.Helpers.AutoMapper
             CreateMap<OCDto, OC>();
             CreateMap<AccountGroupAccountDto, AccountGroupAccount>();
 
+            CreateMap<OcUserDto, OCUser>();
 
         }
     }
