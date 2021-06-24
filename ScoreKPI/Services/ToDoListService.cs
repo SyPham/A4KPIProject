@@ -80,7 +80,7 @@ namespace ScoreKPI.Services
             var positions = new List<int> { SystemRole.L1, SystemRole.L2 };
             if (positions.Contains(role.AccountGroup.Position))
             {
-                var data = await _repoObjective.FindAll().Select(x => new ToDoListByLevelL1L2Dto
+                var data = await _repoObjective.FindAll(x=> x.Topic).Select(x => new ToDoListByLevelL1L2Dto
                 {
                     Id = x.Id,
                     Objective = x.Topic,
