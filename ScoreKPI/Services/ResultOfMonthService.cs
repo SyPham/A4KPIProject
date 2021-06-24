@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -15,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace ScoreKPI.Services
 {
-    public interface IResultOfMonthService: IServiceBase<ResultOfMonth, ResultOfMonthDto>
+    public interface IResultOfMonthService : IServiceBase<ResultOfMonth, ResultOfMonthDto>
     {
-        Task<List<ResultOfMonthDto>> GetAllByObjectiveId(int objectiveId);
+        Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId);
         Task<OperationResult> UpdateResultOfMonthAsync(ResultOfMonthRequestDto model);
 
     }
@@ -28,41 +29,62 @@ namespace ScoreKPI.Services
         private readonly IRepositoryBase<ResultOfMonth> _repo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         public ResultOfMonthService(
-            IRepositoryBase<ResultOfMonth> repo, 
+            IRepositoryBase<ResultOfMonth> repo,
             IUnitOfWork unitOfWork,
-            IMapper mapper, 
+            IMapper mapper,
+             IHttpContextAccessor httpContextAccessor,
             MapperConfiguration configMapper
             )
-            : base(repo, unitOfWork, mapper,  configMapper)
+            : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
-      
-        public async Task<List<ResultOfMonthDto>> GetAllByObjectiveId(int objectiveId)
+
+        public async Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId)
         {
             var month = DateTime.Now.Month;
-            return await _repo.FindAll(x => x.ObjectiveId == objectiveId && month == x.Month).ProjectTo<ResultOfMonthDto>(_configMapper).ToListAsync();
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return await _repo.FindAll(x => x.CreatedBy == accountId && objectiveId == x.ObjectiveId && month == x.Month).ProjectTo<ResultOfMonthDto>(_configMapper).ToListAsync();
 
         }
         public async Task<OperationResult> UpdateResultOfMonthAsync(ResultOfMonthRequestDto model)
         {
-            var item = await _repo.FindByIdAsync(model.Id);
-            item.Title = model.Title;
-            _repo.Update(item);
             try
             {
+                var item = await _repo.FindByIdAsync(model.Id);
+                if (item == null)
+                {
+                    _repo.Add(new ResultOfMonth
+                    {
+                        Month = DateTime.Now.Month,
+                        Title = model.Title,
+                        ObjectiveId = model.ObjectiveId,
+                        CreatedBy = model.CreatedBy
+                    });
+                }
+                else
+                {
+                    item.ObjectiveId = model.ObjectiveId;
+                    item.Title = model.Title;
+                    item.CreatedBy = model.CreatedBy;
+                    _repo.Update(item);
+                }
+
                 await _unitOfWork.SaveChangeAsync();
                 operationResult = new OperationResult
                 {
                     StatusCode = HttpStatusCode.OK,
                     Message = MessageReponse.AddSuccess,
                     Success = true,
-                    Data = item
+                    Data = model
                 };
             }
             catch (Exception ex)

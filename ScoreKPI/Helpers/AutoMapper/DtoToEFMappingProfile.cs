@@ -14,12 +14,9 @@ namespace ScoreKPI.Helpers.AutoMapper
         public DtoToEFMappingProfile()
         {
             CreateMap<AccountDto, Account>()
-                .ForMember(d => d.AccountGroup, o => o.Ignore())
-                .ForMember(d => d.AccountType, o => o.Ignore())
-                ;
+                .ForMember(d => d.AccountType, o => o.Ignore());
             CreateMap<AccountTypeDto, AccountType>()
-                .ForMember(d => d.Accounts, o => o.Ignore())
-                ;
+                .ForMember(d => d.Accounts, o => o.Ignore());
             CreateMap<AccountGroupDto, AccountGroup>();
 
             CreateMap<PeriodDto, Period>() ;
@@ -47,6 +44,8 @@ namespace ScoreKPI.Helpers.AutoMapper
             CreateMap<CommentDto, Comment>();
             CreateMap<ContributionDto, Contribution>();
             CreateMap<PeriodTypeDto, PeriodType>();
+            CreateMap<AccountGroupAccountDto, AccountGroupAccount>();
+
 
         }
     }

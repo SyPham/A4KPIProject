@@ -10,6 +10,7 @@ import { Account } from 'src/app/_core/_model/account';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
+import { AccountGroupAccount } from 'src/app/_core/_model/account-group-account';
 
 @Component({
   selector: 'app-account',
@@ -31,7 +32,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   setFocus: any;
   locale = localStorage.getItem('lang');
   accountGroupData: AccountGroup[];
-  accountGroupId: any;
+  accountGroupItem: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -50,10 +51,36 @@ export class AccountComponent extends BaseComponent implements OnInit {
   onDoubleClick(args: any): void {
     this.setFocus = args.column; // Get the column from Double click event
   }
+  initialModel() {
+    this.accountGroupItem = [];
+    this.accountCreate = {
+      id: 0,
+      username: null,
+      password: null,
+      fullName: null,
+      email: null,
+      accountTypeId: 2,
+      isLock: false,
+      createdBy: 0,
+      createdTime: new Date().toLocaleDateString(),
+      modifiedBy: 0,
+      modifiedTime: null,
+      accountGroupIds: null,
+      accountGroupText: null,
+      accountType: null,
+    };
+
+  }
+  updateModel(data) {
+    this.accountGroupItem = data.accountGroupIds;
+  }
   actionBegin(args) {
+    if (args.requestType === 'add') {
+      this.initialModel();
+    }
     if (args.requestType === 'beginEdit') {
       const item = args.rowData;
-      this.accountGroupId = item.accountGroupId;
+      this.updateModel(item);
     }
     if (args.requestType === 'save' && args.action === 'add') {
       this.accountCreate = {
@@ -64,13 +91,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
         email: args.data.email,
         accountTypeId: 2,
         isLock: false,
-        accountGroupId: this.accountGroupId,
         createdBy: 0,
         createdTime: new Date().toLocaleDateString(),
         modifiedBy: 0,
         modifiedTime: null,
-        accountGroup: null,
         accountType: null,
+        accountGroupIds: this.accountGroupItem,
+        accountGroupText: null,
       };
 
       if (args.data.username === undefined) {
@@ -94,13 +121,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
         email: args.data.email,
         isLock: args.data.isLock,
         accountTypeId: args.data.accountTypeId,
-        accountGroupId: this.accountGroupId,
         createdBy: args.data.createdBy,
         createdTime: args.data.createdTime,
         modifiedBy:args.data.modifiedBy,
         modifiedTime: args.data.modifiedTime,
-        accountGroup: null,
         accountType: null,
+        accountGroupIds: this.accountGroupItem,
+        accountGroupText: null,
       };
       this.update();
     }
@@ -203,8 +230,5 @@ export class AccountComponent extends BaseComponent implements OnInit {
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }
-  onChangeAccountGroup(args) {
-    console.log(args);
-    this.accountGroupId = args.itemData.id;
-  }
+
 }

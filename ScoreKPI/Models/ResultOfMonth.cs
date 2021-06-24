@@ -15,13 +15,14 @@ namespace ScoreKPI.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public int Month { get; set; }
-        public int CreatedBy { get; set; }
         public int ObjectiveId { get; set; }
+        public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
+        [ForeignKey(nameof(CreatedBy))]
+        public virtual Account Account { get; set; }
         [ForeignKey(nameof(ObjectiveId))]
         public virtual Objective Objective { get; set; }
-
     }
 }

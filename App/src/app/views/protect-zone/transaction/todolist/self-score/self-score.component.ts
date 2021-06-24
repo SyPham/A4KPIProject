@@ -14,6 +14,7 @@ import { KPIScore } from 'src/app/_core/_model/kpi-score';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { KPIService } from 'src/app/_core/_service/kpi.service';
 import { KPI } from 'src/app/_core/_model/kpi';
+import { PeriodType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-self-score',
   templateUrl: './self-score.component.html',
@@ -22,6 +23,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 export class SelfScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
   @Input() data: Objective;
+  @Input() periodTypeCode: PeriodType;
   gridData: object;
   toolbarOptions = ['Add', 'Delete', 'Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -45,20 +47,22 @@ export class SelfScoreComponent implements OnInit {
   ngOnInit(): void {
     this.kpiScoreModel = {
       id: 0,
-      objectiveId: this.data.id,
-      periodType: "Quarter",
+      periodTypeId: 0,
+      periodTypeCode: PeriodType.Monthly,
       period: this.utilitiesService.getQuarter(new Date()),
       point: this.point,
-      scoreBy: +JSON.parse(localStorage.getItem('user')).id
-
+      scoreBy: +JSON.parse(localStorage.getItem('user')).id,
+      modifiedTime: null,
+      createdTime: new Date().toDateString(),
+      accountId: +JSON.parse(localStorage.getItem('user')).id
     }
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
-    this.getFisrtByObjectiveIdAndScoreBy();
+    this.getFisrtByAccountId();
   }
   loadData() {
-    this.service.getAllInCurrentQuarterByObjectiveId(this.data.id).subscribe(data => {
+    this.service.getAllKPISelfScoreByObjectiveId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -67,10 +71,10 @@ export class SelfScoreComponent implements OnInit {
       this.kpiScoreData = data;
     });
   }
-  getFisrtByObjectiveIdAndScoreBy() {
-    this.kpiScoreService.getFisrtByObjectiveIdAndScoreBy(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
-      this.point = data.point;
-      this.kpiScoreModel.id = data.id;
+  getFisrtByAccountId() {
+    this.kpiScoreService.getFisrtByAccountId(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+      this.point = data?.point;
+      this.kpiScoreModel.id = data?.id;
     });
   }
   loadKPIData() {
@@ -79,20 +83,19 @@ export class SelfScoreComponent implements OnInit {
     });
   }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
-    const data = args.data as ToDoListOfQuarter;
-    const fields = ['month'];
-    if (fields.includes(args.column.field)) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
-    }
-    if (args.column.field.includes("resultOfMonth")) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
-    }
+    // const data = args.data as ToDoListOfQuarter;
+    // const fields = ['month'];
+    // if (fields.includes(args.column.field)) {
+    //   args.rowSpan = (this.gridData as any).filter(
+    //     item => item.month === data.month
+    //   ).length;
+    // }
+    // if (args.column.field.includes("resultOfMonth")) {
+    //   args.rowSpan = (this.gridData as any).filter(
+    //     item => item.month === data.month
+    //   ).length;
+    // }
   }
-
   addKPIScore() {
     if (!this.point) {
       this.alertify.warning('Not yet complete. Can not submit!', true);
@@ -103,7 +106,7 @@ export class SelfScoreComponent implements OnInit {
       (res) => {
         if (res.success === true) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.getFisrtByObjectiveIdAndScoreBy();
+          this.getFisrtByAccountId();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }

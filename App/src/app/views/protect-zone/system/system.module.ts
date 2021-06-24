@@ -8,7 +8,7 @@ import { AccountGroupComponent } from './account-group/account-group.component';
 import { SystemRoutingModule } from './system.routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GridAllModule } from '@syncfusion/ej2-angular-grids';
-import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { DropDownListModule, MultiSelectAllModule, MultiSelectModule } from '@syncfusion/ej2-angular-dropdowns';
 import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -62,6 +62,7 @@ if (lang === 'vi') {
     SwitchModule,
     SystemRoutingModule,
     DateInputsModule ,
+    MultiSelectAllModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

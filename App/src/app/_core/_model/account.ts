@@ -1,4 +1,4 @@
-import { AccountGroup } from "./account.group";
+import { AccountGroupAccount } from "./account-group-account";
 import { AccountType } from "./account.type";
 
 export interface Account {
@@ -9,11 +9,11 @@ export interface Account {
   email: string;
   isLock: boolean;
   accountTypeId: number | null;
-  accountGroupId: number | null;
   createdBy: number;
   modifiedBy: number | null;
   createdTime: string;
   modifiedTime: string | null;
   accountType: AccountType;
-  accountGroup: AccountGroup;
+  accountGroupText: string;
+  accountGroupIds: number[];
 }

@@ -17,11 +17,12 @@ namespace ScoreKPI.Services
 {
     public interface IKPIScoreService : IServiceBase<KPIScore, KPIScoreDto>
     {
-        Task<KPIScoreDto> GetFisrtByObjectiveId(int objectiveId, int scoreBy);
+        Task<KPIScoreDto> GetFisrtByAccountId(int scoreBy);
     }
     public class KPIScoreService : ServiceBase<KPIScore, KPIScoreDto>, IKPIScoreService
     {
         private readonly IRepositoryBase<KPIScore> _repo;
+        private readonly IRepositoryBase<PeriodType> _repoPeriodType;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
@@ -29,6 +30,7 @@ namespace ScoreKPI.Services
 
         public KPIScoreService(
             IRepositoryBase<KPIScore> repo,
+            IRepositoryBase<PeriodType> repoPeriodType,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             MapperConfiguration configMapper
@@ -36,11 +38,12 @@ namespace ScoreKPI.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoPeriodType = repoPeriodType;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public async Task<KPIScoreDto> GetFisrtByObjectiveId(int objectiveId, int scoreBy)
+        public async Task<KPIScoreDto> GetFisrtByAccountId(int scoreBy)
         {
             var currrentQuarter = (DateTime.Now.Month + 2) / 3;
 
@@ -53,6 +56,8 @@ namespace ScoreKPI.Services
         /// <returns></returns>
         public override async Task<OperationResult> AddAsync(KPIScoreDto model)
         {
+            var periodType = await _repoPeriodType.FindAll(x => x.Code == model.PeriodTypeCode).FirstOrDefaultAsync();
+            model.PeriodTypeId = periodType.Id;
             if (model.Id > 0)
             {
                 var item = await _repo.FindAll(x => x.Id == model.Id && x.ScoreBy == model.ScoreBy).AsNoTracking().FirstOrDefaultAsync();

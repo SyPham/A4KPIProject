@@ -20,9 +20,11 @@ namespace ScoreKPI.Models
         public DateTime Date { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
-        public virtual ICollection<ResultOfMonth> ResultOfMonth { get; set; }
         public virtual ICollection<ToDoList> ToDoList { get; set; }
+        public virtual ICollection<ResultOfMonth> ResultOfMonth { get; set; }
         public virtual ICollection<PIC> PICs { get; set; }
+        [ForeignKey(nameof(CreatedBy))]
+        public virtual Account Creator { get; set; }
 
     }
 }

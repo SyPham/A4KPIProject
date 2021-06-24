@@ -14,6 +14,7 @@ namespace ScoreKPI.Services
 {
     public interface IPeriodService: IServiceBase<Period, PeriodDto>
     {
+        Task<List<PeriodDto>> GetAllByPeriodTypeIdAsync(int periodTypeId);
     }
     public class PeriodService : ServiceBase<Period, PeriodDto>, IPeriodService
     {
@@ -37,6 +38,11 @@ namespace ScoreKPI.Services
         public override async Task<List<PeriodDto>> GetAllAsync()
         {
             return await _repo.FindAll().ProjectTo<PeriodDto>(_configMapper).ToListAsync();
+
+        }
+        public  async Task<List<PeriodDto>> GetAllByPeriodTypeIdAsync(int periodTypeId)
+        {
+            return await _repo.FindAll(x=>x.PeriodTypeId == periodTypeId).OrderBy(x=>x.Value).ProjectTo<PeriodDto>(_configMapper).ToListAsync();
 
         }
     }

@@ -9,11 +9,12 @@ namespace ScoreKPI.DTO
     {
         public int Id { get; set; }
         public int Period { get; set; }
-        public int AccountId { get; set; }
-        public int PeriodTypeId { get; set; }
-
         public double Point { get; set; }
-        public int ObjectiveId { get; set; }
+        public string PeriodTypeCode { get; set; }
+        public int PeriodTypeId { get; set; }
+        public int AccountId { get; set; }
         public int ScoreBy { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
     }
 }

@@ -22,15 +22,13 @@ namespace ScoreKPI.Models
         public string Email { get; set; }
         public bool IsLock { get; set; }
         public int? AccountTypeId { get; set; }
-        public int? AccountGroupId { get; set; }
         public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get ; set ; }
         public DateTime? ModifiedTime { get ; set ; }
         [ForeignKey(nameof(AccountTypeId))]
         public virtual AccountType AccountType { get; set; }
-        [ForeignKey(nameof(AccountGroupId))]
-        public virtual AccountGroup AccountGroup { get; set; }
         public virtual ICollection<Objective> Objectives { get; set; }
+        public virtual ICollection<AccountGroupAccount> AccountGroupAccount { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace ScoreKPI.DTO
         public DateTime Date { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
-        public  Account Account { get; set; }
+        public  Account Creator { get; set; }
     }
 
     public class ObjectiveRequestDto
@@ -33,6 +33,8 @@ namespace ScoreKPI.DTO
     public class ResultOfMonthRequestDto
     {
         public int Id { get; set; }
+        public int ObjectiveId { get; set; }
+        public int CreatedBy { get; set; }
         public string Title { get; set; }
     }
 }

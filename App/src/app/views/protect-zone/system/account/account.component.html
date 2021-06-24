@@ -41,11 +41,12 @@
               </ng-template>
             </e-column>
             <e-column field="email" textAlign='Center' headerText="Email"> </e-column>
-            <e-column field='accountGroup.name' headerText="{{'Account Group' | translate}}" width='200' textAlign='Center'>
+            <e-column field='accountGroupText' headerText="{{'Account Group' | translate}}" width='200' textAlign='Center'>
+              <ng-template #template let-data>
+                {{data.accountGroupText}}
+              </ng-template>
               <ng-template #editTemplate let-data>
-                  <ejs-dropdownlist #accountGroupDropdownlist [dataSource]='accountGroupData' [value]="data.accountGroupId"
-                      [fields]='fields' [allowFiltering]='true' (change)='onChangeAccountGroup($event)'>
-                  </ejs-dropdownlist>
+                <ejs-multiselect [(ngModel)]='accountGroupItem' [fields]="fields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select months of the Year' [dataSource]='accountGroupData'></ejs-multiselect>
               </ng-template>
               </e-column>
             <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option' | translate}}">

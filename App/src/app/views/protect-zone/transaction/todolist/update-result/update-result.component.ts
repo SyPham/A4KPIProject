@@ -34,11 +34,14 @@ export class UpdateResultComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.title = '';
     this.loadCurrentResultOfMonthData();
     this.loadData();
     this.model = {
       id: 0,
-      title: ''
+      objectiveId: this.data.id,
+      title: '',
+      createdBy: +JSON.parse(localStorage.getItem('user')).id,
     };
   }
   loadData() {
@@ -47,20 +50,20 @@ export class UpdateResultComponent implements OnInit {
     });
   }
   loadCurrentResultOfMonthData() {
-    this.resultOfMonthService.getAllByObjectiveId(this.data.id).subscribe(data => {
-      this.gridResultOfMonthData = data;
-      this.title =  data[0].title;
+    this.resultOfMonthService.getAllByMonth(this.data.id).subscribe(data => {
+      this.gridResultOfMonthData = data || [];
+      this.title =  data[0]?.title;
     });
   }
   updateResultOfMonth() {
     const data = [];
     const gridData = this.gridResultOfMonthData || [];
-    if (gridData.length === 0) {
+    if (!this.title) {
       this.alertify.warning('Not yet complete. Can not submit!', true);
       return;
     }
-    this.model.title = this.title
-    this.model.id = gridData[0].id
+    this.model.title = this.title;
+    this.model.id = gridData[0]?.id || 0;
     this.resultOfMonthService.updateResultOfMonth(this.model).subscribe(
       (res) => {
         if (res.success === true) {

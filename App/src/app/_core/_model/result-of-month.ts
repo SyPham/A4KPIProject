@@ -8,6 +8,9 @@ export interface ResultOfMonth {
   modifiedTime: string | null;
 }
 export interface ResultOfMonthRequest {
+  objectiveId: number;
   id: number;
   title: string;
+  createdBy: number;
+
 }

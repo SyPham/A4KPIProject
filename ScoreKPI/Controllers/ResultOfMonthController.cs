@@ -53,9 +53,9 @@ namespace ScoreKPI.Controllers
             return Ok(await _service.GetByIdAsync(id));
         }
         [HttpGet]
-        public async Task<ActionResult> GetAllByObjectiveId(int objectiveId)
+        public async Task<ActionResult> GetAllByMonth(int objectiveId)
         {
-            return Ok(await _service.GetAllByObjectiveId(objectiveId));
+            return Ok(await _service.GetAllByMonth(objectiveId));
         }
         [HttpGet]
         public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)

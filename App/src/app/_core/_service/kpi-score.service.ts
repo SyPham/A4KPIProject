@@ -15,9 +15,9 @@ export class KPIScoreService extends CURDService<KPIScore> {
   {
     super(http,"KPIScore", utilitiesService);
   }
-  getFisrtByObjectiveIdAndScoreBy(objectiveId, scoreBy): Observable<KPIScore> {
+  getFisrtByAccountId(scoreBy): Observable<KPIScore> {
     return this.http
-      .get<KPIScore>(`${this.base}${this.entity}/GetFisrtByObjectiveIdAndScoreBy?objectiveId=${objectiveId}&scoreby=${scoreBy}`, {})
+      .get<KPIScore>(`${this.base}${this.entity}/GetFisrtByAccountId?scoreby=${scoreBy}`, {})
       .pipe(catchError(this.handleError));
   }
 }

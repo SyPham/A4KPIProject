@@ -34,3 +34,9 @@ export interface ToDoListByLevelL1L2Dto {
   result2OfMonth: string;
   result3OfMonth: string;
 }
+
+export interface SelfScore {
+  objectiveList: string[];
+  resultOfMonth: string;
+  month: number;
+}

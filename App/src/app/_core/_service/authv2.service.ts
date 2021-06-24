@@ -106,7 +106,9 @@ export class Authv2Service implements OnDestroy {
         map((x: any) => {
           const loginResult = x as ApplicationUser;
           const user = x.user;
-          localStorage.setItem('user', JSON.stringify(user));
+        //   localStorage.setItem('user', JSON.stringify(user));
+        //  localStorage.setItem('token', x.token);
+
           this._user.next(loginResult as ApplicationUser);
           // this.decodedToken = this.jwtHelper.decodeToken(loginResult.accessToken);
           this.currentUser = user;

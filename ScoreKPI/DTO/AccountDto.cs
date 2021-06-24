@@ -19,7 +19,7 @@ namespace ScoreKPI.DTO
         public int ModifiedBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
-        public int? AccountGroupId { get; set; }
-        public AccountGroup AccountGroup { get; set; }
+        public List<int> AccountGroupIds { get; set; }
+        public string AccountGroupText { get; set; }
     }
 }

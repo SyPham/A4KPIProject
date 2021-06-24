@@ -10,3 +10,8 @@ export enum SystemRole {
     KPI = "KPI",
     Attitude = "Attitude"
     }
+    export enum PeriodType {
+      Monthly = "Monthly",
+      Quarterly = "Quarterly",
+      HalfYear = "HalfYear"
+      }

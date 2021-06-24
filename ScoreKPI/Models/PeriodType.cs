@@ -24,6 +24,6 @@ namespace ScoreKPI.Models
         [MaxLength(100)]
         public string Name { get; set; }
         public int Position { get; set; }
-        public virtual ICollection<PeriodReportTime> PeriodReportTimes { get; set; }
+        public virtual ICollection<Period> Periods { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -19,6 +20,8 @@ namespace ScoreKPI.Services
     {
         Task<OperationResult> PostAsync(ObjectiveRequestDto model);
         Task<OperationResult> PutAsync(ObjectiveRequestDto model);
+
+        Task<List<ObjectiveDto>> GetAllKPIObjectiveByAccountId();
     }
     public class ObjectiveService : ServiceBase<Objective, ObjectiveDto>, IObjectiveService
     {
@@ -29,13 +32,15 @@ namespace ScoreKPI.Services
         private readonly IRepositoryBase<ResultOfMonth> _repoResultOfMonth;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         public ObjectiveService(
             IRepositoryBase<Objective> repo, 
             IRepositoryBase<PIC> repoPIC,
             IRepositoryBase<ResultOfMonth> repoResultOfMonth,
             IUnitOfWork unitOfWork,
-            IMapper mapper, 
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
             MapperConfiguration configMapper
             )
             : base(repo, unitOfWork, mapper,  configMapper)
@@ -45,12 +50,27 @@ namespace ScoreKPI.Services
             _repoResultOfMonth = repoResultOfMonth;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
-      
+        public override async Task<List<ObjectiveDto>> GetAllAsync()
+        {
+       
+            return await _repo.FindAll().Include(x=>x.Creator).ProjectTo<ObjectiveDto>(_configMapper).ToListAsync();
+        }
+        public  async Task<List<ObjectiveDto>> GetAllKPIObjectiveByAccountId()
+        {
+           
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            return await _repo.FindAll().Where(x => x.CreatedBy == accountID).Include(x => x.Creator).ProjectTo<ObjectiveDto>(_configMapper).ToListAsync();
+        }
         public async Task<OperationResult> PostAsync(ObjectiveRequestDto model)
         {
             var item = _mapper.Map<Objective>(model);
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            item.CreatedBy = accountID;
             _repo.Add(item);
             try
             {
@@ -61,21 +81,7 @@ namespace ScoreKPI.Services
                     var picItem = new PIC { AccountId = accountId, ObjectiveId = item.Id };
                     picList.Add(picItem);
                 }
-                _repoPIC.AddRange(picList);
-                //throw new Exception();
-                var resultOfMonthList = new List<ResultOfMonth> { };
-                await _unitOfWork.SaveChangeAsync();
-
-                for (int i = 1; i <= 12; i++)
-                {
-                    resultOfMonthList.Add(new ResultOfMonth
-                    {
-                        Month = i,
-                        ObjectiveId = item.Id
-                    });
-                }
-                
-                _repoResultOfMonth.AddRange(resultOfMonthList);
+                _repoPIC.AddRange(picList); 
                 await _unitOfWork.SaveChangeAsync();
 
                 operationResult = new OperationResult
@@ -96,6 +102,9 @@ namespace ScoreKPI.Services
         public async Task<OperationResult> PutAsync(ObjectiveRequestDto model)
         {
             var item = await _repo.FindByIdAsync(model.Id);
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            item.CreatedBy = accountID;
             item.Date = model.Date;
             item.Topic = model.Topic;
             item.Status = model.Status;

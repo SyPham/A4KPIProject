@@ -126,6 +126,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
       // });
       localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
       this.router.navigate(['/system/account']);
 
       // console.log('end getActionInFunctionByRoleID');

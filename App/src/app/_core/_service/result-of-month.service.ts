@@ -16,9 +16,9 @@ export class ResultOfMonthService extends CURDService<ResultOfMonth> {
   {
     super(http,"ResultOfMonth", utilitiesService);
   }
-  getAllByObjectiveId(objectiveId): Observable<ResultOfMonth[]> {
+  getAllByMonth(objectiveId): Observable<ResultOfMonth[]> {
     return this.http
-      .get<ResultOfMonth[]>(`${this.base}${this.entity}/GetAllByObjectiveId?objectiveId=${objectiveId}`, {})
+      .get<ResultOfMonth[]>(`${this.base}${this.entity}/GetAllByMonth?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
   }
   updateResultOfMonth(model: ResultOfMonthRequest): Observable<OperationResult> {
