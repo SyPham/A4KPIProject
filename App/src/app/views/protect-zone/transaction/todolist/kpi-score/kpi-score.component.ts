@@ -17,6 +17,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
+import { PeriodType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-kpi-score',
   templateUrl: './kpi-score.component.html',
@@ -25,6 +26,7 @@ import { forkJoin } from 'rxjs';
 export class KpiScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
   @Input() data: ToDoListL1L2;
+  @Input() periodTypeCode: PeriodType;
   gridData: object;
   toolbarOptions = ['Add', 'Delete', 'Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -51,12 +53,14 @@ export class KpiScoreComponent implements OnInit {
   ngOnInit(): void {
     this.kpiScoreModel = {
       id: 0,
-      objectiveId: this.data.id,
-      periodType: "Quarter",
+      periodTypeId: 0,
+      periodTypeCode: this.periodTypeCode,
       period: this.utilitiesService.getQuarter(new Date()),
       point: this.point,
-      scoreBy: +JSON.parse(localStorage.getItem('user')).id
-
+      scoreBy: +JSON.parse(localStorage.getItem('user')).id,
+      modifiedTime: null,
+      createdTime: new Date().toDateString(),
+      accountId: +JSON.parse(localStorage.getItem('user')).id
     }
     this.commentModel = {
       id: 0,
@@ -71,7 +75,7 @@ export class KpiScoreComponent implements OnInit {
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
-    this.getFisrtByObjectiveIdAndScoreBy();
+    this.getFisrtByAccountId();
     this.getFisrtCommentByObjectiveId();
   }
   getMonthListInCurrentQuarter() {
@@ -95,8 +99,8 @@ export class KpiScoreComponent implements OnInit {
       this.kpiScoreData = data;
     });
   }
-  getFisrtByObjectiveIdAndScoreBy() {
-    this.kpiScoreService.getFisrtByObjectiveIdAndScoreBy(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+  getFisrtByAccountId() {
+    this.kpiScoreService.getFisrtByAccountId(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
       this.point = data?.point;
       this.kpiScoreModel.id = data?.id;
     });

@@ -16,15 +16,13 @@ namespace ScoreKPI.Models
         public string YourObjective { get; set; }
         public string Action { get; set; }
         public string Remark { get; set; }
-        public int? ProgressId { get; set; }
         public int ObjectiveId { get; set; }
 
         public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get ; set ; }
         public DateTime? ModifiedTime { get ; set ; }
-        [ForeignKey(nameof(ProgressId))]
-        public virtual Progress Progress { get; set; }
+      
         [ForeignKey(nameof(ObjectiveId))]
         public virtual Objective Objective { get; set; }
 

@@ -16,14 +16,14 @@
     <e-column field='objective' headerText='KPI Objective' type='string'></e-column>
     <e-column field='l0TargetList' headerText='L0 Target' type='string'>
       <ng-template #template let-data>
-        <ul style="padding: 0 0 0 8px;" *ngFor="let item of data.l0TargetList">
+        <ul style="padding: 0 0 0 15px;" *ngFor="let item of data.l0TargetList">
           <li>{{item}}</li>
         </ul>
        </ng-template>
     </e-column>
     <e-column field='l0ActionList' headerText='L0 Action' type='string'>
       <ng-template #template let-data>
-        <ul style="padding: 0 0 0 8px;" *ngFor="let item of data.l0ActionList">
+        <ul style="padding: 0 0 0 15px;" *ngFor="let item of data.l0ActionList">
           <li>{{item}}</li>
         </ul>
        </ng-template>

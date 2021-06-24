@@ -16,9 +16,9 @@ namespace ScoreKPI.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult> GetFisrtByObjectiveIdAndScoreBy(int objectiveId, int scoreBy)
+        public async Task<ActionResult> GetFisrtByAccountId(int scoreBy)
         {
-            return Ok(await _service.GetFisrtByObjectiveId(objectiveId, scoreBy));
+            return Ok(await _service.GetFisrtByAccountId(scoreBy));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
@@ -29,12 +29,18 @@ namespace ScoreKPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] KPIScoreDto model)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            model.AccountId = accountID;
             return StatusCodeResult(await _service.AddAsync(model));
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateAsync([FromBody] KPIScoreDto model)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            model.AccountId = accountID;
             return StatusCodeResult(await _service.UpdateAsync(model));
         }
 

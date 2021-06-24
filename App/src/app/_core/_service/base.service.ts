@@ -6,15 +6,15 @@ export class BaseService {
     constructor() { }
 
     protected handleError(errorResponse: any) {
-        if (errorResponse.error?.message) {
-            return throwError(errorResponse.error?.message || 'Server error');
+        if (errorResponse?.error?.message) {
+            return throwError(errorResponse?.error?.message || 'Server error');
         }
 
-        if (errorResponse.error.errors) {
+        if (errorResponse?.error?.errors) {
             let modelStateErrors = '';
 
             // for now just concatenate the error descriptions, alternative we could simply pass the entire error response upstream
-            for (const errorMsg of errorResponse.error?.errors) {
+            for (const errorMsg of errorResponse?.error?.errors) {
                 modelStateErrors += errorMsg + '<br/>';
             }
             return throwError(modelStateErrors || 'Server error');

@@ -27,5 +27,9 @@ export class ObjectiveService extends CURDService<Objective> {
       .put<OperationResult>(`${this.base}${this.entity}/update`, model)
       .pipe(catchError(this.handleError));
   }
-
+  getAllKPIObjectiveByAccountId(): Observable<Objective[]> {
+    return this.http
+      .get<Objective[]>(`${this.base}${this.entity}/GetAllKPIObjectiveByAccountId`, {})
+      .pipe(catchError(this.handleError));
+  }
 }

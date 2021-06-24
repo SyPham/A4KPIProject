@@ -22,6 +22,7 @@ namespace ScoreKPI
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddHttpContextAccessor();
             services.AddControllers()
              .AddNewtonsoftJson(options =>
              {

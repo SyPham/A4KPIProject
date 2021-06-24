@@ -113,6 +113,28 @@ namespace ScoreKPI.Migrations
                     b.ToTable("AccountGroups");
                 });
 
+            modelBuilder.Entity("ScoreKPI.Models.AccountGroupAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountGroupId");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("AccountGroupAccount");
+                });
+
             modelBuilder.Entity("ScoreKPI.Models.AccountGroupPeriod", b =>
                 {
                     b.Property<int>("Id")
@@ -439,8 +461,26 @@ namespace ScoreKPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountId")
+                    b.Property<int>("Level")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OC");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.Objective", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -466,7 +506,7 @@ namespace ScoreKPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("CreatedBy");
 
                     b.ToTable("Objectives");
                 });
@@ -684,6 +724,8 @@ namespace ScoreKPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ObjectiveId");
 
                     b.ToTable("ResultOfMonth");
@@ -714,9 +756,6 @@ namespace ScoreKPI.Migrations
                     b.Property<int>("ObjectiveId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProgressId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Remark")
                         .HasColumnType("nvarchar(max)");
 
@@ -727,14 +766,12 @@ namespace ScoreKPI.Migrations
 
                     b.HasIndex("ObjectiveId");
 
-                    b.HasIndex("ProgressId");
-
                     b.ToTable("ToDoList");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.Account", b =>
                 {
-                    b.HasOne("ScoreKPI.Models.AccountGroup", "AccountGroup")
+                    b.HasOne("ScoreKPI.Models.AccountGroup", null)
                         .WithMany("Accounts")
                         .HasForeignKey("AccountGroupId");
 
@@ -746,9 +783,26 @@ namespace ScoreKPI.Migrations
                         .WithMany("Accounts")
                         .HasForeignKey("ProgressId");
 
-                    b.Navigation("AccountGroup");
-
                     b.Navigation("AccountType");
+                });
+
+            modelBuilder.Entity("ScoreKPI.Models.AccountGroupAccount", b =>
+                {
+                    b.HasOne("ScoreKPI.Models.AccountGroup", "AccountGroup")
+                        .WithMany()
+                        .HasForeignKey("AccountGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany("AccountGroupAccount")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("AccountGroup");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.AccountGroupPeriod", b =>
@@ -805,7 +859,7 @@ namespace ScoreKPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                    b.HasOne("ScoreKPI.Models.PeriodType", "PeriodType")
                         .WithMany()
                         .HasForeignKey("PeriodTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -824,7 +878,7 @@ namespace ScoreKPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                    b.HasOne("ScoreKPI.Models.PeriodType", "PeriodType")
                         .WithMany()
                         .HasForeignKey("PeriodTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -843,7 +897,7 @@ namespace ScoreKPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScoreKPI.Models.Period", "PeriodType")
+                    b.HasOne("ScoreKPI.Models.PeriodType", "PeriodType")
                         .WithMany()
                         .HasForeignKey("PeriodTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -875,9 +929,13 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.Objective", b =>
                 {
-                    b.HasOne("ScoreKPI.Models.Account", null)
+                    b.HasOne("ScoreKPI.Models.Account", "Creator")
                         .WithMany("Objectives")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.PIC", b =>
@@ -906,7 +964,7 @@ namespace ScoreKPI.Migrations
                         .HasForeignKey("AccountGroupId");
 
                     b.HasOne("ScoreKPI.Models.PeriodType", "PeriodType")
-                        .WithMany()
+                        .WithMany("Periods")
                         .HasForeignKey("PeriodTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -942,11 +1000,19 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.ResultOfMonth", b =>
                 {
+                    b.HasOne("ScoreKPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ScoreKPI.Models.Objective", "Objective")
                         .WithMany("ResultOfMonth")
                         .HasForeignKey("ObjectiveId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Account");
 
                     b.Navigation("Objective");
                 });
@@ -959,17 +1025,13 @@ namespace ScoreKPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ScoreKPI.Models.Progress", "Progress")
-                        .WithMany()
-                        .HasForeignKey("ProgressId");
-
                     b.Navigation("Objective");
-
-                    b.Navigation("Progress");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.Account", b =>
                 {
+                    b.Navigation("AccountGroupAccount");
+
                     b.Navigation("Objectives");
                 });
 
@@ -996,7 +1058,7 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.PeriodType", b =>
                 {
-                    b.Navigation("PeriodReportTimes");
+                    b.Navigation("Periods");
                 });
 
             modelBuilder.Entity("ScoreKPI.Models.Progress", b =>

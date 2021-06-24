@@ -2,13 +2,12 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { GridAllModule } from '@syncfusion/ej2-angular-grids'
-import { DropDownListModule, MultiSelectModule } from '@syncfusion/ej2-angular-dropdowns'
+import { DropDownListModule, MultiSelectAllModule, MultiSelectModule } from '@syncfusion/ej2-angular-dropdowns'
 import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { HttpClient } from '@angular/common/http'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
 import { loadCldr } from '@syncfusion/ej2-base'
-import { DatePickerModule } from '@syncfusion/ej2-angular-calendars'
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs'
 import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid'
 
@@ -69,6 +68,7 @@ if (lang === 'vi') {
     SwitchModule,
     SystemRoutingModule,
     DateInputsModule ,
+    MultiSelectAllModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

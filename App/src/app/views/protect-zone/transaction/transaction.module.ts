@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons';
-import { DropDownListModule, MultiSelectModule } from '@syncfusion/ej2-angular-dropdowns';
+import { DropDownListModule, MultiSelectModule, MultiSelectAllModule } from '@syncfusion/ej2-angular-dropdowns';
 import { GridAllModule } from '@syncfusion/ej2-angular-grids';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { loadCldr } from '@syncfusion/ej2-base';
@@ -68,8 +68,8 @@ if (lang === 'vi') {
     SwitchModule,
     TransactionRoutingModule,
     DateInputsModule ,
-    MultiSelectModule,
     ToolbarModule,
+    MultiSelectAllModule,
     TabModule,
     TranslateModule.forChild({
       loader: {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScoreKPI.DTO;
 using ScoreKPI.Helpers;
@@ -24,7 +25,11 @@ namespace ScoreKPI.Controllers
         {
             return Ok(await _service.GetAllAsync());
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetAllKPIObjectiveByAccountId()
+        {
+            return Ok(await _service.GetAllKPIObjectiveByAccountId());
+        }
         [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] ObjectiveRequestDto model)
         {

@@ -102,16 +102,16 @@ namespace ScoreKPI.Helpers
             #endregion
 
             #region Tiến độ
-            if (!(_context.Progresses.Any()))
-            {
-                _context.Progresses.AddRange(new List<Progress> {
-                    new Progress {Name = "In Progress"},
-                    new Progress{ Name = "Done" },
-                    new Progress{ Name = "Pending" },
-                    new Progress{ Name = "Undone"}
-                });
-                _context.SaveChanges();
-            }
+            //if (!(_context.Progresses.Any()))
+            //{
+            //    _context.Progresses.AddRange(new List<Progress> {
+            //        new Progress {Name = "In Progress"},
+            //        new Progress{ Name = "Done" },
+            //        new Progress{ Name = "Pending" },
+            //        new Progress{ Name = "Undone"}
+            //    });
+            //    _context.SaveChanges();
+            //}
 
             #endregion
 

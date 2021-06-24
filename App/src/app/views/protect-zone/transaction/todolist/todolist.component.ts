@@ -10,7 +10,7 @@ import { UpdateResultComponent } from './update-result/update-result.component';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { AttitudeScoreComponent } from './attitude-score/attitude-score.component';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
-import { SystemRole,ToDoListType } from 'src/app/_core/enum/system';
+import { PeriodType, SystemRole,ToDoListType } from 'src/app/_core/enum/system';
 import { AttitudeScoreL2Component } from './attitude-score-l2/attitude-score-l2.component';
 
 @Component({
@@ -42,7 +42,7 @@ export class TodolistComponent implements OnInit {
     const index = args.selectedIndex + 1;
     switch (index) {
       case SystemRole.L0:
-      this.loadData();
+      this.loadDataL0();
       break;
       case SystemRole.L1:
         this.loadDataL1L2();
@@ -62,13 +62,14 @@ export class TodolistComponent implements OnInit {
   getGridTemplate(index): TemplateRef<any> {
    return this.Gridtemplates.toArray()[index - 1];
   }
-  loadData() {
-    this.service.getAll().subscribe(data => {
+  loadDataL0() {
+    this.todolistService.l0().subscribe(data => {
       this.gridData = data;
     });
   }
+
   loadDataL1L2() {
-    this.todolistService.getAllObjectiveByL1L2().subscribe(data => {
+    this.todolistService.l1().subscribe(data => {
       this.gridData = data;
     });
   }
@@ -102,6 +103,7 @@ export class TodolistComponent implements OnInit {
   openSelfScoreModalComponent(data) {
     const modalRef = this.modalService.open(SelfScoreComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.periodTypeCode = PeriodType.Monthly;
     modalRef.result.then((result) => {
     }, (reason) => {
     });

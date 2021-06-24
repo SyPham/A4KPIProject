@@ -1,4 +1,5 @@
-﻿using ScoreKPI.Models.Interface;
+﻿using ScoreKPI.Models;
+using ScoreKPI.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,5 +37,13 @@ namespace ScoreKPI.DTO
         public string Result1OfMonth { get; set; }
         public string Result2OfMonth { get; set; }
         public string Result3OfMonth { get; set; }
+        public object Months { get; set; }
+    }
+    public class SelfScoreDto
+    {
+
+        public List<string> ObjectiveList { get; set; }
+        public string ResultOfMonth { get; set; }
+        public int Month { get; set; }
     }
 }

@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { AlertifyService } from '../_service/alertify.service';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../_service/authentication.service';
+import { Authv2Service } from '../_service/authv2.service';
 
 @Injectable()
 export class BasicAuthInterceptor implements HttpInterceptor {
     constructor(
         private alertify: AlertifyService
-        , private authService: AuthenticationService,
+        , private authService: Authv2Service,
         private router: Router
     ) { }
     private handleError(error: HttpErrorResponse) {
@@ -47,12 +47,12 @@ export class BasicAuthInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+      const accessToken = localStorage.getItem('token');
+
         // add authorization header with basic auth credentials if available
         if (localStorage.getItem('token')) {
             request = request.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
+              setHeaders: { Authorization: `Bearer ${accessToken}` },
             });
         }
         // return next.handle(request);

@@ -9,9 +9,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { PeriodService } from 'src/app/_core/_service/period.service';
-import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { DatePipe } from '@angular/common';
-import { PeriodReportTimeService } from 'src/app/_core/_service/period.report.time.service';
 import { PeriodType } from 'src/app/_core/_model/period-type';
 import { PeriodTypeService } from 'src/app/_core/_service/period-type.service';
 
@@ -23,7 +21,8 @@ import { PeriodTypeService } from 'src/app/_core/_service/period-type.service';
 })
 export class PeriodTypeComponent extends BaseComponent implements OnInit {
   data: PeriodType[] = [];
-  periodReportTimeData: PeriodReportTime[] = [];
+  periodItem: PeriodType;
+  periodData: Period[] = [];
   password = '';
   modalReference: NgbModalRef;
   fields: object = { text: 'name', value: 'id' };
@@ -35,12 +34,16 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
   periodUpdate: PeriodType;
   setFocus: any;
   locale = localStorage.getItem('lang');
-  periodId: any;
+  periodTypeId: any;
   reportTime: any;
-  model: PeriodReportTime;
+  model: Period;
+  monthValueData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  value: number;
+  title: string;
+  months: any;
   constructor(
     private service: PeriodTypeService,
-    private periodReportTimeService: PeriodReportTimeService,
+    private periodService: PeriodService,
     public modalService: NgbModal,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
@@ -57,15 +60,16 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
     this.setFocus = args.column; // Get the column from Double click event
   }
   actionBegin(args) {
+    console.log(args);
     if (args.requestType === 'beginEdit') {
       const item = args.rowData;
     }
     if (args.requestType === 'save' && args.action === 'add') {
       this.periodCreate = {
         id: 0,
-        name: args.data.name ,
-        code: args.data.code ,
-        position: args.data.position ,
+        name: args.data.name,
+        code: args.data.code,
+        position: args.data.position,
       };
 
       if (args.data.name === undefined) {
@@ -73,15 +77,16 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
         args.cancel = true;
         return;
       }
+      console.log('create data: ', args.data);
 
-      this.create();
+      // this.create();
     }
     if (args.requestType === 'save' && args.action === 'edit') {
       this.periodUpdate = {
-        id: args.data.id ,
-        name: args.data.name ,
-        code: args.data.code ,
-        position: args.data.position ,
+        id: args.data.id,
+        name: args.data.name,
+        code: args.data.code,
+        position: args.data.position,
       };
       this.update();
     }
@@ -114,9 +119,9 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
     });
   }
 
-  loadPeriodReportTimeData() {
-    this.periodReportTimeService.getAll().subscribe(data => {
-      this.periodReportTimeData = data;
+  loadPeriodData() {
+    this.periodService.getAllByPeriodTypeId(this.periodTypeId).subscribe(data => {
+      this.periodData = data;
     });
   }
   delete(id) {
@@ -126,7 +131,7 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
           this.alertify.success(MessageConstants.DELETED_OK_MSG);
           this.loadData();
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
@@ -141,7 +146,7 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
           this.loadData();
           this.periodCreate = {} as PeriodType;
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
 
       },
@@ -175,39 +180,82 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
 
   }
   showModal(name, value) {
-    this.periodId = +value.id;
-    this.loadPeriodReportTimeData();
-    this.modalReference = this.modalService.open(name, { size: 'lg' });
+    this.periodItem = value;
+    this.periodTypeId = +value.id;
+    this.loadPeriodData();
+    this.modalReference = this.modalService.open(name, { size: 'xl' });
+  }
+  initialModel() {
+    this.months = null,
+    this.reportTime = new Date();
+    this.model = {
+      id: 0,
+      periodTypeId: this.periodTypeId,
+      reportTime: this.datePipe.transform(this.reportTime, "YYYY-MM-dd HH:mm"),
+      modifiedBy: null,
+      createdTime: this.datePipe.transform(new Date(), "YYYY-MM-dd HH:mm"),
+      modifiedTime: null,
+      value: 0,
+      title: null,
+      months: null,
+    }
+  }
+
+  updateModel(data) {
+    this.months = data.months?.split(',').map(x=>+x),
+    this.reportTime =  new Date(data.reportTime);
+    this.model = {
+      id: data.id,
+      periodTypeId: this.periodTypeId,
+      reportTime: data.reportTime,
+      modifiedBy: data.modifiedBy,
+      createdTime: data.createdTime,
+      modifiedTime: data.modifiedTime,
+      value: data.value,
+      title: data.title,
+      months: this.months,
+    }
   }
   actionBeginPeriodsGrid(args) {
+    if (args.requestType === 'cancel') {
+      this.initialModel();
+    }
+    if (args.requestType === 'add') {
+      this.initialModel();
+    }
     if (args.requestType === 'beginEdit') {
       const item = args.rowData;
-      this.reportTime = this.datePipe.transform(item?.startTime, "YYYY-MM-dd HH:mm");
+      this.updateModel(item);
     }
     if (args.requestType === 'save') {
       if (args.action === 'add') {
+        const data = args.data;
         this.model = {
-          id: null,
-          periodId: this.periodId,
+          id: 0,
+          periodTypeId: this.periodTypeId,
           reportTime: this.datePipe.transform(this.reportTime, "YYYY-MM-dd HH:mm"),
-          createdBy:0,
           modifiedBy: null,
           createdTime: this.datePipe.transform(new Date(), "YYYY-MM-dd HH:mm"),
           modifiedTime: null,
-          period: null,
+          value: data.value,
+          title: data.title,
+          months: this.months.join(),
         }
+
         this.createPeriodReportTime();
       }
       if (args.action === 'edit') {
+        const data = args.data;
         this.model = {
-          id: 0,
-          periodId: this.periodId,
+          id: data.id,
+          periodTypeId: this.periodTypeId,
           reportTime: this.datePipe.transform(this.reportTime, "YYYY-MM-dd HH:mm"),
-          createdBy:0,
-          modifiedBy: null,
-          createdTime: this.datePipe.transform(new Date(), "YYYY-MM-dd HH:mm"),
-          modifiedTime: null,
-          period: null,
+          modifiedBy: data.modifiedBy,
+          createdTime: data.createdTime,
+          modifiedTime: data.modifiedTime,
+          value: data.value,
+          title: data.title,
+          months: this.months.join(),
         }
         this.updatePeriodReportTime();
       }
@@ -218,13 +266,13 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
   }
 
   deletePeriodReportTime(id) {
-    this.periodReportTimeService.delete(id).subscribe(
+    this.periodService.delete(id).subscribe(
       (res) => {
         if (res.success === true) {
           this.alertify.success(MessageConstants.DELETED_OK_MSG);
-          this.loadData();
+          this.loadPeriodData();
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
@@ -232,13 +280,14 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
 
   }
   createPeriodReportTime() {
-    this.periodReportTimeService.add(this.model).subscribe(
+    this.periodService.add(this.model).subscribe(
       (res) => {
         if (res.success === true) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.periodCreate = {} as PeriodType;
+          this.initialModel();
+          this.loadPeriodData();
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
 
       },
@@ -248,10 +297,11 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
     );
   }
   updatePeriodReportTime() {
-    this.periodReportTimeService.update(this.model).subscribe(
+    this.periodService.update(this.model).subscribe(
       (res) => {
         if (res.success === true) {
           this.alertify.success(MessageConstants.UPDATED_OK_MSG);
+          this.loadPeriodData();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }

@@ -1,8 +1,11 @@
 export interface KPIScore {
   id: number;
-  periodType: string;
   period: number;
   point: number;
-  objectiveId: number;
+  periodTypeId: number;
+  accountId: number;
   scoreBy: number;
+  createdTime: string;
+  modifiedTime: string | null;
+  periodTypeCode: string;
 }

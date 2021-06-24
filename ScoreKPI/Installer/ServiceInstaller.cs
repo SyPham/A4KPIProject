@@ -35,7 +35,7 @@ namespace ScoreKPI.Installer
             services.AddScoped<IContributionService, ContributionService>();
             services.AddScoped<IOCService, OCService>();
             services.AddScoped<IPeriodTypeService, PeriodTypeService>();
-
+            services.AddScoped<IAccountGroupAccountService, AccountGroupAccountService>();
         }
     }
 }

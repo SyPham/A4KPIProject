@@ -25,6 +25,7 @@ namespace ScoreKPI.Services
         Task<object> MappingUserOC(OcUserDto OcUserDto);
         Task<object> MappingRangeUserOC(OcUserDto model);
         Task<object> RemoveUserOC(OcUserDto OcUserDto);
+      
     }
     public class OCService : ServiceBase<OC, OCDto>, IOCService
     {
@@ -169,5 +170,6 @@ namespace ScoreKPI.Services
                 throw;
             }
         }
+       
     }
 }

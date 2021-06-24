@@ -130,7 +130,7 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
 
   // api
   loadData() {
-    this.service.getAll().subscribe(data => {
+    this.service.getAllKPIObjectiveByAccountId().subscribe(data => {
       this.data = data;
     });
   }
@@ -181,9 +181,15 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
         if (res.success === true) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
           this.loadData();
-          this.model = {} as ObjectiveRequest;
           this.topic = '';
           this.accountIdList = [];
+          this.model = {
+            id: 0,
+            topic: "",
+            status: false,
+            date: new Date().toLocaleDateString(),
+            accountIdList: this.accountIdList
+          };
           this.modalService.dismissAll();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);

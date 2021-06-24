@@ -28,6 +28,7 @@ namespace ScoreKPI.Data
         public DbSet<KPI> KPIs { get; set; }
         public DbSet<ResultOfMonth> ResultOfMonth { get; set; }
         public DbSet<AccountGroupPeriod> AccountGroupPeriods { get; set; }
+        public DbSet<AccountGroupAccount> AccountGroupAccount { get; set; }
         public DbSet<KPIScore> KPIScore { get; set; }
         public DbSet<AttitudeScore> AttitudeScore { get; set; }
         public DbSet<Comment> Comments { get; set; }
