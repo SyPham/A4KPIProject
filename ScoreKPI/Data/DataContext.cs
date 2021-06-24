@@ -36,7 +36,9 @@ namespace ScoreKPI.Data
         public DbSet<OC> OCs { get; set; }
         public DbSet<OCUser> OCUsers { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {  }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+
+        }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             IEnumerable<EntityEntry> modified = ChangeTracker.Entries()

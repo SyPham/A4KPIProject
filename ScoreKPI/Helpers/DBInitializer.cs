@@ -128,17 +128,17 @@ namespace ScoreKPI.Helpers
             #endregion
 
             #region Tài Khoản
-            if (!(_context.Accounts.Any()))
-            {
-                var supper = _context.AccountTypes.FirstOrDefault(x => x.Code.Equals("SYSTEM"));
-                var user = _context.AccountTypes.FirstOrDefault(x => x.Code.Equals("MEMBER"));
-                var account1 = new Account { Username = "admin", Password = "1", AccountTypeId = supper.Id };
-                var account2 = new Account { Username = "user", Password = "1", AccountTypeId = user.Id };
-                _context.Accounts.AddRange(new List<Account> {account1,
-                   account2
-                });
-                _context.SaveChanges();
-            }
+            //if (!(_context.Accounts.Any()))
+            //{
+            //    var supper = _context.AccountTypes.FirstOrDefault(x => x.Code.Equals("SYSTEM"));
+            //    var user = _context.AccountTypes.FirstOrDefault(x => x.Code.Equals("MEMBER"));
+            //    var account1 = new Account { Username = "admin", Password = "1", AccountTypeId = supper.Id };
+            //    var account2 = new Account { Username = "user", Password = "1", AccountTypeId = user.Id };
+            //    _context.Accounts.AddRange(new List<Account> {account1,
+            //       account2
+            //    });
+            //    _context.SaveChanges();
+            //}
 
             #endregion
 

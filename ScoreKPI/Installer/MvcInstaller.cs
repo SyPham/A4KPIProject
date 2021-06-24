@@ -29,9 +29,9 @@ namespace ScoreKPI.Installer
             services.AddScoped<DbFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-            // var sp = services.BuildServiceProvider();
-            // var context = (DataContext)sp.GetService(typeof(DataContext));
-            // Helpers.DBInitializer.Seed(context);
+            //var sp = services.BuildServiceProvider();
+            //var context = (DataContext)sp.GetService(typeof(DataContext));
+            //Helpers.DBInitializer.Seed(context);
 
             services
                 .AddAutoMapper(typeof(Startup))

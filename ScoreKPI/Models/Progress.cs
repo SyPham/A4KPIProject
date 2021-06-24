@@ -15,6 +15,5 @@ namespace ScoreKPI.Models
         public int Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }
-        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

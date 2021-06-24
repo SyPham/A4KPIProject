@@ -28,6 +28,6 @@ namespace ScoreKPI.Models
         public virtual PeriodType PeriodType { get; set; }
 
         [ForeignKey(nameof(ScoreBy))]
-        public virtual Account AccountScore { get; set; }
+        public virtual Account AccountScored { get; set; }
     }
 }
