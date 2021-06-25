@@ -17,6 +17,13 @@ namespace ScoreKPI.Models
             Code = code;
         }
 
+        public AccountType(int id, string name, string code)
+        {
+            Name = name;
+            Code = code;
+            Id = id;
+        }
+
         [Key]
         public int Id { get; set; }
         [MaxLength(100)]

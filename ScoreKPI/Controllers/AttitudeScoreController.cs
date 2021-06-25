@@ -19,10 +19,11 @@ namespace ScoreKPI.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult> GetFisrtByObjectiveIdAndScoreBy(int objectiveId, int scoreBy)
+        public async Task<ActionResult> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType)
         {
-            return Ok(await _service.GetFisrtByObjectiveId(objectiveId, scoreBy));
+            return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId, period, scoreType));
         }
+       
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {

@@ -18,6 +18,9 @@ namespace ScoreKPI.Models
         public int PeriodTypeId { get; set; }
         public int AccountId { get; set; }
         public int ScoreBy { get; set; }
+        [MaxLength(50)]
+        public string ScoreType { get; set; }
+
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
         [ForeignKey(nameof(PeriodTypeId))]

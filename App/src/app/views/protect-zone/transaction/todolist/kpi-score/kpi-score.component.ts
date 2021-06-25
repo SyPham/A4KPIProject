@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { UtilitiesService } from './../../../../../_core/_service/utilities.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +18,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
-import { PeriodType } from 'src/app/_core/enum/system';
+import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-kpi-score',
   templateUrl: './kpi-score.component.html',
@@ -25,10 +26,11 @@ import { PeriodType } from 'src/app/_core/enum/system';
 })
 export class KpiScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: ToDoListL1L2;
+  @Input() data: any;
   @Input() periodTypeCode: PeriodType;
+  @Input() scoreType: SystemScoreType;
   gridData: object;
-  toolbarOptions = ['Add', 'Delete', 'Search'];
+  toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   model: ToDoList;
@@ -40,6 +42,8 @@ export class KpiScoreComponent implements OnInit {
   filterSettings = { type: 'Excel' };
   content = '';
   commentModel: Comment;
+  quarterlySettingsData = [];
+  columns = [];
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
@@ -53,44 +57,62 @@ export class KpiScoreComponent implements OnInit {
   ngOnInit(): void {
     this.kpiScoreModel = {
       id: 0,
-      periodTypeId: 0,
-      periodTypeCode: this.periodTypeCode,
-      period: this.utilitiesService.getQuarter(new Date()),
+      periodTypeId: this.data.periodTypeId,
+      period: this.data.period,
       point: this.point,
       scoreBy: +JSON.parse(localStorage.getItem('user')).id,
       modifiedTime: null,
       createdTime: new Date().toDateString(),
-      accountId: +JSON.parse(localStorage.getItem('user')).id
+      accountId: this.data.id,
+      scoreType: this.scoreType
+
     }
     this.commentModel = {
       id: 0,
       content: this.content,
       createdBy: +JSON.parse(localStorage.getItem('user')).id,
-      objectiveId: this.data.id,
+      accountId: this.data.id,
       modifiedBy: null,
       createdTime: new Date().toDateString(),
-      modifiedTime: null
+      modifiedTime: null,
+      period: this.data.period,
+      periodTypeId: this.data.periodTypeId,
+      scoreType: this.scoreType
     }
 
+    this.getQuarterlySetting();
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
     this.getFisrtByAccountId();
     this.getFisrtCommentByObjectiveId();
   }
-  getMonthListInCurrentQuarter() {
-    const currentQuarter = this.utilitiesService.getQuarter(new Date());
-    const listMonthOfEachQuarter = [
-        ["Result of Feb.","Result of Mar.","Result of Apr."],
-        ["Result of May.","Result of Jun.","Result of Jul."],
-        ["Result of Aug.","Result of Sep.","Result of Oct."],
-        ["Result of Nov.","Result of Dec.","Result of Jan."]
-    ];
-    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[currentQuarter - 1];
+  getMonthListInCurrentQuarter(index) {
+
+    const listMonthOfEachQuarter =
+        [
+        "Result of Jan.",
+        "Result of Feb.","Result of Mar.","Result of Apr.",
+        "Result of May.","Result of Jun.","Result of Jul.",
+        "Result of Aug.","Result of Sep.","Result of Oct.",
+        "Result of Nov.","Result of Dec."
+       ]
+    ;
+    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[index - 1];
     return listMonthOfCurrentQuarter;
   }
+  getQuarterlySetting() {
+    this.quarterlySettingsData = this.data.settings || [];
+    this.columns =[];
+    for (const month of this.quarterlySettingsData) {
+      this.columns.push({ field: `${month}`,
+      headerText: this.getMonthListInCurrentQuarter(month),
+      month: month
+     })
+    }
+  }
   loadData() {
-    this.service.getAllInCurrentQuarterByAccountGroup(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -100,13 +122,23 @@ export class KpiScoreComponent implements OnInit {
     });
   }
   getFisrtByAccountId() {
-    this.kpiScoreService.getFisrtByAccountId(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.kpiScoreService.getFisrtByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period,
+      this.scoreType
+    ).subscribe(data => {
       this.point = data?.point;
       this.kpiScoreModel.id = data?.id;
     });
   }
   getFisrtCommentByObjectiveId() {
-    this.commentService.getFisrtByObjectiveId(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.commentService.getFisrtByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period,
+      this.scoreType
+    ).subscribe(data => {
       this.content = data?.content;
       this.commentModel.id = data?.id;
     });
@@ -117,18 +149,23 @@ export class KpiScoreComponent implements OnInit {
     });
   }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
-    const data = args.data as ToDoListOfQuarter;
+    const data = args.data as any;
     const fields = ['month'];
-    if (fields.includes(args.column.field)) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
+    for (const month of this.quarterlySettingsData) {
+      if (('' + month).includes(args.column.field)) {
+        (args.cell as any).innerText = data.resultOfMonth.filter(x=>x.month === month)[0]?.title || "N/A";
+      }
     }
-    if (args.column.field.includes("resultOfMonth")) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
-    }
+    // if (fields.includes(args.column.field)) {
+    //   args.rowSpan = (this.gridData as any).filter(
+    //     item => item.month === data.month
+    //   ).length;
+    // }
+    // if (args.column.field.includes("resultOfMonth")) {
+    //   args.rowSpan = (this.gridData as any).filter(
+    //     item => item.month === data.month
+    //   ).length;
+    // }
   }
 
   addKPIScore() {

@@ -5,7 +5,7 @@ export interface KPIScore {
   periodTypeId: number;
   accountId: number;
   scoreBy: number;
+  scoreType: string;
   createdTime: string;
   modifiedTime: string | null;
-  periodTypeCode: string;
 }

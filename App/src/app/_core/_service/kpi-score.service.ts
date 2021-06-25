@@ -15,9 +15,14 @@ export class KPIScoreService extends CURDService<KPIScore> {
   {
     super(http,"KPIScore", utilitiesService);
   }
-  getFisrtByAccountId(scoreBy): Observable<KPIScore> {
-    return this.http
-      .get<KPIScore>(`${this.base}${this.entity}/GetFisrtByAccountId?scoreby=${scoreBy}`, {})
-      .pipe(catchError(this.handleError));
+
+  getFisrtSelfScoreByAccountId(accountId, periodTypeId, period, scoreType): Observable<KPIScore> {
+    const apiUrl =`${this.base}${this.entity}/GetFisrtSelfScoreByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
+    return this.http.get<KPIScore>(apiUrl, {}).pipe(catchError(this.handleError));
+  }
+  // Lấy điểm đã chấm cho user
+  getFisrtByAccountId(accountId, periodTypeId, period, scoreType): Observable<KPIScore> {
+    const apiUrl =`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
+    return this.http.get<KPIScore>(apiUrl, {}).pipe(catchError(this.handleError));
   }
 }

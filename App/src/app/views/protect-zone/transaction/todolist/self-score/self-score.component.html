@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body p-0">
   <ejs-grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
-  [toolbar]='toolbarOptions' (queryCellInfo)='queryCellInfoEvent($event)' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
+  [toolbar]='toolbarOptions' (queryCellInfo)='queryCellInfoEvent($event)' [pageSettings]='pageSettings' [allowExcelExport]='true'>
   <e-columns>
     <e-column field='month' headerText='Month' textAlign='Center' width=80 type='number'></e-column>
     <e-column field='objective' headerText='Your Objective' type='string'>

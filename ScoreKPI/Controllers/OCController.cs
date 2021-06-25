@@ -38,12 +38,7 @@ namespace ScoreKPI.Controllers
             return StatusCodeResult(await _service.AddAsync(model));
         }
 
-        [HttpGet("{OCname}")]
-        public async Task<IActionResult> GetUserByOCname(string OCname)
-        {
-            var result = await _service.GetUserByOCname(OCname);
-            return Ok(result);
-        }
+       
         [HttpGet("{ocID}")]
         public async Task<IActionResult> GetUserByOcID(int ocID)
         {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -18,18 +19,20 @@ namespace ScoreKPI.Services
     public interface IContributionService: IServiceBase<Contribution, ContributionDto>
     {
         Task<List<ContributionDto>> GetAllByObjectiveId(int objectiveId);
-        Task<ContributionDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
+        Task<ContributionDto> GetFisrtByAccountId(int accountId, int periodTypeId);
     }
     public class ContributionService : ServiceBase<Contribution, ContributionDto>, IContributionService
     {
         private OperationResult operationResult;
 
         private readonly IRepositoryBase<Contribution> _repo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public ContributionService(
-            IRepositoryBase<Contribution> repo, 
+            IRepositoryBase<Contribution> repo,
+            IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork,
             IMapper mapper, 
             MapperConfiguration configMapper
@@ -37,14 +40,19 @@ namespace ScoreKPI.Services
             : base(repo, unitOfWork, mapper,  configMapper)
         {
             _repo = repo;
+            _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
         }
-        public async Task<ContributionDto> GetFisrtByObjectiveId(int objectiveId, int createdBy)
+        public async Task<ContributionDto> GetFisrtByAccountId(int accountId, int periodTypeId)
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
-            return await _repo.FindAll(x => x.Period == currrentQuarter && x.CreatedBy == createdBy).ProjectTo<ContributionDto>(_configMapper).FirstOrDefaultAsync();
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int createdBy = JWTExtensions.GetDecodeTokenById(accessToken);
+            var date = DateTime.Today;
+            var month = date.Month;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
+            return await _repo.FindAll(x => x.PeriodTypeId == periodTypeId && x.CreatedTime.Year == DateTime.Today.Year && x.Period == currentHalfYear && accountId == x.AccountId && createdBy == x.CreatedBy && x.AccountId != createdBy).ProjectTo<ContributionDto>(_configMapper).FirstOrDefaultAsync();
         }
         public async Task<List<ContributionDto>> GetAllByObjectiveId(int objectiveId)
         {

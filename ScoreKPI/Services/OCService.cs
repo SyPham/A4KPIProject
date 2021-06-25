@@ -21,7 +21,6 @@ namespace ScoreKPI.Services
         // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
         // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
         Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
-        Task<List<AccountDto>> GetUserByOCname(string name);
         Task<List<OcUserDto>> GetUserByOcID(int ocID);
         Task<object> MappingUserOC(OcUserDto OcUserDto);
         Task<object> MappingRangeUserOC(OcUserDto model);
@@ -62,10 +61,6 @@ namespace ScoreKPI.Services
             return lists;
         }
 
-        public async Task<List<AccountDto>> GetUserByOCname(string name)
-        {
-            return await _repoAccount.FindAll().Where(x=> x.RoleOC.Contains(name.ToUpper())).ProjectTo<AccountDto>(_configMapper).ToListAsync();
-        }
 
         public async Task<object> MappingUserOC(OcUserDto OcUserDto)
         {
@@ -78,7 +73,7 @@ namespace ScoreKPI.Services
                 });
                 try
                 {
-                   await _repoOcUser.SaveAll();
+                   await _unitOfWork.SaveChangeAsync();
                     return new
                     {
                         status = true,
@@ -141,7 +136,7 @@ namespace ScoreKPI.Services
                 _repoOcUser.Remove(item);
                 try
                 {
-                    await _repoOcUser.SaveAll();
+                    await _unitOfWork.SaveChangeAsync();
                     return new
                     {
                         status = true,
@@ -208,7 +203,7 @@ namespace ScoreKPI.Services
                             UserID = item,
                             OCID = model.OCID
                         });
-                        await _repoOcUser.SaveAll();
+                        await _unitOfWork.SaveChangeAsync();
                     } else
                     {
                         return new

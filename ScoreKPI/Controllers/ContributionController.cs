@@ -15,9 +15,9 @@ namespace ScoreKPI.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult> GetFisrtByObjectiveId(int objectiveId, int createdBy)
+        public async Task<ActionResult> GetFisrtByAccountId(int accountId, int periodTypeId)
         {
-            return Ok(await _service.GetFisrtByObjectiveId(objectiveId, createdBy));
+            return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()

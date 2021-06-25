@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using NetUtility;
+using OfficeOpenXml;
 using ScoreKPI.DTO;
 using ScoreKPI.Helpers;
 using ScoreKPI.Services;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ScoreKPI.Controllers
@@ -10,10 +16,16 @@ namespace ScoreKPI.Controllers
     public class ToDoListController : ApiControllerBase
     {
         private readonly IToDoListService _service;
+        private readonly IAccountService _serviceAccount;
+        private readonly IObjectiveService _serviceObjective;
 
-        public ToDoListController(IToDoListService service)
+        public ToDoListController(IToDoListService service,
+            IAccountService serviceAccount,
+            IObjectiveService serviceObjective)
         {
             _service = service;
+            _serviceAccount = serviceAccount;
+            _serviceObjective = serviceObjective;
         }
         /// <summary>
         /// Lấy danh sách cho KPI Score
@@ -42,18 +54,63 @@ namespace ScoreKPI.Controllers
             return Ok(await _service.GetAllKPISelfScoreByObjectiveId(objectiveId, accountId));
         }
         [HttpGet]
-        public async Task<ActionResult> L0()
+        public async Task<ActionResult> GetAllKPIScoreL1L2ByAccountId(int accountId)
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"];
-            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            return Ok(await _service.L0(accountId));
+         
+            return Ok(await _service.GetAllKPIScoreL1L2ByAccountId(accountId));
         }
         [HttpGet]
-        public async Task<ActionResult> L1()
+        public async Task<ActionResult> GetAllAttitudeScoreL1L2ByAccountId(int accountId)
+        {
+
+            return Ok(await _service.GetAllAttitudeScoreL1L2ByAccountId(accountId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetQuarterlySetting()
+        {
+            return Ok(await _service.GetQuarterlySetting());
+        }
+        [HttpGet]
+        public async Task<ActionResult> L0( DateTime currentTime)
         {
             var accessToken = HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            return Ok(await _service.L1(accountId));
+            return Ok(await _service.L0(accountId, currentTime));
+        }
+        [HttpGet]
+        public async Task<ActionResult> L1(DateTime currentTime)
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.L1(accountId, currentTime));
+        }
+        [HttpGet]
+        public async Task<ActionResult> L2(DateTime currentTime)
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.L2(accountId, currentTime));
+        }
+        [HttpGet]
+        public async Task<ActionResult> FHO()
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.FHO(accountId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GHR(DateTime currentTime)
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.GHR(accountId, currentTime));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GM(DateTime currentTime)
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.GM(accountId, currentTime));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllObjectiveByL1L2()
@@ -136,6 +193,107 @@ namespace ScoreKPI.Controllers
         {
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
+        [HttpPost]
+        public async Task<ActionResult> Import([FromForm] IFormFile file2)
+        {
+            IFormFile file = Request.Form.Files["UploadedFile"];
+            object uploadBy = Request.Form["UploadBy"];
+            var datasList = new List<ImportExcelFHO>();
+            //var datasList2 = new List<UploadDataVM2>();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
+            if ((file != null) && (file.Length > 0) && !string.IsNullOrEmpty(file.FileName))
+            {
+                string fileName = file.FileName;
+                int userid = uploadBy.ToInt();
+                using (var package = new ExcelPackage(file.OpenReadStream()))
+                {
+                    var currentSheet = package.Workbook.Worksheets;
+                    var workSheet = currentSheet.First();
+                    var noOfCol = workSheet.Dimension.Columns;
+                    var noOfRow = workSheet.Dimension.Rows;
+
+                    for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
+                    {
+                        datasList.Add(new ImportExcelFHO()
+                        {
+                            KPIObjective = workSheet.Cells[rowIterator, 1].Value.ToSafetyString(),
+                            UserList = workSheet.Cells[rowIterator, 2].Value.ToSafetyString(),
+                        });
+                    }
+                }
+                var list = new List<ObjectiveDto>();
+                foreach (var item in datasList)
+                {
+                    var accountIds = new List<int>();
+                    if (item.UserList.IsNullOrEmpty() == false)
+                    {
+                        var accountList = item.UserList.Split(',').Select(x=>x.Trim()).ToArray();
+                        foreach (var username in accountList)
+                        {
+                            var account = await _serviceAccount.GetByUsername(username);
+                            if (account != null)
+                            {
+                                accountIds.Add(account.Id);
+                            }
+                        }
+                    }
+                    list.Add(new ObjectiveDto { Topic = item.KPIObjective, CreatedBy = userid, AccountIdList = accountIds });
+                }
+                var check = await _serviceObjective.AddRangeAsync(list);
+                if (check.Success == true)
+                    return Ok();
+                else
+                {
+                    return BadRequest(check);
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ExcelExport()
+        {
+            string filename = "FHOTemplate.xlsx";
+            if (filename == null)
+                return Content("filename not present");
+
+            var path = Path.Combine(
+                           Directory.GetCurrentDirectory(),
+                           "wwwroot/excelTemplate", filename);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/octet-stream"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
     }
 }

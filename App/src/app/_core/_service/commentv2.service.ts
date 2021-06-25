@@ -14,9 +14,9 @@ export class Commentv2Service extends CURDService<Comment> {
   {
     super(http,"Comment", utilitiesService);
   }
-  getFisrtByObjectiveId(objectiveId, createdBy): Observable<Comment> {
-    return this.http
-      .get<Comment>(`${this.base}${this.entity}/GetFisrtByObjectiveId?objectiveId=${objectiveId}&createdBy=${createdBy}`, {})
-      .pipe(catchError(this.handleError));
+
+  getFisrtByAccountId(accountId, periodTypeId, period, scoreType): Observable<Comment> {
+    const apiUrl =`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
+    return this.http.get<Comment>(apiUrl, {}).pipe(catchError(this.handleError));
   }
 }

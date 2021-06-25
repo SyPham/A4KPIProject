@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -18,7 +19,7 @@ namespace ScoreKPI.Services
     public interface ICommentService: IServiceBase<Comment, CommentDto>
     {
         Task<List<CommentDto>> GetAllByObjectiveId(int objectiveId);
-        Task<CommentDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
+        Task<CommentDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType);
     }
     public class CommentService : ServiceBase<Comment, CommentDto>, ICommentService
     {
@@ -27,11 +28,13 @@ namespace ScoreKPI.Services
         private readonly IRepositoryBase<Comment> _repo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         public CommentService(
             IRepositoryBase<Comment> repo, 
             IUnitOfWork unitOfWork,
-            IMapper mapper, 
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
             MapperConfiguration configMapper
             )
             : base(repo, unitOfWork, mapper,  configMapper)
@@ -39,12 +42,25 @@ namespace ScoreKPI.Services
             _repo = repo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
-        public async Task<CommentDto> GetFisrtByObjectiveId(int objectiveId, int createdBy)
+       
+        public async Task<CommentDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType)
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
-            return await _repo.FindAll(x => x.Period == currrentQuarter && x.CreatedBy == createdBy).ProjectTo<CommentDto>(_configMapper).FirstOrDefaultAsync();
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int scoreBy = JWTExtensions.GetDecodeTokenById(accessToken);
+
+            return await _repo.FindAll(x =>
+                                        x.ScoreType == scoreType
+                                        && x.PeriodTypeId == periodTypeId
+                                        && x.CreatedTime.Year == DateTime.Today.Year
+                                        && x.Period == period
+                                        && accountId == x.AccountId
+                                        && scoreBy == x.CreatedBy
+                                        && x.AccountId != scoreBy)
+                                    .ProjectTo<CommentDto>(_configMapper)
+                                    .FirstOrDefaultAsync();
         }
         public async Task<List<CommentDto>> GetAllByObjectiveId(int objectiveId)
         {

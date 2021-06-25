@@ -14,7 +14,7 @@ import { KPIScore } from 'src/app/_core/_model/kpi-score';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { KPIService } from 'src/app/_core/_service/kpi.service';
 import { KPI } from 'src/app/_core/_model/kpi';
-import { PeriodType } from 'src/app/_core/enum/system';
+import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-self-score',
   templateUrl: './self-score.component.html',
@@ -22,10 +22,11 @@ import { PeriodType } from 'src/app/_core/enum/system';
 })
 export class SelfScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: Objective;
+  @Input() data: any;
   @Input() periodTypeCode: PeriodType;
+  @Input() scoreType: SystemScoreType;
   gridData: object;
-  toolbarOptions = ['Add', 'Delete', 'Search'];
+  toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   model: ToDoList;
@@ -47,19 +48,19 @@ export class SelfScoreComponent implements OnInit {
   ngOnInit(): void {
     this.kpiScoreModel = {
       id: 0,
-      periodTypeId: 0,
-      periodTypeCode: PeriodType.Monthly,
-      period: this.utilitiesService.getQuarter(new Date()),
+      periodTypeId: this.data.periodTypeId,
+      period: this.data.period,
       point: this.point,
       scoreBy: +JSON.parse(localStorage.getItem('user')).id,
       modifiedTime: null,
       createdTime: new Date().toDateString(),
-      accountId: +JSON.parse(localStorage.getItem('user')).id
+      accountId: +JSON.parse(localStorage.getItem('user')).id,
+      scoreType: this.scoreType
     }
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
-    this.getFisrtByAccountId();
+    this.getFisrtSelfScoreByAccountId();
   }
   loadData() {
     this.service.getAllKPISelfScoreByObjectiveId(this.data.id).subscribe(data => {
@@ -71,8 +72,13 @@ export class SelfScoreComponent implements OnInit {
       this.kpiScoreData = data;
     });
   }
-  getFisrtByAccountId() {
-    this.kpiScoreService.getFisrtByAccountId(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+  getFisrtSelfScoreByAccountId() {
+    this.kpiScoreService.getFisrtSelfScoreByAccountId(
+      +JSON.parse(localStorage.getItem('user')).id,
+      this.data.periodTypeId,
+      this.data.period,
+      this.scoreType
+    ).subscribe(data => {
       this.point = data?.point;
       this.kpiScoreModel.id = data?.id;
     });
@@ -106,7 +112,7 @@ export class SelfScoreComponent implements OnInit {
       (res) => {
         if (res.success === true) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.getFisrtByAccountId();
+          this.getFisrtSelfScoreByAccountId();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }

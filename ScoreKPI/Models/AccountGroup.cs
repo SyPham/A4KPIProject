@@ -19,7 +19,6 @@ namespace ScoreKPI.Models
         public int ModifiedBy { get; set; }
         public DateTime CreatedTime { get ; set ; }
         public DateTime? ModifiedTime { get ; set ; }
-        public virtual ICollection<Account> Accounts { get; set; }
         public virtual ICollection<Period> Periods { get; set; }
     }
 }

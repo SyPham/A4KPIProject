@@ -5,5 +5,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>ScoreKPI</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>H:\a_2021\ScoreKPI\ScoreKPI\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

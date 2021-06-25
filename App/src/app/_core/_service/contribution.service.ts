@@ -14,9 +14,10 @@ export class ContributionService extends CURDService<Contribution> {
   {
     super(http,"Contribution", utilitiesService);
   }
-  getFisrtByObjectiveId(objectiveId, createdBy): Observable<Contribution> {
+
+  getFisrtByAccountId(accountId, periodTypeId): Observable<Contribution> {
     return this.http
-      .get<Contribution>(`${this.base}${this.entity}/GetFisrtByObjectiveId?objectiveId=${objectiveId}&createdBy=${createdBy}`, {})
+      .get<Contribution>(`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}`, {})
       .pipe(catchError(this.handleError));
   }
 }

@@ -44,6 +44,34 @@ export class UpdateResultComponent implements OnInit {
       createdBy: +JSON.parse(localStorage.getItem('user')).id,
     };
   }
+  getMonthText() {
+    const month = new Date().getMonth();
+    const listMonthOfEachQuarter =
+        [
+        "Result of Jan.",
+        "Result of Feb.","Result of Mar.","Result of Apr.",
+        "Result of May.","Result of Jun.","Result of Jul.",
+        "Result of Aug.","Result of Sep.","Result of Oct.",
+        "Result of Nov.","Result of Dec."
+       ]
+    ;
+    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[month];
+    return listMonthOfCurrentQuarter;
+  }
+  getTitleText() {
+    const month = new Date().getMonth();
+    const listMonthOfEachQuarter =
+        [
+        "Jan.",
+        "Feb.","Mar.","Apr.",
+        "May.","Jun.","Jul.",
+        "Aug.","Sep.","Oct.",
+        "Nov.","Dec."
+       ]
+    ;
+    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[month];
+    return listMonthOfCurrentQuarter;
+  }
   loadData() {
     this.todolistService.getAllByObjectiveId(this.data.id).subscribe(data => {
       this.gridData = data;

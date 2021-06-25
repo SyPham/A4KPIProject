@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NetUtility;
 using ScoreKPI.Constants;
@@ -13,38 +14,59 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
 namespace ScoreKPI.Services
 {
     public interface IToDoListService : IServiceBase<ToDoList, ToDoListDto>
     {
         Task<object> GetAllInCurrentQuarterByObjectiveIdAsync(int objectiveId);
         /// <summary>
-        /// Lấy tất cả KPI Objective của PIC
+        /// Lấy objective list PICS
         /// Nếu quyền là L1, L2, FHO, GHR, GM thì sẽ để trống
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        Task<object> L0(int accountId);
+        Task<object> L0(int accountId, DateTime currentTime);
         /// <summary>
-        /// Lấy tất cả KPI Objective của PIC
+        /// Chấm điểm KPI và điểm thái độ của những người mình đã giao nhiệm vụ
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        Task<object> L1(int accountId);
+        Task<object> L1(int accountId, DateTime currentTime);
 
         /// <summary>
-        /// Lấy tất cả KPI Objective của PIC
+        /// Lấy tất cả cấp dưới của mình để chấm điểm
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        Task<object> L2(int accountId);
+        Task<object> L2(int accountId, DateTime currentTime);
+        /// <summary>
+        /// Lấy tất cả user để chấm điểm( gán ở bảng oc user)
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        Task<object> GHR(int accountId, DateTime currentTime);
+        /// <summary>
+        /// Lấy tất cả user để chấm điểm( gán ở bảng oc user)
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        Task<object> FHO(int accountId);
+        /// <summary>
+        /// Lấy tất cả user để chấm điểm( gán ở bảng oc user)
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        Task<object> GM(int accountId, DateTime currentTime);
 
         Task<List<ToDoListDto>> GetAllByObjectiveIdAsync(int objectiveId);
         Task<List<ToDoListByLevelL1L2Dto>> GetAllInCurrentQuarterByAccountGroup(int accountId);
         Task<List<ToDoListByLevelL1L2Dto>> GetAllKPIScoreByAccountId(int accountId);
+        Task<object> GetAllKPIScoreL1L2ByAccountId(int accountId);
+        Task<object> GetAllAttitudeScoreL1L2ByAccountId(int accountId);
         Task<object> GetAllKPISelfScoreByObjectiveId(int objectiveId, int accountId);
         Task<object> GetAllObjectiveByL1L2();
+
+        Task<object> GetQuarterlySetting();
 
     }
     public class ToDoListService : ServiceBase<ToDoList, ToDoListDto>, IToDoListService
@@ -57,8 +79,11 @@ namespace ScoreKPI.Services
         private readonly IRepositoryBase<ResultOfMonth> _repoResultOfMonth;
         private readonly IRepositoryBase<KPIScore> _repoKPIScore;
         private readonly IRepositoryBase<PeriodType> _repoPeriodType;
+        private readonly IRepositoryBase<OCUser> _repoOCUser;
+        private readonly IRepositoryBase<OC> _repoOC;
         private readonly IRepositoryBase<Period> _repoPeriod;
         private readonly IRepositoryBase<AttitudeScore> _repoAttitudeScore;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
@@ -70,8 +95,11 @@ namespace ScoreKPI.Services
             IRepositoryBase<ResultOfMonth> repoResultOfMonth,
             IRepositoryBase<KPIScore> repoKPIScore,
             IRepositoryBase<PeriodType> repoPeriodType,
+            IRepositoryBase<OCUser> repoOCUser,
+            IRepositoryBase<OC> repoOC,
             IRepositoryBase<Period> repoPeriod,
             IRepositoryBase<AttitudeScore> repoAttitudeScore,
+            IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             MapperConfiguration configMapper
@@ -85,8 +113,11 @@ namespace ScoreKPI.Services
             _repoResultOfMonth = repoResultOfMonth;
             _repoKPIScore = repoKPIScore;
             _repoPeriodType = repoPeriodType;
+            _repoOCUser = repoOCUser;
+            _repoOC = repoOC;
             _repoPeriod = repoPeriod;
             _repoAttitudeScore = repoAttitudeScore;
+            _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
@@ -105,7 +136,7 @@ namespace ScoreKPI.Services
             {
                 return new List<ToDoListByLevelL1L2Dto> { };
             }
-            var monthlist = quarterly.Months.Split(',').Select(int.Parse).OrderBy(x=>x).ToList();
+            var monthlist = quarterly.Months.Split(',').Select(int.Parse).OrderBy(x => x).ToList();
 
             var data = await _repoObjective.FindAll().Select(x => new ToDoListByLevelL1L2Dto
             {
@@ -118,34 +149,37 @@ namespace ScoreKPI.Services
 
         }
 
-        public async Task<object> GetAllKPISelfScoreByObjectiveId(int objectiveId,int accountId)
+        public async Task<object> GetAllKPISelfScoreByObjectiveId(int objectiveId, int accountId)
         {
             int currentQuarter = (DateTime.Now.Month + 2) / 3;
             var quarterly = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly && x.Value == currentQuarter).FirstOrDefaultAsync();
             if (!quarterly.Months.Contains(','))
             {
-                return new List<SelfScoreDto> { };
+                return new List<dynamic> { };
             }
             var monthlist = quarterly.Months.Split(',').Select(int.Parse).OrderBy(x => x).ToList();
-            
-            var data = await _repo.FindAll(x=>x.CreatedBy == accountId).SelectMany(x=> 
-              x.Objective.ResultOfMonth.Where(x=>x.ObjectiveId == objectiveId)
+
+            var data = await _repo.FindAll(x => x.CreatedBy == accountId).SelectMany(x =>
+                x.Objective.ResultOfMonth.Where(x => x.ObjectiveId == objectiveId)
             ).ToListAsync();
             var model = (from a in monthlist
-                        join b in data.DistinctBy(x=>new { x.Month, x.ObjectiveId }).ToList() on a equals b.Month into ab
-                        from c in ab.DefaultIfEmpty()
-                        select new SelfScoreDto
-                        {
-                            Month = a,
-                            ObjectiveList = c != null ? c.Objective.ToDoList.Select(x => x.YourObjective).ToList() : new List<string>(),
-                            ResultOfMonth = c != null ? c.Title : "N/A",
-                        }).ToList();
-        
-            return  model;
+                         join b in data.DistinctBy(x => new { x.Month, x.ObjectiveId }).ToList() on a equals b.Month into ab
+                         from c in ab.DefaultIfEmpty()
+                         select new
+                         {
+                             Month = a,
+                             ObjectiveList = c != null ? c.Objective.ToDoList.Select(x => x.YourObjective).ToList() : new List<string>(),
+                             ResultOfMonth = c != null ? c.Title : "N/A",
+                             Period = quarterly.Value,
+                             PeriodTypeId = quarterly.PeriodTypeId
+                         }).ToList();
+
+            return model;
 
         }
         public async Task<object> GetAllInCurrentQuarterByObjectiveIdAsync(int objectiveId)
         {
+
             int quarter = (DateTime.Now.Month + 2) / 3;
             var listMonthOfQuarter = new List<int[]>()
             {
@@ -218,51 +252,535 @@ namespace ScoreKPI.Services
             return data1.Concat(data2).ToList();
         }
 
-        public async Task<object> L0(int accountId)
+        public async Task<object> L0(int accountId, DateTime currentTime)
         {
-            return await _repoObjective.FindAll().Where(x => x.PICs.Any(x => x.AccountId == accountId)).ProjectTo<ObjectiveDto>(_configMapper).ToListAsync();
+            var date = DateTime.Today;
+            var month = date.Month;
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+              .Select(x => new
+              {
+                  x.Title,
+                  x.PeriodTypeId,
+                  x.PeriodType.DisplayBefore,
+                  x.Value,
+                  x.ReportTime,
+                  Months = x.Months.Split(",").Select(int.Parse).ToList()
+              }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var displayBeforQuarterly = quarterly.DisplayBefore;
+            var reportTimeQuarterly = quarterly.ReportTime.AddDays(-displayBeforQuarterly);
+
+            var monthlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Monthly).ToListAsync())
+             .Select(x => new
+             {
+                 x.Title,
+                 x.PeriodTypeId,
+                 x.PeriodType.DisplayBefore,
+                 x.Value,
+                 x.ReportTime
+             }).ToList();
+            var monthly = monthlyModel.Where(x => x.Value.Equals(currentTime.Month)).FirstOrDefault();
+
+            var displayBeformonthly = monthly.DisplayBefore;
+            var reportTimemonthly = monthly.ReportTime.AddDays(-displayBeformonthly);
+
+            return await _repoObjective.FindAll().Where(x => x.PICs.Any(x => x.AccountId == accountId))
+          .Select(x => new
+          {
+              Topic = x.Topic,
+              Id = x.Id,
+              Period = quarterly.Value,
+              PeriodTypeId = quarterly.PeriodTypeId,
+              IsDisplayUploadResult = currentTime.Date >= reportTimemonthly.Date,
+              IsDisplaySelfScore = currentTime.Date >= reportTimeQuarterly.Date,
+          }).ToListAsync();
+
         }
 
-        public async Task<object> L1(int accountId)
+        public async Task<object> L1(int accountId, DateTime currentTime)
         {
-            int currentQuarter = (DateTime.Now.Month + 2) / 3;
-            var date = DateTime.Today.AddMonths(-6);
+
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            var date = DateTime.Today;
             var month = date.Month;
-            int currentHalfYear = month <= 6 ? 1 : 2;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
 
             // Lấy settings của quý và nửa năm
-            var quarterly = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly && x.Value == currentQuarter).FirstOrDefaultAsync();
-            var halfYear = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).FirstOrDefaultAsync();
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+                .Select(x => new
+                {
+                    x.Title,
+                    x.PeriodTypeId,
+                    x.Value,
+                    x.ReportTime,
+                    x.PeriodType.DisplayBefore,
+                    Months = x.Months.Split(",").Select(int.Parse).ToList()
+                }).ToList();
+
+            var halfYearModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).ToListAsync())
+               .Select(x => new
+               {
+                   x.Title,
+                   x.PeriodTypeId,
+                   x.PeriodType.DisplayBefore,
+                   x.Value,
+                   x.ReportTime,
+                   Months = x.Months.Split(",").Select(int.Parse).ToList()
+               }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYear = halfYearModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYearSettings = halfYear.Months;
+            var quarterlySettings = quarterly.Months;
+
+            var displayBeforQuarterly = quarterly.DisplayBefore;
+            var reportTimeQuarterly = quarterly.ReportTime.AddDays(-displayBeforQuarterly);
+
+            var displayBeforHalfYear = quarterly.DisplayBefore;
+            var reportTimeHalfYear = halfYear.ReportTime.AddDays(-displayBeforHalfYear);
+
 
             // Lấy tất cả các user đã giao nhiệm vụ cho họ
-            var data = (await _repoObjective.FindAll(x => x.CreatedBy == accountId)
+            var data = (await _repoObjective.FindAll(x => accountID == x.CreatedBy)
                 .SelectMany(x => x.PICs)
                 .ToListAsync())
                 .DistinctBy(x => x.AccountId)
                 .ToList();
             var kpi = data.Select(x => new
             {
-                Id = x.Id,
+                Id = x.AccountId,
                 Objective = $"{quarterly.Title} - {x.Account.FullName}",
-                Type = "KPI"
+                DueDate = quarterly.ReportTime,
+                Type = "KPI",
+                Period = quarterly.Value,
+                PeriodTypeId = quarterly.PeriodTypeId,
+                Settings = quarterlySettings,
+                IsDisplayKPIScore = true,
+                IsDisplayAttitude = false,
             }).ToList();
             var attitude = data.Select(x => new
             {
-                Id = x.Id,
-                Objective = $"{quarterly.Title} - {x.Account.FullName}",
-                Type = "Attitude"
+                Id = x.AccountId,
+                Objective = $"{halfYear.Title} - {x.Account.FullName}",
+                DueDate = halfYear.ReportTime,
+                Type = "Attitude",
+                Period = halfYear.Value,
+                PeriodTypeId = halfYear.PeriodTypeId,
+                Settings = halfYearSettings,
+                IsDisplayKPIScore = false,
+                IsDisplayAttitude = true
             }).ToList();
-            return kpi.Concat(attitude).ToList();
+            if (currentTime.Date >= reportTimeQuarterly.Date)
+            {
+                return kpi.ToList();
+            }
+
+            if (currentTime.Date >= reportTimeHalfYear.Date)
+            {
+                return attitude.ToList();
+
+            }
+
+            if (currentTime.Date >= reportTimeQuarterly.Date && currentTime.Date == reportTimeHalfYear.Date)
+            {
+                return kpi.Concat(attitude).ToList();
+            }
+            return new List<dynamic>();
         }
 
-        public Task<object> L2(int accountId)
+        public async Task<object> L2(int accountId, DateTime currentTime)
         {
-            throw new NotImplementedException();
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            // tim oc cua usser login
+            var ocuser = await _repoOCUser.FindAll(x => x.UserID == accountID).FirstOrDefaultAsync();
+            var checkRole = await _repoAccountGroupAccount.FindAll(x => x.AccountId == accountID).Select(x => x.AccountGroup.Position).AnyAsync(x => SystemRole.L2 == x);
+            if (checkRole == false) return new List<dynamic>();
+
+            if (ocuser == null) return new List<dynamic>();
+            // Lay tat ca con cua oc
+            var oc = _repoOC.FindAll().AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCID).ToList();
+            var ocs = oc.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
+            // vao ocUser tim theo ocId list 
+            var accountIds = await _repoOCUser.FindAll(x => ocs.Contains(x.OCID)).Select(x => x.UserID).Distinct().ToListAsync();
+
+            var date = DateTime.Today;
+            var month = date.Month;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
+
+            // Lấy settings của quý và nửa năm
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+                .Select(x => new
+                {
+                    x.Title,
+                    x.PeriodTypeId,
+                    x.PeriodType.DisplayBefore,
+                    x.Value,
+                    x.ReportTime,
+                    Months = x.Months.Split(",").Select(int.Parse).ToList()
+                }).ToList();
+
+            var halfYearModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).ToListAsync())
+               .Select(x => new
+               {
+                   x.Title,
+                   x.PeriodTypeId,
+                   x.PeriodType.DisplayBefore,
+                   x.Value,
+                   x.ReportTime,
+                   Months = x.Months.Split(",").Select(int.Parse).ToList()
+               }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYear = halfYearModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYearSettings = halfYear.Months;
+            var quarterlySettings = quarterly.Months;
+
+
+            var displayBeforQuarterly = quarterly.DisplayBefore;
+            var reportTimeQuarterly = quarterly.ReportTime.AddDays(-displayBeforQuarterly);
+
+            var displayBeforHalfYear = quarterly.DisplayBefore;
+            var reportTimeHalfYear = halfYear.ReportTime.AddDays(-displayBeforHalfYear);
+
+            // Lấy tất cả các user đã giao nhiệm vụ cho họ
+            var data = (await _repoObjective.FindAll(x => accountIds.Contains(x.CreatedBy))
+                .SelectMany(x => x.PICs)
+                .ToListAsync())
+                .DistinctBy(x => x.AccountId)
+                .ToList();
+            var kpi = data.Select(x => new
+            {
+                Id = x.AccountId,
+                Objective = $"{quarterly.Title} - {x.Account.FullName}",
+                DueDate = quarterly.ReportTime,
+                Type = "KPI",
+                Period = quarterly.Value,
+                PeriodTypeId = quarterly.PeriodTypeId,
+                Settings = quarterlySettings
+            }).ToList();
+            var attitude = data.Select(x => new
+            {
+                Id = x.AccountId,
+                Objective = $"{halfYear.Title} - {x.Account.FullName}",
+                DueDate = halfYear.ReportTime,
+                Type = "Attitude",
+                Period = halfYear.Value,
+                PeriodTypeId = halfYear.PeriodTypeId,
+                Settings = halfYearSettings
+            }).ToList();
+            if (currentTime.Date >= reportTimeQuarterly.Date)
+            {
+                return kpi.ToList();
+            }
+
+            if (currentTime.Date >= reportTimeHalfYear.Date)
+            {
+                return attitude.ToList();
+
+            }
+
+            if (currentTime.Date >= reportTimeQuarterly.Date && currentTime.Date >= reportTimeHalfYear.Date)
+            {
+                return kpi.Concat(attitude).ToList();
+            }
+            return new List<dynamic>();
         }
 
+        public async Task<object> GHR(int accountId, DateTime currentTime)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            var checkRole = await _repoAccountGroupAccount.FindAll(x => x.AccountId == accountID)
+                .Select(x => x.AccountGroup.Position).AnyAsync(x => SystemRole.GHR == x);
+            if (checkRole == false) return new List<dynamic>();
+
+            // tim oc cua usser login
+            var ocuser = await _repoOCUser.FindAll(x => x.UserID == accountID).FirstOrDefaultAsync();
+            if (ocuser == null) return new List<dynamic>();
+            // Lay tat ca con cua oc
+            var oc = _repoOC.FindAll().AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCID).ToList();
+            var ocs = oc.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
+            // vao ocUser tim theo ocId list 
+            var accountIds = await _repoOCUser.FindAll(x => ocs.Contains(x.OCID)).Select(x => x.UserID).Distinct().ToListAsync();
+
+            var date = DateTime.Today;
+            var month = date.Month;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
+
+            // Lấy settings của quý và nửa năm
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+                .Select(x => new
+                {
+                    x.Title,
+                    x.PeriodTypeId,
+                    x.PeriodType.DisplayBefore,
+                    x.Value,
+                    x.ReportTime,
+                    Months = x.Months.Split(",").Select(int.Parse).ToList()
+                }).ToList();
+
+            var halfYearModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).ToListAsync())
+               .Select(x => new
+               {
+                   x.Title,
+                   x.PeriodTypeId,
+                   x.PeriodType.DisplayBefore,
+                   x.Value,
+                   x.ReportTime,
+                   Months = x.Months.Split(",").Select(int.Parse).ToList()
+               }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYear = halfYearModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYearSettings = halfYear.Months;
+            var quarterlySettings = quarterly.Months;
+
+
+            var displayBeforQuarterly = quarterly.DisplayBefore;
+            var reportTimeQuarterly = quarterly.ReportTime.AddDays(-displayBeforQuarterly);
+
+            var displayBeforHalfYear = quarterly.DisplayBefore;
+            var reportTimeHalfYear = halfYear.ReportTime.AddDays(-displayBeforHalfYear);
+
+
+            // Lấy tất cả các user đã giao nhiệm vụ cho họ
+            var data = (await _repoObjective.FindAll(x => accountIds.Contains(x.CreatedBy))
+                .SelectMany(x => x.PICs)
+                .ToListAsync())
+                .DistinctBy(x => x.AccountId)
+                .ToList();
+            var kpi = data.Select(x => new
+            {
+                Id = x.AccountId,
+                Objective = $"{quarterly.Title} - {x.Account.FullName}",
+                DueDate = quarterly.ReportTime,
+                Type = "KPI",
+                Period = quarterly.Value,
+                PeriodTypeId = quarterly.PeriodTypeId,
+                Settings = quarterlySettings
+            }).ToList();
+            var attitude = data.Select(x => new
+            {
+                Id = x.AccountId,
+                Objective = $"{halfYear.Title} - {x.Account.FullName}",
+                DueDate = halfYear.ReportTime,
+                Type = "Attitude",
+                Period = halfYear.Value,
+                PeriodTypeId = halfYear.PeriodTypeId,
+                Settings = halfYearSettings
+            }).ToList();
+            if (currentTime.Date >= reportTimeQuarterly.Date)
+            {
+                return kpi.ToList();
+            }
+
+            if (currentTime.Date >= reportTimeHalfYear.Date)
+            {
+                return attitude.ToList();
+
+            }
+
+            if (currentTime.Date >= reportTimeQuarterly.Date && currentTime.Date >= reportTimeHalfYear.Date)
+            {
+                return kpi.Concat(attitude).ToList();
+            }
+            return new List<dynamic>();
+        }
+        public async Task<object> FHO(int accountId)
+        {
+            var date = DateTime.Today;
+            var month = date.Month;
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+              .Select(x => new
+              {
+                  x.Title,
+                  x.PeriodTypeId,
+                  x.Value,
+                  x.ReportTime,
+                  Months = x.Months.Split(",").Select(int.Parse).ToList()
+              }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+
+            return await _repoObjective.FindAll().Where(x => x.PICs.Any(x => x.AccountId == accountId))
+                .Select(x => new
+                {
+                    Topic = x.Topic,
+                    Id = x.Id,
+                    Period = quarterly.Value,
+                    PeriodTypeId = quarterly.PeriodTypeId
+                }).ToListAsync();
+        }
+
+        public async Task<object> GM(int accountId, DateTime currentTime)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            var checkRole = await _repoAccountGroupAccount.FindAll(x => x.AccountId == accountID)
+                .Select(x => x.AccountGroup.Position).AnyAsync(x => SystemRole.GM == x);
+            if (checkRole == false) return new List<dynamic>();
+
+            // tim oc cua usser login
+            var ocuser = await _repoOCUser.FindAll(x => x.UserID == accountID).FirstOrDefaultAsync();
+            if (ocuser == null) return new List<dynamic>();
+            // Lay tat ca con cua oc
+            var oc = _repoOC.FindAll().AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCID).ToList();
+            var ocs = oc.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
+            // vao ocUser tim theo ocId list 
+            var accountIds = await _repoOCUser.FindAll(x => ocs.Contains(x.OCID)).Select(x => x.UserID).Distinct().ToListAsync();
+
+            var date = DateTime.Today;
+            var month = date.Month;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
+
+            // Lấy settings của quý và nửa năm
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+                .Select(x => new
+                {
+                    x.Title,
+                    x.PeriodTypeId,
+                    x.PeriodType.DisplayBefore,
+                    x.Value,
+                    x.ReportTime,
+                    Months = x.Months.Split(",").Select(int.Parse).ToList()
+                }).ToList();
+
+            var halfYearModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).ToListAsync())
+               .Select(x => new
+               {
+                   x.Title,
+                   x.PeriodTypeId,
+                   x.PeriodType.DisplayBefore,
+                   x.Value,
+                   x.ReportTime,
+                   Months = x.Months.Split(",").Select(int.Parse).ToList()
+               }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYear = halfYearModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var halfYearSettings = halfYear.Months;
+            var quarterlySettings = quarterly.Months;
+
+
+            var displayBeforQuarterly = quarterly.DisplayBefore;
+            var reportTimeQuarterly = quarterly.ReportTime.AddDays(-displayBeforQuarterly);
+
+            var displayBeforHalfYear = quarterly.DisplayBefore;
+            var reportTimeHalfYear = halfYear.ReportTime.AddDays(-displayBeforHalfYear);
+            // Lấy tất cả các user đã giao nhiệm vụ cho họ
+            var data = (await _repoObjective.FindAll(x => accountIds.Contains(x.CreatedBy))
+                .SelectMany(x => x.PICs)
+                .ToListAsync())
+                .DistinctBy(x => x.AccountId)
+                .ToList();
+            var kpi = data.Select(x => new
+            {
+                Id = x.AccountId,
+                Objective = $"{quarterly.Title} - {x.Account.FullName}",
+                DueDate = quarterly.ReportTime,
+                Type = "KPI",
+                Period = quarterly.Value,
+                PeriodTypeId = quarterly.PeriodTypeId,
+                Settings = quarterlySettings
+            }).ToList();
+
+            if (currentTime.Date >= reportTimeQuarterly.Date)
+            {
+                return kpi.ToList();
+            }
+
+            return new List<dynamic>();
+        }
         public Task<List<ToDoListByLevelL1L2Dto>> GetAllInCurrentQuarterByAccountGroup(int accountId)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<object> GetAllAttitudeScoreL1L2ByAccountId(int accountId)
+        {
+            var date = DateTime.Today;
+            var month = date.Month;
+            int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
+
+            // Lấy settings của quý và nửa năm
+            var halfYearModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.Value == currentHalfYear).ToListAsync())
+             .Select(x => new
+             {
+                 x.Title,
+                 x.PeriodTypeId,
+                 x.Value,
+                 x.ReportTime,
+                 Months = x.Months.Split(",").Select(int.Parse).ToList()
+             }).ToList();
+            var halfYear = halfYearModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var monthsOfCurrentHalfYear = halfYear.Months;
+
+            var data = await _repoObjective.FindAll(x => x.PICs.Select(a => a.AccountId).Contains(accountId))
+                .Where(x => x.ResultOfMonth.Any(a => monthsOfCurrentHalfYear.Contains(a.Month)))
+                .Select(x => new
+                {
+                    Objective = x.Topic,
+                    L0TargetList = x.ToDoList.Select(a => a.YourObjective).ToList(),
+                    L0ActionList = x.ToDoList.Select(a => a.Action).ToList(),
+                    ResultOfMonth = x.ResultOfMonth.Select(a => new { a.Month, a.Title, a.ObjectiveId, a.CreatedBy }),
+                    Settings = monthsOfCurrentHalfYear,
+                    PeriodTypeId = halfYear.PeriodTypeId,
+                    Period = halfYear.Value
+                })
+                .ToListAsync();
+
+
+            return data;
+        }
+        public async Task<object> GetAllKPIScoreL1L2ByAccountId(int accountId)
+        {
+            var date = DateTime.Today;
+            var month = date.Month;
+            // Lấy settings của quý và nửa năm
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+              .Select(x => new
+              {
+                  x.Title,
+                  x.PeriodTypeId,
+                  x.Value,
+                  x.ReportTime,
+                  Months = x.Months.Split(",").Select(int.Parse).ToList()
+              }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var monthsOfCurrentQuarter = quarterly.Months.ToList();
+
+            var data = await _repoObjective.FindAll(x => x.PICs.Select(a => a.AccountId).Contains(accountId))
+                .Where(x => x.ResultOfMonth.Any(a => monthsOfCurrentQuarter.Contains(a.Month)))
+                .Select(x => new
+                {
+                    Objective = x.Topic,
+                    L0TargetList = x.ToDoList.Select(a => a.YourObjective).ToList(),
+                    L0ActionList = x.ToDoList.Select(a => a.Action).ToList(),
+                    ResultOfMonth = x.ResultOfMonth.Select(a => new { a.Month, a.Title, a.ObjectiveId, a.CreatedBy }),
+                    Settings = monthsOfCurrentQuarter,
+                    PeriodTypeId = quarterly.PeriodTypeId,
+                    Period = quarterly.Value
+                })
+                .ToListAsync();
+
+
+            return data;
+        }
+
+        public async Task<object> GetQuarterlySetting()
+        {
+            var date = DateTime.Today;
+            var month = date.Month;
+            // Lấy settings của quý và nửa năm
+            var quarterlyModel = (await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly).ToListAsync())
+              .Select(x => new
+              {
+                  x.Title,
+                  x.ReportTime,
+                  Months = x.Months.Split(",").Select(int.Parse).ToList()
+              }).ToList();
+            var quarterly = quarterlyModel.Where(x => x.Months.Contains(month)).FirstOrDefault();
+            var monthsOfCurrentQuarter = quarterly.Months.ToList();
+            return monthsOfCurrentQuarter;
+        }
+
+      
     }
 }

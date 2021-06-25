@@ -2,8 +2,11 @@ export interface Comment {
   id: number;
   content: string;
   createdBy: number;
-  objectiveId: number;
+  accountId: number;
+  periodTypeId: number;
+  period: number;
   modifiedBy: number | null;
   createdTime: string;
+  scoreType: string;
   modifiedTime: string | null;
 }

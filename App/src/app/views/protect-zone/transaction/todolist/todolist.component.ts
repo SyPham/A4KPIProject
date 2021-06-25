@@ -1,7 +1,7 @@
 import { KpiScoreComponent } from './kpi-score/kpi-score.component';
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
 import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
 import { ActionComponent } from './action/action.component';
@@ -10,13 +10,20 @@ import { UpdateResultComponent } from './update-result/update-result.component';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { AttitudeScoreComponent } from './attitude-score/attitude-score.component';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
-import { PeriodType, SystemRole,ToDoListType } from 'src/app/_core/enum/system';
+import { PeriodType, SystemRole, ToDoListType, SystemScoreType } from 'src/app/_core/enum/system';
 import { AttitudeScoreL2Component } from './attitude-score-l2/attitude-score-l2.component';
+import { AttitudeScoreGHRComponent } from './attitude-score-ghr/attitude-score-ghr.component';
+import { KpiScoreGMComponent } from './kpi-score-gm/kpi-score-gm.component';
+import { KpiScoreGHRComponent } from './kpi-score-ghr/kpi-score-ghr.component';
+import { environment } from 'src/environments/environment';
+import { AlertifyService } from 'src/app/_core/_service/alertify.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-todolist',
   templateUrl: './todolist.component.html',
-  styleUrls: ['./todolist.component.scss']
+  styleUrls: ['./todolist.component.scss'],
+  providers: [DatePipe]
 })
 export class TodolistComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
@@ -28,34 +35,89 @@ export class TodolistComponent implements OnInit {
   accountGroupData: AccountGroup[];
   KPI = ToDoListType.KPI as string;
   Attitude = ToDoListType.Attitude as string;
+  scoreType: SystemScoreType;
+  modalReference: NgbModalRef;
+  @ViewChild('importModal') importModal: NgbModalRef;
+  file: any;
+  excelDownloadUrl: string;
+  currentTime: any ;
+  currentTimeRequest: any ;
+  index: any = 1;
   constructor(
     private service: ObjectiveService,
+    private alertify: AlertifyService,
     public todolistService: Todolistv2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
+    private datePipe: DatePipe,
   ) { }
-
-  ngOnInit(): void {
-    this.loadAccountGroupData();
+  onChangeReportTime(value: Date): void {
+    this.loadData();
   }
-  selected(args) {
-    const index = args.selectedIndex + 1;
+  ngOnInit(): void {
+    this.currentTime = new Date();
+
+    this.loadAccountGroupData();
+    this.loadData();
+  }
+  loadData() {
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const index = this.index;
     switch (index) {
       case SystemRole.L0:
+      this.scoreType = SystemScoreType.L0;
       this.loadDataL0();
       break;
       case SystemRole.L1:
-        this.loadDataL1L2();
+        this.scoreType = SystemScoreType.L1;
+        this.loadDataL1();
       break;
       case SystemRole.L2:
-        this.loadDataL1L2();
+        this.scoreType = SystemScoreType.L2;
+        this.loadDataL2();
       break;
       case SystemRole.FHO:
+        this.scoreType = SystemScoreType.FHO;
+        this.loadDataFHO();
       break;
       case SystemRole.GHR:
+        this.scoreType = SystemScoreType.GHR;
         this.loadDataGHR();
       break;
       case SystemRole.GM:
+        this.loadDataGM();
+        this.scoreType = SystemScoreType.GM;
+      break;
+    }
+  }
+  selected(args) {
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const index = args.selectedIndex + 1;
+    this.index = index;
+    switch (index) {
+      case SystemRole.L0:
+      this.scoreType = SystemScoreType.L0;
+      this.loadDataL0();
+      break;
+      case SystemRole.L1:
+        this.scoreType = SystemScoreType.L1;
+        this.loadDataL1();
+      break;
+      case SystemRole.L2:
+        this.scoreType = SystemScoreType.L2;
+        this.loadDataL2();
+      break;
+      case SystemRole.FHO:
+        this.scoreType = SystemScoreType.FHO;
+        this.loadDataFHO();
+      break;
+      case SystemRole.GHR:
+        this.scoreType = SystemScoreType.GHR;
+        this.loadDataGHR();
+      break;
+      case SystemRole.GM:
+        this.loadDataGM();
+        this.scoreType = SystemScoreType.GM;
       break;
     }
   }
@@ -63,18 +125,33 @@ export class TodolistComponent implements OnInit {
    return this.Gridtemplates.toArray()[index - 1];
   }
   loadDataL0() {
-    this.todolistService.l0().subscribe(data => {
+    this.todolistService.l0(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
 
-  loadDataL1L2() {
-    this.todolistService.l1().subscribe(data => {
+  loadDataL1() {
+    this.todolistService.l1(this.currentTimeRequest).subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataL2() {
+    this.todolistService.l2(this.currentTimeRequest).subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataFHO() {
+    this.todolistService.fho(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataGHR() {
-    this.todolistService.getAllObjectiveByL1L2().subscribe(data => {
+    this.todolistService.ghr(this.currentTimeRequest).subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataGM() {
+    this.todolistService.gm(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -104,6 +181,8 @@ export class TodolistComponent implements OnInit {
     const modalRef = this.modalService.open(SelfScoreComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Monthly;
+    modalRef.componentInstance.scoreType = this.scoreType;
+
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -111,6 +190,26 @@ export class TodolistComponent implements OnInit {
   openKPIScoreModalComponent(data) {
     const modalRef = this.modalService.open(KpiScoreComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
+    modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openKPIScoreGHRModalComponent(data) {
+    const modalRef = this.modalService.open(KpiScoreGHRComponent, { size: 'xl', backdrop : 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
+    modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openKPIScoreGMModalComponent(data) {
+    const modalRef = this.modalService.open(KpiScoreGMComponent, { size: 'xl', backdrop : 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
+    modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -118,6 +217,7 @@ export class TodolistComponent implements OnInit {
   openAttitudeScoreModalComponent(data) {
     const modalRef = this.modalService.open(AttitudeScoreComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -125,11 +225,38 @@ export class TodolistComponent implements OnInit {
   openAttitudeScoreL2ModalComponent(data) {
     const modalRef = this.modalService.open(AttitudeScoreL2Component, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
     }, (reason) => {
     });
   }
 
+  openAttitudeScoreGHRModalComponent(data) {
+    const modalRef = this.modalService.open(AttitudeScoreGHRComponent, { size: 'xl', backdrop : 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openImportExcelModalComponent() {
+      this.excelDownloadUrl = `${environment.apiUrl}todolist/ExcelExport`;
+      this.modalReference = this.modalService.open(this.importModal, { size: 'xl' });
+  }
+  fileProgress(event) {
+    this.file = event.target.files[0];
+  }
+  uploadFile() {
+    const uploadBy = JSON.parse(localStorage.getItem('user')).id;
+    this.todolistService.import(this.file, uploadBy)
+      .subscribe((res: any) => {
+        this.loadDataFHO();
+        this.alertify.success('The excel has been imported into system!');
+        this.modalService.dismissAll();
+      }, error => {
+          this.alertify.error(error, true);
+      });
+  }
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }

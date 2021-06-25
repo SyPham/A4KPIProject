@@ -11,6 +11,9 @@ namespace ScoreKPI.Models
         [Key]
         public int Id { get; set; }
         public string Content { get; set; }
+        [MaxLength(50)]
+        public string ScoreType { get; set; }
+
         public int CreatedBy { get; set; }
         public int AccountId { get; set; }
         public int PeriodTypeId { get; set; }

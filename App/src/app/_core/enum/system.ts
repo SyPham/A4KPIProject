@@ -6,6 +6,14 @@ export enum SystemRole {
   GHR= 5,
   GM= 6
   }
+  export enum SystemScoreType {
+    L0= "L0",
+    L1= "L1",
+    L2= "L2",
+    FHO= "FHO",
+    GHR= "GHR",
+    GM= "GM",
+    }
   export enum ToDoListType {
     KPI = "KPI",
     Attitude = "Attitude"

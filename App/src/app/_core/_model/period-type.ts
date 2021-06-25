@@ -3,4 +3,5 @@ export interface PeriodType {
   code: string;
   name: string;
   position: number;
+  displayBefore: string;
 }

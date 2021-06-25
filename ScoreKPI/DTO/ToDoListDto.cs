@@ -46,4 +46,10 @@ namespace ScoreKPI.DTO
         public string ResultOfMonth { get; set; }
         public int Month { get; set; }
     }
+    public class ImportExcelFHO
+    {
+
+        public string KPIObjective { get; set; }
+        public  string UserList { get; set; }
+    }
 }

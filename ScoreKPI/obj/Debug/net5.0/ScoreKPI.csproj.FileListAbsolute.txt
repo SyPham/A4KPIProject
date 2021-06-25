@@ -138,3 +138,6 @@ F:\Angular\SYSTEM\A4KPI\ScoreKPI\obj\Debug\net5.0\ref\ScoreKPI.dll
 F:\Angular\SYSTEM\A4KPI\ScoreKPI\obj\Debug\net5.0\ScoreKPI.pdb
 F:\Angular\SYSTEM\A4KPI\ScoreKPI\obj\Debug\net5.0\ScoreKPI.genruntimeconfig.cache
 F:\Angular\SYSTEM\A4KPI\ScoreKPI\bin\Debug\net5.0\NetUtility.dll
+H:\a_2021\ScoreKPI\ScoreKPI\bin\Debug\net5.0\EPPlus.dll
+H:\a_2021\ScoreKPI\ScoreKPI\bin\Debug\net5.0\Microsoft.IO.RecyclableMemoryStream.dll
+H:\a_2021\ScoreKPI\ScoreKPI\bin\Debug\net5.0\System.Xml.XPath.XmlDocument.dll

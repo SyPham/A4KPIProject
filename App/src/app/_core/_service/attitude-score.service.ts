@@ -20,4 +20,10 @@ export class AttitudeScoreService extends CURDService<AttitudeScore> {
       .get<AttitudeScore>(`${this.base}${this.entity}/GetFisrtByObjectiveIdAndScoreBy?objectiveId=${objectiveId}&scoreby=${scoreBy}`, {})
       .pipe(catchError(this.handleError));
   }
+  getFisrtByAccountId(accountId, periodTypeId, period, scoreType): Observable<AttitudeScore> {
+    const apiUrl =`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
+    return this.http
+      .get<AttitudeScore>(apiUrl, {})
+      .pipe(catchError(this.handleError));
+  }
 }

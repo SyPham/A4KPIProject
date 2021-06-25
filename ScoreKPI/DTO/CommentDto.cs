@@ -8,6 +8,8 @@ namespace ScoreKPI.DTO
         public string Content { get; set; }
         public int CreatedBy { get; set; }
         public int AccountId { get; set; }
+        public string ScoreType { get; set; }
+
         public int PeriodTypeId { get; set; }
         public int Period { get; set; }
         public int? ModifiedBy { get; set; }

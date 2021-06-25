@@ -11,7 +11,8 @@ namespace ScoreKPI.DTO
         public string Code { get; set; }
         public string Name { get; set; }
         public int Position { get; set; }
-        public DateTime DueDate { get; set; }
+        public int DisplayBefore { get; set; }
+
 
     }
 }

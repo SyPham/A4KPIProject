@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -17,13 +18,16 @@ namespace ScoreKPI.Services
 {
     public interface IAttitudeScoreService : IServiceBase<AttitudeScore, AttitudeScoreDto>
     {
-        Task<AttitudeScoreDto> GetFisrtByObjectiveId(int objectiveId, int scoreBy);
+       
+        Task<AttitudeScoreDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType);
+
     }
     public class AttitudeScoreService : ServiceBase<AttitudeScore, AttitudeScoreDto>, IAttitudeScoreService
     {
         private readonly IRepositoryBase<AttitudeScore> _repo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         private OperationResult operationResult;
 
@@ -31,6 +35,7 @@ namespace ScoreKPI.Services
             IRepositoryBase<AttitudeScore> repo,
             IUnitOfWork unitOfWork,
             IMapper mapper,
+             IHttpContextAccessor httpContextAccessor,
             MapperConfiguration configMapper
             )
             : base(repo, unitOfWork, mapper, configMapper)
@@ -38,12 +43,25 @@ namespace ScoreKPI.Services
             _repo = repo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
-        public async Task<AttitudeScoreDto> GetFisrtByObjectiveId(int objectiveId, int scoreBy)
+        
+        public async Task<AttitudeScoreDto> GetFisrtByAccountId(int accountId, int periodTypeId,int period, string scoreType)
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
-            return await _repo.FindAll(x => x.Period == currrentQuarter && scoreBy == x.ScoreBy).ProjectTo<AttitudeScoreDto>(_configMapper).FirstOrDefaultAsync();
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int scoreBy = JWTExtensions.GetDecodeTokenById(accessToken);
+
+            return await _repo.FindAll(x => x.ScoreType == scoreType 
+                                        && x.PeriodTypeId == periodTypeId 
+                                        && x.CreatedTime.Year == DateTime.Today.Year 
+                                        && x.Period == period
+                                        && accountId == x.AccountId 
+                                        && scoreBy == x.ScoreBy 
+                                        && x.AccountId != scoreBy)
+                                .ProjectTo<AttitudeScoreDto>(_configMapper)
+                                .FirstOrDefaultAsync();
+
         }
         /// <summary>
         /// Chỉnh sửa thành vừa cập nhật vừa thêm mới

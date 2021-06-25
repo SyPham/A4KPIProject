@@ -19,6 +19,7 @@ namespace ScoreKPI.DTO
         public DateTime Date { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
+      
         public  Account Creator { get; set; }
     }
 

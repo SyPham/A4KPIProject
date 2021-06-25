@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body p-0">
   <ejs-grid #grid [dataSource]='gridData' allowTextWrap='true'  [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
-  [toolbar]='toolbarOptions' (queryCellInfo)='queryCellInfoEvent($event)' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
+  [toolbar]='toolbarOptions' (queryCellInfo)='queryCellInfoEvent($event)' [pageSettings]='pageSettings' [allowExcelExport]='true'>
   <e-columns>
     <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
       <ng-template #template let-data>
@@ -28,10 +28,12 @@
         </ul>
        </ng-template>
     </e-column>
-    <e-column field='result1OfMonth' headerText='{{getMonthListInCurrentQuarter()[0]}}'></e-column>
-    <e-column field='result2OfMonth' headerText='{{getMonthListInCurrentQuarter()[1]}}'></e-column>
-    <e-column field='result3OfMonth' headerText='{{getMonthListInCurrentQuarter()[2]}}'></e-column>
-
+    <ng-template #template ngFor let-column [ngForOf]="columns">
+      <e-column [field]="column.field"
+                [headerText]="column.headerText"
+               >
+     </e-column>
+</ng-template>
   </e-columns>
 </ejs-grid>
 <div class="row mt-2 d-flex justify-content-center">

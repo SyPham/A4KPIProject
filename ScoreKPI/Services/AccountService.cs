@@ -15,9 +15,10 @@ using System.Threading.Tasks;
 
 namespace ScoreKPI.Services
 {
-    public interface IAccountService: IServiceBase<Account, AccountDto>
+    public interface IAccountService : IServiceBase<Account, AccountDto>
     {
         Task<OperationResult> LockAsync(int id);
+        Task<AccountDto> GetByUsername(string username);
     }
     public class AccountService : ServiceBase<Account, AccountDto>, IAccountService
     {
@@ -29,13 +30,13 @@ namespace ScoreKPI.Services
         private OperationResult operationResult;
 
         public AccountService(
-            IRepositoryBase<Account> repo, 
+            IRepositoryBase<Account> repo,
             IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
             IUnitOfWork unitOfWork,
-            IMapper mapper, 
+            IMapper mapper,
             MapperConfiguration configMapper
             )
-            : base(repo, unitOfWork, mapper,  configMapper)
+            : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
             _repoAccountGroupAccount = repoAccountGroupAccount;
@@ -118,7 +119,7 @@ namespace ScoreKPI.Services
         }
         public override async Task<List<AccountDto>> GetAllAsync()
         {
-            return await _repo.FindAll(x=>x.AccountType.Code != "SYSTEM").ProjectTo<AccountDto>(_configMapper).ToListAsync();
+            return await _repo.FindAll(x => x.AccountType.Code != "SYSTEM").ProjectTo<AccountDto>(_configMapper).ToListAsync();
 
         }
 
@@ -148,6 +149,12 @@ namespace ScoreKPI.Services
                 operationResult = ex.GetMessageError();
             }
             return operationResult;
+        }
+
+        public async Task<AccountDto> GetByUsername(string username)
+        {
+            var result = await _repo.FindAll(x => x.Username.ToLower() == username.ToLower()).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
+            return result;
         }
     }
 }

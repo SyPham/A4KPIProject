@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ScoreKPI.Constants;
 using ScoreKPI.Data;
@@ -17,7 +18,8 @@ namespace ScoreKPI.Services
 {
     public interface IKPIScoreService : IServiceBase<KPIScore, KPIScoreDto>
     {
-        Task<KPIScoreDto> GetFisrtByAccountId(int scoreBy);
+        Task<KPIScoreDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType);
+        Task<KPIScoreDto> GetFisrtSelfScoreByAccountId(int accountId, int periodTypeId, int period, string scoreType);
     }
     public class KPIScoreService : ServiceBase<KPIScore, KPIScoreDto>, IKPIScoreService
     {
@@ -25,6 +27,7 @@ namespace ScoreKPI.Services
         private readonly IRepositoryBase<PeriodType> _repoPeriodType;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         private OperationResult operationResult;
 
@@ -33,6 +36,7 @@ namespace ScoreKPI.Services
             IRepositoryBase<PeriodType> repoPeriodType,
             IUnitOfWork unitOfWork,
             IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
             MapperConfiguration configMapper
             )
             : base(repo, unitOfWork, mapper, configMapper)
@@ -41,13 +45,24 @@ namespace ScoreKPI.Services
             _repoPeriodType = repoPeriodType;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
-        public async Task<KPIScoreDto> GetFisrtByAccountId(int scoreBy)
+        public async Task<KPIScoreDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType)
         {
-            var currrentQuarter = (DateTime.Now.Month + 2) / 3;
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int scoreBy = JWTExtensions.GetDecodeTokenById(accessToken);
 
-            return await _repo.FindAll(x => x.Period == currrentQuarter && scoreBy == x.ScoreBy).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
+            return await _repo.FindAll(x => 
+                                        x.ScoreType == scoreType 
+                                        && x.PeriodTypeId == periodTypeId 
+                                        && x.CreatedTime.Year == DateTime.Today.Year 
+                                        && x.Period == period
+                                        && accountId == x.AccountId 
+                                        && scoreBy == x.ScoreBy 
+                                        && x.AccountId != scoreBy)
+                                    .ProjectTo<KPIScoreDto>(_configMapper)
+                                    .FirstOrDefaultAsync();
         }
         /// <summary>
         /// Chỉnh sửa thành vừa cập nhật vừa thêm mới
@@ -56,8 +71,6 @@ namespace ScoreKPI.Services
         /// <returns></returns>
         public override async Task<OperationResult> AddAsync(KPIScoreDto model)
         {
-            var periodType = await _repoPeriodType.FindAll(x => x.Code == model.PeriodTypeCode).FirstOrDefaultAsync();
-            model.PeriodTypeId = periodType.Id;
             if (model.Id > 0)
             {
                 var item = await _repo.FindAll(x => x.Id == model.Id && x.ScoreBy == model.ScoreBy).AsNoTracking().FirstOrDefaultAsync();
@@ -85,6 +98,23 @@ namespace ScoreKPI.Services
                 operationResult = ex.GetMessageError();
             }
             return operationResult;
+        }
+
+        public async Task<KPIScoreDto> GetFisrtSelfScoreByAccountId(int scoreBy, int periodTypeId, int period, string scoreType)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+         
+            // tu cham cho minh
+            return await _repo.FindAll(x =>  
+                                    x.PeriodTypeId == periodTypeId 
+                                    && x.CreatedTime.Year == DateTime.Today.Year 
+                                    && x.Period == period 
+                                    && x.ScoreBy == scoreBy
+                                    && x.ScoreType == scoreType
+                                    && x.AccountId == scoreBy
+                                    && x.AccountId == accountID
+                                ).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
         }
     }
 }

@@ -17,6 +17,15 @@ namespace ScoreKPI.Models
             Name = name;
             Position = position;
         }
+        public PeriodType(int id, string code, string name, int position)
+        {
+            Code = code;
+            Name = name;
+            Position = position;
+            Id = id;
+
+        }
+     
         [Key]
         public int Id { get; set; }
         [MaxLength(50)]
@@ -24,6 +33,8 @@ namespace ScoreKPI.Models
         [MaxLength(100)]
         public string Name { get; set; }
         public int Position { get; set; }
+        public int DisplayBefore { get; set; }
+
         public virtual ICollection<Period> Periods { get; set; }
     }
 }

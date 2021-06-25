@@ -18,6 +18,7 @@ import { ContributionService } from 'src/app/_core/_service/contribution.service
 import { AttitudeService } from 'src/app/_core/_service/attitude.service';
 import { Attitude } from 'src/app/_core/_model/attitude';
 import { forkJoin } from 'rxjs';
+import { SystemRole, SystemScoreType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-attitude-score',
   templateUrl: './attitude-score.component.html',
@@ -25,9 +26,10 @@ import { forkJoin } from 'rxjs';
 })
 export class AttitudeScoreComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: ToDoListL1L2;
+  @Input() data: any;
+  @Input() scoreType: SystemScoreType;
   gridData: object;
-  toolbarOptions = ['Add', 'Delete', 'Search'];
+  toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   model: ToDoList;
@@ -39,6 +41,8 @@ export class AttitudeScoreComponent implements OnInit {
   content = '';
   contributionModel: Contribution;
   attitudeData: Attitude[];
+  halfYearSettingsData: any;
+  columns: any[];
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
@@ -52,45 +56,61 @@ export class AttitudeScoreComponent implements OnInit {
   ngOnInit(): void {
     this.attitudeScoreModel = {
       id: 0,
-      periodType: "Quarter",
-      period: this.utilitiesService.getQuarter(new Date()),
+      periodTypeId: this.data.periodTypeId,
+      period: this.data.period,
       point: this.point,
-      objectiveId: this.data.id,
+      accountId: this.data.id,
       scoreBy: +JSON.parse(localStorage.getItem('user')).id,
       createdTime: new Date().toDateString(),
-      modifiedTime: null
+      modifiedTime: null,
+      scoreType: this.scoreType
     }
     this.contributionModel =  {
       id: 0,
       content: this.content,
       createdBy: +JSON.parse(localStorage.getItem('user')).id,
-      objectiveId: this.data.id,
+      accountId: this.data.id,
       modifiedBy: null,
       createdTime: new Date().toDateString(),
-      modifiedTime: null
+      modifiedTime: null,
+      periodTypeId: this.data.periodTypeId,
+      period: this.data.period
     }
 
 
+    this.getHalfYearSetting();
     this.loadData();
     this.loadAttitudeScoreData();
     this.loadKPIData();
     this.getFisrtByObjectiveIdAndScoreBy();
     this.getFisrtContributionByObjectiveId();
   }
-  getMonthListInCurrentQuarter() {
-    const currentQuarter = this.utilitiesService.getQuarter(new Date());
-    const listMonthOfEachQuarter = [
-        ["Result of Feb.","Result of Mar.","Result of Apr."],
-        ["Result of May.","Result of Jun.","Result of Jul."],
-        ["Result of Aug.","Result of Sep.","Result of Oct."],
-        ["Result of Nov.","Result of Dec.","Result of Jan."]
-    ];
-    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[currentQuarter - 1];
+  getMonthListInCurrentQuarter(index) {
+
+    const listMonthOfEachQuarter =
+        [
+        "Result of Jan.",
+        "Result of Feb.","Result of Mar.","Result of Apr.",
+        "Result of May.","Result of Jun.","Result of Jul.",
+        "Result of Aug.","Result of Sep.","Result of Oct.",
+        "Result of Nov.","Result of Dec."
+       ]
+    ;
+    const listMonthOfCurrentQuarter = listMonthOfEachQuarter[index - 1];
     return listMonthOfCurrentQuarter;
   }
-
+  getHalfYearSetting() {
+    this.halfYearSettingsData = this.data.settings || [];
+    this.columns =[];
+    for (const month of this.halfYearSettingsData) {
+      this.columns.push({ field: `${month}`,
+      headerText: this.getMonthListInCurrentQuarter(month),
+      month: month
+     })
+    }
+  }
   loadData() {
-    this.service.getAllInCurrentQuarterByAccountGroup(+JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.service.getAllAttitudeScoreL1L2ByAccountId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -100,13 +120,18 @@ export class AttitudeScoreComponent implements OnInit {
     });
   }
   getFisrtByObjectiveIdAndScoreBy() {
-    this.attitudeScoreService.getFisrtByObjectiveIdAndScoreBy(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.attitudeScoreService.getFisrtByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period,
+      this.scoreType
+      ).subscribe(data => {
       this.point = data?.point;
       this.attitudeScoreModel.id = data?.id;
     });
   }
   getFisrtContributionByObjectiveId() {
-    this.contributionService.getFisrtByObjectiveId(this.data.id, +JSON.parse(localStorage.getItem('user')).id).subscribe(data => {
+    this.contributionService.getFisrtByAccountId(this.data.id, this.data.periodTypeId).subscribe(data => {
       this.content = data?.content;
       this.contributionModel.id = data?.id;
     });
@@ -117,17 +142,12 @@ export class AttitudeScoreComponent implements OnInit {
     });
   }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
-    const data = args.data as ToDoListOfQuarter;
+    const data = args.data as any;
     const fields = ['month'];
-    if (fields.includes(args.column.field)) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
-    }
-    if (args.column.field.includes("resultOfMonth")) {
-      args.rowSpan = (this.gridData as any).filter(
-        item => item.month === data.month
-      ).length;
+    for (const month of this.halfYearSettingsData) {
+      if (('' + month).includes(args.column.field)) {
+        (args.cell as any).innerText = data.resultOfMonth.filter(x=>x.month === month)[0]?.title || "N/A";
+      }
     }
   }
 

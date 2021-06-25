@@ -15,10 +15,20 @@ namespace ScoreKPI.Controllers
         {
             _service = service;
         }
+        /// <summary>
+        /// Lấy điển đã chấm cho user
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> GetFisrtByAccountId(int scoreBy)
+        public async Task<ActionResult> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType)
         {
-            return Ok(await _service.GetFisrtByAccountId(scoreBy));
+            return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId, period, scoreType));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetFisrtSelfScoreByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            return Ok(await _service.GetFisrtSelfScoreByAccountId(accountId, periodTypeId, period, scoreType));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
@@ -29,18 +39,12 @@ namespace ScoreKPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] KPIScoreDto model)
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"];
-            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
-            model.AccountId = accountID;
             return StatusCodeResult(await _service.AddAsync(model));
         }
 
         [HttpPut]
         public async Task<ActionResult> UpdateAsync([FromBody] KPIScoreDto model)
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"];
-            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
-            model.AccountId = accountID;
             return StatusCodeResult(await _service.UpdateAsync(model));
         }
 

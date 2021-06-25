@@ -31,7 +31,7 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
   password = '';
   @ViewChild('addNewModal') public addNewModal: TemplateRef<any>;
   modalReference: NgbModalRef;
-  fields: object = { text: 'username', value: 'id' };
+  fields: object = { text: 'fullName', value: 'id' };
   filterSettings = { type: 'Excel' };
   // toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -136,7 +136,7 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
   }
   loadAccountData() {
     this.accountService.getAll().subscribe(data => {
-      this.accountData = data;
+      this.accountData = data.filter(x=> x.id !== +JSON.parse(localStorage.getItem('user')).id);
     });
   }
   loadAccountGroupData() {

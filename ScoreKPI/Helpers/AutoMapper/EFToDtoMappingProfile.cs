@@ -23,7 +23,7 @@ namespace ScoreKPI.Helpers.AutoMapper
             CreateMap<Objective, ObjectiveDto>()
                  .ForMember(d => d.Creator, o => o.Ignore())
                 .ForMember(d => d.AccountIdList, o => o.MapFrom(s => s.PICs.Count > 0 ? s.PICs.Select(x=>x.AccountId) : s.PICs.Select(x => x.AccountId)))
-                .ForMember(d => d.Accounts, o => o.MapFrom(s => s.PICs.Count > 0 ?  String.Join(",",s.PICs.Select(x=>x.Account.Username).ToArray()): "" ))
+                .ForMember(d => d.Accounts, o => o.MapFrom(s => s.PICs.Count > 0 ?  String.Join(",",s.PICs.Select(x=>x.Account.FullName).ToArray()): "" ))
                 ;
 
             CreateMap<PeriodReportTime, PeriodReportTimeDto>();

@@ -18,6 +18,7 @@ namespace ScoreKPI.Helpers
         public static void Seed(DataContext _context)
         {
             #region Period Type
+
             if (!(_context.PeriodType.Any()))
             {
                 _context.PeriodType.AddRange(new List<PeriodType> {
@@ -118,11 +119,13 @@ namespace ScoreKPI.Helpers
             #region Loại Tài Khoản
             if (!(_context.AccountTypes.Any()))
             {
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.AccountTypes ON");
                 _context.AccountTypes.AddRange(new List<AccountType> {
-                    new AccountType( "System Management", "SYSTEM"),
-                    new AccountType( "Members", "MEMBER"),
+                    new AccountType(1, "System Management", "SYSTEM"),
+                    new AccountType(2, "Members", "MEMBER"),
                 });
                 _context.SaveChanges();
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.AccountTypes OFF");
             }
 
             #endregion
@@ -145,13 +148,13 @@ namespace ScoreKPI.Helpers
             #region Nhóm Tài Khoản
             if (!(_context.AccountGroups.Any()))
             {
-
                 _context.AccountGroups.AddRange(new List<AccountGroup> {
-                    new AccountGroup { Name = "GM" },
-                    new AccountGroup { Name = "GHM" },
-                    new AccountGroup { Name = "L2" },
-                    new AccountGroup { Name = "L1" },
-                    new AccountGroup { Name = "L0" }
+                    new AccountGroup { Name = "L0", Position = 1 },
+                    new AccountGroup { Name = "L1", Position = 2 },
+                    new AccountGroup { Name = "L2", Position = 3 },
+                    new AccountGroup { Name = "FHO", Position = 4 },
+                    new AccountGroup { Name = "GHM", Position = 5 },
+                    new AccountGroup { Name = "GM", Position = 6 }
             });
                 _context.SaveChanges();
             }

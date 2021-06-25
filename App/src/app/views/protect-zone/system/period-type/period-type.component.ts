@@ -41,6 +41,7 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
   value: number;
   title: string;
   months: any;
+  displayTime: any;
   constructor(
     private service: PeriodTypeService,
     private periodService: PeriodService,
@@ -69,6 +70,7 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
         id: 0,
         name: args.data.name,
         code: args.data.code,
+        displayBefore: args.data.displayBefore,
         position: args.data.position,
       };
 
@@ -85,6 +87,7 @@ export class PeriodTypeComponent extends BaseComponent implements OnInit {
       this.periodUpdate = {
         id: args.data.id,
         name: args.data.name,
+        displayBefore: args.data.displayBefore,
         code: args.data.code,
         position: args.data.position,
       };

@@ -34,8 +34,8 @@ namespace ScoreKPI.Data
 
         IQueryable<T> GetAll();
 
-        Task<bool> SaveAll();
-        void Save();
+        //Task<bool> SaveAll();
+        //void Save();
         void AddRange(List<T> entity);
     }
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class

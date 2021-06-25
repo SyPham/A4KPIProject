@@ -20,19 +20,34 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<ToDoList[]>(`${this.base}${this.entity}/GetAllByObjectiveId?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
   }
-  l0(): Observable<Objective[]> {
+  l0(currentTime): Observable<any[]> {
     return this.http
-      .get<Objective[]>(`${this.base}${this.entity}/L0`, {})
+      .get<any[]>(`${this.base}${this.entity}/L0?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
-  l1(): Observable<Objective[]> {
+  l1(currentTime): Observable<any[]> {
     return this.http
-      .get<Objective[]>(`${this.base}${this.entity}/L1`, {})
+      .get<any[]>(`${this.base}${this.entity}/L1?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
-  l2(): Observable<Objective[]> {
+  l2(currentTime): Observable<any[]> {
     return this.http
-      .get<Objective[]>(`${this.base}${this.entity}/L2`, {})
+      .get<any[]>(`${this.base}${this.entity}/L2?currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  fho(currentTime): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/fho?currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  ghr(currentTime): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/ghr?currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  gm(currentTime): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/gm?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
   getAllInCurrentQuarterByObjectiveId(objectiveId): Observable<ToDoListOfQuarter[]> {
@@ -71,5 +86,32 @@ export class Todolistv2Service extends CURDService<ToDoList> {
     return this.http
       .get<SelfScore[]>(`${this.base}${this.entity}/getAllKPISelfScoreByObjectiveId?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
+  }
+  /**
+    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
+    */
+   getAllKPIScoreL1L2ByAccountId(accountId): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL1L2ByAccountId?accountId=${accountId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  getQuarterlySetting(): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/getQuarterlySetting`, {})
+      .pipe(catchError(this.handleError));
+  }
+ /**
+    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
+    */
+  getAllAttitudeScoreL1L2ByAccountId(accountId): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllAttitudeScoreL1L2ByAccountId?accountId=${accountId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  import(file,uploadBy) {
+    const formData = new FormData();
+    formData.append('UploadedFile', file);
+    formData.append('UploadBy', uploadBy);
+    return this.http.post(uploadBy + 'todolist/Import', formData);
   }
 }

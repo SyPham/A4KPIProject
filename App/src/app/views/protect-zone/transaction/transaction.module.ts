@@ -1,3 +1,4 @@
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { AttitudeScoreComponent } from './todolist/attitude-score/attitude-score.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -20,6 +21,9 @@ import { UpdateResultComponent } from './todolist/update-result/update-result.co
 import { SelfScoreComponent } from './todolist/self-score/self-score.component';
 import { KpiScoreComponent } from './todolist/kpi-score/kpi-score.component';
 import { AttitudeScoreL2Component } from './todolist/attitude-score-l2/attitude-score-l2.component';
+import { KpiScoreGHRComponent } from './todolist/kpi-score-ghr/kpi-score-ghr.component';
+import { KpiScoreGMComponent } from './todolist/kpi-score-gm/kpi-score-gm.component';
+import { AttitudeScoreGHRComponent } from './todolist/attitude-score-ghr/attitude-score-ghr.component';
 
 
 
@@ -56,7 +60,10 @@ if (lang === 'vi') {
     SelfScoreComponent,
     KpiScoreComponent,
     AttitudeScoreComponent,
-    AttitudeScoreL2Component
+    AttitudeScoreL2Component,
+    KpiScoreGHRComponent,
+    KpiScoreGMComponent,
+    AttitudeScoreGHRComponent
   ],
   imports: [
     CommonModule,
@@ -70,6 +77,7 @@ if (lang === 'vi') {
     DateInputsModule ,
     ToolbarModule,
     MultiSelectAllModule,
+    DatePickerModule,
     TabModule,
     TranslateModule.forChild({
       loader: {

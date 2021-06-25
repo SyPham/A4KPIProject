@@ -26,9 +26,6 @@ namespace ScoreKPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountGroupId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AccountTypeId")
                         .HasColumnType("int");
 
@@ -59,19 +56,11 @@ namespace ScoreKPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("RoleOC")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("StatusOC")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Username")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountGroupId");
 
                     b.HasIndex("AccountTypeId");
 
@@ -215,6 +204,10 @@ namespace ScoreKPI.Migrations
                     b.Property<int>("ScoreBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("ScoreType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
@@ -256,6 +249,10 @@ namespace ScoreKPI.Migrations
 
                     b.Property<int>("PeriodTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ScoreType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -348,6 +345,10 @@ namespace ScoreKPI.Migrations
 
                     b.Property<int>("ScoreBy")
                         .HasColumnType("int");
+
+                    b.Property<string>("ScoreType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -599,6 +600,9 @@ namespace ScoreKPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("DisplayBefore")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -740,10 +744,6 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.Account", b =>
                 {
-                    b.HasOne("ScoreKPI.Models.AccountGroup", null)
-                        .WithMany("Accounts")
-                        .HasForeignKey("AccountGroupId");
-
                     b.HasOne("ScoreKPI.Models.AccountType", "AccountType")
                         .WithMany("Accounts")
                         .HasForeignKey("AccountTypeId");
@@ -998,8 +998,6 @@ namespace ScoreKPI.Migrations
 
             modelBuilder.Entity("ScoreKPI.Models.AccountGroup", b =>
                 {
-                    b.Navigation("Accounts");
-
                     b.Navigation("Periods");
                 });
 
