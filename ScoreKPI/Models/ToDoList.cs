@@ -17,6 +17,8 @@ namespace ScoreKPI.Models
         public string Action { get; set; }
         public string Remark { get; set; }
         public int ObjectiveId { get; set; }
+        public int? ParentId { get; set; }
+        public int Level { get; set; }
 
         public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }

@@ -5,6 +5,8 @@ export interface ToDoList {
   remark: string;
   progressId: number | null;
   objectiveId: number;
+  level: number;
+  parentId: number | null;
   createdBy: number;
   modifiedBy: number | null;
   createdTime: string;

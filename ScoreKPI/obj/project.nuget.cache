@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LAkafBfwSsIB1Y4UX0bRGqESs32nH4JtkGljG/02fWRhnX2JzoDEpNhDNPjzThpTXeqvUUCjiPIfBXZ47Gv0eQ==",
+  "dgSpecHash": "LuD24JYf3a88Rm0NYUjogWx1GCLIfM8e5snLCRBgCu0IvIpnFj2ZYnFCVnG6Kalvs/P2zKMJTBtAdoT2jmpgrw==",
   "success": true,
   "projectFilePath": "H:\\a_2021\\ScoreKPI\\ScoreKPI\\ScoreKPI.csproj",
   "expectedPackageFiles": [
@@ -12,6 +12,7 @@
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.7\\microsoft.aspnetcore.authentication.jwtbearer.5.0.7.nupkg.sha512",
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\5.0.7\\microsoft.aspnetcore.jsonpatch.5.0.7.nupkg.sha512",
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\5.0.7\\microsoft.aspnetcore.mvc.newtonsoftjson.5.0.7.nupkg.sha512",
+    "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.aspnetcore.spaservices.extensions\\5.0.7\\microsoft.aspnetcore.spaservices.extensions.5.0.7.nupkg.sha512",
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\sy.pham\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",

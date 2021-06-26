@@ -54,6 +54,8 @@ export class ActionComponent implements OnInit {
       yourObjective: '',
       action:  '',
       remark:  '',
+      parentId: 0,
+      level: 0,
       progressId: null,
       objectiveId: this.data.id,
       createdBy: 0,

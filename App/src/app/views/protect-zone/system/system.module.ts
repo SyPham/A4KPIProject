@@ -7,7 +7,7 @@ import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
 import { HttpClient } from '@angular/common/http'
 import { TranslateHttpLoader } from '@ngx-translate/http-loader'
-import { loadCldr } from '@syncfusion/ej2-base'
+import { L10n, loadCldr, setCulture } from '@syncfusion/ej2-base'
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs'
 import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid'
 
@@ -79,4 +79,23 @@ if (lang === 'vi') {
     }),
   ]
 })
-export class SystemModule { }
+export class SystemModule  {
+  vi: any;
+  en: any;
+  constructor() {
+    if (lang === 'vi') {
+      defaultLang = 'vi';
+      setTimeout(() => {
+        L10n.load(require('../../../../assets/ej2-lang/vi.json'));
+        setCulture('vi');
+      });
+    } else {
+      defaultLang = 'en';
+      setTimeout(() => {
+        L10n.load(require('../../../../assets/ej2-lang/en.json'));
+        setCulture('en');
+      });
+    }
+  }
+}
+
