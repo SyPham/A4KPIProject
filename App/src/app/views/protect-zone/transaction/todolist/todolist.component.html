@@ -38,11 +38,14 @@
         </ng-template>
       </e-column>
       <e-column field='topic' headerText='KPI Objective' type='string'>
+        <ng-template #template let-data>
+          <span>{{data.topic}}</span> <span *ngIf="data.isReject && data.isDisplayUploadResult" class="badge badge-danger">Rejected</span>
+        </ng-template>
       </e-column>
       <e-column field='option' headerText='Option'>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" (click)='openActionModalComponent(data)'>Action</button>
+            <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.isDisplayAction" (click)='openActionModalComponent(data)'>Action</button>
             <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.isDisplayUploadResult" (click)='openUpdateResultModalComponent(data)'>Update Result</button>
             <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.isDisplaySelfScore" (click)='openSelfScoreModalComponent(data)'>Self-score</button>
           </div>
@@ -145,7 +148,28 @@
     </e-columns>
   </ejs-grid>
 </ng-template>
-
+<!-- Functional Leader -->
+<ng-template #GridtemplateRef>
+  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
+  [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+  <e-columns>
+    <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
+      <ng-template #template let-data>
+        {{NO(data.index)}}
+      </ng-template>
+    </e-column>
+    <e-column field='objective' headerText='Objective' type='string'>
+    </e-column>
+    <e-column field='option' headerText='Option'>
+      <ng-template #template let-data>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-secondary mr-2" (click)='openAttitudeScoreFunctionalLeaderModalComponent(data)'>Attitude Score</button>
+        </div>
+      </ng-template>
+    </e-column>
+  </e-columns>
+</ejs-grid>
+</ng-template>
 <!-- GM -->
 <ng-template #GridtemplateRef>
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'

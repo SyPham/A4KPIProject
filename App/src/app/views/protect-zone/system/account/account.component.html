@@ -44,6 +44,26 @@
                 <ejs-multiselect [(ngModel)]='accountGroupItem' [fields]="fields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select months of the Year' [dataSource]='accountGroupData'></ejs-multiselect>
               </ng-template>
               </e-column>
+
+
+                <e-column field='manager' headerText="{{'L1 Manager'}}" width='150' textAlign='Center'>
+                  <ng-template #template let-data>
+                    {{data.managerName}}
+                  </ng-template>
+                  <ng-template #editTemplate let-data>
+                    <ejs-dropdownlist [(ngModel)]='managerId' [fields]="managerFields" placeholder='Select a manager' [dataSource]='managers'></ejs-dropdownlist>
+                  </ng-template>
+                  </e-column>
+
+                  <e-column field='leaderName' headerText="{{'Functional Leader'}}" width='150' textAlign='Center'>
+                    <ng-template #template let-data>
+                      {{data.leaderName}}
+                    </ng-template>
+                    <ng-template #editTemplate let-data>
+                      <ejs-dropdownlist [(ngModel)]='leaderId' [fields]="leaderFields" placeholder='Select a leader' [dataSource]='leaders'></ejs-dropdownlist>
+                    </ng-template>
+                    </e-column>
+
             <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option' | translate}}">
               <ng-template #template let-data>
                 <div class="btn-group">

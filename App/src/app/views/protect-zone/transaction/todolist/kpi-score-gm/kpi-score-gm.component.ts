@@ -29,6 +29,8 @@ export class KpiScoreGMComponent implements OnInit {
   @Input() data: any;
   @Input() periodTypeCode: PeriodType;
   @Input() scoreType: SystemScoreType;
+  @Input() currentTime: any;
+
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -112,7 +114,7 @@ export class KpiScoreGMComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id, this.currentTime).subscribe(data => {
       this.gridData = data;
     });
   }

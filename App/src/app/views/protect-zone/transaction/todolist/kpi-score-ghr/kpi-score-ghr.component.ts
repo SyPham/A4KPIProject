@@ -1,3 +1,5 @@
+import { ObjectiveService } from 'src/app/_core/_service/objective.service';
+import { SmartScoreService } from './../../../../../_core/_service/smart-score.service';
 import { filter } from 'rxjs/operators';
 import { UtilitiesService } from '../../../../../_core/_service/utilities.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
@@ -19,6 +21,7 @@ import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
 import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
+import { SmartScore } from 'src/app/_core/_model/smart-score';
 @Component({
   selector: 'app-kpi-score-ghr',
   templateUrl: './kpi-score-ghr.component.html',
@@ -29,6 +32,8 @@ export class KpiScoreGHRComponent implements OnInit {
   @Input() data: any;
   @Input() periodTypeCode: PeriodType;
   @Input() scoreType: SystemScoreType;
+  @Input() currentTime: any;
+
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -44,11 +49,15 @@ export class KpiScoreGHRComponent implements OnInit {
   commentModel: Comment;
   quarterlySettingsData = [];
   columns = [];
+  objectiveIds: any = [];
+  smartScoreData: SmartScore[];
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
     public kpiScoreService: KPIScoreService,
     public kpiService: KPIService,
+    public objectiveService: ObjectiveService,
+    public smartScoreService: SmartScoreService,
     public commentService: Commentv2Service,
     private alertify: AlertifyService,
     private utilitiesService: UtilitiesService
@@ -83,10 +92,12 @@ export class KpiScoreGHRComponent implements OnInit {
     this.getQuarterlySetting();
     this.loadData();
     this.loadKPIScoreData();
+    this.loadSmartScoreData();
     this.loadKPIData();
     this.getFisrtByAccountId();
     this.getFisrtCommentByObjectiveId();
   }
+
   getMonthListInCurrentQuarter(index) {
 
     const listMonthOfEachQuarter =
@@ -112,8 +123,11 @@ export class KpiScoreGHRComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllKPIScoreGHRByAccountId(this.data.id, this.currentTime).subscribe(data => {
       this.gridData = data;
+      this.objectiveIds = data.filter( (item: any) => {
+        return item.isReject == true;
+      }).map( (item: any) => { return item.id}) || [];
     });
   }
   loadKPIScoreData() {
@@ -148,6 +162,11 @@ export class KpiScoreGHRComponent implements OnInit {
       this.kpiData = data;
     });
   }
+  loadSmartScoreData() {
+    this.smartScoreService.getAll().subscribe(data => {
+      this.smartScoreData = data;
+    });
+  }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
     const data = args.data as any;
     const fields = ['month'];
@@ -156,20 +175,18 @@ export class KpiScoreGHRComponent implements OnInit {
         (args.cell as any).innerText = data.resultOfMonth.filter(x=>x.month === month)[0]?.title || "N/A";
       }
     }
-    // if (fields.includes(args.column.field)) {
-    //   args.rowSpan = (this.gridData as any).filter(
-    //     item => item.month === data.month
-    //   ).length;
-    // }
-    // if (args.column.field.includes("resultOfMonth")) {
-    //   args.rowSpan = (this.gridData as any).filter(
-    //     item => item.month === data.month
-    //   ).length;
-    // }
   }
 
+  onchangeReject(args, data) {
+    if (args) {
+      this.objectiveIds.push(data.todolistId);
+      this.objectiveIds = this.utilitiesService.toDistinct(this.objectiveIds);
+    } else {
+      const value = data.todolistId;
+      this.objectiveIds = this.utilitiesService.toArrayRemove(this.objectiveIds, value);
+    }
+  }
   addKPIScore() {
-
     this.kpiScoreModel.point = this.point;
     return this.kpiScoreService.add(this.kpiScoreModel);
   }
@@ -177,14 +194,75 @@ export class KpiScoreGHRComponent implements OnInit {
     this.commentModel.content = this.content;
     return this.commentService.add(this.commentModel);
   }
-  finish() {
-    if (!this.point) {
-      this.alertify.warning('Not yet complete. Can not submit!', true);
+  reject() {
+    if (this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {
+      this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
+      return;
+    }
+    if (this.objectiveIds.length === 0) {
+      this.alertify.warning(`There's no reject item, please check remark. 您沒有選擇不合格的項目，請完成勾選`, true);
+      return;
+    }
+    const comment = this.addComment();
+    const release = this.service.reject(this.objectiveIds);
+    forkJoin([comment, release]).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.alertify.success('Successfully 成功地', true);
+      } else {
+        this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
+      }
+    })
+  }
+  release() {
+    const ids = (this.grid.dataSource as any).map( x => { return x.todolistId; }) || [];
+    if (ids.length === 0) {
+      this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
+      return;
+    }
+    if (this.objectiveIds.length > 0) {
+      this.alertify.warning(`You ticked in reject column, please click Reject . 您有勾選不合格的項目，請按Reject`, true);
+      return;
+    }
+    if (this.utilitiesService.isUndefinedOrNull(this.point)) {
+      this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
+      return;
+    }
+    if (
+      !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
+      this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
+    ) {
+      this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
       return;
     }
     const kpiScore = this.addKPIScore();
-    // const comment = this.addComment();
-    forkJoin([kpiScore]).subscribe(response => {
+    const comment = this.addComment();
+    const release = this.service.release(ids);
+    forkJoin([kpiScore, comment, release]).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.alertify.success('Successfully 成功地', true);
+      } else {
+        this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
+      }
+    })
+  }
+  finish() {
+
+    if (
+      !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
+      this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
+    ) {
+      this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
+      return;
+    }
+    const kpiScore = this.addKPIScore();
+    const comment = this.addComment();
+    forkJoin([kpiScore, comment]).subscribe(response => {
       console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);

@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { KpiScoreComponent } from './kpi-score/kpi-score.component';
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
-import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, QueryList, ViewChildren, OnDestroy } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
@@ -18,6 +19,7 @@ import { KpiScoreGHRComponent } from './kpi-score-ghr/kpi-score-ghr.component';
 import { environment } from 'src/environments/environment';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { DatePipe } from '@angular/common';
+import { AttitudeScoreFunctionalLeaderComponent } from './attitude-score-functional-leader/attitude-score-functional-leader.component';
 
 @Component({
   selector: 'app-todolist',
@@ -25,7 +27,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./todolist.component.scss'],
   providers: [DatePipe]
 })
-export class TodolistComponent implements OnInit {
+export class TodolistComponent implements OnInit, OnDestroy {
   @ViewChild('grid') grid: GridComponent;
   @ViewChildren('GridtemplateRef') public Gridtemplates: QueryList< TemplateRef<any>>;
   gridData: object;
@@ -43,6 +45,7 @@ export class TodolistComponent implements OnInit {
   currentTime: any ;
   currentTimeRequest: any ;
   index: any = 1;
+  subscription: Subscription[] = [];
   constructor(
     private service: ObjectiveService,
     private alertify: AlertifyService,
@@ -51,6 +54,9 @@ export class TodolistComponent implements OnInit {
     public modalService: NgbModal,
     private datePipe: DatePipe,
   ) { }
+  ngOnDestroy(): void {
+    this.subscription.forEach( item => item.unsubscribe());
+  }
   onChangeReportTime(value: Date): void {
     this.loadData();
   }
@@ -59,6 +65,7 @@ export class TodolistComponent implements OnInit {
 
     this.loadAccountGroupData();
     this.loadData();
+    this.subscription.push(this.todolistService.currentMessage.subscribe(message => {if (message) { this.loadData(); }}));
   }
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
@@ -71,6 +78,10 @@ export class TodolistComponent implements OnInit {
       case SystemRole.L1:
         this.scoreType = SystemScoreType.L1;
         this.loadDataL1();
+      break;
+      case SystemRole.FunctionalLeader:
+        this.scoreType = SystemScoreType.FunctionalLeader;
+        this.loadDataFunctionalLeader();
       break;
       case SystemRole.L2:
         this.scoreType = SystemScoreType.L2;
@@ -91,6 +102,7 @@ export class TodolistComponent implements OnInit {
     }
   }
   selected(args) {
+    console.log(args);
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
     const index = args.selectedIndex + 1;
     this.index = index;
@@ -102,6 +114,10 @@ export class TodolistComponent implements OnInit {
       case SystemRole.L1:
         this.scoreType = SystemScoreType.L1;
         this.loadDataL1();
+      break;
+      case SystemRole.FunctionalLeader:
+        this.scoreType = SystemScoreType.FunctionalLeader;
+        this.loadDataFunctionalLeader();
       break;
       case SystemRole.L2:
         this.scoreType = SystemScoreType.L2;
@@ -132,6 +148,11 @@ export class TodolistComponent implements OnInit {
 
   loadDataL1() {
     this.todolistService.l1(this.currentTimeRequest).subscribe(data => {
+      this.gridData = data;
+    });
+  }
+  loadDataFunctionalLeader() {
+    this.todolistService.functionalLeader(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -168,13 +189,16 @@ export class TodolistComponent implements OnInit {
     modalRef.componentInstance.data = data;
     modalRef.result.then((result) => {
     }, (reason) => {
+      this.loadData();
     });
   }
   openUpdateResultModalComponent(data) {
     const modalRef = this.modalService.open(UpdateResultComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.isReject = data.isReject;
     modalRef.result.then((result) => {
     }, (reason) => {
+      this.loadData();
     });
   }
   openSelfScoreModalComponent(data) {
@@ -185,6 +209,7 @@ export class TodolistComponent implements OnInit {
 
     modalRef.result.then((result) => {
     }, (reason) => {
+      this.loadData();
     });
   }
   openKPIScoreModalComponent(data) {
@@ -192,6 +217,7 @@ export class TodolistComponent implements OnInit {
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.componentInstance.currentTime = this.currentTime;
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -201,6 +227,8 @@ export class TodolistComponent implements OnInit {
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.componentInstance.currentTime = this.currentTime;
+
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -210,6 +238,8 @@ export class TodolistComponent implements OnInit {
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.componentInstance.currentTime = this.currentTime;
+
     modalRef.result.then((result) => {
     }, (reason) => {
     });
@@ -233,6 +263,14 @@ export class TodolistComponent implements OnInit {
 
   openAttitudeScoreGHRModalComponent(data) {
     const modalRef = this.modalService.open(AttitudeScoreGHRComponent, { size: 'xl', backdrop : 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openAttitudeScoreFunctionalLeaderModalComponent(data) {
+    const modalRef = this.modalService.open(AttitudeScoreFunctionalLeaderComponent, { size: 'xl', backdrop : 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {

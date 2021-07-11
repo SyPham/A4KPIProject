@@ -29,6 +29,7 @@ export class KpiScoreComponent implements OnInit {
   @Input() data: any;
   @Input() periodTypeCode: PeriodType;
   @Input() scoreType: SystemScoreType;
+  @Input() currentTime: any;
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -112,7 +113,7 @@ export class KpiScoreComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id, this.currentTime).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -177,9 +178,15 @@ export class KpiScoreComponent implements OnInit {
     this.commentModel.content = this.content;
     return this.commentService.add(this.commentModel);
   }
+  isShowSelfScore() {
+    const Q2 = 2;
+    const Q4 = 4;
+    const settings = [Q2, Q4];
+    return settings.includes(this.data.period)
+  }
   finish() {
     if (!this.point) {
-      this.alertify.warning('Not yet complete. Can not submit!', true);
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
     const kpiScore = this.addKPIScore();

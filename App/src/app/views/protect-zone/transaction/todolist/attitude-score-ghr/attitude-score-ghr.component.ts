@@ -161,7 +161,7 @@ export class AttitudeScoreGHRComponent implements OnInit {
   }
   finish() {
     if (!this.point) {
-      this.alertify.warning('Not yet complete. Can not submit!', true);
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
     const attitudeScore =  this.addAttitudeScore();
