@@ -16,4 +16,8 @@ export interface Account {
   accountType: AccountType;
   accountGroupText: string;
   accountGroupIds: number[];
+  leader: number;
+  manager: number;
+  leaderName: string;
+  managerName: string;
 }

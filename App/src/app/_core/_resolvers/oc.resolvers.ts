@@ -3,7 +3,6 @@ import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AlertifyService } from '../_service/alertify.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Oc } from '../_model/oc';
 import { OcService } from '../_service/oc.service';
 
 @Injectable()

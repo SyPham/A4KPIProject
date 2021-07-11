@@ -51,7 +51,6 @@ import { GridAllModule } from '@syncfusion/ej2-angular-grids';
 
 import { MomentModule } from 'ngx-moment';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpLoaderFactory } from './views/ec/ec.module';
 import { HttpClient } from '@angular/common/http';
 import { CoreModule } from './_core/core.module';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
@@ -64,17 +63,9 @@ import { MentionModule } from 'angular-mentions';
 import { BasicAuthInterceptor } from './_core/_helper/basic-auth.interceptor';
 import { ErrorInterceptorProvider } from './_core/_service/error.interceptor';
 import { AuthGuard } from './_core/_guards/auth.guard';
-import { FollowResolver } from './_core/_resolvers/follow.resolvers';
-import { GlueResolver } from './_core/_resolvers/glue.resolver';
-import { HistoryResolver } from './_core/_resolvers/history.resolvers';
-import { ProjectResolver } from './_core/_resolvers/project.resolvers';
-import { ProjectDetailResolver } from './_core/_resolvers/projectDetail.resolvers';
-import { RoleResolver } from './_core/_resolvers/role.resolvers';
-import { TodolistResolver } from './_core/_resolvers/todolist.resolvers';
-import { UserResolver } from './_core/_resolvers/user.resolvers';
 import { AlertifyService } from './_core/_service/alertify.service';
-import { AuthService } from './_core/_service/auth.service';
 import { Authv2Service } from './_core/_service/authv2.service';
+import { HttpLoaderFactory } from './views/protect-zone/system/system.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -145,15 +136,7 @@ export function tokenGetter() {
     AuthGuard,
     NgxSpinnerService,
     ErrorInterceptorProvider,
-    ProjectResolver,
-    TodolistResolver,
-    HistoryResolver,
-    FollowResolver,
-    UserResolver,
-    ProjectDetailResolver,
-    RoleResolver,
     Authv2Service,
-    GlueResolver,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

@@ -4,22 +4,36 @@ import { Injectable } from '@angular/core';
 import { UtilitiesService } from './utilities.service';
 import { SelfScore, ToDoList, ToDoListByLevelL1L2Dto, ToDoListL1L2, ToDoListOfQuarter } from '../_model/todolistv2';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Objective } from '../_model/objective';
+import { OperationResult } from '../_model/operation.result';
 @Injectable({
   providedIn: 'root'
 })
 export class Todolistv2Service extends CURDService<ToDoList> {
-
+  messageSource = new BehaviorSubject<boolean>(null);
+  currentMessage = this.messageSource.asObservable();
+  // có thể subcribe theo dõi thay đổi value của biến này thay cho messageSource
   constructor(http: HttpClient, utilitiesService: UtilitiesService) {
     super(http, "Todolist", utilitiesService);
   }
-  getAllByObjectiveId(objectiveId): Observable<ToDoList[]> {
+   // method này để change source message
+  changeMessage(message) {
+    this.messageSource.next(message);
+  }
+
+  getAllByObjectiveId(objectiveId): Observable<any[]> {
     return this.http
-      .get<ToDoList[]>(`${this.base}${this.entity}/GetAllByObjectiveId?objectiveId=${objectiveId}`, {})
+      .get<any[]>(`${this.base}${this.entity}/GetAllByObjectiveId?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
   }
+  getAllByObjectiveIdAsTree(objectiveId): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/GetAllByObjectiveIdAsTree?objectiveId=${objectiveId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
   l0(currentTime): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.base}${this.entity}/L0?currentTime=${currentTime}`, {})
@@ -30,6 +44,12 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<any[]>(`${this.base}${this.entity}/L1?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
+  functionalLeader(currentTime): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/FunctionalLeader?currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
   l2(currentTime): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.base}${this.entity}/L2?currentTime=${currentTime}`, {})
@@ -87,12 +107,40 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<SelfScore[]>(`${this.base}${this.entity}/getAllKPISelfScoreByObjectiveId?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
   }
+  dateToYMD(date) {
+    var d = date.getDate();
+    var m = date.getMonth() + 1; //Month from 0 to 11
+    var y = date.getFullYear();
+    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+  }
+
   /**
     * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
     */
-   getAllKPIScoreL1L2ByAccountId(accountId): Observable<[]> {
+   getAllKPIScoreL1L2ByAccountId(accountId,currentTime): Observable<[]> {
     return this.http
-      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL1L2ByAccountId?accountId=${accountId}`, {})
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL1L2ByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
+      .pipe(catchError(this.handleError));
+  }
+    /**
+    * // TODO: Lấy dữ kiệu cho vai trò là GHR khi click vào KPI Score Button
+    */
+     getAllKPIScoreGHRByAccountId(accountId,currentTime): Observable<[]> {
+      return this.http
+        .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreGHRByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
+        .pipe(catchError(this.handleError));
+    }
+ /**
+    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
+    */
+  getAllKPIScoreL0ByPeriod(period): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL0ByPeriod?period=${period}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  getAllAttitudeScoreByFunctionalLeader(): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/GetAllAttitudeScoreByFunctionalLeader`, {})
       .pipe(catchError(this.handleError));
   }
   getQuarterlySetting(): Observable<any[]> {
@@ -113,5 +161,20 @@ export class Todolistv2Service extends CURDService<ToDoList> {
     formData.append('UploadedFile', file);
     formData.append('UploadBy', uploadBy);
     return this.http.post(uploadBy + 'todolist/Import', formData);
+  }
+  reject(ids): Observable<OperationResult> {
+    return this.http
+      .put<OperationResult>(`${this.base}${this.entity}/reject`, {ids})
+      .pipe(catchError(this.handleError));
+  }
+  disableReject(ids): Observable<OperationResult> {
+    return this.http
+      .put<OperationResult>(`${this.base}${this.entity}/DisableReject`, {ids})
+      .pipe(catchError(this.handleError));
+  }
+  release(ids): Observable<OperationResult> {
+    return this.http
+      .put<OperationResult>(`${this.base}${this.entity}/release`, {ids})
+      .pipe(catchError(this.handleError));
   }
 }

@@ -19,4 +19,13 @@ export class Commentv2Service extends CURDService<Comment> {
     const apiUrl =`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
     return this.http.get<Comment>(apiUrl, {}).pipe(catchError(this.handleError));
   }
+  getFunctionalLeaderCommentByAccountId(accountId, periodTypeId, period): Observable<Comment> {
+    const apiUrl =`${this.base}${this.entity}/GetFunctionalLeaderCommentByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}`;
+    return this.http.get<Comment>(apiUrl, {}).pipe(catchError(this.handleError));
+  }
+
+ getGHRCommentByAccountId(accountId, periodTypeId, period): Observable<Comment> {
+    const apiUrl =`${this.base}${this.entity}/GetGHRCommentByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}`;
+    return this.http.get<Comment>(apiUrl, {}).pipe(catchError(this.handleError));
+  }
 }

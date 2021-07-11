@@ -95,4 +95,24 @@ export class UtilitiesService {
     var month = d.getMonth() + 1;
     return (Math.ceil(month / 3));
   }
+  isUndefinedOrNullOrEmpty(value): boolean {
+    if (value === undefined || value === null || value === '')
+      return true;
+    return false;
+  }
+  isUndefinedOrNull(value): boolean {
+    if (value === undefined || value === null || value === '')
+      return true;
+    return false;
+  }
+  toDistinct(array) {
+    const uniqueArray = [...new Set(array)]
+    return uniqueArray;
+  }
+  toArrayRemove(arr, value) {
+
+    return arr.filter(function(ele){
+        return ele != value;
+    });
+}
 }
