@@ -23,7 +23,11 @@ namespace A4KPI.Controllers
         {
             return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId, period, scoreType));
         }
-       
+        [HttpGet]
+        public async Task<ActionResult> GetL1AttitudeScoreByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            return Ok(await _service.GetL1AttitudeScoreByAccountId(accountId, periodTypeId, period, scoreType));
+        }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {

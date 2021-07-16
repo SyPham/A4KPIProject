@@ -20,7 +20,7 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   toolbarBuilding: object;
   toolbarUser: object;
   data: any;
-  ocID: number;
+  OCId: number;
   userData: any;
   buildingUserData: any;
   ocName: number
@@ -33,10 +33,10 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   accountList: any = [];
   @ViewChild('addUserOc') public addUserOc: TemplateRef<any>;
   model = {
-    UserID: 0,
-    OCID: 0,
-    OCname: null,
-    AccountIdList: this.accountIdList
+    accountId: 0,
+    ocId: 0,
+    ocName: null,
+    accountIdList: this.accountIdList
   };
   modalReference: NgbModalRef;
   constructor(
@@ -53,16 +53,16 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   actionBegin(args) {
     if (args.requestType === 'delete') {
       const obj = {
-        userID: args.data[0].ID,
-        OCID: this.ocID,
-        OCname: this.ocName
+        accountId: args.data[0].ID,
+        ocId: this.OCId,
+        ocName: this.ocName
       }
       this.removeBuildingUser(obj);
    }
   }
   openModal(item) {
     this.getAllUsers();
-    this.modalReference = this.modalService.open(this.addUserOc, { size: 'xl' });
+    this.modalReference = this.modalService.open(this.addUserOc, { size: 'lg' });
   }
 
   toolbarClick(args: any): void {
@@ -80,21 +80,21 @@ export class OcUserComponent extends BaseComponent implements OnInit {
 
   create() {
     this.model = {
-      UserID: 0,
-      OCID: this.ocID,
-      OCname: this.ocName,
-      AccountIdList: this.accountIdList
+      accountId: 0,
+      ocId: this.OCId,
+      ocName: this.ocName,
+      accountIdList: this.accountIdList
     };
     this.ocService.mapRangeUserOC(this.model).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
-        this.getUserByOcID(this.ocID);
+        this.getUserByOcID(this.OCId);
         this.accountIdList = [];
         this.model = {
-          UserID: 0,
-          OCID: 0,
-          OCname: null,
-          AccountIdList: this.accountIdList
+          accountId: 0,
+          ocId: 0,
+          ocName: null,
+          accountIdList: this.accountIdList
         };
         this.modalService.dismissAll();
       } else {
@@ -121,16 +121,14 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   }
 
   createdUsers() {
-    // this.getAllUsers();
   }
 
   rowSelected(args) {
     const data = args.data.entity || args.data;
-    this.ocID = Number(data.id);
+    this.OCId = Number(data.id);
     this.ocName = data.name;
     if (args.isInteracted) {
-      // this.getUserByOcName(this.ocName);
-      this.getUserByOcID(this.ocID);
+      this.getUserByOcID(this.OCId);
     }
   }
 
@@ -144,12 +142,10 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocService.mapUserOC(obj).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(res.message);
-        // this.getUserByOcName(this.ocName);
-        this.getUserByOcID(this.ocID);
+        this.getUserByOcID(this.OCId);
       } else {
         this.alertify.warning(res.message);
-        // this.getUserByOcName(this.ocName);
-        this.getUserByOcID(this.ocID);
+        this.getUserByOcID(this.OCId);
       }
     });
   }
@@ -158,12 +154,10 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.ocService.removeUserOC(obj).subscribe((res: any) => {
       if (res.status) {
         this.alertify.success(res.message);
-        //this.getUserByOcName(this.ocName);
-        this.getUserByOcID(this.ocID);
+        this.getUserByOcID(this.OCId);
       } else {
         this.alertify.warning(res.message);
-        //this.getUserByOcName(this.ocName);
-        this.getUserByOcID(this.ocID);
+        this.getUserByOcID(this.OCId);
 
       }
     });
@@ -173,36 +167,28 @@ export class OcUserComponent extends BaseComponent implements OnInit {
     this.accountService.getAll().subscribe((res: any) => {
       const data = res.map((i: any) => {
         return {
-          ID: i.id,
-          Username: i.fullName,
-          Email: i.email,
-          Status: this.checkStatus(i.id)
+          id: i.id,
+          fullName: i.fullName,
+          email: i.email,
+          status: this.checkStatus(i.id)
         };
       });
-      this.userData = data.filter(x => x.Status);
-      // this.userData = data;
+      this.userData = data.filter(x => x.status);
       this.accountData = res ;
     });
   }
 
-  getUserByOcName(ocName) {
-    this.ocService.GetUserByOCname(ocName).subscribe(res => {
+  getUserByOcID(OCId) {
+    this.ocService.GetUserByOcID(OCId).subscribe(res => {
       this.OcUserData = res || [];
       this.getAllUsers();
     });
   }
 
-  getUserByOcID(ocID) {
-    this.ocService.GetUserByOcID(ocID).subscribe(res => {
-      this.OcUserData = res || [];
-      this.getAllUsers();
-    });
-  }
-
-  checkStatus(userID) {
+  checkStatus(accountId) {
     this.OcUserData = this.OcUserData || [];
     const item = this.OcUserData.filter(i => {
-      return i.userID === userID && i.ocid === this.ocID;
+      return i.accountId === accountId && i.ocId === this.OCId;
     });
     if (item.length <= 0) {
       return false;
@@ -213,19 +199,19 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   }
 
   onChangeMap(args, data) {
-    if (this.ocID > 0) {
+    if (this.OCId > 0) {
       if (args.checked) {
         const obj = {
-          userID: data.ID,
-          OCID: this.ocID,
-          OCname: this.ocName
+          accountId: data.id,
+          ocId: this.OCId,
+          ocName: this.ocName
         };
         this.mappingUserWithBuilding(obj);
       } else {
         const obj = {
-          userID: data.ID,
-          OCID: this.ocID,
-          OCname: this.ocName
+          accountId: data.id,
+          ocId: this.OCId,
+          ocName: this.ocName
         }
         this.removeBuildingUser(obj);
       }

@@ -31,6 +31,25 @@ namespace A4KPI.Controllers
             return Ok(await _service.GetFisrtSelfScoreByAccountId(accountId, periodTypeId, period, scoreType));
         }
         [HttpGet]
+        public async Task<ActionResult> GetFisrtSelfScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            return Ok(await _service.GetFisrtSelfScoreL1ByAccountId(accountId, periodTypeId, period, scoreType));
+        }
+
+        /// <summary>
+        /// Lấy điểm L1 chấm cho L0 theo tháng, quý hoặc nửa năm. Sử dụng cho L2 modal
+        /// </summary>
+        /// <param name="accountId">L0</param>
+        /// <param name="periodTypeId">Loại tháng, quý, nửa năm</param>
+        /// <param name="period">Tháng, quý hoặc nửa năm</param>
+        /// <param name="scoreType">Chấm điểm bởi L1, L2 hoặc GHR</param>
+        /// <returns>Trả về điểm L1 chấm cho L0 theo tháng, quý hoặc nửa năm</returns>
+        [HttpGet]
+        public async Task<ActionResult> GetFisrtKPIScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            return Ok(await _service.GetFisrtKPIScoreL1ByAccountId(accountId, periodTypeId, period, scoreType));
+        }
+        [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
             return Ok((await _service.GetAllAsync()).OrderBy(x=>x.Point));

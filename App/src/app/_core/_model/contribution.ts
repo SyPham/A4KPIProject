@@ -1,6 +1,7 @@
 export interface Contribution {
   id: number;
   content: string;
+  scoreType: string;
   createdBy: number;
   accountId: number;
   periodTypeId: number;

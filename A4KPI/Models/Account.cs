@@ -34,5 +34,9 @@ namespace A4KPI.Models
         public virtual AccountType AccountType { get; set; }
         public virtual ICollection<Objective> Objectives { get; set; }
         public virtual ICollection<AccountGroupAccount> AccountGroupAccount { get; set; }
+
+        public virtual ICollection<Performance> Performances { get; set; }
+        public virtual ICollection<OCAccount> OCAccounts { get; set; }
+
     }
 }

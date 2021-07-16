@@ -18,7 +18,7 @@ namespace A4KPI.Services
 {
     public interface IResultOfMonthService : IServiceBase<ResultOfMonth, ResultOfMonthDto>
     {
-        Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId);
+        Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId, DateTime currentTime);
         Task<OperationResult> UpdateResultOfMonthAsync(ResultOfMonthRequestDto model);
 
     }
@@ -50,9 +50,9 @@ namespace A4KPI.Services
             _configMapper = configMapper;
         }
 
-        public async Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId)
+        public async Task<List<ResultOfMonthDto>> GetAllByMonth(int objectiveId, DateTime currentTime)
         {
-            var month = DateTime.Now.Month;
+            var month = currentTime.Month;
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
             return await _repo.FindAll(x => x.CreatedBy == accountId && objectiveId == x.ObjectiveId && month == x.Month).ProjectTo<ResultOfMonthDto>(_configMapper).ToListAsync();

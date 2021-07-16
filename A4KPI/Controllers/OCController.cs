@@ -46,21 +46,21 @@ namespace A4KPI.Controllers
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> MappingUserOC([FromBody]OcUserDto OcUserDto)
+        public async Task<IActionResult> MappingUserOC([FromBody]OCAccountDto OcUserDto)
         {
             var result = await _service.MappingUserOC(OcUserDto);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> MappingRangeUserOC(OcUserDto OcUserDto)
+        public async Task<IActionResult> MappingRangeUserOC(OCAccountDto OcUserDto)
         {
             var result = await _service.MappingRangeUserOC(OcUserDto);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveUserOC([FromBody]OcUserDto OcUserDto)
+        public async Task<IActionResult> RemoveUserOC([FromBody]OCAccountDto OcUserDto)
         {
             var result = await _service.RemoveUserOC(OcUserDto);
             return Ok(result);

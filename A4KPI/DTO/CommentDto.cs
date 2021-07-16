@@ -11,6 +11,7 @@ namespace A4KPI.DTO
         public string ScoreType { get; set; }
 
         public int PeriodTypeId { get; set; }
+        public string CommentTypeId { get; set; }
         public int Period { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get; set; }

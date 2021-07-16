@@ -12,6 +12,13 @@ namespace A4KPI.Constants
         public static string HalfYear = "HalfYear";
 
     }
+    public class SystemPeriodType
+    {
+        public static int Monthly = 1;
+        public static int Quarterly = 2;
+        public static int HalfYear = 3;
+
+    }
     public class Quarter
     {
         public static int Q1 = 1;

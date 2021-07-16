@@ -367,11 +367,21 @@ export const navItems: INavData[] = [
     url: '/report',
     icon: 'icon-calculator',
     children: [
-      // {
-      //   name: 'KPI Objective',
-      //   url: '/kanban/objective',
-      //   icon: 'icon-cursor'
-      // },
+      {
+        name: 'Q1,Q3 Report 季報表',
+        url: '/report/q1-q3-report',
+        icon: 'icon-calculator'
+      },
+      {
+        name: 'H1 & H2 Report',
+        url: '/report/h1-h2-report',
+        icon: 'icon-calculator'
+      },
+      {
+        name: 'HQ HR Report 年中考核名單',
+        url: '/report/hq-hr-report',
+        icon: 'icon-calculator'
+      },
     ]
   }
   // {

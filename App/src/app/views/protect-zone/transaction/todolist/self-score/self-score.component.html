@@ -59,11 +59,25 @@
 
 <div class="row mt-2 d-flex justify-content-center">
   <div class="col-md-12">
+        <!-- Nếu có Functional Leader -->
+        <table class="table" *ngIf="hasFunctionalLeader && isQuarter2Or4">
+          <thead>
+            <tr>
+              <th scope="col" style="width:20%">Functional leader comment<br> 功能主管評語</th>
+              <th scope="col" style="width:50%">{{functionalLeaderCommentContent || ""}}</th>
+              <th scope="col" style="width:20%">Functional leader score<br>功能主管評分</th>
+              <th scope="col" style="width:10%;text-align: center; font-size: xx-large;">{{functionalLeaderAttitudeScoreData || 0}}</th>
+            </tr>
+          </thead>
+        </table>
+        <div class="alert alert-danger text-center" role="alert" *ngIf="hasFunctionalLeader && functionalLeaderScored === false">
+          <strong class="text-center"> Please ask functional leader to score attitude score L0!</strong>
+        </div>
+
     <table class="table " style="border: none;">
       <thead>
         <tr>
-          <th style="border: none; width: 60%;padding: 0" scope="col" class="text-center" [style.color]="content ? '#23282c' : 'white'">Functional Leader Comment<br>功能主管評語</th>
-          <th style="border: none; width: 20%;padding: 0;" scope="col" class="text-center" [style.color]="content ? '#23282c' : 'white'">Functional Leader Score <br>功能主管評態度分數</th>
+          <th style="border: none; width: 60%;padding: 0" scope="col" class="text-center">Self - Evaluation 自我評價</th>
           <th style="border: none; width: 20%;padding: 0;" scope="col" class="text-center">Self-Score <br>自評</th>
         </tr>
       </thead>
@@ -71,12 +85,9 @@
         <tr>
           <td style="border: none;">
             <div class="form-group">
-              <textarea id="comment" [style.display]="content ? 'block' : 'none'" style="pointer-events: none; cursor: pointer;" rows="6" type="text" [(ngModel)]="content"
+              <textarea id="comment" rows="6" type="text" [(ngModel)]="content"
               placeholder="Type something!" class="form-control"></textarea>
             </div>
-          </td>
-          <td style="border: none; text-align: center; font-size: xx-large;" [style.color]="content ? '#23282c' : 'white'">
-            {{attitudeScoreData?.point}}
           </td>
           <td style="border: none;">
             <div class="form-group">
@@ -93,6 +104,6 @@
 </div>
 
 <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' | translate}}</button>
-    <button type="button" class="btn btn-success" (click)="finish()" >{{'Finish' | translate}}</button>
+    <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' }}</button>
+    <button [disabled]="hasFunctionalLeader && functionalLeaderScored === false" type="button" class="btn btn-success" (click)="finish()" >{{'Finish' }}</button>
 </div>

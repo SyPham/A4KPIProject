@@ -48,10 +48,13 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<Period, PeriodDto>();
             CreateMap<AccountGroupAccount, AccountGroupAccountDto>();
 
-            CreateMap<OCUser, OcUserDto>();
+            CreateMap<OCAccount, OCAccountDto>()
+            .ForMember(d => d.FullName, o => o.MapFrom(s => s.Account.FullName));
             CreateMap<SpecialContributionScore, SpecialContributionScoreDto>();
             CreateMap<SpecialScore, SpecialScoreDto>();
             CreateMap<SmartScore, SmartScoreDto>();
+            CreateMap<Performance, PerformanceDto>();
+
 
         }
     }

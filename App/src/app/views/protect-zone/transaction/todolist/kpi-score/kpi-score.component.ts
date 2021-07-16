@@ -1,3 +1,4 @@
+import { CommentType } from './../../../../../_core/enum/system';
 import { filter } from 'rxjs/operators';
 import { UtilitiesService } from './../../../../../_core/_service/utilities.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
@@ -18,7 +19,8 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
-import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
+import { PeriodType, Quarter, SystemScoreType } from 'src/app/_core/enum/system';
+import { AttitudeScoreService } from 'src/app/_core/_service/attitude-score.service';
 @Component({
   selector: 'app-kpi-score',
   templateUrl: './kpi-score.component.html',
@@ -45,6 +47,14 @@ export class KpiScoreComponent implements OnInit {
   commentModel: Comment;
   quarterlySettingsData = [];
   columns = [];
+  isQuarter2Or4: boolean;
+  selfPoint: number;
+  hasFunctionalLeader: boolean;
+  selfScored: boolean;
+  functionalLeaderCommentContent: string;
+  functionalLeaderScored: boolean;
+  functionalLeaderAttitudeScoreData: number;
+  selfEvaluationCommentContent: string;
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
@@ -52,10 +62,14 @@ export class KpiScoreComponent implements OnInit {
     public kpiService: KPIService,
     public commentService: Commentv2Service,
     private alertify: AlertifyService,
+    private attitudeScoreService: AttitudeScoreService,
     private utilitiesService: UtilitiesService
   ) { }
 
   ngOnInit(): void {
+    this.hasFunctionalLeader = this.data.hasFunctionalLeader;
+
+    this.isQuarter2Or4 = this.data.period == Quarter.Q2 || this.data.period == Quarter.Q4;
     this.kpiScoreModel = {
       id: 0,
       periodTypeId: this.data.periodTypeId,
@@ -66,7 +80,6 @@ export class KpiScoreComponent implements OnInit {
       createdTime: new Date().toDateString(),
       accountId: this.data.id,
       scoreType: this.scoreType
-
     }
     this.commentModel = {
       id: 0,
@@ -78,15 +91,63 @@ export class KpiScoreComponent implements OnInit {
       modifiedTime: null,
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
-      scoreType: this.scoreType
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.Comment
     }
 
+    if(this.isQuarter2Or4 === true) {
+      this.getFisrtSelfScoreL1ByAccountId();
+      if (this.hasFunctionalLeader === true) {
+        this.getFunctionalLeaderCommentByAccountId();
+        this.getFunctionalLeaderAttitudeScoreByAccountId();
+      }
+    }
     this.getQuarterlySetting();
     this.loadData();
     this.loadKPIScoreData();
     this.loadKPIData();
     this.getFisrtByAccountId();
     this.getFisrtCommentByObjectiveId();
+    this.getL1SelfEvaluationCommentByAccountId();
+  }
+  getFunctionalLeaderAttitudeScoreByAccountId() {
+    this.attitudeScoreService.getFunctionalLeaderAttitudeScoreByAccountId(
+      this.data.id,
+      this.data.halfYearId,
+      this.data.period,
+      ).subscribe(data => {
+      this.functionalLeaderAttitudeScoreData = data?.point || 0;
+      this.functionalLeaderScored = this.functionalLeaderAttitudeScoreData > 0;
+    });
+  }
+  getFunctionalLeaderCommentByAccountId() {
+    this.commentService.getFunctionalLeaderCommentByAccountId(
+      this.data.id,
+      this.data.halfYearId,
+      this.data.period
+    ).subscribe(data => {
+      this.functionalLeaderCommentContent = data?.content;
+    });
+  }
+  getFisrtSelfScoreL1ByAccountId() {
+    this.kpiScoreService.getFisrtSelfScoreL1ByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period,
+      SystemScoreType.L0
+    ).subscribe(data => {
+      this.selfPoint = data?.point || 0;
+      this.selfScored = this.selfPoint !== 0;
+    });
+  }
+  getL1SelfEvaluationCommentByAccountId() {
+    this.commentService.getL1SelfEvaluationCommentByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period
+    ).subscribe(data => {
+      this.selfEvaluationCommentContent = data?.content;
+    });
   }
   getMonthListInCurrentQuarter(index) {
 
@@ -113,7 +174,7 @@ export class KpiScoreComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id, this.currentTime).subscribe(data => {
+    this.service.getAllKPIScoreL1ByAccountId(this.data.id, this.currentTime).subscribe(data => {
       this.gridData = data;
     });
   }

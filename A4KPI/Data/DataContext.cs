@@ -34,13 +34,38 @@ namespace A4KPI.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Contribution> Contributions { get; set; }
         public DbSet<OC> OCs { get; set; }
-        public DbSet<OCUser> OCUsers { get; set; }
+        public DbSet<OCAccount> OCAccounts { get; set; }
         public DbSet<SpecialScore> SpecialScore { get; set; }
         public DbSet<SmartScore> SmartScore { get; set; }
+        public DbSet<Performance> Performances { get; set; }
         public DbSet<SpecialContributionScore> SpecialContributionScore { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
+            // Xóa user1 trong bảng account thì những accountId của user1 trong bảng Performance không bị xóa theo
+            modelBuilder.Entity<Performance>()
+                .HasOne(s => s.Account)
+                .WithMany(ta => ta.Performances)
+                .HasForeignKey(u => u.UploadBy)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Performance>()
+               .HasOne(s => s.Objective)
+               .WithMany(ta => ta.Performances)
+               .HasForeignKey(u => u.ObjectiveId)
+               .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<OCAccount>()
+            .HasOne(s => s.Account)
+            .WithMany(ta => ta.OCAccounts)
+            .HasForeignKey(u => u.AccountId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<OCAccount>()
+               .HasOne(s => s.OC)
+               .WithMany(ta => ta.OCAccounts)
+               .HasForeignKey(u => u.OCId)
+               .OnDelete(DeleteBehavior.NoAction);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

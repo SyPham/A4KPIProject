@@ -15,9 +15,14 @@ namespace A4KPI.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult> GetFisrtByAccountId(int accountId, int periodTypeId)
+        public async Task<ActionResult> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType)
         {
-            return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId));
+            return Ok(await _service.GetFisrtByAccountId(accountId, periodTypeId, period, scoreType));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetL1CommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            return Ok(await _service.GetL1CommentByAccountId(accountId, periodTypeId, period));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()

@@ -15,5 +15,7 @@ namespace A4KPI.Models
         public string Name { get; set; }
         public int Level { get; set; }
         public int? ParentId { get; set; }
+
+        public virtual List<OCAccount> OCAccounts { get; set; }
     }
 }

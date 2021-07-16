@@ -62,13 +62,13 @@
 
 <div class="row mt-2 d-flex justify-content-center">
   <div class="col-md-12">
-    <table class="table">
+    <table class="table" *ngIf="hasFunctionalLeader">
       <thead>
         <tr>
           <th scope="col" style="width:20%">Functional leader comment<br> 功能主管評語</th>
-          <th scope="col" style="width:50%">No Comment</th>
+          <th scope="col" style="width:50%">{{functionalLeaderCommentContent || ""}}</th>
           <th scope="col" style="width:20%">Functional leader score<br>功能主管評分</th>
-          <th scope="col" style="width:10%;text-align: center; font-size: xx-large;">0</th>
+          <th scope="col" style="width:10%;text-align: center; font-size: xx-large;">{{functionalLeaderAttitudeScoreData || 0}}</th>
         </tr>
       </thead>
     </table>
@@ -128,6 +128,6 @@
 </div>
 
 <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' | translate}}</button>
-    <button type="button" class="btn btn-success" (click)="finish()" >{{'Finish' | translate}}</button>
+    <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' }}</button>
+    <button type="button" class="btn btn-success" (click)="finish()" >{{'Finish' }}</button>
 </div>

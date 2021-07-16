@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ToDoList } from './../../../../../_core/_model/todolistv2';
 import { Todolistv2Service } from './../../../../../_core/_service/todolistv2.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
@@ -7,16 +8,19 @@ import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { ToDoListLevel } from 'src/app/_core/enum/system';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-action',
   templateUrl: './action.component.html',
-  styleUrls: ['./action.component.scss']
+  styleUrls: ['./action.component.scss'],
+  providers: [DatePipe]
 })
 export class ActionComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: Objective;
+  @Input() data: any;
   gridData: object;
+  @Input() isReject: any;
   toolbarOptions = ['Add', 'Delete', 'Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
@@ -31,6 +35,8 @@ export class ActionComponent implements OnInit {
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
     private alertify: AlertifyService,
+    private todolistService: Todolistv2Service,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -162,7 +168,7 @@ export class ActionComponent implements OnInit {
       return;
     }
     this.targetModel.action = this.target;
-    this.targetModel.deadline = this.deadline;
+    this.targetModel.deadline = this.datePipe.transform(this.deadline, "yyyy-MM-dd HH:mm:ss");
     this.objectiveModel.action = this.objective;
     data.push(this.targetModel)
     data.push(this.objectiveModel)
@@ -182,22 +188,27 @@ export class ActionComponent implements OnInit {
       } as ToDoList;
       data.push(model);
     }
-
-    this.service.addRange(data).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.loadData();
-          this.service.changeMessage(true);
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-
-      },
-      (error) => {
-        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+    const disableReject = this.todolistService.disableReject([this.data.todolistId]);
+    const addRange = this.service.addRange(data);
+    const sources = [addRange];
+    if (this.isReject) {
+      sources.push(disableReject);
+    }
+    forkJoin(sources).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.loadData();
+        this.todolistService.changeMessage(true);
+      } else {
+        this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       }
-    );
+    },
+    (error) => {
+      this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+    })
   }
   update() {
 

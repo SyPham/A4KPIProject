@@ -47,10 +47,11 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<OCDto, OC>();
             CreateMap<AccountGroupAccountDto, AccountGroupAccount>();
 
-            CreateMap<OcUserDto, OCUser>();
+            CreateMap<OCAccountDto, OCAccount>();
             CreateMap<SpecialContributionScoreDto, SpecialContributionScore>();
             CreateMap<SpecialScoreDto, SpecialScore>();
             CreateMap<SmartScoreDto, SmartScore>();
+            CreateMap<PerformanceDto, Performance>();
         }
     }
 }

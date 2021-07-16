@@ -26,8 +26,9 @@ import { KpiScoreGMComponent } from './todolist/kpi-score-gm/kpi-score-gm.compon
 import { AttitudeScoreGHRComponent } from './todolist/attitude-score-ghr/attitude-score-ghr.component';
 import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid';
 import { AttitudeScoreFunctionalLeaderComponent } from './todolist/attitude-score-functional-leader/attitude-score-functional-leader.component';
+import { KpiScoreL2Component } from './todolist/kpi-score-l2/kpi-score-l2.component';
 
-
+import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,6 +62,7 @@ if (lang === 'vi') {
     UpdateResultComponent,
     SelfScoreComponent,
     KpiScoreComponent,
+    KpiScoreL2Component,
     AttitudeScoreComponent,
     AttitudeScoreFunctionalLeaderComponent,
     AttitudeScoreL2Component,
@@ -83,6 +85,7 @@ if (lang === 'vi') {
     MultiSelectAllModule,
     DatePickerModule,
     TabModule,
+    SpreadsheetAllModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

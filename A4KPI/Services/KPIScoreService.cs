@@ -19,11 +19,14 @@ namespace A4KPI.Services
     public interface IKPIScoreService : IServiceBase<KPIScore, KPIScoreDto>
     {
         Task<KPIScoreDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType);
+        Task<KPIScoreDto> GetFisrtKPIScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType);
         Task<KPIScoreDto> GetFisrtSelfScoreByAccountId(int accountId, int periodTypeId, int period, string scoreType);
+        Task<KPIScoreDto> GetFisrtSelfScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType);
     }
     public class KPIScoreService : ServiceBase<KPIScore, KPIScoreDto>, IKPIScoreService
     {
         private readonly IRepositoryBase<KPIScore> _repo;
+        private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IRepositoryBase<PeriodType> _repoPeriodType;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -33,6 +36,7 @@ namespace A4KPI.Services
 
         public KPIScoreService(
             IRepositoryBase<KPIScore> repo,
+            IRepositoryBase<Account> repoAccount,
             IRepositoryBase<PeriodType> repoPeriodType,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -42,6 +46,7 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoAccount = repoAccount;
             _repoPeriodType = repoPeriodType;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -115,6 +120,36 @@ namespace A4KPI.Services
                                     && x.AccountId == scoreBy
                                     && x.AccountId == accountID
                                 ).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
+        }
+
+        public async Task<KPIScoreDto> GetFisrtSelfScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            return await _repo.FindAll(x =>
+                                    x.PeriodTypeId == periodTypeId
+                                    && x.CreatedTime.Year == DateTime.Today.Year
+                                    && x.Period == period
+                                    && x.ScoreBy == accountId
+                                    && x.ScoreType == ScoreType.L0
+                                    && x.AccountId == accountId
+                                ).ProjectTo<KPIScoreDto>(_configMapper).FirstOrDefaultAsync();
+        }
+
+        public async Task<KPIScoreDto> GetFisrtKPIScoreL1ByAccountId(int accountId, int periodTypeId, int period, string scoreType)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int scoreBy = JWTExtensions.GetDecodeTokenById(accessToken);
+            var l1 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+            if (l1 == null) return new KPIScoreDto();
+            return await _repo.FindAll(x =>
+                                         x.PeriodTypeId == periodTypeId
+                                        && x.CreatedTime.Year == DateTime.Today.Year
+                                        && x.Period == period
+                                        && x.ScoreType == ScoreType.L1
+                                        && accountId == x.AccountId
+                                        && l1.Manager == x.ScoreBy
+                                        && x.AccountId != l1.Manager)
+                                    .ProjectTo<KPIScoreDto>(_configMapper)
+                                    .FirstOrDefaultAsync();
         }
     }
 }

@@ -73,16 +73,35 @@ namespace A4KPI.Controllers
             return Ok(await _service.GetAllKPIScoreGHRByAccountId(accountId, currentTime));
         }
         [HttpGet]
-        public async Task<ActionResult> GetAllKPIScoreL1L2ByAccountId(int accountId, DateTime currentTime)
+        public async Task<ActionResult> GetAllKPIScoreL1ByAccountId(int accountId, DateTime currentTime)
         {
          
-            return Ok(await _service.GetAllKPIScoreL1L2ByAccountId(accountId, currentTime));
+            return Ok(await _service.GetAllKPIScoreL1ByAccountId(accountId, currentTime));
         }
         [HttpGet]
-        public async Task<ActionResult> GetAllAttitudeScoreL1L2ByAccountId(int accountId)
+        public async Task<ActionResult> GetAllKPIScoreL2ByAccountId(int accountId, DateTime currentTime)
         {
 
-            return Ok(await _service.GetAllAttitudeScoreL1L2ByAccountId(accountId));
+            return Ok(await _service.GetAllKPIScoreL2ByAccountId(accountId, currentTime));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllAttitudeScoreL1ByAccountId(int accountId)
+        {
+
+            return Ok(await _service.GetAllAttitudeScoreL1ByAccountId(accountId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetAllAttitudeScoreL2ByAccountId(int accountId)
+        {
+
+            return Ok(await _service.GetAllAttitudeScoreL2ByAccountId(accountId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetAllAttitudeScoreGFLByAccountId(int accountId)
+        {
+
+            return Ok(await _service.GetAllAttitudeScoreGFLByAccountId(accountId));
         }
         [HttpGet]
         public async Task<ActionResult> GetQuarterlySetting()

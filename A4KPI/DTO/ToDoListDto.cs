@@ -13,7 +13,6 @@ namespace A4KPI.DTO
     public class ToDoListDto 
     {
         public int Id { get; set; }
-
         public string Action { get; set; }
         public string Remark { get; set; }
         public int? ProgressId { get; set; }
@@ -64,6 +63,7 @@ namespace A4KPI.DTO
         public DateTime DueDate { get; set; }
         public string Type { get; set; }
         public int Period { get; set; }
+        public int HalfYearId { get; set; }
         public int QuarterPeriodTypeId { get; set; }
         public int Quarter { get; set; }
         public int PeriodTypeId { get; set; }
@@ -73,6 +73,8 @@ namespace A4KPI.DTO
         public bool IsDisplayAction { get; set; }
         public bool IsReject { get; set; }
         public bool IsRelease { get; set; }
+        public bool HasFunctionalLeader { get; set; }
+
     }
     public class FunctionalLeaderDto
     {
@@ -94,9 +96,26 @@ namespace A4KPI.DTO
         public string Type { get; set; }
         public int Period { get; set; }
         public int PeriodTypeId { get; set; }
+        public int HalfYearId { get; set; }
         public List<int> Settings { get; set; }
         public bool IsDisplayKPIScore { get; set; }
         public bool IsDisplayAttitude { get; set; }
+        public bool HasFunctionalLeader { get; set; }
+    }
+    public class L2Dto
+    {
+        public int Id { get; set; }
+        public string Objective { get; set; }
+        public DateTime DueDate { get; set; }
+        public string Type { get; set; }
+        public string FullName { get; set; }
+        public int Period { get; set; }
+        public int PeriodTypeId { get; set; }
+        public int HalfYearId { get; set; }
+        public List<int> Settings { get; set; }
+        public bool IsDisplayKPIScore { get; set; }
+        public bool IsDisplayAttitude { get; set; }
+        public bool HasFunctionalLeader { get; set; }
     }
     public class GHRDto
     {
@@ -110,5 +129,20 @@ namespace A4KPI.DTO
         public bool IsDisplayKPIScore { get; set; }
         public bool IsDisplayAttitude { get; set; }
     }
+    public class Q1OrQ3Request
+    {
+        public int Period { get; set; }
+        public int PeriodTypeId { get; set; }
+        public int AccountId { get; set; }
+    }
 
+    public class Q1OrQ3Export
+    {
+        public string FullName { get; set; }
+        public double L1Score { get; set; }
+        public string L1Comment { get; set; }
+        public double L2Score { get; set; }
+        public string L2Comment { get; set; }
+        public double GHRSmartScore { get; set; }
+    }
 }

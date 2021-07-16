@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace A4KPI.DTO
 {
-    public class OcUserDto
+    public class OCAccountDto
     {
-        public int UserID { get; set; }
-        public int OCID { get; set; }
-        public string OCname { get; set; }
+        public int AccountId { get; set; }
+        public int OCId { get; set; }
+        public string OCName { get; set; }
+        public string FullName { get; set; }
         public List<int> AccountIdList { get; set; }
     }
 }

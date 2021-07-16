@@ -21,7 +21,11 @@ namespace A4KPI.Services
         Task<List<CommentDto>> GetAllByObjectiveId(int objectiveId);
         Task<CommentDto> GetFisrtByAccountId(int accountId, int periodTypeId, int period, string scoreType);
         Task<object> GetFunctionalLeaderCommentByAccountId(int accountId, int periodTypeId, int period);
+        Task<object> GetL1CommentByAccountId(int accountId, int periodTypeId, int period);
         Task<object> GetGHRCommentByAccountId(int accountId, int periodTypeId, int period);
+        Task<object> GetL0SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period);
+        Task<object> GetL1SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period);
+        Task<object> GetL2SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period);
 
     }
     public class CommentService : ServiceBase<Comment, CommentDto>, ICommentService
@@ -29,12 +33,14 @@ namespace A4KPI.Services
         private OperationResult operationResult;
 
         private readonly IRepositoryBase<Comment> _repo;
+        private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MapperConfiguration _configMapper;
         public CommentService(
             IRepositoryBase<Comment> repo, 
+            IRepositoryBase<Account> repoAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor,
@@ -43,6 +49,7 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper,  configMapper)
         {
             _repo = repo;
+            _repoAccount = repoAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
@@ -59,6 +66,7 @@ namespace A4KPI.Services
                                         && x.PeriodTypeId == periodTypeId
                                         && x.CreatedTime.Year == DateTime.Today.Year
                                         && x.Period == period
+                                        && x.CommentTypeId == CommentType.Comment
                                         && accountId == x.AccountId
                                         && scoreBy == x.CreatedBy
                                         && x.AccountId != scoreBy)
@@ -108,26 +116,98 @@ namespace A4KPI.Services
 
         public  async Task<object> GetFunctionalLeaderCommentByAccountId(int accountId, int periodTypeId, int period)
         {
+            var l1 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+
+            if (l1 == null) return new CommentDto();
             return await _repo.FindAll(x =>
                                         x.ScoreType == ScoreType.FunctionalLeader
+                                        && x.CommentTypeId == CommentType.Comment
                                         && x.PeriodTypeId == periodTypeId
                                         && x.CreatedTime.Year == DateTime.Today.Year
                                         && x.Period == period
+                                        && x.CreatedBy == l1.Leader
                                         && accountId == x.AccountId
                                         && x.AccountId != x.CreatedBy)
                                     .ProjectTo<CommentDto>(_configMapper)
                                     .FirstOrDefaultAsync();
         }
-
+       
         public async Task<object> GetGHRCommentByAccountId(int accountId, int periodTypeId, int period)
         {
             return await _repo.FindAll(x =>
                                        x.ScoreType == ScoreType.GHR
+                                       && x.CommentTypeId == CommentType.Comment
                                        && x.PeriodTypeId == periodTypeId
                                        && x.CreatedTime.Year == DateTime.Today.Year
                                        && x.Period == period
                                        && accountId == x.AccountId
                                        && x.AccountId != x.CreatedBy)
+                                   .ProjectTo<CommentDto>(_configMapper)
+                                   .FirstOrDefaultAsync();
+        }
+
+        public async Task<object> GetL1CommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            var l1 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+
+            if (l1 == null) return new CommentDto();
+            return await _repo.FindAll(x =>
+                                       x.PeriodTypeId == periodTypeId
+                                       && x.CreatedTime.Year == DateTime.Today.Year
+                                       && x.Period == period
+                                       && x.ScoreType == ScoreType.L1
+                                       && x.CommentTypeId == CommentType.Comment
+                                       && accountId == x.AccountId
+                                       && x.CreatedBy == l1.Manager)
+                                   .ProjectTo<CommentDto>(_configMapper)
+                                   .FirstOrDefaultAsync();
+        }
+
+        public async Task<object> GetL0SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            var l0 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+
+            if (l0 == null) return new CommentDto();
+            return await _repo.FindAll(x =>
+                                       x.PeriodTypeId == periodTypeId
+                                       && x.CreatedTime.Year == DateTime.Today.Year
+                                       && x.Period == period
+                                       && x.ScoreType == ScoreType.L0
+                                       && x.CommentTypeId == CommentType.SelfEvaluation
+                                       && accountId == x.AccountId
+                                       && x.CreatedBy == accountId)
+                                   .ProjectTo<CommentDto>(_configMapper)
+                                   .FirstOrDefaultAsync();
+        }
+        public async Task<object> GetL1SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            var l0 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+
+            if (l0 == null) return new CommentDto();
+            return await _repo.FindAll(x =>
+                                       x.PeriodTypeId == periodTypeId
+                                       && x.CreatedTime.Year == DateTime.Today.Year
+                                       && x.Period == period
+                                       && x.ScoreType == ScoreType.L0
+                                       && x.CommentTypeId == CommentType.SelfEvaluation
+                                       && accountId == x.AccountId
+                                       && x.CreatedBy == accountId)
+                                   .ProjectTo<CommentDto>(_configMapper)
+                                   .FirstOrDefaultAsync();
+        }
+        public async Task<object> GetL2SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            var l0 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+
+            if (l0 == null) return new CommentDto();
+            return await _repo.FindAll(x =>
+                                       x.PeriodTypeId == periodTypeId
+                                       && x.CreatedTime.Year == DateTime.Today.Year
+                                       && x.Period == period
+                                       && x.ScoreType == ScoreType.L0
+                                       && x.CommentTypeId == CommentType.SelfEvaluation
+                                       && accountId == x.AccountId
+                                       && x.CreatedBy == accountId)
                                    .ProjectTo<CommentDto>(_configMapper)
                                    .FirstOrDefaultAsync();
         }

@@ -53,9 +53,9 @@ namespace A4KPI.Controllers
             return Ok(await _service.GetByIdAsync(id));
         }
         [HttpGet]
-        public async Task<ActionResult> GetAllByMonth(int objectiveId)
+        public async Task<ActionResult> GetAllByMonth(int objectiveId, DateTime currentTime)
         {
-            return Ok(await _service.GetAllByMonth(objectiveId));
+            return Ok(await _service.GetAllByMonth(objectiveId, currentTime));
         }
         [HttpGet]
         public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)

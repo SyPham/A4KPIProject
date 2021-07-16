@@ -18,7 +18,7 @@ export class Todolistv2Service extends CURDService<ToDoList> {
   constructor(http: HttpClient, utilitiesService: UtilitiesService) {
     super(http, "Todolist", utilitiesService);
   }
-   // method này để change source message
+  // method này để change source message
   changeMessage(message) {
     this.messageSource.next(message);
   }
@@ -94,7 +94,7 @@ export class Todolistv2Service extends CURDService<ToDoList> {
   /**
     * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
     */
-   getAllKPIScoreByAccountId(): Observable<ToDoListByLevelL1L2Dto[]> {
+  getAllKPIScoreByAccountId(): Observable<ToDoListByLevelL1L2Dto[]> {
     return this.http
       .get<ToDoListByLevelL1L2Dto[]>(`${this.base}${this.entity}/GetAllKPIScoreL0ByAccountId`, {})
       .pipe(catchError(this.handleError));
@@ -102,7 +102,7 @@ export class Todolistv2Service extends CURDService<ToDoList> {
   /**
     * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
     */
-   getAllKPISelfScoreByObjectiveId(objectiveId): Observable<SelfScore[]> {
+  getAllKPISelfScoreByObjectiveId(objectiveId): Observable<SelfScore[]> {
     return this.http
       .get<SelfScore[]>(`${this.base}${this.entity}/getAllKPISelfScoreByObjectiveId?objectiveId=${objectiveId}`, {})
       .pipe(catchError(this.handleError));
@@ -111,28 +111,37 @@ export class Todolistv2Service extends CURDService<ToDoList> {
     var d = date.getDate();
     var m = date.getMonth() + 1; //Month from 0 to 11
     var y = date.getFullYear();
-    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
   }
 
   /**
-    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
+    * // TODO: Lấy dữ kiệu cho vai trò là L1 khi click vào KPI Score Button
     */
-   getAllKPIScoreL1L2ByAccountId(accountId,currentTime): Observable<[]> {
+  getAllKPIScoreL1ByAccountId(accountId, currentTime): Observable<[]> {
     return this.http
-      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL1L2ByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL1ByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
       .pipe(catchError(this.handleError));
   }
-    /**
-    * // TODO: Lấy dữ kiệu cho vai trò là GHR khi click vào KPI Score Button
-    */
-     getAllKPIScoreGHRByAccountId(accountId,currentTime): Observable<[]> {
-      return this.http
-        .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreGHRByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
-        .pipe(catchError(this.handleError));
-    }
- /**
-    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
-    */
+
+  /**
+  * // TODO: Lấy dữ kiệu cho vai trò là  L2 khi click vào KPI Score Button
+  */
+  getAllKPIScoreL2ByAccountId(accountId, currentTime): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL2ByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  /**
+  * // TODO: Lấy dữ kiệu cho vai trò là GHR khi click vào KPI Score Button
+  */
+  getAllKPIScoreGHRByAccountId(accountId, currentTime): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreGHRByAccountId?accountId=${accountId}&currentTime=${this.dateToYMD(currentTime)}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  /**
+     * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
+     */
   getAllKPIScoreL0ByPeriod(period): Observable<[]> {
     return this.http
       .get<[]>(`${this.base}${this.entity}/GetAllKPIScoreL0ByPeriod?period=${period}`, {})
@@ -148,15 +157,39 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<any[]>(`${this.base}${this.entity}/getQuarterlySetting`, {})
       .pipe(catchError(this.handleError));
   }
- /**
-    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
-    */
-  getAllAttitudeScoreL1L2ByAccountId(accountId): Observable<[]> {
+  /**
+     * // TODO: Lấy dữ kiệu cho vai trò là L1 khi click vào KPI Score Button
+     */
+  getAllAttitudeScoreL1ByAccountId(accountId): Observable<[]> {
     return this.http
-      .get<[]>(`${this.base}${this.entity}/GetAllAttitudeScoreL1L2ByAccountId?accountId=${accountId}`, {})
+      .get<[]>(`${this.base}${this.entity}/GetAllAttitudeScoreL1ByAccountId?accountId=${accountId}`, {})
       .pipe(catchError(this.handleError));
   }
-  import(file,uploadBy) {
+  /**
+   * // TODO: Lấy dữ kiệu cho vai trò là  L2 khi click vào KPI Score Button
+   */
+  getAllAttitudeScoreL2ByAccountId(accountId): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/GetAllAttitudeScoreL2ByAccountId?accountId=${accountId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  /**
+* // TODO: Lấy dữ kiệu cho vai trò là  L2 khi click vào KPI Score Button
+*/
+  getAllAttitudeScoreGHRByAccountId(accountId): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/getAllAttitudeScoreGHRByAccountId?accountId=${accountId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  /**
+   * // TODO: Lấy dữ kiệu cho vai trò là  L2 khi click vào KPI Score Button
+   */
+   getAllAttitudeScoreGFLByAccountId(accountId): Observable<[]> {
+    return this.http
+      .get<[]>(`${this.base}${this.entity}/getAllAttitudeScoreGFLByAccountId?accountId=${accountId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  import(file, uploadBy) {
     const formData = new FormData();
     formData.append('UploadedFile', file);
     formData.append('UploadBy', uploadBy);
@@ -164,17 +197,17 @@ export class Todolistv2Service extends CURDService<ToDoList> {
   }
   reject(ids): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/reject`, {ids})
+      .put<OperationResult>(`${this.base}${this.entity}/reject`, { ids })
       .pipe(catchError(this.handleError));
   }
   disableReject(ids): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/DisableReject`, {ids})
+      .put<OperationResult>(`${this.base}${this.entity}/DisableReject`, { ids })
       .pipe(catchError(this.handleError));
   }
   release(ids): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/release`, {ids})
+      .put<OperationResult>(`${this.base}${this.entity}/release`, { ids })
       .pipe(catchError(this.handleError));
   }
 }

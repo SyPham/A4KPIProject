@@ -17,7 +17,7 @@ import { ContributionService } from 'src/app/_core/_service/contribution.service
 import { AttitudeService } from 'src/app/_core/_service/attitude.service';
 import { Attitude } from 'src/app/_core/_model/attitude';
 import { forkJoin } from 'rxjs';
-import { SystemScoreType } from 'src/app/_core/enum/system';
+import { CommentType, SystemScoreType } from 'src/app/_core/enum/system';
 import { SpecialContributionScoreService } from 'src/app/_core/_service/special-contribution-score.service';
 import { SpecialScore } from 'src/app/_core/_model/special-score';
 import { SpecialContributionScore } from 'src/app/_core/_model/special-contribution-score';
@@ -54,6 +54,9 @@ export class AttitudeScoreComponent implements OnInit {
   halfYearSettingsData: any;
   columns: any[];
   specialScoreData: SpecialScore[];
+  hasFunctionalLeader: any;
+  functionalLeaderCommentContent: string;
+  functionalLeaderAttitudeScoreData: number;
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
@@ -68,6 +71,7 @@ export class AttitudeScoreComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.hasFunctionalLeader = this.data.hasFunctionalLeader;
     this.attitudeScoreModel = {
       id: 0,
       periodTypeId: this.data.periodTypeId,
@@ -99,7 +103,8 @@ export class AttitudeScoreComponent implements OnInit {
       createdTime: new Date().toDateString(),
       modifiedTime: null,
       periodTypeId: this.data.periodTypeId,
-      period: this.data.period
+      period: this.data.period,
+      scoreType: this.scoreType
     };
     this.commentModel = {
       id: 0,
@@ -111,8 +116,13 @@ export class AttitudeScoreComponent implements OnInit {
       modifiedTime: null,
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
-      scoreType: this.scoreType
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.SelfEvaluation
     };
+    if (this.hasFunctionalLeader === true) {
+      this.getFunctionalLeaderCommentByAccountId();
+      this.getFunctionalLeaderAttitudeScoreByAccountId();
+    }
     this.getHalfYearSetting();
     this.loadData();
     this.loadAttitudeScoreData();
@@ -148,13 +158,22 @@ export class AttitudeScoreComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllAttitudeScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllAttitudeScoreL1ByAccountId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
   loadAttitudeScoreData() {
     this.attitudeScoreService.getById(this.data.id).subscribe(data => {
       this.attitudeScoreData = data;
+    });
+  }
+  getFunctionalLeaderAttitudeScoreByAccountId() {
+    this.attitudeScoreService.getFunctionalLeaderAttitudeScoreByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period,
+      ).subscribe(data => {
+      this.functionalLeaderAttitudeScoreData = data?.point || 0;
     });
   }
   getFisrtByObjectiveIdAndScoreBy() {
@@ -169,9 +188,18 @@ export class AttitudeScoreComponent implements OnInit {
     });
   }
   getFisrtContributionByObjectiveId() {
-    this.contributionService.getFisrtByAccountId(this.data.id, this.data.periodTypeId).subscribe(data => {
+    this.contributionService.getFisrtByAccountId(this.data.id, this.data.periodTypeId, this.data.period, this.scoreType).subscribe(data => {
       this.content = data?.content;
       this.contributionModel.id = data?.id;
+    });
+  }
+  getFunctionalLeaderCommentByAccountId() {
+    this.commentService.getFunctionalLeaderCommentByAccountId(
+      this.data.id,
+      this.data.periodTypeId,
+      this.data.period
+    ).subscribe(data => {
+      this.functionalLeaderCommentContent = data?.content;
     });
   }
   getFisrtCommentByObjectiveId() {
@@ -217,7 +245,7 @@ export class AttitudeScoreComponent implements OnInit {
     }
   }
   addComment() {
-    this.commentModel.content = this.content;
+    this.commentModel.content = this.commentContent;
     return this.commentService.add(this.commentModel);
   }
   addAttitudeScore() {
@@ -242,7 +270,7 @@ export class AttitudeScoreComponent implements OnInit {
       return;
     }
     if (this.specialPoint != 0 && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {
-      this.alertify.warning('Please type a special contribution or mistake! <br>Not yet complete. Can not submit! 尚未完成，無法提交', true);
+      this.alertify.warning('Please leave a special contribution or mistake! <br>Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
     if (this.specialPoint === 0 && !this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {

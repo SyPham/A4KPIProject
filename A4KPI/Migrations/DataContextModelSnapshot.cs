@@ -238,6 +238,10 @@ namespace A4KPI.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CommentTypeId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -302,6 +306,10 @@ namespace A4KPI.Migrations
 
                     b.Property<int>("PeriodTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ScoreType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -435,28 +443,35 @@ namespace A4KPI.Migrations
                     b.ToTable("OC");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.OCUser", b =>
+            modelBuilder.Entity("A4KPI.Models.OCAccount", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OCID")
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OCId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("ID");
+                    b.HasIndex("AccountId");
 
-                    b.ToTable("OCUsers");
+                    b.HasIndex("OCId");
+
+                    b.ToTable("OCAccounts");
                 });
 
             modelBuilder.Entity("A4KPI.Models.Objective", b =>
@@ -515,6 +530,40 @@ namespace A4KPI.Migrations
                     b.HasIndex("ObjectiveId");
 
                     b.ToTable("PIC");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Performance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ObjectiveId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Percentage")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UploadBy")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObjectiveId");
+
+                    b.HasIndex("UploadBy");
+
+                    b.ToTable("Performances");
                 });
 
             modelBuilder.Entity("A4KPI.Models.Period", b =>
@@ -986,6 +1035,25 @@ namespace A4KPI.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.OCAccount", b =>
+                {
+                    b.HasOne("A4KPI.Models.Account", "Account")
+                        .WithMany("OCAccounts")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.OC", "OC")
+                        .WithMany("OCAccounts")
+                        .HasForeignKey("OCId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("OC");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Objective", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Creator")
@@ -1009,6 +1077,25 @@ namespace A4KPI.Migrations
                         .WithMany("PICs")
                         .HasForeignKey("ObjectiveId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Objective");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Performance", b =>
+                {
+                    b.HasOne("A4KPI.Models.Objective", "Objective")
+                        .WithMany("Performances")
+                        .HasForeignKey("ObjectiveId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Account", "Account")
+                        .WithMany("Performances")
+                        .HasForeignKey("UploadBy")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -1115,6 +1202,10 @@ namespace A4KPI.Migrations
                     b.Navigation("AccountGroupAccount");
 
                     b.Navigation("Objectives");
+
+                    b.Navigation("OCAccounts");
+
+                    b.Navigation("Performances");
                 });
 
             modelBuilder.Entity("A4KPI.Models.AccountGroup", b =>
@@ -1127,8 +1218,15 @@ namespace A4KPI.Migrations
                     b.Navigation("Accounts");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.OC", b =>
+                {
+                    b.Navigation("OCAccounts");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Objective", b =>
                 {
+                    b.Navigation("Performances");
+
                     b.Navigation("PICs");
 
                     b.Navigation("ResultOfMonth");

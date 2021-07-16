@@ -21,10 +21,10 @@ namespace A4KPI.Services
         // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
         // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
         Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
-        Task<List<OcUserDto>> GetUserByOcID(int ocID);
-        Task<object> MappingUserOC(OcUserDto OcUserDto);
-        Task<object> MappingRangeUserOC(OcUserDto model);
-        Task<object> RemoveUserOC(OcUserDto OcUserDto);
+        Task<List<OCAccountDto>> GetUserByOcID(int ocID);
+        Task<object> MappingUserOC(OCAccountDto OCAccountDto);
+        Task<object> MappingRangeUserOC(OCAccountDto model);
+        Task<object> RemoveUserOC(OCAccountDto OCAccountDto);
       
     }
     public class OCService : ServiceBase<OC, OCDto>, IOCService
@@ -32,14 +32,14 @@ namespace A4KPI.Services
         private OperationResult operationResult;
 
         private readonly IRepositoryBase<OC> _repo;
-        private readonly IRepositoryBase<OCUser> _repoOcUser;
+        private readonly IRepositoryBase<OCAccount> _repoOCAccount;
         private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
         public OCService(
             IRepositoryBase<OC> repo, 
-            IRepositoryBase<OCUser> repoOcUser,
+            IRepositoryBase<OCAccount> repoOCAccount,
             IRepositoryBase<Account> repoAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper, 
@@ -48,7 +48,7 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper,  configMapper)
         {
             _repo = repo;
-            _repoOcUser = repoOcUser;
+            _repoOCAccount = repoOCAccount;
             _repoAccount = repoAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -62,14 +62,14 @@ namespace A4KPI.Services
         }
 
 
-        public async Task<object> MappingUserOC(OcUserDto OcUserDto)
+        public async Task<object> MappingUserOC(OCAccountDto OCAccountDto)
         {
-            var item = await _repoOcUser.FindAll().FirstOrDefaultAsync(x => x.UserID == OcUserDto.UserID && x.OCID == OcUserDto.OCID);
+            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
             if (item == null)
             {
-                _repoOcUser.Add(new OCUser { 
-                    UserID = OcUserDto.UserID,
-                    OCID = OcUserDto.OCID
+                _repoOCAccount.Add(new OCAccount {
+                    AccountId = OCAccountDto.AccountId,
+                    OCId = OCAccountDto.OCId
                 });
                 try
                 {
@@ -97,43 +97,14 @@ namespace A4KPI.Services
                     message = "The User belonged with other building!"
                 };
             }
-            // var test = _repoAccount.FindById(OcUserDto.UserID) ;
-            // if(test == null)
-            //    return new
-            //     {
-            //         status = false,
-            //         message = "Failed on save!"
-            //     };
-            // List<string> list = test.RoleOC.Split(',').ToList();
-            // if (!test.RoleOC.Equals(OcUserDto.OCname)) {
-            //     list.Add(OcUserDto.OCname);
-            // }
-            // test.RoleOC = string.Join(",", list);
-            // try
-            // {
-            //     await _repoAccount.SaveAll();
-            //     return new
-            //     {
-            //         status = true,
-            //         message = "Mapping Successfully!"
-            //     };
-            // }
-            // catch (Exception)
-            // {
-            //     return new
-            //     {
-            //         status = false,
-            //         message = "Failed on save!"
-            //     };
-            // }
         }
 
-        public async Task<object> RemoveUserOC(OcUserDto OcUserDto)
+        public async Task<object> RemoveUserOC(OCAccountDto OCAccountDto)
         {
-            var item = await _repoOcUser.FindAll().FirstOrDefaultAsync(x => x.UserID == OcUserDto.UserID && x.OCID == OcUserDto.OCID);
+            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
             if (item != null)
             {
-                _repoOcUser.Remove(item);
+                _repoOCAccount.Remove(item);
                 try
                 {
                     await _unitOfWork.SaveChangeAsync();
@@ -161,47 +132,22 @@ namespace A4KPI.Services
                     message = ""
                 };
             }
-            // // string[] termsList;
-            // var test = _repoAccount.FindById(OcUserDto.UserID) ;
-            // // List<string> list = new List<string>(termsList);
-            // List<string> list = test.RoleOC.Split(',').ToList();
-            // // termsList.Append();
-            // if (test.RoleOC.Equals(OcUserDto.OCname)) {
-            //     list.Remove(OcUserDto.OCname);
-            // }
-            // test.RoleOC = string.Join(",", list);
-            // try
-            // {
-            //     await _repoAccount.SaveAll();
-            //     return new
-            //     {
-            //         status = true,
-            //         message = "Mapping Successfully!"
-            //     };
-            // }
-            // catch (Exception)
-            // {
-            //     return new
-            //     {
-            //         status = false,
-            //         message = "Failed on save!"
-            //     };
-            // }
+           
         }
 
-        public async Task<object> MappingRangeUserOC(OcUserDto model)
+        public async Task<object> MappingRangeUserOC(OCAccountDto model)
         {
             try
             {
                 foreach (var item in model.AccountIdList)
                 {
-                    var items = await _repoOcUser.FindAll().FirstOrDefaultAsync(x => x.UserID == item && x.OCID == model.OCID);
+                    var items = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == item && x.OCId == model.OCId);
                     var item_username = _repoAccount.FindAll().FirstOrDefault(x => x.Id == item).FullName;
                     if (items == null)
                     {
-                        _repoOcUser.Add(new OCUser { 
-                            UserID = item,
-                            OCID = model.OCID
+                        _repoOCAccount.Add(new OCAccount { 
+                            AccountId = item,
+                            OCId = model.OCId
                         });
                         await _unitOfWork.SaveChangeAsync();
                     } else
@@ -209,34 +155,9 @@ namespace A4KPI.Services
                         return new
                         {
                             status = false,
-                            message = $"User {item_username} already exists in the {model.OCname}"
+                            message = $"User {item_username} already exists in the {model.OCName}"
                         };
                     }
-                    // var mapping = _repoAccount.FindById(item);
-                    // List<string> list = new List<string>();
-                    // if(mapping == null)
-                    //     return new
-                    //     {
-                    //         status = false,
-                    //         message = "Failed on save!"
-                    //     };
-                    // if (mapping.RoleOC == null || mapping.RoleOC == "")
-                    // {
-                    //     mapping.RoleOC = model.OCname;
-                    // } else {
-                    //     list = mapping.RoleOC.Split(',').ToList();
-                    //     if (!mapping.RoleOC.Equals(model.OCname)) {
-                    //         list.Add(model.OCname);
-                    //     } else {
-                    //         return new
-                    //         {
-                    //             status = false,
-                    //             message = $"User {mapping.FullName} already exists in the {model.OCname}"
-                    //         };
-                    //     }
-                    //     mapping.RoleOC = string.Join(",", list);
-                    // }
-                    // await _repoAccount.SaveAll();
                 }
                 return new
                 {
@@ -244,7 +165,7 @@ namespace A4KPI.Services
                     message = "Mapping Successfully!"
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
                 throw;
@@ -252,9 +173,9 @@ namespace A4KPI.Services
         }
        
 
-        public async Task<List<OcUserDto>> GetUserByOcID(int ocID)
+        public async Task<List<OCAccountDto>> GetUserByOcID(int ocID)
         {
-            return await _repoOcUser.FindAll().Where(x=>x.OCID == ocID).ProjectTo<OcUserDto>(_configMapper).ToListAsync();
+            return await _repoOCAccount.FindAll().Where(x=>x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
         }
     }
 }

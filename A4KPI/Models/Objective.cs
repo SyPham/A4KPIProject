@@ -26,5 +26,8 @@ namespace A4KPI.Models
         [ForeignKey(nameof(CreatedBy))]
         public virtual Account Creator { get; set; }
 
+        public virtual ICollection<Performance> Performances { get; set; }
+
+
     }
 }

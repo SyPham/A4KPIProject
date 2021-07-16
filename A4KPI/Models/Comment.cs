@@ -19,6 +19,8 @@ namespace A4KPI.Models
         public int PeriodTypeId { get; set; }
         public int Period { get; set; }
         public int? ModifiedBy { get; set; }
+        [MaxLength(100)]
+        public string CommentTypeId { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
         [ForeignKey(nameof(AccountId))]

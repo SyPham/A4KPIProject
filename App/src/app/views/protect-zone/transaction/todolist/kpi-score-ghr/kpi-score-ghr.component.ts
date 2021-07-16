@@ -20,7 +20,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
-import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
+import { CommentType, PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
 import { SmartScore } from 'src/app/_core/_model/smart-score';
 @Component({
   selector: 'app-kpi-score-ghr',
@@ -86,7 +86,8 @@ export class KpiScoreGHRComponent implements OnInit {
       modifiedTime: null,
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
-      scoreType: this.scoreType
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.Comment
     }
 
     this.getQuarterlySetting();
@@ -186,6 +187,21 @@ export class KpiScoreGHRComponent implements OnInit {
       this.objectiveIds = this.utilitiesService.toArrayRemove(this.objectiveIds, value);
     }
   }
+  onChangeSmartScore(args) {
+    if (args.isInteracted) {
+      const kpiScore = this.addKPIScore();
+      forkJoin([kpiScore]).subscribe(response => {
+        console.log(response)
+        const arr = response.map(x=> x.success);
+        const checker = arr => arr.every(Boolean);
+        if (checker) {
+          this.alertify.success('Successfully 成功地', true);
+        } else {
+          this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
+        }
+      })
+    }
+  }
   addKPIScore() {
     this.kpiScoreModel.point = this.point;
     return this.kpiScoreService.add(this.kpiScoreModel);
@@ -194,9 +210,14 @@ export class KpiScoreGHRComponent implements OnInit {
     this.commentModel.content = this.content;
     return this.commentService.add(this.commentModel);
   }
+
   reject() {
     if (this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {
       this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
+      return;
+    }
+    if (this.utilitiesService.isUndefinedOrNull(this.point)) {
+      this.alertify.warning('Please score smart score first. Not yet complete. Can not release. 尚未完成，無法提交', true);
       return;
     }
     if (this.objectiveIds.length === 0) {
@@ -237,10 +258,9 @@ export class KpiScoreGHRComponent implements OnInit {
       this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
       return;
     }
-    const kpiScore = this.addKPIScore();
     const comment = this.addComment();
     const release = this.service.release(ids);
-    forkJoin([kpiScore, comment, release]).subscribe(response => {
+    forkJoin([comment, release]).subscribe(response => {
       console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);
@@ -260,9 +280,9 @@ export class KpiScoreGHRComponent implements OnInit {
       this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
       return;
     }
-    const kpiScore = this.addKPIScore();
+
     const comment = this.addComment();
-    forkJoin([kpiScore, comment]).subscribe(response => {
+    forkJoin([comment]).subscribe(response => {
       console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);

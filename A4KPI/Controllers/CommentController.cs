@@ -68,5 +68,25 @@ namespace A4KPI.Controllers
         {
             return Ok(await _service.GetGHRCommentByAccountId(accountId, periodTypeId, period));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetL1CommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            return Ok(await _service.GetL1CommentByAccountId(accountId, periodTypeId, period));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetL0SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            return Ok(await _service.GetL0SelfEvaluationCommentByAccountId(accountId, periodTypeId, period));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetL1SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            return Ok(await _service.GetL0SelfEvaluationCommentByAccountId(accountId, periodTypeId, period));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetL2SelfEvaluationCommentByAccountId(int accountId, int periodTypeId, int period)
+        {
+            return Ok(await _service.GetL0SelfEvaluationCommentByAccountId(accountId, periodTypeId, period));
+        }
     }
 }

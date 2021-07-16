@@ -19,7 +19,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
-import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
+import { CommentType, PeriodType, Quarter, SystemScoreType } from 'src/app/_core/enum/system';
 import { AttitudeScore } from 'src/app/_core/_model/attitude-score';
 @Component({
   selector: 'app-self-score',
@@ -40,12 +40,18 @@ export class SelfScoreComponent implements OnInit {
   kpiScoreData: KPIScore;
   point: number;
   kpiData: KPI[];
+  commentModel: Comment;
   fields: object = { text: 'point', value: 'point' };
   filterSettings = { type: 'Excel' };
   content = '';
   quarterlySettingsData = [];
   columns = [];
   attitudeScoreData:  AttitudeScore;
+  hasFunctionalLeader = false;
+  functionalLeaderCommentContent: string;
+  functionalLeaderAttitudeScoreData: any;
+  isQuarter2Or4: boolean;
+  functionalLeaderScored: boolean;
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolistv2Service,
@@ -58,6 +64,9 @@ export class SelfScoreComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.hasFunctionalLeader = this.data.hasFunctionalLeader;
+    this.isQuarter2Or4 = this.data.period == Quarter.Q2 || this.data.period == Quarter.Q4;
+
     this.kpiScoreModel = {
       id: 0,
       periodTypeId: this.data.periodTypeId,
@@ -69,13 +78,29 @@ export class SelfScoreComponent implements OnInit {
       accountId: +JSON.parse(localStorage.getItem('user')).id,
       scoreType: this.scoreType
     }
+    this.commentModel = {
+      id: 0,
+      content: this.content,
+      createdBy: +JSON.parse(localStorage.getItem('user')).id,
+      accountId: +JSON.parse(localStorage.getItem('user')).id,
+      modifiedBy: null,
+      createdTime: new Date().toDateString(),
+      modifiedTime: null,
+      period: this.data.period,
+      periodTypeId: this.data.periodTypeId,
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.SelfEvaluation
+    };
+    if (this.hasFunctionalLeader === true) {
+      this.getFunctionalLeaderCommentByAccountId();
+      this.getFunctionalLeaderAttitudeScoreByAccountId();
+    }
 
     this.getQuarterlySetting();
     this.loadData();
     this.loadKPIData();
     this.getFisrtSelfScoreByAccountId();
-    this.getFunctionalLeaderCommentByAccountId();
-    this.getFunctionalLeaderAttitudeScoreByAccountId();
+    this.getL0SelfEvaluationCommentByAccountId();
   }
   getMonthListInCurrentQuarter(index) {
 
@@ -110,10 +135,11 @@ export class SelfScoreComponent implements OnInit {
   getFunctionalLeaderAttitudeScoreByAccountId() {
     this.attitudeScoreService.getFunctionalLeaderAttitudeScoreByAccountId(
       +JSON.parse(localStorage.getItem('user')).id,
-      this.data.periodTypeId,
+      this.data.halfYearId,
       this.data.period
     ).subscribe(data => {
-      this.attitudeScoreData = data;
+      this.functionalLeaderAttitudeScoreData = data?.point || 0;
+      this.functionalLeaderScored = this.functionalLeaderAttitudeScoreData !== 0;
     });
   }
   getFisrtSelfScoreByAccountId() {
@@ -127,14 +153,23 @@ export class SelfScoreComponent implements OnInit {
       this.kpiScoreModel.id = data?.id;
     });
   }
-
-  getFunctionalLeaderCommentByAccountId() {
-    this.commentService.getFunctionalLeaderCommentByAccountId(
+  getL0SelfEvaluationCommentByAccountId() {
+    this.commentService.getL0SelfEvaluationCommentByAccountId(
       +JSON.parse(localStorage.getItem('user')).id,
       this.data.periodTypeId,
       this.data.period
     ).subscribe(data => {
       this.content = data?.content;
+      this.commentModel.id = data?.id;
+    });
+  }
+  getFunctionalLeaderCommentByAccountId() {
+    this.commentService.getFunctionalLeaderCommentByAccountId(
+      +JSON.parse(localStorage.getItem('user')).id,
+      this.data.halfYearId,
+      this.data.period
+    ).subscribe(data => {
+      this.functionalLeaderCommentContent = data?.content;
     });
   }
   loadKPIData() {
@@ -156,14 +191,23 @@ export class SelfScoreComponent implements OnInit {
     this.kpiScoreModel.point = this.point;
     return this.kpiScoreService.add(this.kpiScoreModel);
   }
-
+  addComment() {
+    this.commentModel.content = this.content;
+    return this.commentService.add(this.commentModel);
+  }
   finish() {
-    if (!this.point) {
-      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
+    if (this.point != 0 && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {
+      this.alertify.warning('Please leave a Self - Evaluation! <br>Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
+    if (this.point === 0 && !this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)) {
+      this.alertify.warning('Please choose a special score. <br>Not yet complete. Can not submit! 尚未完成，無法提交', true);
+      return;
+    }
+
     const kpiScore = this.addKPIScore();
-    forkJoin([kpiScore]).subscribe(response => {
+    const comment = this.addComment();
+    forkJoin([kpiScore, comment]).subscribe(response => {
       console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);

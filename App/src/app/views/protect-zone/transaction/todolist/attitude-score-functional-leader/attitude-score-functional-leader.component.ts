@@ -17,7 +17,7 @@ import { Attitude } from 'src/app/_core/_model/attitude';
 import { forkJoin } from 'rxjs';
 import { Comment } from 'src/app/_core/_model/commentv2';
 
-import { SystemScoreType } from 'src/app/_core/enum/system';
+import { CommentType, SystemScoreType } from 'src/app/_core/enum/system';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 @Component({
   selector: 'app-attitude-score-functional-leader',
@@ -75,7 +75,8 @@ export class AttitudeScoreFunctionalLeaderComponent implements OnInit {
       createdTime: new Date().toDateString(),
       modifiedTime: null,
       periodTypeId: this.data.periodTypeId,
-      period: this.data.period
+      period: this.data.period,
+      scoreType: this.scoreType
     };
 
     this.commentModel = {
@@ -88,7 +89,8 @@ export class AttitudeScoreFunctionalLeaderComponent implements OnInit {
       modifiedTime: null,
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
-      scoreType: this.scoreType
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.SelfEvaluation
     };
     this.getHalfYearSetting();
     this.loadData();
@@ -122,7 +124,7 @@ export class AttitudeScoreFunctionalLeaderComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllAttitudeScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllAttitudeScoreGFLByAccountId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -143,11 +145,10 @@ export class AttitudeScoreFunctionalLeaderComponent implements OnInit {
     });
   }
   getFisrtByObjectiveIdAndScoreBy() {
-    this.attitudeScoreService.getFisrtByAccountId(
+    this.attitudeScoreService.getFunctionalLeaderAttitudeScoreByAccountId(
       this.data.id,
       this.data.periodTypeId,
-      this.data.period,
-      this.scoreType
+      this.data.period
       ).subscribe(data => {
       this.point = data?.point;
       this.attitudeScoreModel.id = data?.id;

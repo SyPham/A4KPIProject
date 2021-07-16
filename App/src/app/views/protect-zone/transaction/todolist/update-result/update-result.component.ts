@@ -10,16 +10,19 @@ import { ResultOfMonthService } from 'src/app/_core/_service/result-of-month.ser
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-result',
   templateUrl: './update-result.component.html',
-  styleUrls: ['./update-result.component.scss']
+  styleUrls: ['./update-result.component.scss'],
+  providers: [DatePipe]
 })
 export class UpdateResultComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
   @Input() data: any;
   @Input() isReject: any;
+  @Input() currentTime: any;
   gridData: object;
   gridResultOfMonthData: ResultOfMonth[];
   toolbarOptions = ['Search'];
@@ -29,16 +32,20 @@ export class UpdateResultComponent implements OnInit {
   model: ResultOfMonthRequest;
   title: string;
   content: string;
+  currentTimeRequest: any;
   constructor(
     public activeModal: NgbActiveModal,
     private service: ObjectiveService,
     private todolistService: Todolistv2Service,
     private alertify: AlertifyService,
     private commentService: Commentv2Service,
-    private resultOfMonthService: ResultOfMonthService
+    private resultOfMonthService: ResultOfMonthService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+
     this.title = '';
     if (this.isReject) {
       this.getGHRCommentByAccountId();
@@ -55,7 +62,7 @@ export class UpdateResultComponent implements OnInit {
 
 
   getMonthText() {
-    const month = new Date().getMonth();
+    const month = this.currentTime.getMonth();
     const listMonthOfEachQuarter =
         [
         "Result of Jan.",
@@ -69,7 +76,7 @@ export class UpdateResultComponent implements OnInit {
     return listMonthOfCurrentQuarter;
   }
   getTitleText() {
-    const month = new Date().getMonth();
+    const month = this.currentTime.getMonth();
     const listMonthOfEachQuarter =
         [
         "Jan.",
@@ -97,7 +104,7 @@ export class UpdateResultComponent implements OnInit {
     });
   }
   loadCurrentResultOfMonthData() {
-    this.resultOfMonthService.getAllByMonth(this.data.id).subscribe(data => {
+    this.resultOfMonthService.getAllByMonth(this.data.id, this.currentTimeRequest).subscribe(data => {
       this.gridResultOfMonthData = data || [];
       this.title =  data[0]?.title;
     });

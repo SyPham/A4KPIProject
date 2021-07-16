@@ -1,3 +1,5 @@
+import { map } from 'rxjs/operators';
+import { PerformanceService } from './../../../../_core/_service/performance.service';
 import { Subscription } from 'rxjs';
 import { KpiScoreComponent } from './kpi-score/kpi-score.component';
 import { AccountGroupService } from './../../../../_core/_service/account.group.service';
@@ -20,7 +22,9 @@ import { environment } from 'src/environments/environment';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { DatePipe } from '@angular/common';
 import { AttitudeScoreFunctionalLeaderComponent } from './attitude-score-functional-leader/attitude-score-functional-leader.component';
-
+import { KpiScoreL2Component } from './kpi-score-l2/kpi-score-l2.component';
+import { CellRenderEventArgs, SheetModel, ColumnModel, RowModel, SpreadsheetComponent, ProtectSettingsModel, CellModel } from '@syncfusion/ej2-angular-spreadsheet';
+import { MessageConstants } from 'src/app/_core/_constants/system';
 @Component({
   selector: 'app-todolist',
   templateUrl: './todolist.component.html',
@@ -29,7 +33,7 @@ import { AttitudeScoreFunctionalLeaderComponent } from './attitude-score-functio
 })
 export class TodolistComponent implements OnInit, OnDestroy {
   @ViewChild('grid') grid: GridComponent;
-  @ViewChildren('GridtemplateRef') public Gridtemplates: QueryList< TemplateRef<any>>;
+  @ViewChildren('GridtemplateRef') public Gridtemplates: QueryList<TemplateRef<any>>;
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -42,10 +46,15 @@ export class TodolistComponent implements OnInit, OnDestroy {
   @ViewChild('importModal') importModal: NgbModalRef;
   file: any;
   excelDownloadUrl: string;
-  currentTime: any ;
-  currentTimeRequest: any ;
+  currentTime: any;
+  currentTimeRequest: any;
   index: any = 1;
   subscription: Subscription[] = [];
+  @ViewChild('remoteDataBinding')
+  public spreadsheetObj: SpreadsheetComponent;
+  public sheetName = 'Upload Details';
+  public data: Object[] = [];
+  originalData: import("h:/a_2021/a_A4KPI/App/src/app/_core/_model/performance").Performance[];
   constructor(
     private service: ObjectiveService,
     private alertify: AlertifyService,
@@ -53,9 +62,10 @@ export class TodolistComponent implements OnInit, OnDestroy {
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
     private datePipe: DatePipe,
+    private performanceService: PerformanceService
   ) { }
   ngOnDestroy(): void {
-    this.subscription.forEach( item => item.unsubscribe());
+    this.subscription.forEach(item => item.unsubscribe());
   }
   onChangeReportTime(value: Date): void {
     this.loadData();
@@ -65,40 +75,40 @@ export class TodolistComponent implements OnInit, OnDestroy {
 
     this.loadAccountGroupData();
     this.loadData();
-    this.subscription.push(this.todolistService.currentMessage.subscribe(message => {if (message) { this.loadData(); }}));
+    this.subscription.push(this.todolistService.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
   }
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
     const index = this.index;
     switch (index) {
       case SystemRole.L0:
-      this.scoreType = SystemScoreType.L0;
-      this.loadDataL0();
-      break;
+        this.scoreType = SystemScoreType.L0;
+        this.loadDataL0();
+        break;
       case SystemRole.L1:
         this.scoreType = SystemScoreType.L1;
         this.loadDataL1();
-      break;
+        break;
       case SystemRole.FunctionalLeader:
         this.scoreType = SystemScoreType.FunctionalLeader;
         this.loadDataFunctionalLeader();
-      break;
+        break;
       case SystemRole.L2:
         this.scoreType = SystemScoreType.L2;
         this.loadDataL2();
-      break;
+        break;
       case SystemRole.FHO:
         this.scoreType = SystemScoreType.FHO;
-        this.loadDataFHO();
-      break;
+        this.loadDataUpdater();
+        break;
       case SystemRole.GHR:
         this.scoreType = SystemScoreType.GHR;
         this.loadDataGHR();
-      break;
+        break;
       case SystemRole.GM:
         this.loadDataGM();
         this.scoreType = SystemScoreType.GM;
-      break;
+        break;
     }
   }
   selected(args) {
@@ -108,37 +118,37 @@ export class TodolistComponent implements OnInit, OnDestroy {
     this.index = index;
     switch (index) {
       case SystemRole.L0:
-      this.scoreType = SystemScoreType.L0;
-      this.loadDataL0();
-      break;
+        this.scoreType = SystemScoreType.L0;
+        this.loadDataL0();
+        break;
       case SystemRole.L1:
         this.scoreType = SystemScoreType.L1;
         this.loadDataL1();
-      break;
+        break;
       case SystemRole.FunctionalLeader:
         this.scoreType = SystemScoreType.FunctionalLeader;
         this.loadDataFunctionalLeader();
-      break;
+        break;
       case SystemRole.L2:
         this.scoreType = SystemScoreType.L2;
         this.loadDataL2();
-      break;
+        break;
       case SystemRole.FHO:
         this.scoreType = SystemScoreType.FHO;
-        this.loadDataFHO();
-      break;
+        this.loadDataUpdater();
+        break;
       case SystemRole.GHR:
         this.scoreType = SystemScoreType.GHR;
         this.loadDataGHR();
-      break;
+        break;
       case SystemRole.GM:
         this.loadDataGM();
         this.scoreType = SystemScoreType.GM;
-      break;
+        break;
     }
   }
   getGridTemplate(index): TemplateRef<any> {
-   return this.Gridtemplates.toArray()[index - 1];
+    return this.Gridtemplates.toArray()[index - 1];
   }
   loadDataL0() {
     this.todolistService.l0(this.currentTimeRequest).subscribe(data => {
@@ -149,6 +159,18 @@ export class TodolistComponent implements OnInit, OnDestroy {
   loadDataL1() {
     this.todolistService.l1(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
+    });
+  }
+  loadDataUpdater() {
+    this.performanceService.getKPIObjectivesByUpdater().subscribe(data => {
+      this.data = data.map(item => {
+        return {
+          objectiveName: item.objectiveName,
+          percentage: item.percentage,
+          createdTime: item.createdTime === '0001-01-01T00:00:00' ? "" : this.datePipe.transform(item.createdTime, "yyyy-MM-dd HH:mm:ss")
+        }
+      });
+      this.originalData =  data;
     });
   }
   loadDataFunctionalLeader() {
@@ -181,39 +203,96 @@ export class TodolistComponent implements OnInit, OnDestroy {
       this.accountGroupData = data;
     });
   }
-  createdToolbar() {}
-  onClickToolbar(args) {}
-  onFilter(args) {}
-  openActionModalComponent(data) {
-    const modalRef = this.modalService.open(ActionComponent, { size: 'xl', backdrop : 'static' });
-    modalRef.componentInstance.data = data;
-    modalRef.result.then((result) => {
-    }, (reason) => {
-      this.loadData();
-    });
+  created() {
+  //To Applies cell lock to the specified range of cells.
+//   let protectSetting:ProtectSettingsModel = {
+//     selectCells: true,
+//     formatCells: false,
+//     formatRows: false,
+//     formatColumns: false,
+//     insertLink: false
+// }
+// this.spreadsheetObj.protectSheet(this.sheetName, protectSetting);
+// this.spreadsheetObj.lockCells('A2:AZ100', false); // to unlock the A2:Az100 cells
+// this.spreadsheetObj.lockCells('A1:Z1', true); // to lock the A1:Z1 cells
   }
-  openUpdateResultModalComponent(data) {
-    const modalRef = this.modalService.open(UpdateResultComponent, { size: 'xl', backdrop : 'static' });
+  async submit() {
+    console.log(`A2:C${this.originalData.length + 1}`);
+    let index = 2;
+    const results = [];
+    for (const item of this.originalData) {
+    const data = await  this.spreadsheetObj.getData(`A${index}:C${index}`);
+    let objective = '';
+    let percentage = '';
+    for (const a of data) {
+      if (a[0] === `A${index}`) {
+        objective = a[1].value;
+       }
+       if (a[0] === `B${index}`) {
+         percentage = a[1].value;
+        }
+      }
+
+      console.log(objective, percentage);
+
+       const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any ;
+       itemResult.percentage = percentage;
+       results.push(itemResult);
+       index++;
+      }
+      console.log(results);
+      this.performanceService.submit(results).subscribe(response => {
+        console.log(response)
+        if (response.success) {
+          this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        } else {
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+        }
+      }, () => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG) )
+
+  }
+  createdToolbar() { }
+  onClickToolbar(args) { }
+  onFilter(args) { }
+  openActionModalComponent(data) {
+    const modalRef = this.modalService.open(ActionComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.isReject = data.isReject;
     modalRef.result.then((result) => {
     }, (reason) => {
-      this.loadData();
+    });
+  }
+  openUpdateResultModalComponent(data) {
+    const modalRef = this.modalService.open(UpdateResultComponent, { size: 'xl', backdrop: 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.currentTime = this.currentTime;
+    modalRef.componentInstance.isReject = data.isReject;
+    modalRef.result.then((result) => {
+    }, (reason) => {
     });
   }
   openSelfScoreModalComponent(data) {
-    const modalRef = this.modalService.open(SelfScoreComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(SelfScoreComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Monthly;
     modalRef.componentInstance.scoreType = this.scoreType;
 
     modalRef.result.then((result) => {
     }, (reason) => {
-      this.loadData();
     });
   }
   openKPIScoreModalComponent(data) {
-    const modalRef = this.modalService.open(KpiScoreComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(KpiScoreComponent, { size: 'xl', backdrop: 'static' });
+    modalRef.componentInstance.data = data;
+    modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
+    modalRef.componentInstance.scoreType = this.scoreType;
+    modalRef.componentInstance.currentTime = this.currentTime;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
+  }
+  openKPIScoreL2ModalComponent(data) {
+    const modalRef = this.modalService.open(KpiScoreL2Component, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
@@ -223,7 +302,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openKPIScoreGHRModalComponent(data) {
-    const modalRef = this.modalService.open(KpiScoreGHRComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(KpiScoreGHRComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
@@ -234,7 +313,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openKPIScoreGMModalComponent(data) {
-    const modalRef = this.modalService.open(KpiScoreGMComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(KpiScoreGMComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.periodTypeCode = PeriodType.Quarterly;
     modalRef.componentInstance.scoreType = this.scoreType;
@@ -245,7 +324,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openAttitudeScoreModalComponent(data) {
-    const modalRef = this.modalService.open(AttitudeScoreComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(AttitudeScoreComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
@@ -253,7 +332,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openAttitudeScoreL2ModalComponent(data) {
-    const modalRef = this.modalService.open(AttitudeScoreL2Component, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(AttitudeScoreL2Component, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
@@ -262,7 +341,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
   }
 
   openAttitudeScoreGHRModalComponent(data) {
-    const modalRef = this.modalService.open(AttitudeScoreGHRComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(AttitudeScoreGHRComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
@@ -270,7 +349,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openAttitudeScoreFunctionalLeaderModalComponent(data) {
-    const modalRef = this.modalService.open(AttitudeScoreFunctionalLeaderComponent, { size: 'xl', backdrop : 'static' });
+    const modalRef = this.modalService.open(AttitudeScoreFunctionalLeaderComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;
     modalRef.componentInstance.scoreType = this.scoreType;
     modalRef.result.then((result) => {
@@ -278,8 +357,8 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   openImportExcelModalComponent() {
-      this.excelDownloadUrl = `${environment.apiUrl}todolist/ExcelExport`;
-      this.modalReference = this.modalService.open(this.importModal, { size: 'xl' });
+    this.excelDownloadUrl = `${environment.apiUrl}todolist/ExcelExport`;
+    this.modalReference = this.modalService.open(this.importModal, { size: 'xl' });
   }
   fileProgress(event) {
     this.file = event.target.files[0];
@@ -292,7 +371,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
         this.alertify.success('The excel has been imported into system!');
         this.modalService.dismissAll();
       }, error => {
-          this.alertify.error(error, true);
+        this.alertify.error(error, true);
       });
   }
   NO(index) {

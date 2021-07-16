@@ -26,4 +26,10 @@ export class SpecialContributionScoreService extends CURDService<SpecialContribu
       .get<SpecialContributionScore>(apiUrl, {})
       .pipe(catchError(this.handleError));
   }
+  getSpecialScoreByAccountId(accountId, periodTypeId, period, scoreType): Observable<SpecialContributionScore> {
+    const apiUrl =`${this.base}${this.entity}/GetSpecialScoreByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`;
+    return this.http
+      .get<SpecialContributionScore>(apiUrl, {})
+      .pipe(catchError(this.handleError));
+  }
 }
