@@ -1,4 +1,3 @@
-import { map } from 'rxjs/operators';
 import { PerformanceService } from './../../../../_core/_service/performance.service';
 import { Subscription } from 'rxjs';
 import { KpiScoreComponent } from './kpi-score/kpi-score.component';
@@ -20,10 +19,11 @@ import { KpiScoreGMComponent } from './kpi-score-gm/kpi-score-gm.component';
 import { KpiScoreGHRComponent } from './kpi-score-ghr/kpi-score-ghr.component';
 import { environment } from 'src/environments/environment';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
+import { Performance } from 'src/app/_core/_model/performance';
 import { DatePipe } from '@angular/common';
 import { AttitudeScoreFunctionalLeaderComponent } from './attitude-score-functional-leader/attitude-score-functional-leader.component';
 import { KpiScoreL2Component } from './kpi-score-l2/kpi-score-l2.component';
-import { CellRenderEventArgs, SheetModel, ColumnModel, RowModel, SpreadsheetComponent, ProtectSettingsModel, CellModel } from '@syncfusion/ej2-angular-spreadsheet';
+import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 @Component({
   selector: 'app-todolist',
@@ -54,7 +54,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
   public spreadsheetObj: SpreadsheetComponent;
   public sheetName = 'Upload Details';
   public data: Object[] = [];
-  originalData: import("h:/a_2021/a_A4KPI/App/src/app/_core/_model/performance").Performance[];
+  originalData: Performance[];
   constructor(
     private service: ObjectiveService,
     private alertify: AlertifyService,
