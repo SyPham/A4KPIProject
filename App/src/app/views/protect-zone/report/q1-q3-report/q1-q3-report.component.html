@@ -6,7 +6,7 @@
         </h3>
       </div>
       <!-- /.card-header -->
-      <div class="card-body table-responsive p-0">
+      <!-- <div class="card-body table-responsive p-0">
         <ejs-grid #grid
           id='grid'
           [dataSource]="data"
@@ -30,7 +30,6 @@
               </ng-template>
             </e-column>
             <e-column field="fullName" textAlign='Center' headerText="Name"> </e-column>
-            <!-- <e-column field="position" textAlign='Center' headerText="Position"> </e-column> -->
             <e-column field="#" textAlign='Center' headerText="Option">
               <ng-template #template let-data>
                 <button class="btn btn-sm btn-success" (click)='openModal(data)'>Detail</button>
@@ -38,6 +37,74 @@
             </e-column>
           </e-columns>
         </ejs-grid>
+      </div> -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 text-center py-2">
+            <span style="font-size: x-large;">
+              人事季報表
+            </span>
+          </div>
+          <div class="col-md-12 d-flex justify-content-start py-2">
+            <span style="font-size: x-large;">
+              年度 {{detail?.year || 2021}}
+            </span>
+
+            <span style="font-size: x-large; margin-left: 20px;">
+              廠區 SHC
+            </span>
+
+            <span style="font-size: x-large;margin-left: 20px">
+              季度 Quarter
+
+            </span>
+
+            <span style="font-size: x-large;margin-left: 20px">
+              <p-checkbox shape="round" color="success" [checked]="currentquater === 1 ? true : false" lock="true">
+                <i p-icon class="material-icons">done</i>
+                Q1
+              </p-checkbox>
+            </span>
+
+            <span style="font-size: x-large;margin-left: 20px">
+              <p-checkbox shape="round" color="success" [checked]="currentquater === 3 ? true : false" lock="true">
+                <i p-icon class="material-icons">done</i>
+                Q3
+              </p-checkbox>
+            </span>
+
+            <span style="font-size: x-large;margin-left: 20px">
+              <button type="button" class="btn btn-primary" (click)="exportExcel()" >Export Excel</button>
+            </span>
+          </div>
+          <div class="col-md-12">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">部門單位 Dept.</th>
+                  <th scope="col">姓名 Full Name</th>
+                  <th scope="col" style="width:10%">直屬主管評分 L1 score</th>
+                  <th scope="col">直屬主管評語 L1 comment</th>
+                  <th scope="col" style="width:10%">二階主管評分 L2 score</th>
+                  <th scope="col">二階主管評語 L2 comment</th>
+                  <th scope="col" style="width:10%">SMART 分數</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of detail; let i=index">
+                  <td>{{item?.oc}}</td>
+                  <td>{{item?.fullName}}</td>
+                  <td style="text-align: center;">{{item?.l1Score}}</td>
+                  <td>{{item?.l1Comment}}</td>
+                  <td style="text-align: center;">{{item?.l2Score}}</td>
+                  <td>{{item?.l2Comment}}</td>
+                  <td style="text-align: center;">{{item?.smartScore}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
       <!-- /.card-body -->
     </div>

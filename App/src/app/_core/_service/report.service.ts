@@ -26,11 +26,18 @@ export class ReportService {
   getQ1Q3Data(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/GetQ1Q3Data`, {});
   }
+
+  getQ1Q3DataByLeo(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3DataByLeo`, {});
+  }
   getQ1Q3ReportInfo(accountId): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3ReportInfo?accountId=${accountId}`, {});
   }
   q1q3ExportExcel(accountId: number) {
     return this.http.get(`${this.baseUrl}Report/ExportExcel/${accountId}`, { responseType: 'blob' });
+  }
+  q1q3ExportExcelByLeo() {
+    return this.http.get(`${this.baseUrl}Report/ExportExcelByLeo/`, { responseType: 'blob' });
   }
   geH1H2Data(): Observable<any>  {
     return this.http.get<any>(`${this.baseUrl}Report/GetH1H2Data`, {});

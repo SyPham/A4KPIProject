@@ -35,6 +35,12 @@ namespace A4KPI.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetQ1Q3DataByLeo()
+        {
+            return Ok(await _serviceQ1Q3.GetQ1Q3DataByLeo());
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetH1H2Data()
         {
             return Ok(await _serviceH1H2.GetH1H2Data());
@@ -49,6 +55,13 @@ namespace A4KPI.Controllers
         public async Task<IActionResult> ExportExcel(int accountId)
         {
             var bin = await _serviceQ1Q3.ExportExcel(accountId);
+            return File(bin, "application/octet-stream", "Q1,Q3 Report 季報表.xlsx");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportExcelByLeo()
+        {
+            var bin = await _serviceQ1Q3.ExportExcelByLeo();
             return File(bin, "application/octet-stream", "Q1,Q3 Report 季報表.xlsx");
         }
         [HttpGet]

@@ -26,6 +26,7 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
   @ViewChild('detailModal') detailModal: NgbModalRef;
   detail: any;
   itemData: any;
+  currentquater: any;
 
   constructor(
     public modalService: NgbModal,
@@ -55,7 +56,17 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
     }
   }
   exportExcel() {
-    this.service.q1q3ExportExcel(this.itemData.id).subscribe((data: any) => {
+    // this.service.q1q3ExportExcel(this.itemData.id).subscribe((data: any) => {
+    //   const blob = new Blob([data],
+    //     { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    //   const downloadURL = window.URL.createObjectURL(data);
+    //   const link = document.createElement('a');
+    //   link.href = downloadURL;
+    //   link.download = 'Q1,Q3 Report 季報表.xlsx';
+    //   link.click();
+    // });
+    this.service.q1q3ExportExcelByLeo().subscribe((data: any) => {
       const blob = new Blob([data],
         { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
@@ -72,8 +83,11 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
   // api
 
   loadData() {
-    this.service.geH1H2Data().subscribe(data => {
-      this.data = data;
+    this.service.getQ1Q3DataByLeo().subscribe(data => {
+      console.log(data);
+      // this.data = data;
+      this.detail = data.data,
+      this.currentquater = data.currentQuarter
     });
   }
   getQ1Q3ReportInfo(id) {

@@ -23,7 +23,7 @@ import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid';
 
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { TooltipAllModule } from '@syncfusion/ej2-angular-popups';
-
+import { NgxPrettyCheckboxModule } from 'ngx-pretty-checkbox';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -52,6 +52,7 @@ if (lang === 'vi') {
 
 @NgModule({
   imports: [
+    NgxPrettyCheckboxModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
