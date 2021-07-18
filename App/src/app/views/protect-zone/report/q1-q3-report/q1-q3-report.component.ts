@@ -6,11 +6,13 @@ import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { ReportService } from 'src/app/_core/_service/report.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-q1-q3-report',
   templateUrl: './q1-q3-report.component.html',
-  styleUrls: ['./q1-q3-report.component.scss']
+  styleUrls: ['./q1-q3-report.component.scss'],
+  providers: [DatePipe]
 })
 export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
   data: any[] = [];
@@ -27,15 +29,21 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
   detail: any;
   itemData: any;
   currentquater: any;
-
+  currentTime: any;
+  currentTimeRequest: any;
   constructor(
     public modalService: NgbModal,
     private alertify: AlertifyService,
     private service: ReportService,
+    private datePipe: DatePipe,
     private route: ActivatedRoute,
   ) { super(); }
 
   ngOnInit() {
+    this.currentTime = new Date();
+    this.loadData();
+  }
+  onChangeReportTime(value: Date): void {
     this.loadData();
   }
   openModal(data) {
@@ -66,7 +74,7 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
     //   link.download = 'Q1,Q3 Report 季報表.xlsx';
     //   link.click();
     // });
-    this.service.q1q3ExportExcelByLeo().subscribe((data: any) => {
+    this.service.q1q3ExportExcelByLeo(this.currentTimeRequest).subscribe((data: any) => {
       const blob = new Blob([data],
         { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
@@ -83,10 +91,11 @@ export class Q1Q3ReportComponent extends BaseComponent implements OnInit {
   // api
 
   loadData() {
-    this.service.getQ1Q3DataByLeo().subscribe(data => {
-      console.log(data);
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    this.service.getQ1Q3DataByLeo(this.currentTimeRequest).subscribe(data => {
       // this.data = data;
       this.detail = data.data,
+      console.log(this.detail);
       this.currentquater = data.currentQuarter
     });
   }

@@ -23,11 +23,11 @@ namespace A4KPI.Services
     {
 
         Task<object> GetQ1Q3Data();
-        Task<object> GetQ1Q3DataByLeo();
+        Task<object> GetQ1Q3DataByLeo(DateTime currentTime);
         Task<Q1Q3ReportDto> GetReportInfo(int accountId);
 
         Task<Byte[]> ExportExcel(int accountId);
-        Task<Byte[]> ExportExcelByLeo();
+        Task<Byte[]> ExportExcelByLeo(DateTime currentTime);
     }
     public class Q1Q3Service : IQ1Q3Service
     {
@@ -112,7 +112,7 @@ namespace A4KPI.Services
             return model;
         }
 
-        public async Task<object> GetQ1Q3DataByLeo()
+        public async Task<object> GetQ1Q3DataByLeo(DateTime currentTime)
         {
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
@@ -146,8 +146,10 @@ namespace A4KPI.Services
                     x.Value,
                     x.Title,
                     Months = x.Months.Split(",").Select(int.Parse).ToList()
+                    
                 });
-            var currentDate = DateTime.Today;
+            //var currentDate = DateTime.Today;
+            var currentDate = currentTime;
             var currentMonth = currentDate.Month;
             var currentYear = currentDate.Year;
             var currentQuarter = quarterlyModel2.FirstOrDefault(x => x.Months.Contains(currentMonth)).Value;
@@ -165,9 +167,9 @@ namespace A4KPI.Services
                     }).FirstOrDefaultAsync();
                         if (ocuser == null) return new Q1Q3ReportDto();
 
-                        var currentDate1 = DateTime.Today;
-                        var currentMonth1 = currentDate.Month + "";
-                        var currentYear1 = currentDate.Year;
+                        //var currentDate1 = DateTime.Today;
+                        //var currentMonth1 = currentDate.Month + "";
+                        //var currentYear1 = currentDate.Year;
 
                         var quarterly = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.Quarterly).FirstOrDefaultAsync();
                         var periods = quarterly.Periods.Select(x => new
@@ -176,7 +178,7 @@ namespace A4KPI.Services
                             x.Value,
                             x.ReportTime,
                             Months = x.Months.Split(',').ToList()
-                        }).Where(x => x.Months.Contains(currentMonth1)).FirstOrDefault();
+                        }).Where(x => x.Months.Contains(currentMonth.ToString())).FirstOrDefault();
 
                         var l1 = await _repoAccount.FindAll(x => x.Id == item.Id).FirstOrDefaultAsync();
                         if (l1 == null) return new Q1Q3ReportDto();
@@ -250,7 +252,7 @@ namespace A4KPI.Services
             };
         }
 
-        public async Task<object> GetQ1Q3DataByLeoExcel()
+        public async Task<object> GetQ1Q3DataByLeoExcel(DateTime currentTime)
         {
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
@@ -285,12 +287,14 @@ namespace A4KPI.Services
                     x.Title,
                     Months = x.Months.Split(",").Select(int.Parse).ToList()
                 });
-            var currentDate = DateTime.Today;
-            var currentMonth = currentDate.Month;
+            //var currentDate = DateTime.Today;
+            var currentDate = currentTime;
+            var currentMonth = currentDate.Month ;
             var currentYear = currentDate.Year;
             var currentQuarter = quarterlyModel2.FirstOrDefault(x => x.Months.Contains(currentMonth)).Value;
+
             var data = new List<Q1Q3ReportDto>();
-            if (currentQuarter == Quarter.Q2 || currentQuarter == Quarter.Q3)
+            if (currentQuarter == Quarter.Q1 || currentQuarter == Quarter.Q3)
             {
                 foreach (var item in model)
                 {
@@ -303,9 +307,9 @@ namespace A4KPI.Services
                     }).FirstOrDefaultAsync();
                     if (ocuser == null) return new Q1Q3ReportDto();
 
-                    var currentDate1 = DateTime.Today;
-                    var currentMonth1 = currentDate.Month + "";
-                    var currentYear1 = currentDate.Year;
+                    //var currentDate1 = DateTime.Today;
+                    //var currentMonth1 = currentDate.Month + "";
+                    //var currentYear1 = currentDate.Year;
 
                     var quarterly = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.Quarterly).FirstOrDefaultAsync();
                     var periods = quarterly.Periods.Select(x => new
@@ -314,7 +318,7 @@ namespace A4KPI.Services
                         x.Value,
                         x.ReportTime,
                         Months = x.Months.Split(',').ToList()
-                    }).Where(x => x.Months.Contains(currentMonth1)).FirstOrDefault();
+                    }).Where(x => x.Months.Contains(currentMonth.ToString())).FirstOrDefault();
 
                     var l1 = await _repoAccount.FindAll(x => x.Id == item.Id).FirstOrDefaultAsync();
                     if (l1 == null) return new Q1Q3ReportDto();
@@ -680,12 +684,13 @@ namespace A4KPI.Services
             }
         }
 
-        public async Task<Byte[]> ExportExcelByLeo()
+        public async Task<Byte[]> ExportExcelByLeo(DateTime currentTimes)
         {
-            var model = await GetQ1Q3DataByLeoExcel();
+            var model = await GetQ1Q3DataByLeoExcel(currentTimes);
             try
             {
-                var currentTime = DateTime.Now;
+                //var currentTime = DateTime.Now;// test
+                //var currentTime = currentTimes;
                 ExcelPackage.LicenseContext = LicenseContext.Commercial;
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 var memoryStream = new MemoryStream();

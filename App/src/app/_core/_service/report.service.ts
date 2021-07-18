@@ -27,8 +27,8 @@ export class ReportService {
     return this.http.get<any>(`${this.baseUrl}Report/GetQ1Q3Data`, {});
   }
 
-  getQ1Q3DataByLeo(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3DataByLeo`, {});
+  getQ1Q3DataByLeo(currentTime): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3DataByLeo?currentTime=${currentTime}`, {});
   }
   getQ1Q3ReportInfo(accountId): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3ReportInfo?accountId=${accountId}`, {});
@@ -36,8 +36,8 @@ export class ReportService {
   q1q3ExportExcel(accountId: number) {
     return this.http.get(`${this.baseUrl}Report/ExportExcel/${accountId}`, { responseType: 'blob' });
   }
-  q1q3ExportExcelByLeo() {
-    return this.http.get(`${this.baseUrl}Report/ExportExcelByLeo/`, { responseType: 'blob' });
+  q1q3ExportExcelByLeo(currentTime) {
+    return this.http.get(`${this.baseUrl}Report/ExportExcelByLeo?currentTime=${currentTime}`, { responseType: 'blob' });
   }
   geH1H2Data(): Observable<any>  {
     return this.http.get<any>(`${this.baseUrl}Report/GetH1H2Data`, {});

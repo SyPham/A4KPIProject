@@ -40,6 +40,13 @@
       </div> -->
       <div class="modal-body">
         <div class="row">
+          <div class="col-md-3 d-flex justify-content-center">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Change System Date</label>
+              <kendo-datepicker style="width: 100%;" [(ngModel)]="currentTime" (valueChange)="onChangeReportTime($event)">
+              </kendo-datepicker>
+            </div>
+          </div>
           <div class="col-md-12 text-center py-2">
             <span style="font-size: x-large;">
               人事季報表
@@ -73,7 +80,7 @@
               </p-checkbox>
             </span>
 
-            <span style="font-size: x-large;margin-left: 20px">
+            <span *ngIf="currentquater === 1 || currentquater === 3" style="font-size: x-large;margin-left: 20px">
               <button type="button" class="btn btn-primary" (click)="exportExcel()" >Export Excel</button>
             </span>
           </div>
@@ -91,15 +98,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of detail; let i=index">
-                  <td>{{item?.oc}}</td>
-                  <td>{{item?.fullName}}</td>
-                  <td style="text-align: center;">{{item?.l1Score}}</td>
-                  <td>{{item?.l1Comment}}</td>
-                  <td style="text-align: center;">{{item?.l2Score}}</td>
-                  <td>{{item?.l2Comment}}</td>
-                  <td style="text-align: center;">{{item?.smartScore}}</td>
-                </tr>
+                <ng-container *ngIf="detail !== undefined; else elseTemplate">
+
+                  <tr *ngFor="let item of detail; let i=index">
+                    <td>{{item?.oc}}</td>
+                    <td>{{item?.fullName}}</td>
+                    <td style="text-align: center;">{{item?.l1Score}}</td>
+                    <td>{{item?.l1Comment}}</td>
+                    <td style="text-align: center;">{{item?.l2Score}}</td>
+                    <td>{{item?.l2Comment}}</td>
+                    <td style="text-align: center;">{{item?.smartScore}}</td>
+                  </tr>
+                </ng-container>
+                <ng-template #elseTemplate>
+                  <tr>
+                      No records
+                  </tr>
+                </ng-template>
+
               </tbody>
             </table>
           </div>

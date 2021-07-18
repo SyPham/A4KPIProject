@@ -35,9 +35,9 @@ namespace A4KPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetQ1Q3DataByLeo()
+        public async Task<ActionResult> GetQ1Q3DataByLeo(DateTime currentTime)
         {
-            return Ok(await _serviceQ1Q3.GetQ1Q3DataByLeo());
+            return Ok(await _serviceQ1Q3.GetQ1Q3DataByLeo(currentTime));
         }
 
         [HttpGet]
@@ -59,9 +59,9 @@ namespace A4KPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExportExcelByLeo()
+        public async Task<IActionResult> ExportExcelByLeo(DateTime currentTime)
         {
-            var bin = await _serviceQ1Q3.ExportExcelByLeo();
+            var bin = await _serviceQ1Q3.ExportExcelByLeo(currentTime);
             return File(bin, "application/octet-stream", "Q1,Q3 Report 季報表.xlsx");
         }
         [HttpGet]
