@@ -390,6 +390,7 @@ namespace A4KPI.Services
             return data.ToList();
             
         }
+
         public async Task<Q1Q3ReportDto> GetReportInfo(int accountId)
         {
             var ocuser = await _repoOCAccount.FindAll(x => x.AccountId == accountId)

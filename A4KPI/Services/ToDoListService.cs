@@ -462,6 +462,7 @@ namespace A4KPI.Services
 
             var quarterType = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.Quarterly).FirstOrDefaultAsync();
             var displayTimeQuarter = date.AddDays(quarterType.DisplayBefore).Date;
+
             // Lấy settings của quý và nửa năm
             var quarterlyModel = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Quarterly && x.ReportTime.Date >= displayTimeQuarter).OrderBy(x => x.ReportTime).FirstOrDefaultAsync();
             var halfYearModel = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.HalfYear && x.ReportTime.Date >= displayTimeHalfYear).OrderBy(x => x.ReportTime).FirstOrDefaultAsync();

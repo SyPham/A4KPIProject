@@ -18,6 +18,7 @@ namespace A4KPI.Services
     {
       
         Task<object> GetH1H2Data();
+        Task<object> GetReportInfo(int accountId);
 
         Task<object> GetAllKPIScoreL0ByPeriod(int period);
     }
@@ -39,6 +40,7 @@ namespace A4KPI.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRepositoryBase<Comment> _repoComment;
         private readonly MapperConfiguration _configMapper;
         public H1H2Service(
             IRepositoryBase<ToDoList> repo,
@@ -52,6 +54,7 @@ namespace A4KPI.Services
             IRepositoryBase<PIC> repoPIC,
             IRepositoryBase<OC> repoOC,
             IRepositoryBase<Period> repoPeriod,
+            IRepositoryBase<Comment> repoComment,
             IRepositoryBase<AttitudeScore> repoAttitudeScore,
             IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork,
@@ -60,6 +63,7 @@ namespace A4KPI.Services
             )
         {
             _repo = repo;
+            _repoComment = repoComment;
             _repoAccount = repoAccount;
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _repoObjective = repoObjective;
@@ -75,6 +79,102 @@ namespace A4KPI.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
+        }
+
+        public async Task<object> GetReportInfo(int accountId)
+        {
+            var ocuser = await _repoOCAccount.FindAll(x => x.AccountId == accountId)
+             .Select(x => new
+             {
+                 OC = x.OC.Name,
+                 OCId = x.OC.ParentId,
+                 FullName = x.Account.FullName
+             }).FirstOrDefaultAsync();
+            if (ocuser == null) return new H1H2ReportDto();
+
+            var currentDate = DateTime.Today;
+            var currentMonth = currentDate.Month + "";
+            var currentYear = currentDate.Year;
+            var leader_id = _repoAccount.FindById(accountId).Leader;
+            var quarterly = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.HalfYear).FirstOrDefaultAsync();
+            var periods = quarterly.Periods.Select(x => new
+            {
+                x.Title,
+                x.Value,
+                x.ReportTime,
+                Months = x.Months.Split(',').ToList()
+            }).Where(x => x.Months.Contains(currentMonth)).FirstOrDefault();
+
+            var l1 = await _repoAccount.FindAll(x => x.Id == accountId).FirstOrDefaultAsync();
+            if (l1 == null) return new Q1Q3ReportDto();
+            double? l1ScoreKPI = await _repoAttitudeScore.FindAll(x =>
+                                         x.PeriodTypeId == SystemPeriodType.HalfYear
+                                        && x.CreatedTime.Year == DateTime.Today.Year
+                                        && x.Period == periods.Value
+                                        && x.ScoreType == ScoreType.L1
+                                        && accountId == x.AccountId
+                                        && l1.Manager == x.ScoreBy
+                                        && x.AccountId != l1.Manager)
+                                    .Select(x => x.Point)
+                                    .FirstOrDefaultAsync();
+            var l1Comment = await _repoComment.FindAll(x =>
+                                       x.PeriodTypeId == SystemPeriodType.HalfYear
+                                      && x.CreatedTime.Year == DateTime.Today.Year
+                                      && x.Period == periods.Value
+                                      && x.ScoreType == ScoreType.L1
+                                      && accountId == x.AccountId
+                                      && l1.Manager == x.CreatedBy
+                                      && x.AccountId != l1.Manager)
+                                    .Select(x => x.Content)
+                                  .FirstOrDefaultAsync();
+
+            double? l2ScoreKPI = await _repoAttitudeScore.FindAll(x =>
+                                       x.PeriodTypeId == SystemPeriodType.HalfYear
+                                      && x.CreatedTime.Year == DateTime.Today.Year
+                                      && x.Period == periods.Value
+                                      && x.ScoreType == ScoreType.L2
+                                      && accountId == x.AccountId)
+                                    .Select(x => x.Point)
+                                  .FirstOrDefaultAsync();
+            var l2Comment = await _repoComment.FindAll(x =>
+                                       x.PeriodTypeId == SystemPeriodType.HalfYear
+                                      && x.CreatedTime.Year == DateTime.Today.Year
+                                      && x.Period == periods.Value
+                                      && x.ScoreType == ScoreType.L2
+                                      && accountId == x.AccountId)
+                                    .Select(x => x.Content)
+                                  .FirstOrDefaultAsync();
+
+            double? ghrScore = await _repoKPIScore.FindAll(x =>
+                                      x.PeriodTypeId == SystemPeriodType.HalfYear
+                                     && x.CreatedTime.Year == DateTime.Today.Year
+                                     && x.Period == periods.Value
+                                     && x.ScoreType == ScoreType.GHR
+                                     && accountId == x.AccountId)
+                                   .Select(x => x.Point)
+                                 .FirstOrDefaultAsync();
+            double? FLScore = await _repoAttitudeScore.FindAll(x =>
+                                      x.PeriodTypeId == SystemPeriodType.HalfYear
+                                     && x.CreatedTime.Year == DateTime.Today.Year
+                                     && x.Period == periods.Value
+                                     && x.ScoreType == ScoreType.FunctionalLeader
+                                     && leader_id == x.ScoreBy)
+                                   .Select(x => x.Point)
+                                 .FirstOrDefaultAsync();
+            var data = new H1H2ReportDto(periods.Value, currentYear)
+            {
+                FullName = ocuser.FullName,
+                OC = ocuser.OC,
+                L1Score = l1ScoreKPI ?? 0,
+                L1Comment = l1Comment ?? "",
+                L2Score = l2ScoreKPI ?? 0,
+                L2Comment = l2Comment ?? "",
+                SmartScore = ghrScore ?? 0,
+                FLScore = FLScore ?? 0
+
+            };
+
+            return data;
         }
         public async Task<object> GetH1H2Data()
         {

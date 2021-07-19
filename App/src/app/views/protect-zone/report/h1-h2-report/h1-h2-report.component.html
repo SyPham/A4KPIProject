@@ -33,7 +33,7 @@
             <!-- <e-column field="position" textAlign='Center' headerText="Position"> </e-column> -->
             <e-column field="#" textAlign='Center' headerText="Option">
               <ng-template #template let-data>
-                <button class="btn btn-sm btn-success" (click)='openModal(data)'>Detail</button>
+                <button class="btn btn-sm btn-success" (click)='openModal(data,detailModal)'>Detail</button>
               </ng-template>
             </e-column>
           </e-columns>
@@ -66,8 +66,8 @@
       <div class="col-md-6">
 
         <div class="row">
-          <div class="col">Dept.</div>
-          <div class="col">Name:</div>
+          <div class="col">Dept. {{detail !== undefined ? detail.oc : ""}}</div>
+          <div class="col">Name: {{detail !== undefined ? detail.fullName : ""}}</div>
           <div class="col">Position:</div>
         </div>
 
@@ -182,9 +182,9 @@
             </tr>
 
             <tr>
-              <td rowspan="3">L1 Comment</td>
+              <td rowspan="3">L2 Comment</td>
               <td>Q1 KPI: {{""}}</td>
-              <td rowspan="3">L1 Comment</td>
+              <td rowspan="3">L2 Comment</td>
               <td>Q3 KPI: {{""}}</td>
             </tr>
 

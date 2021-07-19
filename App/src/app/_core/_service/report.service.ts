@@ -42,6 +42,9 @@ export class ReportService {
   geH1H2Data(): Observable<any>  {
     return this.http.get<any>(`${this.baseUrl}Report/GetH1H2Data`, {});
   }
+  getH1H2ReportInfo(accountId): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/getH1H2ReportInfo?accountId=${accountId}`, {});
+  }
   geHQHRData(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/GetHQHRData`, {});
   }

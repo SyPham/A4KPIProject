@@ -67,7 +67,13 @@ namespace A4KPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQ1Q3ReportInfo(int accountId)
         {
-            return Ok(await _serviceQ1Q3.GetReportInfo(accountId));
+            return Ok(await _serviceH1H2.GetReportInfo(accountId));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetH1H2ReportInfo(int accountId)
+        {
+            return Ok(await _serviceH1H2.GetReportInfo(accountId));
         }
     }
 }

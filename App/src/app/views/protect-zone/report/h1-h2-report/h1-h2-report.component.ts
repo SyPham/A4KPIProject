@@ -24,7 +24,8 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   toolbarOptions = ['Search'];
   @ViewChild('detailModal') detailModal: NgbModalRef;
   itemData: any;
-
+  detail: any;
+  modalRef: NgbModalRef;
   constructor(
     public modalService: NgbModal,
     private alertify: AlertifyService,
@@ -44,11 +45,16 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
       this.data = data;
     });
   }
-  openModal(data) {
-    this.itemData = data;
-    const modalRef = this.modalService.open(this.detailModal, { size: 'xl', backdrop: 'static' });
-    modalRef.result.then((result) => {
-    }, (reason) => {
+  openModal(data , model) {
+    this.getH1H2ReportInfo(data.id);
+    this.modalRef = this.modalService.open(model, { size: 'xl', backdrop: 'static' });
+
+  }
+
+  getH1H2ReportInfo(id) {
+    this.service.getH1H2ReportInfo(id).subscribe((data: any) => {
+      console.log(data);
+      this.detail = data;
     });
   }
   exportExcel() {}
