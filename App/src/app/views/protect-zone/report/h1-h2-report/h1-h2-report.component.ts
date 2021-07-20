@@ -26,6 +26,7 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   itemData: any;
   detailH1: any;
   detailH2: any;
+  avg: number = 0;
   modalRef: NgbModalRef;
   constructor(
     public modalService: NgbModal,
@@ -57,9 +58,36 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
       this.detailH1 = data.h1;
       console.log(data);
       this.detailH2 = data.h2;
+      this.avg = data.avg
     });
   }
-  exportExcel() {}
+  exportExcel() {
+
+  }
+  exportExcel2(tableID, filename = "") {
+    var downloadLink;
+    var dataType = "application/vnd.ms-excel";
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, "%20");
+
+    filename = filename ? filename + ".xls" : "excel_data.xls";
+
+    downloadLink = document.createElement("a");
+
+    document.body.appendChild(downloadLink);
+
+    if (navigator.msSaveOrOpenBlob) {
+      var blob = new Blob(["\ufeff", tableHTML], {
+        type: dataType,
+      });
+      navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+      downloadLink.href = "data:" + dataType + ", " + tableHTML;
+
+      downloadLink.download = filename;
+      downloadLink.click();
+    }
+  }
   // end api
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;

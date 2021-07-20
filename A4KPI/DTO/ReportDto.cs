@@ -46,6 +46,9 @@ namespace A4KPI.DTO
         public double L1Score { get; set; }
         public double L1 { get; set; }
         public string L1Comment { get; set; }
+        public string FLHComment { get; set; }
+        public string L1HComment { get; set; }
+        public string L1H2Comment { get; set; }
         public string L1Q1Comment { get; set; }
         public string L1Q2Comment { get; set; }
         public double L2Score { get; set; }
@@ -62,6 +65,8 @@ namespace A4KPI.DTO
         public double D_total { get; set; }
         public double total { get; set; }
         public string L2Comment { get; set; }
+        public string L2HComment { get; set; }
+        public string L2H2Comment { get; set; }
         public string L2Q1Comment { get; set; }
         public string L2Q2Comment { get; set; }
         public double FLScore { get; set; }
