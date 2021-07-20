@@ -27,4 +27,11 @@ namespace A4KPI.Constants
         public static int Q4 = 4;
 
     }
+
+    public class HalfYear
+    {
+        public static int H1 = 1;
+        public static int H2 = 2;
+
+    }
 }

@@ -24,7 +24,8 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   toolbarOptions = ['Search'];
   @ViewChild('detailModal') detailModal: NgbModalRef;
   itemData: any;
-  detail: any;
+  detailH1: any;
+  detailH2: any;
   modalRef: NgbModalRef;
   constructor(
     public modalService: NgbModal,
@@ -53,8 +54,9 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
 
   getH1H2ReportInfo(id) {
     this.service.getH1H2ReportInfo(id).subscribe((data: any) => {
+      this.detailH1 = data.h1;
       console.log(data);
-      this.detail = data;
+      this.detailH2 = data.h2;
     });
   }
   exportExcel() {}

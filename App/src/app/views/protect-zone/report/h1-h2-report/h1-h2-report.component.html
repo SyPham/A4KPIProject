@@ -66,8 +66,8 @@
       <div class="col-md-6">
 
         <div class="row">
-          <div class="col">Dept. {{detail !== undefined ? detail.oc : ""}}</div>
-          <div class="col">Name: {{detail !== undefined ? detail.fullName : ""}}</div>
+          <div class="col">Dept. {{detailH1 !== undefined ? detailH1.oc : ""}}</div>
+          <div class="col">Name: {{detailH1 !== undefined ? detailH1.fullName : ""}}</div>
           <div class="col">Position:</div>
         </div>
 
@@ -115,9 +115,9 @@
                 </table>
               </th>
               <th scope="row" colspan="2">H1得分: 12</th>
-              <td>7</td>
-              <td>5</td>
-              <td></td>
+              <td>{{detailH1 !== undefined ? detailH1.l1Score : "N/A"}}</td>
+              <td>{{detailH1 !== undefined ? detailH1.l2Score : "N/A"}}</td>
+              <td>{{detailH1 !== undefined ? detailH1.flScore : "N/A"}}</td>
             </tr>
 
           </tbody>
@@ -132,16 +132,16 @@
             <tr>
               <th scope="row" colspan="2"> </th>
               <th scope="row" colspan="2"> </th>
-              <td>L1</td>
-              <td>L2</td>
-              <td>FL</td>
+              <td>L1 </td>
+              <td>L2 </td>
+              <td>FL </td>
             </tr>
             <tr>
               <th scope="row" colspan="2">Attitude: 20</th>
               <th scope="row" colspan="2">H2得分: 12</th>
-              <td>7</td>
-              <td>5</td>
-              <td></td>
+              <td>{{detailH2 !== undefined ? detailH2.l1Score : "N/A"}}</td>
+              <td>{{detailH2 !== undefined ? detailH2.l2Score : "N/A"}}</td>
+              <td>{{detailH2 !== undefined ? detailH2.flScore : "N/A"}}</td>
             </tr>
 
           </tbody>
