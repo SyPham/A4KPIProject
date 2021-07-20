@@ -42,7 +42,7 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   // end life cycle ejs-grid
   // api
   loadData() {
-    this.service.geH1H2Data().subscribe(data => {
+    this.service.getQ1Q3Data().subscribe(data => {
       this.data = data;
     });
   }

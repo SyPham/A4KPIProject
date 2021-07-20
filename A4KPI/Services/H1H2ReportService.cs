@@ -303,14 +303,14 @@ namespace A4KPI.Services
                                              && leader_id == x.ScoreBy)
                                            .Select(x => x.Point)
                                          .FirstOrDefaultAsync();
-                    double A_total = await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0);
-                    double L1 = (l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0;
-                    double L2 = (l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0;
-                    double Smart = (GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0;
-                    double B_selfScore = await BSelfScore(l0ScoreKPI ?? 0);
-                    double B_L1 = await BL1((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0);
-                    double B_L2 = await BL2((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0);
-                    double B_Smart = await BSmart((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0);
+                    double A_total = Math.Round(await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0), 2);
+                    double L1 = Math.Round((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0, 2);
+                    double L2 = Math.Round((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0 , 2);
+                    double Smart = Math.Round((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0, 2);
+                    double B_selfScore = Math.Round(await BSelfScore(l0ScoreKPI ?? 0),2);
+                    double B_L1 = Math.Round(await BL1((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0),2);
+                    double B_L2 = Math.Round(await BL2((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0), 2);
+                    double B_Smart = Math.Round(await BSmart((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0),2);
                     dataH1 = new H1H2ReportDto(item, periods_quarterly.Value, currentYear)
                     {
                         FullName = ocuser.FullName,
@@ -337,7 +337,7 @@ namespace A4KPI.Services
                         A_total = A_total,
                         B_total = B_selfScore + B_L1 + B_L2 + B_Smart,
                         C_total = Score_special ?? 0,
-                        D_total = A_total + (B_selfScore + B_L1 + B_L2 + B_Smart) + (Score_special ?? 0)
+                        D_total = Math.Round(A_total + (B_selfScore + B_L1 + B_L2 + B_Smart) + (Score_special ?? 0), 2)
                     };
 
                 } else
@@ -590,27 +590,28 @@ namespace A4KPI.Services
 
         public async Task<object> GetH1H2Data()
         {
-            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
-            // tim oc cua usser login
-            var ocuser = await _repoOCAccount.FindAll(x => x.AccountId == accountID).FirstOrDefaultAsync();
+            //var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            //int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+            //// tim oc cua usser login
+            //var ocuser = await _repoOCAccount.FindAll(x => x.AccountId == accountID).FirstOrDefaultAsync();
          
-            if (ocuser == null) return new List<dynamic>();
-            // Lay tat ca con cua oc
-            var oc = _repoOC.FindAll().AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCId).ToList();
-            var ocs = oc.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
-            // vao ocUser tim theo ocId list 
-            var accountIds = await _repoOCAccount.FindAll(x => ocs.Contains(x.OCId)).Select(x => x.AccountId).Distinct().ToListAsync();
-            var pics = await _repoPIC.FindAll(x => accountIds.Contains(x.AccountId)).Select(x=>x.AccountId).Distinct().ToListAsync();
+            //if (ocuser == null) return new List<dynamic>();
+            //// Lay tat ca con cua oc
+            //var oc = _repoOC.FindAll().AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCId).ToList();
+            //var ocs = oc.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
+            //// vao ocUser tim theo ocId list 
+            //var accountIds = await _repoOCAccount.FindAll(x => ocs.Contains(x.OCId)).Select(x => x.AccountId).Distinct().ToListAsync();
+            //var pics = await _repoPIC.FindAll(x => accountIds.Contains(x.AccountId)).Select(x=>x.AccountId).Distinct().ToListAsync();
 
-            var model = await _repoOCAccount.FindAll(x => pics.Contains(x.AccountId))
-                .Select(x => new
-                {
-                    Id = x.AccountId,
-                    FullName = x.Account.FullName,
-                }).ToListAsync();
+            //var model = await _repoOCAccount.FindAll(x => pics.Contains(x.AccountId))
+            //    .Select(x => new
+            //    {
+            //        Id = x.AccountId,
+            //        FullName = x.Account.FullName,
+            //    }).ToListAsync();
 
-            return model;
+            //return model;
+            throw new NotImplementedException();
         }
 
         public Task<object> GetAllKPIScoreL0ByPeriod(int period)
