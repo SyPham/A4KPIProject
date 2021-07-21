@@ -28,6 +28,18 @@ namespace A4KPI.DTO
         public int Year { get; set; }
     }
 
+    public class DataReportDto
+    {
+        public DataReportDto()
+        {
+        }
+        
+
+        public H1H2ReportDto H1 { get; set; }
+        public H1H2ReportDto H2 { get; set; }
+        public double avg { get; set; }
+    }
+
     public class H1H2ReportDto
     {
         public H1H2ReportDto()

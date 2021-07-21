@@ -94,6 +94,7 @@ namespace A4KPI.Services
                 if (model.Password.IsBase64() == false)
                         item.Password = model.Password.ToEncrypt();
                 item.Username = model.Username;
+                item.FullName = model.FullName;
                 item.Email = model.Email;
                 item.Leader = model.Leader;
                 item.Manager = model.Manager;

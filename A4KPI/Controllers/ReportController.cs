@@ -75,5 +75,12 @@ namespace A4KPI.Controllers
         {
             return Ok(await _serviceH1H2.GetReportInfo(accountId));
         }
+
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> ExportH1H2Excel(int accountId)
+        {
+            var bin = await _serviceH1H2.ExportExcel(accountId);
+            return File(bin, "application/octet-stream", "H1,H2 Report 季報表.xlsx");
+        }
     }
 }

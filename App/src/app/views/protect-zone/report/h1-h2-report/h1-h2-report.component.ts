@@ -6,6 +6,7 @@ import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-h1-h2-report',
   templateUrl: './h1-h2-report.component.html',
@@ -28,9 +29,11 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   detailH2: any;
   avg: number = 0;
   modalRef: NgbModalRef;
+  userid: any;
   constructor(
     public modalService: NgbModal,
     private alertify: AlertifyService,
+    private spinner: NgxSpinnerService,
     private service: ReportService,
     private route: ActivatedRoute,
   ) { super(); }
@@ -48,6 +51,7 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
     });
   }
   openModal(data , model) {
+    this.userid = data.id;
     this.getH1H2ReportInfo(data.id);
     this.modalRef = this.modalService.open(model, { size: 'xl', backdrop: 'static' });
 
@@ -56,13 +60,21 @@ export class H1H2ReportComponent extends BaseComponent implements OnInit, AfterV
   getH1H2ReportInfo(id) {
     this.service.getH1H2ReportInfo(id).subscribe((data: any) => {
       this.detailH1 = data.h1;
-      console.log(data);
       this.detailH2 = data.h2;
       this.avg = data.avg
     });
   }
   exportExcel() {
+    this.service.H1H2ExportExcel(this.userid).subscribe((data: any) => {
+      const blob = new Blob([data],
+        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'H1,H2 Report 季報表.xlsx';
+      link.click();
+    });
   }
 
   // end api

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using A4KPI.Helpers;
 using A4KPI.Installer;
+using System.IO;
+using System;
 
 namespace A4KPI
 {
@@ -14,6 +16,19 @@ namespace A4KPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            string rootdir = Directory.GetCurrentDirectory();
+            try
+            {
+                Aspose.Cells.License cellLicense = new Aspose.Cells.License();
+                string filePath = rootdir + "\\wwwroot\\" + "Aspose.Total.lic";
+                FileStream fileStream = new FileStream(filePath, FileMode.Open);
+                cellLicense.SetLicense(fileStream);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public IConfiguration Configuration { get; }
