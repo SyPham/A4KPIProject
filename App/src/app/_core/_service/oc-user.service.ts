@@ -3,9 +3,8 @@ import { PaginatedResult } from '../_model/pagination';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { IComment, ICommentTreeView } from '../_model/comment.interface';
 @Injectable({
   providedIn: 'root'
 })

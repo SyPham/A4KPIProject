@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Task } from '../_model/Task';
 import { IHeader } from '../_model/header.interface';
 const httpOptions = {
   headers: new HttpHeaders({

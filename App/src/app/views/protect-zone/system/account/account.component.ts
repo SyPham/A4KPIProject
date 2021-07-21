@@ -1,8 +1,7 @@
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
-import { EditService, ToolbarService, PageService, GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
-import { Tooltip } from '@syncfusion/ej2-angular-popups';
+import { EditService, ToolbarService, PageService, GridComponent } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Account2Service } from 'src/app/_core/_service/account2.service';
@@ -10,7 +9,6 @@ import { Account } from 'src/app/_core/_model/account';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
-import { AccountGroupAccount } from 'src/app/_core/_model/account-group-account';
 
 @Component({
   selector: 'app-account',
@@ -23,6 +21,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
   password = '';
   modalReference: NgbModalRef;
   fields: object = { text: 'name', value: 'id' };
+  leaderFields: object = { text: 'fullName', value: 'id' };
+  managerFields: object = { text: 'fullName', value: 'id' };
   // toolbarOptions = ['Search'];
   passwordFake = `aRlG8BBHDYjrood3UqjzRl3FubHFI99nEPCahGtZl9jvkexwlJ`;
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -33,6 +33,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
   locale = localStorage.getItem('lang');
   accountGroupData: AccountGroup[];
   accountGroupItem: any;
+  leaders: any[] = [];
+  managers: any[] = [];
+  leaderId: number;
+  managerId: number;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -44,6 +48,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   ngOnInit() {
     // this.Permission(this.route);
     this.loadData();
+    this.getAccounts();
     this.loadAccountGroupData();
   }
   // life cycle ejs-grid
@@ -53,6 +58,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   initialModel() {
     this.accountGroupItem = [];
+    this.leaderId = 0;
+    this.managerId = 0;
     this.accountCreate = {
       id: 0,
       username: null,
@@ -68,11 +75,17 @@ export class AccountComponent extends BaseComponent implements OnInit {
       accountGroupIds: null,
       accountGroupText: null,
       accountType: null,
+      leader: this.leaderId,
+      manager: this.managerId,
+      leaderName: null,
+      managerName: null,
     };
 
   }
   updateModel(data) {
     this.accountGroupItem = data.accountGroupIds;
+    this.managerId = data.manager;
+    this.leaderId = data.leader;
   }
   actionBegin(args) {
     if (args.requestType === 'add') {
@@ -98,6 +111,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
         accountType: null,
         accountGroupIds: this.accountGroupItem,
         accountGroupText: null,
+        leader: this.leaderId,
+        manager: this.managerId,
+        leaderName: null,
+        managerName: null,
       };
 
       if (args.data.username === undefined) {
@@ -128,6 +145,10 @@ export class AccountComponent extends BaseComponent implements OnInit {
         accountType: null,
         accountGroupIds: this.accountGroupItem,
         accountGroupText: null,
+        leader: this.leaderId,
+        manager: this.managerId,
+        leaderName: null,
+        managerName: null,
       };
       this.update();
     }
@@ -173,6 +194,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
   loadData() {
     this.service.getAll().subscribe(data => {
       this.data = data;
+    });
+  }
+  getAccounts() {
+    this.service.getAccounts().subscribe(data => {
+      this.leaders = data;
+      this.managers = data;
     });
   }
   loadAccountGroupData() {

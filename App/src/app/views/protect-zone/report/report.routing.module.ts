@@ -1,3 +1,6 @@
+import { HqHrReportComponent } from './hq-hr-report/hq-hr-report.component';
+import { H1H2ReportComponent } from './h1-h2-report/h1-h2-report.component';
+import { Q1Q3ReportComponent } from './q1-q3-report/q1-q3-report.component';
 
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
@@ -11,17 +14,36 @@ const routes: Routes = [
       breadcrumb: 'System'
     },
     children: [
-      // {
-      //   path: 'account',
-      //   component: AccountComponent,
-      //   data: {
-      //     title: 'Account',
-      //     breadcrumb: 'Account',
-      //     functionCode: 'account'
-      //   },
-      //   // canActivate: [AuthGuard]
-      // },
-
+      {
+        path: 'q1-q3-report',
+        component: Q1Q3ReportComponent,
+        data: {
+          title: 'Q1,Q3 Report 季報表',
+          breadcrumb: 'Q1,Q3 Report 季報表',
+          functionCode: 'q1-q3-report'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'h1-h2-report',
+        component: H1H2ReportComponent,
+        data: {
+          title: 'H1 & H2 Report',
+          breadcrumb: 'H1 & H2 Report',
+          functionCode: 'h1-h2-report'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'hq-hr-report',
+        component: HqHrReportComponent,
+        data: {
+          title: 'HQ HR Report 年中考核名單',
+          breadcrumb: 'HQ HR Report 年中考核名單',
+          functionCode: 'q1-q3-report'
+        },
+        // canActivate: [AuthGuard]
+      },
     ]
   },
 ];

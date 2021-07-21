@@ -1,6 +1,7 @@
 export interface Comment {
   id: number;
   content: string;
+  commentTypeId: string;
   createdBy: number;
   accountId: number;
   periodTypeId: number;

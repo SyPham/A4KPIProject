@@ -4,9 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Tutorial } from '../_model/tutorial';
 import { PaginatedResult } from '../_model/pagination';
-import { IUserRole } from '../_model/role';
 import { ResponseDetail } from '../_model/responseDetail';
 const httpOptions = {
   headers: new HttpHeaders({

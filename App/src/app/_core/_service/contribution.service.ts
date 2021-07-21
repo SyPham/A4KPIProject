@@ -15,9 +15,15 @@ export class ContributionService extends CURDService<Contribution> {
     super(http,"Contribution", utilitiesService);
   }
 
-  getFisrtByAccountId(accountId, periodTypeId): Observable<Contribution> {
+  getFisrtByAccountId(accountId, periodTypeId,period, scoreType): Observable<Contribution> {
     return this.http
-      .get<Contribution>(`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}`, {})
+      .get<Contribution>(`${this.base}${this.entity}/GetFisrtByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}&scoreType=${scoreType}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  getL1CommentByAccountId(accountId, periodTypeId, period): Observable<Contribution> {
+    return this.http
+      .get<Contribution>(`${this.base}${this.entity}/GetL1CommentByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}`, {})
       .pipe(catchError(this.handleError));
   }
 }

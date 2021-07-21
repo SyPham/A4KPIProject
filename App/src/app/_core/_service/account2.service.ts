@@ -22,6 +22,8 @@ export class Account2Service extends CURDService<Account> {
       catchError(this.handleError)
     );
   }
-
+  getAccounts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base}Account/GetAccounts`);
+  }
 
 }

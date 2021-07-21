@@ -60,7 +60,6 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   data: [] = [];
   firstItem: any;
   constructor(
-    private versionService: VersionService,
     private authService: AuthService,
     private authenticationService: Authv2Service,
     private roleService: RoleService,

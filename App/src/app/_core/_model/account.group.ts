@@ -8,6 +8,7 @@ export interface AccountGroup {
   modifiedBy: number;
   createdTime: string;
   position: number;
+  sequence: number;
   modifiedTime: string | null;
   accounts: Account[];
   periods: Period[];

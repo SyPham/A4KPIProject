@@ -7,11 +7,11 @@ const SYSTEM_CODE = 3;
 export const environment = {
   production: false,
   systemCode: SYSTEM_CODE,
-  apiUrlEC: 'http://10.4.4.224:80/api/',
-  apiUrl: 'http://10.4.4.224:44310/api/',
-  apiUrl2: 'http://10.4.4.224:44310/api/',
-  hub: 'http://10.4.4.224:80/ec-hub',
-  scalingHub: 'http://10.4.4.224:80/ec-hub',
+  apiUrlEC: 'http://localhost:80/api/',
+  apiUrl: 'http://10.4.5.132:1011/api/',
+  apiUrl2: 'http://10.4.5.132:1011/api/',
+  hub: 'http://localhost:80/ec-hub',
+  scalingHub: 'http://localhost:80/ec-hub',
   scalingHubLocal: 'http://localhost:5001/scalingHub',
 
   // apiUrlEC: 'http://10.4.5.132:1009/api/',

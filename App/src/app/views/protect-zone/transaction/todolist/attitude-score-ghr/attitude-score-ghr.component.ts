@@ -74,7 +74,8 @@ export class AttitudeScoreGHRComponent implements OnInit {
       createdTime: new Date().toDateString(),
       modifiedTime: null,
       periodTypeId: this.data.periodTypeId,
-      period: this.data.period
+      period: this.data.period,
+      scoreType: this.scoreType
     }
 
 
@@ -110,7 +111,7 @@ export class AttitudeScoreGHRComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllAttitudeScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllAttitudeScoreGHRByAccountId(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
@@ -131,7 +132,7 @@ export class AttitudeScoreGHRComponent implements OnInit {
     });
   }
   getFisrtContributionByObjectiveId() {
-    this.contributionService.getFisrtByAccountId(this.data.id, this.data.periodTypeId).subscribe(data => {
+    this.contributionService.getFisrtByAccountId(this.data.id, this.data.periodTypeId, this.data.period, this.data.scoreType).subscribe(data => {
       this.content = data?.content;
       this.contributionModel.id = data?.id;
     });
@@ -161,7 +162,7 @@ export class AttitudeScoreGHRComponent implements OnInit {
   }
   finish() {
     if (!this.point) {
-      this.alertify.warning('Not yet complete. Can not submit!', true);
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
     const attitudeScore =  this.addAttitudeScore();

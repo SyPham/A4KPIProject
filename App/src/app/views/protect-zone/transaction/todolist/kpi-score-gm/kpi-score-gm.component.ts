@@ -18,7 +18,7 @@ import { KPI } from 'src/app/_core/_model/kpi';
 import { Comment } from 'src/app/_core/_model/commentv2';
 import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
 import { forkJoin } from 'rxjs';
-import { PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
+import { CommentType, PeriodType, SystemScoreType } from 'src/app/_core/enum/system';
 @Component({
   selector: 'app-kpi-score-gm',
   templateUrl: './kpi-score-gm.component.html',
@@ -29,6 +29,8 @@ export class KpiScoreGMComponent implements OnInit {
   @Input() data: any;
   @Input() periodTypeCode: PeriodType;
   @Input() scoreType: SystemScoreType;
+  @Input() currentTime: any;
+
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -77,7 +79,8 @@ export class KpiScoreGMComponent implements OnInit {
       modifiedTime: null,
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
-      scoreType: this.scoreType
+      scoreType: this.scoreType,
+      commentTypeId: CommentType.Comment
     }
 
     this.getQuarterlySetting();
@@ -112,7 +115,7 @@ export class KpiScoreGMComponent implements OnInit {
     }
   }
   loadData() {
-    this.service.getAllKPIScoreL1L2ByAccountId(this.data.id).subscribe(data => {
+    this.service.getAllKPIScoreGHRByAccountId(this.data.id, this.currentTime).subscribe(data => {
       this.gridData = data;
     });
   }

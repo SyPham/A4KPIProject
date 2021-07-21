@@ -32,4 +32,5 @@ export class ObjectiveService extends CURDService<Objective> {
       .get<Objective[]>(`${this.base}${this.entity}/GetAllKPIObjectiveByAccountId`, {})
       .pipe(catchError(this.handleError));
   }
+
 }

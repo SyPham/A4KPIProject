@@ -26,4 +26,16 @@ export class AttitudeScoreService extends CURDService<AttitudeScore> {
       .get<AttitudeScore>(apiUrl, {})
       .pipe(catchError(this.handleError));
   }
+  getFunctionalLeaderAttitudeScoreByAccountId(accountId, periodTypeId, period): Observable<AttitudeScore> {
+    const apiUrl =`${this.base}${this.entity}/GetFunctionalLeaderAttitudeScoreByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}`;
+    return this.http
+      .get<AttitudeScore>(apiUrl, {})
+      .pipe(catchError(this.handleError));
+  }
+  getL1AttitudeScoreByAccountId(accountId, periodTypeId, period): Observable<AttitudeScore> {
+    const apiUrl =`${this.base}${this.entity}/GetL1AttitudeScoreByAccountId?accountId=${accountId}&periodTypeId=${periodTypeId}&period=${period}`;
+    return this.http
+      .get<AttitudeScore>(apiUrl, {})
+      .pipe(catchError(this.handleError));
+  }
 }

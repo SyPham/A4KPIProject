@@ -1,14 +1,15 @@
 export interface ToDoList {
   id: number;
-  yourObjective: string;
   action: string;
   remark: string;
-  progressId: number | null;
   objectiveId: number;
+  level: number;
+  parentId: number | null;
   createdBy: number;
   modifiedBy: number | null;
   createdTime: string;
   modifiedTime: string | null;
+  deadline: string | null;
 }
 export interface ToDoListOfQuarter {
   yourObjective: string;
@@ -28,7 +29,7 @@ export interface ToDoListL1L2 {
 export interface ToDoListByLevelL1L2Dto {
   id: number;
   objective: string;
-  l0TargetList: string[];
+  l0TargetList: string;
   l0ActionList: string[];
   result1OfMonth: string;
   result2OfMonth: string;

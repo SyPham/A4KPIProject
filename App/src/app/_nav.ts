@@ -283,39 +283,39 @@ export const navItems: INavData[] = [
     icon: 'icon-puzzle',
     children: [
       {
-        name: 'Account Group',
+        name: '0.1 Account Group',
         url: '/system/account-group',
         icon: 'icon-puzzle'
       },
       {
-        name: 'Account',
+        name: '0.2 Account',
         url: '/system/account',
         icon: 'icon-puzzle'
       },
 
+      // {
+      //   name: 'Progress',
+      //   url: '/system/progress',
+      //   icon: 'icon-puzzle'
+      // },
       {
-        name: 'Progress',
-        url: '/system/progress',
-        icon: 'icon-puzzle'
-      },
-      {
-        name: 'Period',
+        name: '0.3 Period',
         url: '/system/period',
         icon: 'icon-puzzle'
       },
+      // {
+      //   name: 'Account Group Period',
+      //   url: '/system/account-group-period',
+      //   icon: 'icon-puzzle'
+      // },
       {
-        name: 'Account Group Period',
-        url: '/system/account-group-period',
-        icon: 'icon-puzzle'
-      },
-      {
-        name: 'OC',
+        name: '0.4 OC',
         url: '/system/oc',
         icon: 'icon-puzzle'
       },
 
       {
-        name: 'OC User',
+        name: '0.5 OC User',
         url: '/system/oc-user',
         icon: 'icon-puzzle'
       },
@@ -327,7 +327,7 @@ export const navItems: INavData[] = [
     icon: 'icon-bell',
     children: [
       {
-        name: 'Mailing',
+        name: '1.1 Mailing',
         url: '/maintain/mailing',
         icon: 'icon-bell'
       },
@@ -367,11 +367,21 @@ export const navItems: INavData[] = [
     url: '/report',
     icon: 'icon-calculator',
     children: [
-      // {
-      //   name: 'KPI Objective',
-      //   url: '/kanban/objective',
-      //   icon: 'icon-cursor'
-      // },
+      {
+        name: 'Q1,Q3 Report 季報表',
+        url: '/report/q1-q3-report',
+        icon: 'icon-calculator'
+      },
+      {
+        name: 'H1 & H2 Report',
+        url: '/report/h1-h2-report',
+        icon: 'icon-calculator'
+      },
+      {
+        name: 'HQ HR Report 年中考核名單',
+        url: '/report/hq-hr-report',
+        icon: 'icon-calculator'
+      },
     ]
   }
   // {

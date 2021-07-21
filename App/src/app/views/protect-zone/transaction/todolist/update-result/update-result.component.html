@@ -6,25 +6,49 @@
 </div>
 <div class="modal-body p-0">
   <div class="d-flex">
-    <div class="flex-fill" style="width:70%">
-      <ejs-grid #grid [dataSource]='gridData' allowTextWrap='true' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' gridLines='Both'
-      [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
+    <div class="flex-fill" style="width:70%; padding: 5px 0 5px 5px;">
+      <ejs-grid #grid [dataSource]='gridData'
+      allowTextWrap='true' allowTextWrap='true'
+      [allowResizing]='true'
+      [showColumnMenu]='true'
+      [allowExcelExport]='true'
+      gridLines='Both'
+      [toolbar]='toolbarOptions'
+      >
       <e-columns>
-        <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
-          <ng-template #template let-data>
-            {{NO(data.index)}}
-          </ng-template>
-        </e-column>
-        <e-column field='yourObjective' headerText='Your Objective' type='string'>
+        <e-column field='entity.action' headerText='Your Objective' type='string'>
         </e-column>
         <e-column field='action' headerText='Action'>
+          <ng-template #template let-data>
+            <ul style="padding: 0 0 0 15px;" *ngFor="let item of data.childNodes[0].childNodes">
+              <li>{{item.entity.action}}</li>
+            </ul>
+           </ng-template>
         </e-column>
       </e-columns>
     </ejs-grid>
+    <table class="table " style="border: none;" *ngIf="isReject">
+      <thead>
+        <tr>
+          <th style="border: none; width: 70%;padding: 0" scope="col" class="text-center">GHR Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border: none;">
+            <div class="form-group">
+              <textarea id="comment" rows="6" type="text" [(ngModel)]="content"
+              placeholder="Type something!" class="form-control"></textarea>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
     </div>
     <div class="flex-fill " style="width:30%; padding: 0 5px 0 5px;">
       <div class="form-group">
-        <label for="title" class="d-flex justify-content-center" style="font-weight: Bold;font-size: 14px;margin-top: 47px;">{{getMonthText()}}</label>
+        <label for="title" class="d-flex justify-content-center" style="font-weight: Bold;font-size: 14px;margin-top: 52px;">{{getMonthText()}}</label>
         <textarea id="title" rows="10" type="text" [(ngModel)]="title"
         placeholder="Type something!" class="form-control"></textarea>
       </div>
@@ -41,6 +65,6 @@
 
 </div>
 <div class="modal-footer justify-content-end">
-  <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' | translate}}</button>
-    <button type="button" class="btn btn-success" (click)="finish()" >{{'Finish' | translate}}</button>
+  <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' }}</button>
+    <button type="button" class="btn btn-success" (click)="finish()" >{{'Finish' }}</button>
 </div>

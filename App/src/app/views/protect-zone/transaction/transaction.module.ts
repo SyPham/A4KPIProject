@@ -6,10 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons';
-import { DropDownListModule, MultiSelectModule, MultiSelectAllModule } from '@syncfusion/ej2-angular-dropdowns';
+import { DropDownListModule,  MultiSelectAllModule } from '@syncfusion/ej2-angular-dropdowns';
 import { GridAllModule } from '@syncfusion/ej2-angular-grids';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { loadCldr } from '@syncfusion/ej2-base';
+import { L10n, loadCldr, setCulture } from '@syncfusion/ej2-base';
 
 import { HttpClient } from '@angular/common/http';
 import { ObjectiveComponent } from './objective/objective.component';
@@ -24,8 +24,11 @@ import { AttitudeScoreL2Component } from './todolist/attitude-score-l2/attitude-
 import { KpiScoreGHRComponent } from './todolist/kpi-score-ghr/kpi-score-ghr.component';
 import { KpiScoreGMComponent } from './todolist/kpi-score-gm/kpi-score-gm.component';
 import { AttitudeScoreGHRComponent } from './todolist/attitude-score-ghr/attitude-score-ghr.component';
+import { TreeGridAllModule } from '@syncfusion/ej2-angular-treegrid';
+import { AttitudeScoreFunctionalLeaderComponent } from './todolist/attitude-score-functional-leader/attitude-score-functional-leader.component';
+import { KpiScoreL2Component } from './todolist/kpi-score-l2/kpi-score-l2.component';
 
-
+import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -59,7 +62,9 @@ if (lang === 'vi') {
     UpdateResultComponent,
     SelfScoreComponent,
     KpiScoreComponent,
+    KpiScoreL2Component,
     AttitudeScoreComponent,
+    AttitudeScoreFunctionalLeaderComponent,
     AttitudeScoreL2Component,
     KpiScoreGHRComponent,
     KpiScoreGMComponent,
@@ -71,6 +76,7 @@ if (lang === 'vi') {
     ReactiveFormsModule,
     DropDownListModule,
     GridAllModule,
+    TreeGridAllModule,
     CheckBoxAllModule,
     SwitchModule,
     TransactionRoutingModule,
@@ -79,6 +85,7 @@ if (lang === 'vi') {
     MultiSelectAllModule,
     DatePickerModule,
     TabModule,
+    SpreadsheetAllModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -89,4 +96,22 @@ if (lang === 'vi') {
     }),
   ]
 })
-export class TransactionModule { }
+export class TransactionModule   {
+  vi: any;
+  en: any;
+  constructor() {
+    if (lang === 'vi') {
+      defaultLang = 'vi';
+      setTimeout(() => {
+        L10n.load(require('../../../../assets/ej2-lang/vi.json'));
+        setCulture('vi');
+      });
+    } else {
+      defaultLang = 'en';
+      setTimeout(() => {
+        L10n.load(require('../../../../assets/ej2-lang/en.json'));
+        setCulture('en');
+      });
+    }
+  }
+}

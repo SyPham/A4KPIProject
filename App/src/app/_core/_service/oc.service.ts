@@ -4,7 +4,6 @@ import { map } from 'rxjs/operators'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 
 import { environment } from '../../../environments/environment'
-import { Tutorial } from '../_model/tutorial'
 
 const httpOptions = {
   headers: new HttpHeaders({

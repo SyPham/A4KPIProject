@@ -8,15 +8,21 @@ import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { ObjectiveService } from 'src/app/_core/_service/objective.service';
 import { ResultOfMonthService } from 'src/app/_core/_service/result-of-month.service';
 import { Todolistv2Service } from 'src/app/_core/_service/todolistv2.service';
+import { Commentv2Service } from 'src/app/_core/_service/commentv2.service';
+import { forkJoin } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-result',
   templateUrl: './update-result.component.html',
-  styleUrls: ['./update-result.component.scss']
+  styleUrls: ['./update-result.component.scss'],
+  providers: [DatePipe]
 })
 export class UpdateResultComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
-  @Input() data: Objective;
+  @Input() data: any;
+  @Input() isReject: any;
+  @Input() currentTime: any;
   gridData: object;
   gridResultOfMonthData: ResultOfMonth[];
   toolbarOptions = ['Search'];
@@ -25,16 +31,25 @@ export class UpdateResultComponent implements OnInit {
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   model: ResultOfMonthRequest;
   title: string;
+  content: string;
+  currentTimeRequest: any;
   constructor(
     public activeModal: NgbActiveModal,
     private service: ObjectiveService,
     private todolistService: Todolistv2Service,
     private alertify: AlertifyService,
-    private resultOfMonthService: ResultOfMonthService
+    private commentService: Commentv2Service,
+    private resultOfMonthService: ResultOfMonthService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+
     this.title = '';
+    if (this.isReject) {
+      this.getGHRCommentByAccountId();
+    }
     this.loadCurrentResultOfMonthData();
     this.loadData();
     this.model = {
@@ -44,8 +59,10 @@ export class UpdateResultComponent implements OnInit {
       createdBy: +JSON.parse(localStorage.getItem('user')).id,
     };
   }
+
+
   getMonthText() {
-    const month = new Date().getMonth();
+    const month = this.currentTime.getMonth();
     const listMonthOfEachQuarter =
         [
         "Result of Jan.",
@@ -59,7 +76,7 @@ export class UpdateResultComponent implements OnInit {
     return listMonthOfCurrentQuarter;
   }
   getTitleText() {
-    const month = new Date().getMonth();
+    const month = this.currentTime.getMonth();
     const listMonthOfEachQuarter =
         [
         "Jan.",
@@ -73,12 +90,21 @@ export class UpdateResultComponent implements OnInit {
     return listMonthOfCurrentQuarter;
   }
   loadData() {
-    this.todolistService.getAllByObjectiveId(this.data.id).subscribe(data => {
+    this.todolistService.getAllByObjectiveIdAsTree(this.data.id).subscribe(data => {
       this.gridData = data;
     });
   }
+  getGHRCommentByAccountId() {
+    this.commentService.getGHRCommentByAccountId(
+      +JSON.parse(localStorage.getItem('user')).id,
+      this.data.quarterPeriodTypeId,
+      this.data.quarter
+    ).subscribe(data => {
+      this.content = data?.content;
+    });
+  }
   loadCurrentResultOfMonthData() {
-    this.resultOfMonthService.getAllByMonth(this.data.id).subscribe(data => {
+    this.resultOfMonthService.getAllByMonth(this.data.id, this.currentTimeRequest).subscribe(data => {
       this.gridResultOfMonthData = data || [];
       this.title =  data[0]?.title;
     });
@@ -87,25 +113,33 @@ export class UpdateResultComponent implements OnInit {
     const data = [];
     const gridData = this.gridResultOfMonthData || [];
     if (!this.title) {
-      this.alertify.warning('Not yet complete. Can not submit!', true);
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
     this.model.title = this.title;
     this.model.id = gridData[0]?.id || 0;
-    this.resultOfMonthService.updateResultOfMonth(this.model).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.UPDATED_OK_MSG);
-          this.loadCurrentResultOfMonthData();
-          // this.activeModal.close();
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (error) => {
-        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+
+    const updateResultOfMonth = this.resultOfMonthService.updateResultOfMonth(this.model);
+    const disableReject = this.todolistService.disableReject([this.data.todolistId]);
+    const sources = [updateResultOfMonth];
+    if (this.isReject) {
+      sources.push(disableReject);
+    }
+    forkJoin(sources).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.alertify.success(MessageConstants.UPDATED_OK_MSG);
+        this.loadCurrentResultOfMonthData();
+        this.todolistService.changeMessage(true);
+      } else {
+        this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       }
-    );
+    },
+    (error) => {
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
+    })
   }
   finish() {
     this.updateResultOfMonth();
