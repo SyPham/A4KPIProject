@@ -19,13 +19,13 @@
     },
     "A4KPI": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://10.4.5.132:1011"
+      "applicationUrl": "http://10.4.4.224:1011"
     },
     "API": {
       "commandName": "Executable"

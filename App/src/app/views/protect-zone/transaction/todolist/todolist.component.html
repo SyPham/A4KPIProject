@@ -25,6 +25,8 @@
 
 <!-- L0 -->
 <ng-template #GridtemplateRef>
+  <div *ngIf="isAllowAccess(1)">
+
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
     <e-columns>
@@ -37,6 +39,7 @@
         <ng-template #template let-data>
           <span>{{data.topic}}</span> <span *ngIf="data.isReject && data.isDisplayAction"
             class="badge badge-danger">Rejected</span>
+            <span class="badge badge-success" *ngIf="data.isUpdatedResult">Done</span>
         </ng-template>
       </e-column>
       <e-column field='option' headerText='Option'>
@@ -53,9 +56,18 @@
       </e-column>
     </e-columns>
   </ejs-grid>
+</div>
+
+  <div *ngIf="!isAllowAccess(1)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 <!-- L1 -->
 <ng-template #GridtemplateRef>
+
+  <div *ngIf="isAllowAccess(2)">
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
     <e-columns>
@@ -78,10 +90,18 @@
       </e-column>
     </e-columns>
   </ejs-grid>
+</div>
+
+  <div *ngIf="!isAllowAccess(2)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 
 <!-- L2 -->
 <ng-template #GridtemplateRef>
+  <div *ngIf="isAllowAccess(3)">
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
     <e-columns>
@@ -104,45 +124,60 @@
       </e-column>
     </e-columns>
   </ejs-grid>
+</div>
+
+  <div *ngIf="!isAllowAccess(3)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 
 <!-- Updater -->
 <ng-template #GridtemplateRef>
-  <div class="row">
-    <div class="col-md-12 d-flex justify-content-end my-2">
-      <button type="button" class="btn btn-secondary" (click)="submit()">Submit</button>
+  <div *ngIf="isAllowAccess(4)">
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-end my-2">
+        <button type="button" class="btn btn-secondary" (click)="submit()">Submit</button>
+      </div>
     </div>
-  </div>
-<ejs-spreadsheet #remoteDataBinding (created)="created()" [height]="500" [showRibbon]="false" [showSheetTabs]="false"  >
-  <e-sheets>
-      <e-sheet [name]="sheetName">
-          <e-ranges>
-              <e-range [showFieldAsHeader]="false" startCell="A2" [dataSource]="data" >
-              </e-range>
-          </e-ranges>
-          <e-rows>
-              <e-row>
-                  <e-cells>
-                      <e-cell value="KPI Objective 一階KPI" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
-                      <e-cell value="Monthly Performance" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
-                      <e-cell value="Upload date / time" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
-                  </e-cells>
-              </e-row>
-          </e-rows>
-          <e-columns>
-              <e-column [width]=200></e-column>
-              <e-column [width]=150 [style]="{ textAlign: 'center'}" ></e-column>
-              <e-column [width]=200 [style]="{ textAlign: 'center'}" ></e-column>
-          </e-columns>
-      </e-sheet>
-  </e-sheets>
+  <ejs-spreadsheet #remoteDataBinding  (contextMenuBeforeOpen)="contextMenuBeforeOpen($event)" (created)="created()" [height]="500" [showRibbon]="false" [showSheetTabs]="false"  >
+    <e-sheets>
+        <e-sheet [name]="sheetName">
+            <e-ranges>
+                <e-range [showFieldAsHeader]="false" startCell="A2" [dataSource]="data" >
+                </e-range>
+            </e-ranges>
+            <e-rows>
+                <e-row>
+                    <e-cells>
+                        <e-cell value="KPI Objective 一階KPI" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
+                        <e-cell value="Monthly Performance" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
+                        <e-cell value="Upload date / time" [style]="{ fontWeight: 'bold', textAlign: 'center', backgroundColor: '#4b5366', color: '#ffffff', fontSize: '12pt' }" ></e-cell>
+                    </e-cells>
+                </e-row>
+            </e-rows>
+            <e-columns>
+                <e-column [width]=200></e-column>
+                <e-column [width]=150 [style]="{ textAlign: 'center'}" ></e-column>
+                <e-column [width]=200 [style]="{ textAlign: 'center'}" ></e-column>
+            </e-columns>
+        </e-sheet>
+    </e-sheets>
 
-</ejs-spreadsheet>
+  </ejs-spreadsheet>
+  </div>
+  <div *ngIf="!isAllowAccess(4)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 
 <!-- GHR -->
 <ng-template #GridtemplateRef>
-  <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
+  <div *ngIf="isAllowAccess(5)">
+    <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
     <e-columns>
       <e-column field='#' headerText='#' textAlign='Center' width=80 type='number'>
@@ -164,9 +199,17 @@
       </e-column>
     </e-columns>
   </ejs-grid>
+  </div>
+
+  <div *ngIf="!isAllowAccess(5)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 <!-- Functional Leader -->
 <ng-template #GridtemplateRef>
+  <div *ngIf="isAllowAccess(6)">
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
     <e-columns>
@@ -187,6 +230,13 @@
       </e-column>
     </e-columns>
   </ejs-grid>
+</div>
+
+  <div *ngIf="!isAllowAccess(6)">
+    <p style="text-align: center; color: red; font-size: xx-large;">
+      No authority to view.
+    </p>
+  </div>
 </ng-template>
 <!-- GM -->
 <ng-template #GridtemplateRef>

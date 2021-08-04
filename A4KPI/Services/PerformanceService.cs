@@ -62,12 +62,10 @@ namespace A4KPI.Services
             var currentMonth = DateTime.Today.Month;
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            var ocId = await _repoOCAccount.FindAll(x => x.AccountId == accountId).Select(x=>x.OCId).FirstOrDefaultAsync();
             var checkRole = await _repoAccountGroupAccount.FindAll(x => x.AccountId == accountId).Select(x => x.AccountGroup.Position).AnyAsync(x => SystemRole.Updater == x);
             if (checkRole == false) return new List<PerformanceDto>();
 
-            var fho = await _repoOC.FindAll(x => x.Id == ocId).Select(x => x.ParentId).FirstOrDefaultAsync();
-            var factoryHead = await _repoOCAccount.FindAll(x => x.OCId == fho).Select(x=>x.AccountId).ToListAsync();
+            var factoryHead = await _repoAccountGroupAccount.FindAll(x => x.AccountGroup.Position == SystemRole.FactoryHead).Select(x=>x.AccountId).ToListAsync();
 
             var model = await (from a in _repoObjective.FindAll(x => factoryHead.Contains(x.CreatedBy))
                                join b in _repo.FindAll(x => x.Month == currentMonth && x.UploadBy == accountId) on a.Id equals b.ObjectiveId into ab

@@ -11,7 +11,9 @@ namespace A4KPI.DTO.auth
         public string Username { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+        public List<int> AccountGroupPositions { get; set; }
         public int? AccountTypeId { get; set; }
-        public int? AccountGroupId { get; set; }
+        public bool IsManager { get; set; }
+        public bool IsLeader { get; set; }
     }
 }

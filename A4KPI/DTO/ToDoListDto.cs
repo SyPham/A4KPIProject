@@ -74,6 +74,7 @@ namespace A4KPI.DTO
         public bool IsReject { get; set; }
         public bool IsRelease { get; set; }
         public bool HasFunctionalLeader { get; set; }
+        public bool IsUpdatedResult { get; set; }
 
     }
     public class FunctionalLeaderDto

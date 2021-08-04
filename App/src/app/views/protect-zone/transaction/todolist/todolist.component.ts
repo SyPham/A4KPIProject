@@ -77,6 +77,10 @@ export class TodolistComponent implements OnInit, OnDestroy {
     this.loadData();
     this.subscription.push(this.todolistService.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
   }
+  isAllowAccess(position: number) {
+    const positions = JSON.parse(localStorage.getItem('user')).accountGroupPositions as number[] || [];
+    return positions.includes(position);
+  }
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
     const index = this.index;
@@ -200,9 +204,18 @@ export class TodolistComponent implements OnInit, OnDestroy {
   }
   loadAccountGroupData() {
     this.accountGroupService.getAll().subscribe(data => {
-      this.accountGroupData = data;
+      this.accountGroupData = data.filter(x=> x.position != 100);
     });
   }
+  contextMenuBeforeOpen(args) {
+    console.log(args);
+    if (args.element.id === this.spreadsheetObj.element.id + '_contextmenu') {
+      this.spreadsheetObj.removeContextMenuItems(["Paste"], false);
+      this.spreadsheetObj.removeContextMenuItems(["Paste Special"], false);
+      this.spreadsheetObj.removeContextMenuItems(["Cut"], false);
+      this.spreadsheetObj.removeContextMenuItems(["Copy"], false);
+  }
+ }
   created() {
   //To Applies cell lock to the specified range of cells.
 //   let protectSetting:ProtectSettingsModel = {
@@ -240,11 +253,17 @@ export class TodolistComponent implements OnInit, OnDestroy {
        results.push(itemResult);
        index++;
       }
+      if (results.length === 0) {
+        this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
+        return;
+      }
       console.log(results);
       this.performanceService.submit(results).subscribe(response => {
         console.log(response)
         if (response.success) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
+          this.loadDataUpdater();
+          this.grid.refresh();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }

@@ -1,5 +1,5 @@
 import { AttitudeScoreService } from 'src/app/_core/_service/attitude-score.service';
-import { filter } from 'rxjs/operators';
+import { filter, retry } from 'rxjs/operators';
 import { UtilitiesService } from './../../../../../_core/_service/utilities.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';

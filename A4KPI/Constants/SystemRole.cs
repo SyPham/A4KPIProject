@@ -13,6 +13,7 @@ namespace A4KPI.Constants
         public static int FH0 = 4;
         public static int GHR = 5;
         public static int FunctionalLeader = 6;
+        public static int FactoryHead = 100;
         public static int GM = 7;
         public static int Updater = 4;
     }
