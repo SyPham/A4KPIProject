@@ -388,7 +388,7 @@ namespace A4KPI.Services
                     HalfYearId = SystemPeriodType.HalfYear,
                     Settings = quarterlySettings,
                     IsDisplaySelfScore = true,
-                    HasFunctionalLeader = account.Leader.HasValue
+                    HasFunctionalLeader = account.Leader.HasValue && account.Leader != 0
                 });
             }
             var monthlyType = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.Monthly).FirstOrDefaultAsync();
@@ -409,8 +409,7 @@ namespace A4KPI.Services
                 }).FirstOrDefault(x => x.Months.Contains(monthValue));
                 var monthText = new DateTime(2020, monthValue, 1).ToString("MMMM");
 
-
-                resultOfMonth = await _repoObjective.FindAll().Where(x => x.ToDoList.Any(x => x.CreatedBy == accountId))
+                resultOfMonth = await _repoObjective.FindAll().Where(x => x.ToDoList.Any(a => a.CreatedBy == accountId))
                  .Select(x => new L0Dto
                  {
                      TodolistId = x.ToDoList.Any(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId) ? x.ToDoList.FirstOrDefault(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId).Id : 0,
@@ -422,12 +421,17 @@ namespace A4KPI.Services
                      QuarterPeriodTypeId = quarter.QuarterPeriodTypeId,
                      Period = monthlyModel.Value,
                      PeriodTypeId = monthlyModel.PeriodTypeId,
+                     IsUpdatedResult = x.ResultOfMonth.Any(a => a.CreatedBy == accountId && x.Date.Month == monthValue),
                      IsDisplayUploadResult = true
                  }).ToListAsync();
 
             }
 
-            action = await _repoObjective.FindAll().Where(x => x.PICs.Any(x => x.AccountId == accountId))
+            action = await _repoObjective.FindAll()
+                .Where(x => 
+                        (x.ToDoList.Any(x => x.IsReject && x.Level == ToDoListLevel.Target && x.CreatedBy == accountId) 
+                        || !x.ToDoList.Any(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId)) 
+                        && x.PICs.Any(x => x.AccountId == accountId))
                       .Select(x => new L0Dto
                       {
                           TodolistId = x.ToDoList.Any(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId) ? x.ToDoList.FirstOrDefault(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId).Id : 0,
@@ -492,7 +496,7 @@ namespace A4KPI.Services
                     Settings = quarterlySettings,
                     IsDisplayKPIScore = true,
                     IsDisplayAttitude = false,
-                    HasFunctionalLeader = x.Account.Leader.HasValue
+                    HasFunctionalLeader = x.Account.Leader.HasValue && x.Account.Leader != 0
                 }).ToList();
             }
             if (halfYearModel != null)
@@ -512,7 +516,7 @@ namespace A4KPI.Services
                     Settings = halfYearSettings,
                     IsDisplayKPIScore = false,
                     IsDisplayAttitude = true,
-                    HasFunctionalLeader = x.Account.Leader.HasValue
+                    HasFunctionalLeader = x.Account.Leader.HasValue && x.Account.Leader != 0
                 }).ToList();
             }
 
@@ -620,7 +624,7 @@ namespace A4KPI.Services
                     Settings = quarterlySettings,
                     IsDisplayKPIScore = true,
                     IsDisplayAttitude = false,
-                    HasFunctionalLeader = x.Account.Leader.HasValue,
+                    HasFunctionalLeader = x.Account.Leader.HasValue && x.Account.Leader != 0,
                     FullName = x.Account.FullName
                 }).ToList();
             }
@@ -641,7 +645,7 @@ namespace A4KPI.Services
                     Settings = halfYearSettings,
                     IsDisplayKPIScore = false,
                     IsDisplayAttitude = true,
-                    HasFunctionalLeader = x.Account.Leader.HasValue,
+                    HasFunctionalLeader = x.Account.Leader.HasValue && x.Account.Leader != 0,
                     FullName = x.Account.FullName
                 }).ToList();
             }

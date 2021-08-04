@@ -20,8 +20,8 @@
         </e-column>
         <e-column field='action' headerText='Action'>
           <ng-template #template let-data>
-            <ul style="padding: 0 0 0 15px;" *ngFor="let item of data.childNodes[0].childNodes">
-              <li>{{item.entity.action}}</li>
+            <ul style="padding: 0 0 0 15px;">
+              <li *ngFor="let item of data.childNodes[0].childNodes">{{item.entity.action}}</li>
             </ul>
            </ng-template>
         </e-column>

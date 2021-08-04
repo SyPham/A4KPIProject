@@ -201,6 +201,7 @@ export class ActionComponent implements OnInit {
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
         this.loadData();
+        this.activeModal.close();
         this.todolistService.changeMessage(true);
       } else {
         this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);

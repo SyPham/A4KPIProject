@@ -52,7 +52,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.loadAccountGroupData();
   }
   // life cycle ejs-grid
-
+  createdManager($event, data) {
+    this.managers = this.managers.filter(x=> x.id !== data.id);
+  }
+  createdLeader($event, data) {
+    this.leaders = this.leaders.filter(x=> x.id !== data.id);
+  }
   onDoubleClick(args: any): void {
     this.setFocus = args.column; // Get the column from Double click event
   }

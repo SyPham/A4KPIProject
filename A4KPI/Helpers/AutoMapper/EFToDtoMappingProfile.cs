@@ -37,7 +37,11 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<KPI, KPIDto>();
             CreateMap<Attitude, AttitudeDto>();
             CreateMap<ResultOfMonth, ResultOfMonthDto>();
-            CreateMap<Account, UserForDetailDto>();
+            CreateMap<Account, UserForDetailDto>()
+                .ForMember(d => d.IsLeader, o => o.MapFrom(s => s.Leader.HasValue && s.Leader != 0))
+                .ForMember(d => d.AccountGroupPositions, o => o.MapFrom(s => s.AccountGroupAccount.Select(x=>x.AccountGroup.Position)))
+                .ForMember(d => d.IsManager, o => o.MapFrom(s => s.Manager.HasValue && s.Manager != 0))
+                ;
 
             CreateMap<KPIScore, KPIScoreDto>();
             CreateMap<AttitudeScore, AttitudeScoreDto>();

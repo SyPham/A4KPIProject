@@ -51,7 +51,7 @@
                     {{data.managerName}}
                   </ng-template>
                   <ng-template #editTemplate let-data>
-                    <ejs-dropdownlist [(ngModel)]='managerId' [fields]="managerFields" placeholder='Select a manager' [dataSource]='managers'></ejs-dropdownlist>
+                    <ejs-dropdownlist [(ngModel)]='managerId' [allowFiltering]='true' (created)='createdManager($event, data)' [fields]="managerFields" placeholder='Select a manager' [dataSource]='managers'></ejs-dropdownlist>
                   </ng-template>
                   </e-column>
 
@@ -60,7 +60,7 @@
                       {{data.leaderName}}
                     </ng-template>
                     <ng-template #editTemplate let-data>
-                      <ejs-dropdownlist [(ngModel)]='leaderId' [fields]="leaderFields" placeholder='Select a leader' [dataSource]='leaders'></ejs-dropdownlist>
+                      <ejs-dropdownlist [(ngModel)]='leaderId' [allowFiltering]='true' (created)='createdLeader($event, data)' [fields]="leaderFields" placeholder='Select a leader' [dataSource]='leaders'></ejs-dropdownlist>
                     </ng-template>
                     </e-column>
 
