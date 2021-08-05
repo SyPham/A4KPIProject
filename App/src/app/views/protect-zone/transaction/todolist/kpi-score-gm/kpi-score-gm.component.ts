@@ -53,6 +53,8 @@ export class KpiScoreGMComponent implements OnInit {
     public kpiService: KPIService,
     public commentService: Commentv2Service,
     private alertify: AlertifyService,
+    private todolistService: Todolistv2Service,
+
     private utilitiesService: UtilitiesService
   ) { }
 
@@ -193,6 +195,8 @@ export class KpiScoreGMComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.todolistService.changeMessage(true);
+
       } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }

@@ -65,6 +65,7 @@ export class KpiScoreL2Component implements OnInit {
     public commentService: Commentv2Service,
     private alertify: AlertifyService,
     private utilitiesService: UtilitiesService,
+    private todolistService: Todolistv2Service,
     private attitudeScoreService: AttitudeScoreService
   ) { }
 
@@ -283,6 +284,9 @@ export class KpiScoreL2Component implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.todolistService.changeMessage(true);
+        this.activeModal.close();
+
       } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }

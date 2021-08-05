@@ -133,6 +133,7 @@ export class UpdateResultComponent implements OnInit {
         this.alertify.success(MessageConstants.UPDATED_OK_MSG);
         this.loadCurrentResultOfMonthData();
         this.todolistService.changeMessage(true);
+        this.activeModal.close();
       } else {
         this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       }

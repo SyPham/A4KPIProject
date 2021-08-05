@@ -52,7 +52,7 @@ namespace A4KPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-            return Ok((await _service.GetAllAsync()).OrderBy(x=>x.Point));
+            return Ok((await _service.GetAllAsync()).OrderByDescending(x=> x.Point));
         }
 
         [HttpPost]

@@ -258,6 +258,9 @@ export class KpiScoreComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.service.changeMessage(true);
+        this.activeModal.close();
+
       } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }

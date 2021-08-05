@@ -3,6 +3,7 @@ using A4KPI.DTO;
 using A4KPI.Helpers;
 using A4KPI.Services;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace A4KPI.Controllers
 {
@@ -18,7 +19,7 @@ namespace A4KPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
-            return Ok(await _service.GetAllAsync());
+            return Ok((await _service.GetAllAsync()).OrderByDescending(x=> x.Point));
         }
 
         [HttpPost]

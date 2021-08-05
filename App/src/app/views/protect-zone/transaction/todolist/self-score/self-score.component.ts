@@ -60,6 +60,7 @@ export class SelfScoreComponent implements OnInit {
     public kpiService: KPIService,
     public commentService: Commentv2Service,
     private alertify: AlertifyService,
+    private todolistService: Todolistv2Service,
     private utilitiesService: UtilitiesService
   ) { }
 
@@ -213,6 +214,9 @@ export class SelfScoreComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.todolistService.changeMessage(true);
+        this.activeModal.close();
+
       } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }

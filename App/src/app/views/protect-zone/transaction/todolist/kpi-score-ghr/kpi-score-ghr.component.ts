@@ -195,7 +195,7 @@ export class KpiScoreGHRComponent implements OnInit {
         const arr = response.map(x=> x.success);
         const checker = arr => arr.every(Boolean);
         if (checker) {
-          this.alertify.success('Successfully 成功地', true);
+          // this.alertify.success('Successfully 成功地', true);
         } else {
           this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
         }
@@ -232,6 +232,9 @@ export class KpiScoreGHRComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success('Successfully 成功地', true);
+        this.service.changeMessage(true);
+        this.activeModal.close();
+
       } else {
         this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
       }
@@ -266,6 +269,9 @@ export class KpiScoreGHRComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success('Successfully 成功地', true);
+        this.service.changeMessage(true);
+        this.activeModal.close();
+
       } else {
         this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
       }
@@ -288,6 +294,10 @@ export class KpiScoreGHRComponent implements OnInit {
       const checker = arr => arr.every(Boolean);
       if (checker) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.service.changeMessage(true);
+
+        this.activeModal.close();
+
       } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
