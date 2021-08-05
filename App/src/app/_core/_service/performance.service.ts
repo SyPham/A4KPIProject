@@ -16,9 +16,9 @@ export class PerformanceService extends CURDService<Performance> {
     super(http,"Performance", utilitiesService);
   }
 
-  getKPIObjectivesByUpdater(): Observable<Performance[]> {
+  getKPIObjectivesByUpdater(): Observable<any> {
     return this.http
-      .get<Performance[]>(`${this.base}${this.entity}/GetKPIObjectivesByUpdater`, {})
+      .get<any>(`${this.base}${this.entity}/GetKPIObjectivesByUpdater`, {})
       .pipe(catchError(this.handleError));
   }
 

@@ -135,7 +135,7 @@
 
 <!-- Updater -->
 <ng-template #GridtemplateRef>
-  <div *ngIf="isAllowAccess(4)">
+  <div *ngIf="isAllowAccess(4) && isAuthorize">
     <div class="row">
       <div class="col-md-12 d-flex justify-content-end my-2">
         <button type="button" class="btn btn-secondary" (click)="submit()">Submit</button>
@@ -167,7 +167,7 @@
 
   </ejs-spreadsheet>
   </div>
-  <div *ngIf="!isAllowAccess(4)">
+  <div *ngIf="!isAllowAccess(4) && !isAuthorize">
     <p style="text-align: center; color: red; font-size: xx-large;">
       No authority to view.
     </p>

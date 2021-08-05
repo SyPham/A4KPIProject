@@ -12,6 +12,8 @@ using A4KPI.Constants;
 using A4KPI.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using ESS_API.Helpers;
+using AutoMapper.QueryableExtensions;
 
 namespace A4KPI.Services
 {
@@ -56,16 +58,62 @@ namespace A4KPI.Services
             _httpContextAccessor = httpContextAccessor;
             _configMapper = configMapper;
         }
+        private IEnumerable<OCDto> FindAllParents(List<OCDto> all_data, OCDto child)
+        {
+            var parent = all_data.FirstOrDefault(x => x.Id == child.ParentId);
 
+            if (parent == null)
+                return Enumerable.Empty<OCDto>();
+
+            return new[] { parent }.Concat(FindAllParents(all_data, parent));
+        }
+       
         public async Task<object> GetKPIObjectivesByUpdater()
         {
             var currentMonth = DateTime.Today.Month;
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
             var checkRole = await _repoAccountGroupAccount.FindAll(x => x.AccountId == accountId).Select(x => x.AccountGroup.Position).AnyAsync(x => SystemRole.Updater == x);
-            if (checkRole == false) return new List<PerformanceDto>();
+            if (checkRole == false) return new
+            {
+                Data = new List<PerformanceDto>(),
+                IsAuthorize = false
+            };
+            // tim oc cua usser login
+            var ocuser = await _repoOCAccount.FindAll(x => x.AccountId == accountId).Include(x => x.OC).FirstOrDefaultAsync();
+            if (ocuser == null) return new
+            {
+                Data = new List<PerformanceDto>(),
+                IsAuthorize = false
+            };
+            // Lay tat ca con cua oc
+            if (ocuser.OC.ParentId == null) return new
+            {
+                Data = new List<PerformanceDto>(),
+                IsAuthorize = false
+            };
 
-            var factoryHead = await _repoAccountGroupAccount.FindAll(x => x.AccountGroup.Position == SystemRole.FactoryHead).Select(x=>x.AccountId).ToListAsync();
+            var oc = _repoOC.FindAll().ProjectTo<OCDto>(_configMapper).ToList();
+            var child = oc.FirstOrDefault(x => x.Id == ocuser.OCId);
+            // Tìm tất cả cha của oc hiện tại
+            var ocParentItemList = FindAllParents(oc, child);
+            var ocItem = oc.AsHierarchy(x => x.Id, y => y.ParentId, ocuser.OCId).ToList();
+            // Tìm tất cả con của oc hiện tại
+            var ocChildItemList = ocItem.Flatten(x => x.ChildNodes).Select(x => x.Entity.Id).ToList();
+            var ocs = ocParentItemList.Select(x => x.Id).Union(ocChildItemList).Distinct().ToList();
+            // vao ocUser tim theo ocId list 
+            var accountIds = await _repoOCAccount.FindAll(x => ocs.Contains(x.OCId))
+                                                .Select(x => x.AccountId)
+                                                .Distinct()
+                                                .ToListAsync();
+            if (accountIds.Any(x => x == accountId) == false) return new
+            {
+                Data = new List<PerformanceDto>(),
+                IsAuthorize = false
+            };
+
+            // Neu ai co quyen factoryHeadr thi lay ra
+            var factoryHead = await _repoAccountGroupAccount.FindAll(x => accountIds.Contains(x.AccountId) && x.AccountGroup.Position == SystemRole.FactoryHead).Select(x => x.AccountId).ToListAsync();
 
             var model = await (from a in _repoObjective.FindAll(x => factoryHead.Contains(x.CreatedBy))
                                join b in _repo.FindAll(x => x.Month == currentMonth && x.UploadBy == accountId) on a.Id equals b.ObjectiveId into ab
@@ -80,7 +128,11 @@ namespace A4KPI.Services
                                    CreatedTime = c != null ? c.CreatedTime : DateTime.MinValue,
                                    Percentage = c != null ? c.Percentage : 0
                                }).ToListAsync();
-            return model;
+            return new
+            {
+                Data = model,
+                IsAuthorize = true
+            };
         }
 
         public async Task<OperationResult> Submit(List<PerformanceDto> performances)

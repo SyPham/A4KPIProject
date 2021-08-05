@@ -55,6 +55,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
   public sheetName = 'Upload Details';
   public data: Object[] = [];
   originalData: Performance[];
+  isAuthorize = false;
   constructor(
     private service: ObjectiveService,
     private alertify: AlertifyService,
@@ -166,15 +167,16 @@ export class TodolistComponent implements OnInit, OnDestroy {
     });
   }
   loadDataUpdater() {
-    this.performanceService.getKPIObjectivesByUpdater().subscribe(data => {
-      this.data = data.map(item => {
+    this.performanceService.getKPIObjectivesByUpdater().subscribe(res => {
+      this.data = res.data.map(item => {
         return {
           objectiveName: item.objectiveName,
           percentage: item.percentage,
           createdTime: item.createdTime === '0001-01-01T00:00:00' ? "" : this.datePipe.transform(item.createdTime, "yyyy-MM-dd HH:mm:ss")
         }
       });
-      this.originalData =  data;
+      this.originalData = res.data;
+      this.isAuthorize = res.isAuthorize;
     });
   }
   loadDataFunctionalLeader() {
@@ -204,7 +206,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
   }
   loadAccountGroupData() {
     this.accountGroupService.getAll().subscribe(data => {
-      this.accountGroupData = data.filter(x=> x.position != 100);
+      this.accountGroupData = data.filter(x => x.position != 100);
     });
   }
   contextMenuBeforeOpen(args) {
@@ -214,60 +216,60 @@ export class TodolistComponent implements OnInit, OnDestroy {
       this.spreadsheetObj.removeContextMenuItems(["Paste Special"], false);
       this.spreadsheetObj.removeContextMenuItems(["Cut"], false);
       this.spreadsheetObj.removeContextMenuItems(["Copy"], false);
+    }
   }
- }
   created() {
-  //To Applies cell lock to the specified range of cells.
-//   let protectSetting:ProtectSettingsModel = {
-//     selectCells: true,
-//     formatCells: false,
-//     formatRows: false,
-//     formatColumns: false,
-//     insertLink: false
-// }
-// this.spreadsheetObj.protectSheet(this.sheetName, protectSetting);
-// this.spreadsheetObj.lockCells('A2:AZ100', false); // to unlock the A2:Az100 cells
-// this.spreadsheetObj.lockCells('A1:Z1', true); // to lock the A1:Z1 cells
+    //To Applies cell lock to the specified range of cells.
+    //   let protectSetting:ProtectSettingsModel = {
+    //     selectCells: true,
+    //     formatCells: false,
+    //     formatRows: false,
+    //     formatColumns: false,
+    //     insertLink: false
+    // }
+    // this.spreadsheetObj.protectSheet(this.sheetName, protectSetting);
+    // this.spreadsheetObj.lockCells('A2:AZ100', false); // to unlock the A2:Az100 cells
+    // this.spreadsheetObj.lockCells('A1:Z1', true); // to lock the A1:Z1 cells
   }
   async submit() {
     console.log(`A2:C${this.originalData.length + 1}`);
     let index = 2;
     const results = [];
     for (const item of this.originalData) {
-    const data = await  this.spreadsheetObj.getData(`A${index}:C${index}`);
-    let objective = '';
-    let percentage = '';
-    for (const a of data) {
-      if (a[0] === `A${index}`) {
-        objective = a[1].value;
-       }
-       if (a[0] === `B${index}`) {
-         percentage = a[1].value;
+      const data = await this.spreadsheetObj.getData(`A${index}:C${index}`);
+      let objective = '';
+      let percentage = '';
+      for (const a of data) {
+        if (a[0] === `A${index}`) {
+          objective = a[1].value;
+        }
+        if (a[0] === `B${index}`) {
+          percentage = a[1].value;
         }
       }
 
       console.log(objective, percentage);
 
-       const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any ;
-       itemResult.percentage = percentage;
-       results.push(itemResult);
-       index++;
+      const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any;
+      itemResult.percentage = percentage;
+      results.push(itemResult);
+      index++;
+    }
+    if (results.length === 0) {
+      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
+      return;
+    }
+    console.log(results);
+    this.performanceService.submit(results).subscribe(response => {
+      console.log(response)
+      if (response.success) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.loadDataUpdater();
+        this.grid.refresh();
+      } else {
+        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
-      if (results.length === 0) {
-        this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
-        return;
-      }
-      console.log(results);
-      this.performanceService.submit(results).subscribe(response => {
-        console.log(response)
-        if (response.success) {
-          this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.loadDataUpdater();
-          this.grid.refresh();
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      }, () => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG) )
+    }, () => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG))
 
   }
   createdToolbar() { }
