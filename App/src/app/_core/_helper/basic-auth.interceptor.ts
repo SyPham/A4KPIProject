@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpErrorResponse, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -28,6 +29,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                     // this.router.navigate(['login'], {
                     //     queryParams: { returnUrl: this.router.routerState.snapshot.url },
                     // });
+                    alert(error.error || 'Unauthorized');
                     break;
                 case 400:
                     console.error(error.error);

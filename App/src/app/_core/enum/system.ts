@@ -2,8 +2,10 @@ export enum SystemRole {
   L0 = 1,
   L1 = 2,
   FunctionalLeader = 6,
+  GFL = 6,
   L2 = 3,
   FHO = 4,
+  Updater = 4,
   GHR = 5,
   GM = 7,
 }
@@ -17,9 +19,11 @@ export enum SystemScoreType {
   L1 = "L1",
   L2 = "L2",
   FHO = "FHO",
+  Updater = "FHO",
   GHR = "GHR",
   GM = "GM",
   FunctionalLeader = "FunctionalLeader",
+  GFL = "FunctionalLeader",
 }
 export enum ToDoListType {
   KPI = "KPI",

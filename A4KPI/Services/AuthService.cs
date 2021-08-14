@@ -12,6 +12,7 @@ namespace A4KPI.Services
     public interface IAuthService
     {
         Task<Account> Login(string username, string password);
+        Task<bool> CheckLock(string username);
     }
     public class AuthService : IAuthService
     {
@@ -23,6 +24,18 @@ namespace A4KPI.Services
         {
             _repo = repo;
         }
+
+        public async Task<bool> CheckLock(string username)
+        {
+            var account = await _repo.FindAll().FirstOrDefaultAsync(x =>x.Username == username);
+
+            if (account == null)
+                return false;
+            
+            return account.IsLock;
+
+        }
+
         public async Task<Account> Login(string username, string password)
         {
             var account = await _repo.FindAll().FirstOrDefaultAsync(x => x.Username == username);

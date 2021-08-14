@@ -60,6 +60,11 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<any[]>(`${this.base}${this.entity}/fho?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
+  updater(currentTime): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/updater?currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
   ghr(currentTime): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.base}${this.entity}/ghr?currentTime=${currentTime}`, {})

@@ -42,6 +42,9 @@ namespace A4KPI.Controllers
             var userFromRepo = await _authService.Login(userForLoginDto.Username, userForLoginDto.Password);
             if (userFromRepo == null)
                 return Unauthorized();
+            var isLock= await _authService.CheckLock(userForLoginDto.Username);
+            if (isLock)
+                return Unauthorized("The account has been locked!");
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString())

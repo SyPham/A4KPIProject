@@ -55,6 +55,15 @@ namespace A4KPI.DTO
         public string KPIObjective { get; set; }
         public  string UserList { get; set; }
     }
+    public class UpdaterDto
+    {
+        public UpdaterDto(string title)
+        {
+            Title = title;
+        }
+
+        public string Title { get; set; }
+    }
     public class L0Dto
     {
         public int Id { get; set; }
@@ -128,6 +137,7 @@ namespace A4KPI.DTO
         public int PeriodTypeId { get; set; }
         public List<int> Settings { get; set; }
         public bool IsDisplayKPIScore { get; set; }
+        public bool IsShow { get; set; }
         public bool IsDisplayAttitude { get; set; }
     }
     public class Q1OrQ3Request

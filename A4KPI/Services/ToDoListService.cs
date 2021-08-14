@@ -52,6 +52,9 @@ namespace A4KPI.Services
         /// <param name="accountId"></param>
         /// <returns></returns>
         Task<object> FHO(int accountId);
+
+        Task<object> Updater(int accountId, DateTime currentTime);
+
         /// <summary>
         /// Lấy tất cả user để chấm điểm( gán ở bảng oc user)
         /// </summary>
@@ -87,6 +90,7 @@ namespace A4KPI.Services
     {
         private OperationResult operationResult;
         private readonly IRepositoryBase<ToDoList> _repo;
+        private readonly IRepositoryBase<Performance> _repoPerformance;
         private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IRepositoryBase<AccountGroupAccount> _repoAccountGroupAccount;
         private readonly IRepositoryBase<Objective> _repoObjective;
@@ -104,6 +108,7 @@ namespace A4KPI.Services
         private readonly MapperConfiguration _configMapper;
         public ToDoListService(
             IRepositoryBase<ToDoList> repo,
+            IRepositoryBase<Performance> repoPerformance,
             IRepositoryBase<Account> repoAccount,
             IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
             IRepositoryBase<Objective> repoObjective,
@@ -123,6 +128,7 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoPerformance = repoPerformance;
             _repoAccount = repoAccount;
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _repoObjective = repoObjective;
@@ -143,7 +149,7 @@ namespace A4KPI.Services
         {
             var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
-            return await _repo.FindAll(x => x.ObjectiveId == objectiveId && accountId == x.CreatedBy ).ProjectTo<ToDoListDto>(_configMapper).ToListAsync();
+            return await _repo.FindAll(x => x.ObjectiveId == objectiveId && accountId == x.CreatedBy).ProjectTo<ToDoListDto>(_configMapper).ToListAsync();
         }
         public async Task<object> GetAllByObjectiveIdAsTreeAsync(int objectiveId)
         {
@@ -347,7 +353,7 @@ namespace A4KPI.Services
             var quarterSettings = new List<int> { Quarter.Q2, Quarter.Q4 }; // Quý 2 và Quý 4 L0 sẽ tự chấm điểm cho bản thân -> user demand
             var settingsForQuater2 = new List<int> { Quarter.Q1, Quarter.Q2 }; // Nếu rơi vào quý 2 thì sẽ lấy những tháng của quý 1 và quý 2
             var settingsForQuater4 = new List<int> { Quarter.Q3, Quarter.Q4 }; // Nếu rơi vào quý 4 thì sẽ lấy những tháng của quý 3 và quý 4
-          
+
             if (quarterlyModel != null && quarterSettings.Contains(quarterlyModel.Value))
             {
 
@@ -392,7 +398,9 @@ namespace A4KPI.Services
                 });
             }
             var monthlyType = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.Monthly).FirstOrDefaultAsync();
-            var monthlyModel = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Monthly && x.ReportTime.Date >= displayTimeQuarter).OrderBy(x => x.ReportTime).FirstOrDefaultAsync();
+            var displayTimeMonthly = date.AddDays(monthlyType.DisplayBefore).Date;
+
+            var monthlyModel = await _repoPeriod.FindAll(x => x.PeriodType.Code == SystemPeriod.Monthly && x.ReportTime.Date >= displayTimeMonthly).OrderBy(x => x.ReportTime).FirstOrDefaultAsync();
             if (monthlyModel != null)
             {
                 var monthValue = monthlyModel.Value;
@@ -428,9 +436,9 @@ namespace A4KPI.Services
             }
 
             action = await _repoObjective.FindAll()
-                .Where(x => 
-                        (x.ToDoList.Any(x => x.IsReject && x.Level == ToDoListLevel.Target && x.CreatedBy == accountId) 
-                        || !x.ToDoList.Any(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId)) 
+                .Where(x =>
+                        (x.ToDoList.Any(x => x.IsReject && x.Level == ToDoListLevel.Target && x.CreatedBy == accountId)
+                        || !x.ToDoList.Any(x => x.Level == ToDoListLevel.Target && x.CreatedBy == accountId))
                         && x.PICs.Any(x => x.AccountId == accountId))
                       .Select(x => new L0Dto
                       {
@@ -474,6 +482,7 @@ namespace A4KPI.Services
             // Lấy tất cả các user đã giao nhiệm vụ cho họ
             var data = (await _repoObjective.FindAll(x => x.ToDoList.Any(a => accounts.Contains(a.CreatedBy)))
                 .SelectMany(x => x.PICs)
+                .Where(x => x.Account.IsLock == false)
                 .ToListAsync())
                 .DistinctBy(x => x.AccountId)
                 .ToList();
@@ -540,6 +549,7 @@ namespace A4KPI.Services
             // Lấy tất cả các user đã giao nhiệm vụ cho họ
             var data = (await _repoObjective.FindAll(x => x.ToDoList.Any(a => accounts.Contains(a.CreatedBy)))
             .SelectMany(x => x.PICs)
+            .Where(x => x.Account.IsLock == false)
             .ToListAsync())
             .DistinctBy(x => x.AccountId)
             .ToList();
@@ -590,7 +600,7 @@ namespace A4KPI.Services
             var date = currentTime;
             var month = date.Month;
             int currentHalfYear = month <= 6 && month >= 1 ? 1 : 2;
-        
+
             var halfYearType = await _repoPeriodType.FindAll(x => x.Code == SystemPeriod.HalfYear).FirstOrDefaultAsync();
             var displayTimeHalfYear = date.AddDays(halfYearType.DisplayBefore).Date;
 
@@ -602,6 +612,7 @@ namespace A4KPI.Services
             // Lấy tất cả các user đã giao nhiệm vụ cho họ
             var data = (await _repoObjective.FindAll(x => accountIds.Contains(x.CreatedBy))
                 .SelectMany(x => x.PICs)
+                .Where(x => x.Account.IsLock == false)
                 .ToListAsync())
                 .DistinctBy(x => x.AccountId)
                 .ToList();
@@ -676,15 +687,19 @@ namespace A4KPI.Services
             var quarterlySettings = quarterlyModel.Months.Split(",").Select(int.Parse).ToList();
             var displayBeforQuarterly = quarterlyModel.PeriodType.DisplayBefore;
             var reportTimeQuarterly = quarterlyModel.ReportTime.AddDays(-displayBeforQuarterly);
+            var currentQuarter = quarterlyModel.Value;
             // Lấy tất cả các user đã giao nhiệm vụ cho họ
-            var data = (await _repoObjective.FindAll()
+            var data = (await _repoObjective.FindAll(x => x.ToDoList.Any(a => a.Level == ToDoListLevel.Target))
                 .SelectMany(x => x.PICs)
+                .Where(x => x.Account.IsLock == false)
                 .ToListAsync())
                 .DistinctBy(x => x.AccountId)
                 .ToList();
             kpi = data.Select(x => new GHRDto
             {
                 Id = x.AccountId,
+                IsShow = _repo.FindAll().FirstOrDefault(a => a.CreatedBy == x.AccountId && (a.IsRelease && !a.IsReject || !a.IsRelease && a.IsReject)) != null
+               && _repoKPIScore.FindAll().FirstOrDefault(a => a.AccountId == x.AccountId && a.ScoreType == ScoreType.GHR && a.PeriodTypeId == SystemPeriodType.Quarterly && a.Period == currentQuarter) != null,
                 Objective = $"{quarterlyModel.Title} - {x.Account.FullName}",
                 DueDate = quarterlyModel.ReportTime,
                 Type = "KPI",
@@ -692,7 +707,7 @@ namespace A4KPI.Services
                 PeriodTypeId = quarterlyModel.PeriodTypeId,
                 Settings = quarterlySettings
             }).ToList();
-            return kpi;
+            return kpi.Where(x => !x.IsShow);
         }
         public async Task<object> FHO(int accountId)
         {
@@ -841,13 +856,13 @@ namespace A4KPI.Services
             var monthsOfCurrentQuarter = quarterly.Months.ToList();
 
             var data = await _repoObjective.FindAll(x => x.ToDoList.Select(a => a.CreatedBy).Contains(accountId))
-                
+
                 .Select(x => new
                 {
                     Objective = x.Topic,
                     L0TargetList = x.ToDoList.FirstOrDefault(a => a.Level == ToDoListLevel.Target && a.CreatedBy == accountId).Action,
                     L0ActionList = x.ToDoList.Where(a => a.Level == ToDoListLevel.Action && a.CreatedBy == accountId).Select(a => a.Action).ToList(),
-                    ResultOfMonth = x.ResultOfMonth.Where(a=> a.CreatedBy == accountId).Select(a => new { a.Month, a.Title, a.ObjectiveId, a.CreatedBy }),
+                    ResultOfMonth = x.ResultOfMonth.Where(a => a.CreatedBy == accountId).Select(a => new { a.Month, a.Title, a.ObjectiveId, a.CreatedBy }),
                     Settings = monthsOfCurrentQuarter,
                     PeriodTypeId = quarterly.PeriodTypeId,
                     Period = quarterly.Value
@@ -908,7 +923,7 @@ namespace A4KPI.Services
             var monthsOfCurrentQuarter = quarterlyModel.Months.Split(",").Select(int.Parse).ToList();
             var displayBeforQuarterly = quarterlyModel.PeriodType.DisplayBefore;
             var reportTimeQuarterly = quarterlyModel.ReportTime.AddDays(-displayBeforQuarterly);
-            var data = await _repoObjective.FindAll(x => x.ToDoList.Any(a=> a.CreatedBy == accountId))
+            var data = await _repoObjective.FindAll(x => x.ToDoList.Any(a => a.CreatedBy == accountId))
                 .Select(x => new
                 {
                     Id = x.Id,
@@ -1271,6 +1286,27 @@ namespace A4KPI.Services
 
             //}
             throw new NotImplementedException();
+        }
+
+        public async Task<object> Updater(int accountId, DateTime currentTime)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
+
+            var date = currentTime;
+            var month = date.Month - 1;
+            var year = date.Year;
+            if (month == 0)
+            {
+                month = 12;
+                year = year - 1;
+            }
+            var check = await _repoPerformance.FindAll(x=> x.Month == month && x.CreatedTime.Year == year).AnyAsync();
+            var resultOfMonth = new List<UpdaterDto>();
+            if (check) return resultOfMonth;
+            resultOfMonth.Add(new UpdaterDto($"{new DateTime(year,month,1).ToString("MMM")} 1st KPI"));
+            var data = resultOfMonth;
+            return data;
         }
     }
 }

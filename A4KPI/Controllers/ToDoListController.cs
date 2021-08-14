@@ -130,6 +130,13 @@ namespace A4KPI.Controllers
             return Ok(await _service.FunctionalLeader(accountId, currentTime));
         }
         [HttpGet]
+        public async Task<ActionResult> Updater(DateTime currentTime)
+        {
+            var accessToken = HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            return Ok(await _service.Updater(accountId, currentTime));
+        }
+        [HttpGet]
         public async Task<ActionResult> L2(DateTime currentTime)
         {
             var accessToken = HttpContext.Request.Headers["Authorization"];

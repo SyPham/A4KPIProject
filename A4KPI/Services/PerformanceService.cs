@@ -116,12 +116,11 @@ namespace A4KPI.Services
             var factoryHead = await _repoAccountGroupAccount.FindAll(x => accountIds.Contains(x.AccountId) && x.AccountGroup.Position == SystemRole.FactoryHead).Select(x => x.AccountId).ToListAsync();
 
             var model = await (from a in _repoObjective.FindAll(x => factoryHead.Contains(x.CreatedBy))
-                               join b in _repo.FindAll(x => x.Month == currentMonth && x.UploadBy == accountId) on a.Id equals b.ObjectiveId into ab
+                               join b in _repo.FindAll(x => x.Month == currentMonth) on a.Id equals b.ObjectiveId into ab
                                from c in ab.DefaultIfEmpty()
                                select new PerformanceDto
                                {
                                    Id = c != null ? c.Id : 0,
-                                   UploadBy = accountId,
                                    ObjectiveId = a.Id,
                                    ObjectiveName = a.Topic,
                                    Month = currentMonth,
@@ -139,11 +138,15 @@ namespace A4KPI.Services
         {
             try
             {
+                var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+                int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
                 var items = _mapper.Map<List<Performance>>(performances);
-                if (items.All(x => x.Id > 0))
-                    _repo.UpdateRange(items);
-                else
-                    _repo.AddRange(items);
+                items.ForEach(x =>
+                {
+                    x.UploadBy = accountId;
+                });
+                    _repo.UpdateRange(items.Where(x => x.Id > 0).ToList());
+                    _repo.AddRange(items.Where(x=>x.Id == 0).ToList());
                 await _unitOfWork.SaveChangeAsync();
 
                 operationResult = new OperationResult

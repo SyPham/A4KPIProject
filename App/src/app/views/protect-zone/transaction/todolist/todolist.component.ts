@@ -25,6 +25,8 @@ import { AttitudeScoreFunctionalLeaderComponent } from './attitude-score-functio
 import { KpiScoreL2Component } from './kpi-score-l2/kpi-score-l2.component';
 import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { MessageConstants } from 'src/app/_core/_constants/system';
+import { NgTemplateNameDirective } from '../ng-template-name.directive';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-todolist',
   templateUrl: './todolist.component.html',
@@ -33,7 +35,7 @@ import { MessageConstants } from 'src/app/_core/_constants/system';
 })
 export class TodolistComponent implements OnInit, OnDestroy {
   @ViewChild('grid') grid: GridComponent;
-  @ViewChildren('GridtemplateRef') public Gridtemplates: QueryList<TemplateRef<any>>;
+  @ViewChildren(NgTemplateNameDirective) public Gridtemplates: QueryList<NgTemplateNameDirective>;
   gridData: object;
   toolbarOptions = ['Search'];
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -53,18 +55,19 @@ export class TodolistComponent implements OnInit, OnDestroy {
   @ViewChild('remoteDataBinding')
   public spreadsheetObj: SpreadsheetComponent;
   public sheetName = 'Upload Details';
-  public data: Object[] = [];
-  originalData: Performance[];
   isAuthorize = false;
+  content: string;
   constructor(
     private service: ObjectiveService,
+    private router: Router,
     private alertify: AlertifyService,
     public todolistService: Todolistv2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
     private datePipe: DatePipe,
     private performanceService: PerformanceService
-  ) { }
+  ) {
+  }
   ngOnDestroy(): void {
     // this.subscription.forEach(item => item.unsubscribe());
   }
@@ -73,9 +76,8 @@ export class TodolistComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.currentTime = new Date();
-
+    this.content = '';
     this.loadAccountGroupData();
-    this.loadData();
     this.subscription.push(this.todolistService.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
   }
   isAllowAccess(position: number) {
@@ -84,8 +86,15 @@ export class TodolistComponent implements OnInit, OnDestroy {
   }
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
-    const index = this.index;
-    switch (index) {
+    let systemRole = 0;
+    if (this.content === '') {
+      this.content = this.accountGroupData[0]?.name;
+      systemRole =SystemRole[this.accountGroupData[0]?.name] as any  || 0;
+    } else {
+      systemRole =SystemRole[this.content] as any  || 0;
+
+    }
+    switch (systemRole) {
       case SystemRole.L0:
         this.scoreType = SystemScoreType.L0;
         this.loadDataL0();
@@ -102,7 +111,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
         this.scoreType = SystemScoreType.L2;
         this.loadDataL2();
         break;
-      case SystemRole.FHO:
+      case SystemRole.Updater:
         this.scoreType = SystemScoreType.FHO;
         this.loadDataUpdater();
         break;
@@ -116,12 +125,21 @@ export class TodolistComponent implements OnInit, OnDestroy {
         break;
     }
   }
+
   selected(args) {
-    console.log(args);
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
     const index = args.selectedIndex + 1;
     this.index = index;
-    switch (index) {
+    let systemRole = 0;
+    this.content =args.selectedItem.outerText;
+    if (this.content === '') {
+      this.content = this.accountGroupData[0]?.name;
+      systemRole =SystemRole[this.accountGroupData[0]?.name] as any  || 0;
+    } else {
+      systemRole = SystemRole[args.selectedItem.outerText] as any ;
+
+    }
+    switch (systemRole) {
       case SystemRole.L0:
         this.scoreType = SystemScoreType.L0;
         this.loadDataL0();
@@ -130,7 +148,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
         this.scoreType = SystemScoreType.L1;
         this.loadDataL1();
         break;
-      case SystemRole.FunctionalLeader:
+      case SystemRole.GFL:
         this.scoreType = SystemScoreType.FunctionalLeader;
         this.loadDataFunctionalLeader();
         break;
@@ -138,7 +156,7 @@ export class TodolistComponent implements OnInit, OnDestroy {
         this.scoreType = SystemScoreType.L2;
         this.loadDataL2();
         break;
-      case SystemRole.FHO:
+      case SystemRole.Updater:
         this.scoreType = SystemScoreType.FHO;
         this.loadDataUpdater();
         break;
@@ -152,129 +170,69 @@ export class TodolistComponent implements OnInit, OnDestroy {
         break;
     }
   }
-  getGridTemplate(index): TemplateRef<any> {
-    return this.Gridtemplates.toArray()[index - 1];
+  getGridTemplate(name): TemplateRef<any> {
+    const dir = this.Gridtemplates.find(dir => dir.name === name + '');
+  return dir ? dir.template : null
   }
   loadDataL0() {
+    this.gridData = [];
     this.todolistService.l0(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
 
   loadDataL1() {
+    this.gridData = [];
     this.todolistService.l1(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataUpdater() {
-    this.performanceService.getKPIObjectivesByUpdater().subscribe(res => {
-      this.data = res.data.map(item => {
-        return {
-          objectiveName: item.objectiveName,
-          percentage: item.percentage,
-          createdTime: item.createdTime === '0001-01-01T00:00:00' ? "" : this.datePipe.transform(item.createdTime, "yyyy-MM-dd HH:mm:ss")
-        }
-      });
-      this.originalData = res.data;
-      this.isAuthorize = res.isAuthorize;
+    this.gridData = [];
+    this.todolistService.updater(this.currentTimeRequest).subscribe(data => {
+      this.gridData = data;
     });
   }
   loadDataFunctionalLeader() {
+    this.gridData = [];
     this.todolistService.functionalLeader(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataL2() {
+    this.gridData = [];
     this.todolistService.l2(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataFHO() {
+    this.gridData = [];
     this.todolistService.fho(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataGHR() {
+    this.gridData = [];
     this.todolistService.ghr(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadDataGM() {
+    this.gridData = [];
     this.todolistService.gm(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
   loadAccountGroupData() {
-    this.accountGroupService.getAll().subscribe(data => {
-      this.accountGroupData = data.filter(x => x.position != 100);
+    this.accountGroupService.getAccountGroupForTodolistByAccountId().subscribe(data => {
+      this.accountGroupData = data;
+      this.loadData();
     });
   }
-  contextMenuBeforeOpen(args) {
-    console.log(args);
-    if (args.element.id === this.spreadsheetObj.element.id + '_contextmenu') {
-      this.spreadsheetObj.removeContextMenuItems(["Paste"], false);
-      this.spreadsheetObj.removeContextMenuItems(["Paste Special"], false);
-      this.spreadsheetObj.removeContextMenuItems(["Cut"], false);
-      this.spreadsheetObj.removeContextMenuItems(["Copy"], false);
-    }
+  gotoUpdate() {
+    return this.router.navigateByUrl('/transaction/upload-kpi-objective');
   }
-  created() {
-    //To Applies cell lock to the specified range of cells.
-    //   let protectSetting:ProtectSettingsModel = {
-    //     selectCells: true,
-    //     formatCells: false,
-    //     formatRows: false,
-    //     formatColumns: false,
-    //     insertLink: false
-    // }
-    // this.spreadsheetObj.protectSheet(this.sheetName, protectSetting);
-    // this.spreadsheetObj.lockCells('A2:AZ100', false); // to unlock the A2:Az100 cells
-    // this.spreadsheetObj.lockCells('A1:Z1', true); // to lock the A1:Z1 cells
-  }
-  async submit() {
-    console.log(`A2:C${this.originalData.length + 1}`);
-    let index = 2;
-    const results = [];
-    for (const item of this.originalData) {
-      const data = await this.spreadsheetObj.getData(`A${index}:C${index}`);
-      let objective = '';
-      let percentage = '';
-      for (const a of data) {
-        if (a[0] === `A${index}`) {
-          objective = a[1].value;
-        }
-        if (a[0] === `B${index}`) {
-          percentage = a[1].value;
-        }
-      }
 
-      console.log(objective, percentage);
-
-      const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any;
-      itemResult.percentage = percentage;
-      results.push(itemResult);
-      index++;
-    }
-    if (results.length === 0) {
-      this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
-      return;
-    }
-    console.log(results);
-    this.performanceService.submit(results).subscribe(response => {
-      console.log(response)
-      if (response.success) {
-        this.alertify.success(MessageConstants.CREATED_OK_MSG);
-        this.loadDataUpdater();
-        this.grid.refresh();
-      } else {
-        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-      }
-    }, () => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG))
-
-  }
-  createdToolbar() { }
-  onClickToolbar(args) { }
-  onFilter(args) { }
   openActionModalComponent(data) {
     const modalRef = this.modalService.open(ActionComponent, { size: 'xl', backdrop: 'static' });
     modalRef.componentInstance.data = data;

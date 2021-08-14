@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { UtilitiesService } from './utilities.service';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,5 +14,7 @@ export class AccountGroupService extends CURDService<AccountGroup> {
   {
     super(http,"AccountGroup", utilitiesService);
   }
-
+  getAccountGroupForTodolistByAccountId(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.base}${this.entity}/GetAccountGroupForTodolistByAccountId`);
+  }
 }

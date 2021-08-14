@@ -19,7 +19,11 @@ namespace A4KPI.Controllers
         {
             _service = service;
         }
-
+        [HttpGet]
+        public async Task<ActionResult> GetAccountGroupForTodolistByAccountId()
+        {
+            return Ok((await _service.GetAccountGroupForTodolistByAccountId()).OrderBy(x => x.Sequence));
+        }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {

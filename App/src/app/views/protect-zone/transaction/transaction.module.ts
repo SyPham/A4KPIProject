@@ -29,10 +29,14 @@ import { AttitudeScoreFunctionalLeaderComponent } from './todolist/attitude-scor
 import { KpiScoreL2Component } from './todolist/kpi-score-l2/kpi-score-l2.component';
 
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
+import { NgTemplateNameDirective } from './ng-template-name.directive';
+import { UploadKpiComponent } from './todolist/upload-kpi/upload-kpi.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -68,7 +72,9 @@ if (lang === 'vi') {
     AttitudeScoreL2Component,
     KpiScoreGHRComponent,
     KpiScoreGMComponent,
-    AttitudeScoreGHRComponent
+    AttitudeScoreGHRComponent,
+    NgTemplateNameDirective,
+    UploadKpiComponent
   ],
   imports: [
     CommonModule,
