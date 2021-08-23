@@ -12,7 +12,8 @@ namespace A4KPI.Models
         public int Id { get; set; }
         public int ObjectiveId { get; set; }
         public int Month { get; set; }
-        public double Percentage { get; set; }
+        [StringLength(200)]
+        public string Percentage { get; set; }
         public int UploadBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }

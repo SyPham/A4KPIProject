@@ -84,6 +84,9 @@ namespace A4KPI.DTO
         public bool IsRelease { get; set; }
         public bool HasFunctionalLeader { get; set; }
         public bool IsUpdatedResult { get; set; }
+        public bool IsSelfScore { get; set; }
+        public bool GHRScored { get; set; }
+        public bool FunctionalLeaderScored { get; set; }
 
     }
     public class FunctionalLeaderDto
@@ -97,6 +100,8 @@ namespace A4KPI.DTO
         public List<int> Settings { get; set; }
         public bool IsDisplayKPIScore { get; set; }
         public bool IsDisplayAttitude { get; set; }
+        public bool FunctionalLeaderScored { get; set; }
+
     }
     public class L1Dto
     {
@@ -105,11 +110,16 @@ namespace A4KPI.DTO
         public DateTime DueDate { get; set; }
         public string Type { get; set; }
         public int Period { get; set; }
+        public int HalfYearPeriod { get; set; }
         public int PeriodTypeId { get; set; }
         public int HalfYearId { get; set; }
         public List<int> Settings { get; set; }
+        public bool IsSelfScore { get; set; }
+        public bool WasUpdatedResultOfMonth { get; set; }
         public bool IsDisplayKPIScore { get; set; }
         public bool IsDisplayAttitude { get; set; }
+        public bool FunctionalLeaderScored { get; set; }
+        public bool L1Scored { get; set; }
         public bool HasFunctionalLeader { get; set; }
     }
     public class L2Dto
@@ -120,12 +130,16 @@ namespace A4KPI.DTO
         public string Type { get; set; }
         public string FullName { get; set; }
         public int Period { get; set; }
+        public int HalfYearPeriod { get; set; }
         public int PeriodTypeId { get; set; }
         public int HalfYearId { get; set; }
         public List<int> Settings { get; set; }
         public bool IsDisplayKPIScore { get; set; }
         public bool IsDisplayAttitude { get; set; }
         public bool HasFunctionalLeader { get; set; }
+
+        public bool L1Scored { get; set; }
+        public bool L2Scored { get; set; }
     }
     public class GHRDto
     {
@@ -138,6 +152,8 @@ namespace A4KPI.DTO
         public List<int> Settings { get; set; }
         public bool IsDisplayKPIScore { get; set; }
         public bool IsShow { get; set; }
+        public object CreatedTodolist { get; set; }
+        public object Todolist { get; set; }
         public bool IsDisplayAttitude { get; set; }
     }
     public class Q1OrQ3Request

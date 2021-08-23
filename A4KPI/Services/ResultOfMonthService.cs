@@ -67,7 +67,7 @@ namespace A4KPI.Services
                 {
                     _repo.Add(new ResultOfMonth
                     {
-                        Month = DateTime.Now.Month,
+                        Month = model.Period,
                         Title = model.Title,
                         ObjectiveId = model.ObjectiveId,
                         CreatedBy = model.CreatedBy

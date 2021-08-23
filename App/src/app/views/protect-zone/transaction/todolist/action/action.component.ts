@@ -122,6 +122,13 @@ export class ActionComponent implements OnInit {
     );
 
   }
+  actionBegin(args) {
+    if (args.requestType === 'delete') {
+      if (args.data[0].id > 0) {
+        this.delete(args.data[0].id);
+      }
+    }
+  }
   create() {
     this.model = {
       id: 0,

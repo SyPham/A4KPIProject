@@ -51,12 +51,15 @@ export class OcUserComponent extends BaseComponent implements OnInit {
   }
 
   actionBegin(args) {
+
     if (args.requestType === 'delete') {
+      console.log(args)
       const obj = {
-        accountId: args.data[0].ID,
+        accountId: args.data[0].id,
         ocId: this.OCId,
         ocName: this.ocName
       }
+      console.log(obj)
       this.removeBuildingUser(obj);
    }
   }

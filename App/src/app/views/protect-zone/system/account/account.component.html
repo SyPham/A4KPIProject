@@ -28,15 +28,15 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="username" textAlign='Center' headerText="{{ 'Username' | translate}}"> </e-column>
-            <e-column field="fullName" textAlign='Center' headerText="{{ 'FullName' | translate}}"> </e-column>
-            <e-column field="password" textAlign='Center' headerText="{{ 'Password' | translate}}">
+            <e-column field="username" textAlign='Center' headerText="{{ 'Username'}}"> </e-column>
+            <e-column field="fullName" textAlign='Center' headerText="{{ 'FullName'}}"> </e-column>
+            <e-column field="password" textAlign='Center' headerText="{{ 'Password'}}">
               <ng-template #template let-data>
                 ************
               </ng-template>
             </e-column>
             <e-column field="email" textAlign='Center' headerText="Email"> </e-column>
-            <e-column field='accountGroupText' headerText="{{'Account Group' | translate}}" width='200' textAlign='Center'>
+            <e-column field='accountGroupText' headerText="{{'Account Group'}}" width='200' textAlign='Center'>
               <ng-template #template let-data>
                 {{data.accountGroupText}}
               </ng-template>
@@ -64,7 +64,7 @@
                     </ng-template>
                     </e-column>
 
-            <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option' | translate}}">
+            <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option'}}">
               <ng-template #template let-data>
                 <div class="btn-group">
                   <button type="button" *ngIf="data.isLock" (click)='lock(data.id)' class="btn btn-xs btn-danger"><i class="fa fa-lock"></i></button>

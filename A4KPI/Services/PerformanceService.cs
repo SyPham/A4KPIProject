@@ -125,7 +125,7 @@ namespace A4KPI.Services
                                    ObjectiveName = a.Topic,
                                    Month = currentMonth,
                                    CreatedTime = c != null ? c.CreatedTime : DateTime.MinValue,
-                                   Percentage = c != null ? c.Percentage : 0
+                                   Percentage = c != null ? c.Percentage : ""
                                }).ToListAsync();
             return new
             {

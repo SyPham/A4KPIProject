@@ -52,7 +52,10 @@ namespace A4KPI.Services
             int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
            
             // tim oc cua usser login
-            return await _repoAccount.FindAll(x => x.AccountId == accountId).Select(x=>x.AccountGroup).ProjectTo<AccountGroupDto>(_configMapper).ToListAsync();
+            return await _repoAccount.FindAll(x => x.AccountId == accountId)
+                .Where(x=> x.AccountGroup.Position != 100)
+                .Select(x=>x.AccountGroup)
+                .ProjectTo<AccountGroupDto>(_configMapper).ToListAsync();
         }
     }
 }

@@ -88,14 +88,7 @@ export class Todolistv2Service extends CURDService<ToDoList> {
       .get<ToDoListL1L2[]>(`${this.base}${this.entity}/GetAllObjectiveByL1L2`, {})
       .pipe(catchError(this.handleError));
   }
-  /**
-    * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
-    */
-  getAllInCurrentQuarterByAccountGroup(accountId): Observable<ToDoListByLevelL1L2Dto[]> {
-    return this.http
-      .get<ToDoListByLevelL1L2Dto[]>(`${this.base}${this.entity}/GetAllInCurrentQuarterByAccountGroup?accountId=${accountId}`, {})
-      .pipe(catchError(this.handleError));
-  }
+
   /**
     * // TODO: Lấy dữ kiệu cho vai trò là L1, L2 khi click vào KPI Score Button
     */

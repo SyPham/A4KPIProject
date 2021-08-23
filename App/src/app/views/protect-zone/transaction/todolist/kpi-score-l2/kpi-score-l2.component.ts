@@ -99,10 +99,10 @@ export class KpiScoreL2Component implements OnInit {
     }
     if(this.isQuarter2Or4 === true) {
       this.getFisrtSelfScoreL1ByAccountId();
-      if (this.hasFunctionalLeader === true) {
-        this.getFunctionalLeaderCommentByAccountId();
-        this.getFunctionalLeaderAttitudeScoreByAccountId();
-      }
+      // if (this.hasFunctionalLeader === true) {
+      //   this.getFunctionalLeaderCommentByAccountId();
+      //   this.getFunctionalLeaderAttitudeScoreByAccountId();
+      // }
     }
     this.getL1CommentByAccountId();
     this.getFisrtKPIScoreL1ByAccountId();
@@ -119,7 +119,7 @@ export class KpiScoreL2Component implements OnInit {
     this.commentService.getFunctionalLeaderCommentByAccountId(
       this.data.id,
       this.data.halfYearId,
-      this.data.period
+      this.data.halfYearPeriod,
     ).subscribe(data => {
       this.functionalLeaderCommentContent = data?.content;
     });
@@ -128,7 +128,7 @@ export class KpiScoreL2Component implements OnInit {
     this.attitudeScoreService.getFunctionalLeaderAttitudeScoreByAccountId(
       this.data.id,
       this.data.halfYearId,
-      this.data.period,
+      this.data.halfYearPeriod,
       ).subscribe(data => {
       this.functionalLeaderAttitudeScoreData = data?.point || 0;
       this.functionalLeaderScored = this.functionalLeaderAttitudeScoreData > 0;
@@ -137,8 +137,8 @@ export class KpiScoreL2Component implements OnInit {
   getFisrtSelfScoreL1ByAccountId() {
     this.kpiScoreService.getFisrtSelfScoreL1ByAccountId(
       this.data.id,
-      this.data.periodTypeId,
-      this.data.period,
+      this.data.halfYearId,
+      this.data.halfYearPeriod,
       SystemScoreType.L0
     ).subscribe(data => {
       this.selfPoint = data?.point || 0;
@@ -148,8 +148,8 @@ export class KpiScoreL2Component implements OnInit {
   getL2SelfEvaluationCommentByAccountId() {
     this.commentService.getL2SelfEvaluationCommentByAccountId(
       this.data.id,
-      this.data.periodTypeId,
-      this.data.period
+      this.data.halfYearId,
+      this.data.halfYearPeriod,
     ).subscribe(data => {
       this.selfEvaluationCommentContent = data?.content;
     });

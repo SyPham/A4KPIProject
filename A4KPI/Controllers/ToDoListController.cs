@@ -27,18 +27,7 @@ namespace A4KPI.Controllers
             _serviceAccount = serviceAccount;
             _serviceObjective = serviceObjective;
         }
-        /// <summary>
-        /// Lấy danh sách cho KPI Score
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <returns>Danh sách cho KPI Score</returns>
-        [HttpGet]
-        public async Task<ActionResult> GetAllInCurrentQuarterByAccountGroup(int accountId)
-        {
-            var accessToken = HttpContext.Request.Headers["Authorization"];
-            int accountID = JWTExtensions.GetDecodeTokenById(accessToken);
-            return Ok(await _service.GetAllInCurrentQuarterByAccountGroup(accountId));
-        }
+    
         [HttpGet]
         public async Task<ActionResult> GetAllKPIScoreByAccountId()
         {

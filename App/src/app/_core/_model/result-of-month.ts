@@ -11,6 +11,7 @@ export interface ResultOfMonthRequest {
   objectiveId: number;
   id: number;
   title: string;
+  period: number;
   createdBy: number;
 
 }

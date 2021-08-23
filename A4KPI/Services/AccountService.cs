@@ -194,12 +194,13 @@ namespace A4KPI.Services
             return result;
         }
 
-        public async Task<object> GetAccounts()
+       public async Task<object> GetAccounts()
         {
             var query = await _repo.FindAll(x => x.AccountType.Code != "SYSTEM").Select(x=> new { 
             x.Username,
             x.Id,
-            x.FullName
+            x.FullName,
+            IsLeader = x.AccountGroupAccount.Any(a => a.AccountGroup.Position  == SystemRole.FunctionalLeader)
             }).ToListAsync();
             return query;
         }

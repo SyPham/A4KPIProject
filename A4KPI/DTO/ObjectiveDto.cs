@@ -37,6 +37,7 @@ namespace A4KPI.DTO
         public int Id { get; set; }
         public int ObjectiveId { get; set; }
         public int CreatedBy { get; set; }
+        public int Period { get; set; }
         public string Title { get; set; }
     }
     public class RejectRequestDto

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Update result of KPI Objective ({{data.topic}}) in {{getTitleText()}}</h4>
+  <h4 class="modal-title">Update result of KPI Objective ({{data.topic}})</h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -48,7 +48,7 @@
     </div>
     <div class="flex-fill " style="width:30%; padding: 0 5px 0 5px;">
       <div class="form-group">
-        <label for="title" class="d-flex justify-content-center" style="font-weight: Bold;font-size: 14px;margin-top: 52px;">{{getMonthText()}}</label>
+        <label for="title" class="d-flex justify-content-center" style="font-weight: Bold;font-size: 14px;margin-top: 52px;">Result of {{data.topic.split(' - ')[0]}}</label>
         <textarea id="title" rows="10" type="text" [(ngModel)]="title"
         placeholder="Type something!" class="form-control"></textarea>
       </div>

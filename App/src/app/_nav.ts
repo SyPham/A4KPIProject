@@ -326,11 +326,11 @@ export const navItems: INavData[] = [
     url: '/maintain',
     icon: 'icon-bell',
     children: [
-      {
-        name: '1.1 Mailing',
-        url: '/maintain/mailing',
-        icon: 'icon-bell'
-      },
+      // {
+      //   name: '1.1 Mailing',
+      //   url: '/maintain/mailing',
+      //   icon: 'icon-bell'
+      // },
     ]
   },
   {

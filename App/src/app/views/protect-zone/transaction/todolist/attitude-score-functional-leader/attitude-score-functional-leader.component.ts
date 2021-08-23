@@ -90,7 +90,7 @@ export class AttitudeScoreFunctionalLeaderComponent implements OnInit {
       period: this.data.period,
       periodTypeId: this.data.periodTypeId,
       scoreType: this.scoreType,
-      commentTypeId: CommentType.SelfEvaluation
+      commentTypeId: CommentType.Comment
     };
     this.getHalfYearSetting();
     this.loadData();

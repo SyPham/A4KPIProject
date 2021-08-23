@@ -45,7 +45,6 @@ export class UpdateResultComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
-
     this.title = '';
     if (this.isReject) {
       this.getGHRCommentByAccountId();
@@ -57,6 +56,7 @@ export class UpdateResultComponent implements OnInit {
       objectiveId: this.data.id,
       title: '',
       createdBy: +JSON.parse(localStorage.getItem('user')).id,
+      period: this.data.period
     };
   }
 

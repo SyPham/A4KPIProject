@@ -37,6 +37,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   managers: any[] = [];
   leaderId: number;
   managerId: number;
+  accounts: any[];
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -53,9 +54,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   // life cycle ejs-grid
   createdManager($event, data) {
+    this.managers = this.accounts;
     this.managers = this.managers.filter(x=> x.id !== data.id);
   }
   createdLeader($event, data) {
+    this.leaders = this.accounts.filter(x=> x.isLeader);
     this.leaders = this.leaders.filter(x=> x.id !== data.id);
   }
   onDoubleClick(args: any): void {
@@ -203,7 +206,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   getAccounts() {
     this.service.getAccounts().subscribe(data => {
-      this.leaders = data;
+      this.accounts = data;
+      this.leaders = data.filter(x=> x.isLeader);
+      console.log(this.leaders);
       this.managers = data;
     });
   }
@@ -232,6 +237,8 @@ export class AccountComponent extends BaseComponent implements OnInit {
         if (res.success === true) {
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
           this.loadData();
+          this.getAccounts();
+
           this.accountCreate = {} as Account;
         } else {
            this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);

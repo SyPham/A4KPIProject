@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
+import { CellModel, getCell, SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { PerformanceService } from 'src/app/_core/_service/performance.service';
@@ -46,35 +46,44 @@ export class UploadKpiComponent implements OnInit {
       this.spreadsheetObj.removeContextMenuItems(["Copy"], false);
     }
   }
+
   async submit() {
-    console.log(`A2:C${this.originalData.length + 1}`);
+
     let index = 2;
     const results = [];
-    for (const item of this.originalData) {
-      const data = await this.spreadsheetObj.getData(`A${index}:C${index}`);
-      let objective = '';
-      let percentage = '';
-      for (const a of data) {
-        if (a[0] === `A${index}`) {
-          objective = a[1].value;
-        }
-        if (a[0] === `B${index}`) {
-          percentage = a[1].value;
-        }
-      }
-
-      console.log(objective, percentage);
-
-      const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any;
-      itemResult.percentage = percentage;
-      results.push(itemResult);
-      index++;
+    for(var i = 0 ; i < this.originalData.length ; i++) {
+    console.log(this.spreadsheetObj.getRowData(i + 1, 0)); // to provide the cell model
+        const data = this.spreadsheetObj.getRowData(i + 1, 0) as any;
+        const objective = data[0].objectiveName;
+        const percentage = data[0].percentage;
+        const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any;
+        itemResult.percentage = percentage;
+        results.push(itemResult);
     }
+    console.log(results);
+    // for (const item of this.originalData) {
+    //   const data = await this.spreadsheetObj.getData(`A${index}:C${index}`);
+    //   let objective = '';
+    //   let percentage = '';
+    //   for (const a of data) {
+    //     if (a[0] === `A${index}`) {
+    //       objective = a[1].value;
+    //     }
+    //     if (a[0] === `B${index}`) {
+    //       percentage = a[1].value;
+    //     }
+    //   }
+
+    //   const itemResult = this.originalData.filter((x: any) => x.objectiveName == objective)[0] as any;
+    //   itemResult.percentage = percentage;
+    //   results.push(itemResult);
+    //   index++;
+    // }
     if (results.length === 0) {
       this.alertify.warning('Not yet complete. Can not submit! 尚未完成，無法提交', true);
       return;
     }
-    console.log(results);
+    // console.log(results);
     this.service.submit(results).subscribe(response => {
       console.log(response)
       if (response.success) {
