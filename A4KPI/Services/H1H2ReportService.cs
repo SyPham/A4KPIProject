@@ -38,6 +38,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<KPIScore> _repoKPIScore;
         private readonly IRepositoryBase<PeriodType> _repoPeriodType;
         private readonly IRepositoryBase<OCAccount> _repoOCAccount;
+        private readonly IRepositoryBase<Contribution> _repoContribution;
         private readonly IRepositoryBase<PIC> _repoPIC;
         private readonly IRepositoryBase<OC> _repoOC;
         private readonly IRepositoryBase<Period> _repoPeriod;
@@ -59,6 +60,7 @@ namespace A4KPI.Services
             IRepositoryBase<OCAccount> repoOCAccount,
             IRepositoryBase<PIC> repoPIC,
             IRepositoryBase<OC> repoOC,
+            IRepositoryBase<Contribution> repoContribution,
             IRepositoryBase<Period> repoPeriod,
             IRepositoryBase<Models.Comment> repoComment,
             IRepositoryBase<AttitudeScore> repoAttitudeScore,
@@ -72,6 +74,7 @@ namespace A4KPI.Services
         {
             _repo = repo;
             _repoComment = repoComment;
+            _repoContribution = repoContribution;
             _repoAccount = repoAccount;
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _repoSpecial = repoSpecial;
@@ -107,6 +110,7 @@ namespace A4KPI.Services
             ws.Cells["L2"].PutValue("Name " + H1.FullName);
             //H1
             ws.Cells["D5"].PutValue("H1得分:  " + H1.A_total);
+            ws.Cells["D7"].PutValue("H1:  " + H1.L0SelfScoreComment);
             ws.Cells["F5"].PutValue(H1.L1Score);
             ws.Cells["G5"].PutValue(H1.L2Score);
             ws.Cells["H5"].PutValue(H1.FLScore);
@@ -131,6 +135,7 @@ namespace A4KPI.Services
             ws.Cells["I18"].PutValue(H1.B_L2);
             ws.Cells["J18"].PutValue(H1.B_Smart);
             ws.Cells["D20"].PutValue("H1: " + H1.C_total);
+            ws.Cells["D21"].PutValue("Comment: " + H1.SpecialComment);
             ws.Cells["F20"].PutValue(H1.SpecialScore);
             ws.Cells["E24"].PutValue("H1得分: " + H1.D_total);
 
@@ -141,6 +146,7 @@ namespace A4KPI.Services
             ws.Cells["P5"].PutValue(H2.L1Score);
             ws.Cells["Q5"].PutValue(H2.L2Score);
             ws.Cells["R5"].PutValue(H2.FLScore);
+            ws.Cells["N7"].PutValue("H2: " + H2.L0SelfScoreComment);
             ws.Cells["N8"].PutValue("Q3 KPI: " + H2.L1Q1Comment);
             ws.Cells["N9"].PutValue("Q4 KPI: " + H2.L1Q2Comment);
             ws.Cells["N10"].PutValue("H2 Attitude: " + H2.L1HComment);
@@ -162,6 +168,7 @@ namespace A4KPI.Services
             ws.Cells["S18"].PutValue(H2.B_L2);
             ws.Cells["T18"].PutValue(H2.B_Smart);
             ws.Cells["N20"].PutValue("H2: " + H2.C_total);
+            ws.Cells["N21"].PutValue("Comment: " + H2.SpecialComment);
             ws.Cells["P20"].PutValue(H2.SpecialScore);
             ws.Cells["O24"].PutValue("H2得分: " + H2.D_total);
 
@@ -222,18 +229,16 @@ namespace A4KPI.Services
                                                 && x.Period == item
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
                     //start
                     double? l0ScoreKPI = await _repoKPIScore.FindAll(x =>
-                                                 x.PeriodTypeId == SystemPeriodType.Quarterly
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q2
+                                                && x.Period == HalfYear.H1
                                                 && x.ScoreType == ScoreType.L0
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -243,7 +248,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -253,7 +257,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -263,7 +266,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -273,7 +275,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -283,7 +284,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -294,7 +294,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -302,13 +301,21 @@ namespace A4KPI.Services
                     double? Score_special = await _repoSpecial.FindAll(x =>
                                                  x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q2
+                                                && x.Period == HalfYear.H1
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
+                    var Score_special_comment = await _repoContribution.FindAll(x =>
+                                                x.PeriodTypeId == SystemPeriodType.HalfYear
+                                               && x.CreatedTime.Year == DateTime.Today.Year
+                                               && x.Period == HalfYear.H1
+                                               && x.ScoreType == ScoreType.L2
+                                               && accountId == x.AccountId
+                                               && x.AccountId != l1.Manager)
+                                           .Select(x => x.Content)
+                                           .FirstOrDefaultAsync();
                     //end
 
                     var l1Comment = await _repoComment.FindAll(x =>
@@ -317,7 +324,15 @@ namespace A4KPI.Services
                                               && x.Period == item
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
+                                              && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
+                                          .FirstOrDefaultAsync();
+                    var l0SelfScoreComment = await _repoComment.FindAll(x =>
+                                               x.PeriodTypeId == SystemPeriodType.HalfYear
+                                              && x.CreatedTime.Year == DateTime.Today.Year
+                                              && x.Period == item
+                                              && x.ScoreType == ScoreType.L0
+                                              && accountId == x.AccountId
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -327,7 +342,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q1
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -337,7 +351,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q2
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -347,7 +360,6 @@ namespace A4KPI.Services
                                               && x.Period == item
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -419,19 +431,20 @@ namespace A4KPI.Services
                                            .Select(x => x.Point)
                                          .FirstOrDefaultAsync();
                     double A_total = Math.Round(await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0), 2);
-                    double L1 = Math.Round((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0, 2);
-                    double L2 = Math.Round((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0 , 2);
-                    double Smart = Math.Round((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0, 2);
+                    double L1 = await MathL1(l1Q1ScoreKPI ?? 0, l1Q2ScoreKPI ?? 0);
+                    double L2 = await MathL2(l2Q1ScoreKPI ?? 0, l2Q2ScoreKPI ?? 0);
+                    double Smart = await MathSmart(GHRQ1ScoreKPI ?? 0, GHRQ2ScoreKPI ?? 0);
                     double B_selfScore = Math.Round(await BSelfScore(l0ScoreKPI ?? 0),2);
-                    double B_L1 = Math.Round(await BL1((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0),2);
-                    double B_L2 = Math.Round(await BL2((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0), 2);
-                    double B_Smart = Math.Round(await BSmart((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0),2);
+                    double B_L1 = Math.Round(await BL1(L1),2);
+                    double B_L2 = Math.Round(await BL2(L2), 2);
+                    double B_Smart = Math.Round(await BSmart(Smart),2);
                     dataH1 = new H1H2ReportDto(item, periods_quarterly.Value, currentYear)
                     {
                         FullName = ocuser.FullName,
                         OC = ocuser.OC,
                         L1Score = l1ScoreKPI ?? 0,
                         L1Comment = l1Comment ?? "",
+                        L0SelfScoreComment = l0SelfScoreComment,
                         L1Q1Comment = l1Q1Comment ?? "",
                         L1Q2Comment = l1Q2Comment ?? "",
                         L2Score = l2ScoreKPI ?? 0,
@@ -445,6 +458,7 @@ namespace A4KPI.Services
                         FLScore = FLScore ?? 0,
                         selfScore = l0ScoreKPI ?? 0,
                         SpecialScore = Score_special ?? 0,
+                        SpecialComment = Score_special_comment,
                         L1 = L1,
                         L2 = L2,
                         Smart = Smart,
@@ -472,9 +486,9 @@ namespace A4KPI.Services
                                             .FirstOrDefaultAsync();
                     //start
                     double? l0ScoreKPI = await _repoKPIScore.FindAll(x =>
-                                                 x.PeriodTypeId == SystemPeriodType.Quarterly
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q4
+                                                && x.Period == HalfYear.H2
                                                 && x.ScoreType == ScoreType.L0
                                                 && accountId == x.AccountId
                                                 && l1.Manager == x.ScoreBy
@@ -546,13 +560,22 @@ namespace A4KPI.Services
                     double? Score_special = await _repoSpecial.FindAll(x =>
                                                  x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q4
+                                                && x.Period == HalfYear.H2
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
                                                 && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
+                    var Score_special_comment = await _repoContribution.FindAll(x =>
+                                                x.PeriodTypeId == SystemPeriodType.HalfYear
+                                               && x.CreatedTime.Year == DateTime.Today.Year
+                                               && x.Period == HalfYear.H2
+                                               && x.ScoreType == ScoreType.L2
+                                               && accountId == x.AccountId
+                                               && x.AccountId != l1.Manager)
+                                           .Select(x => x.Content)
+                                           .FirstOrDefaultAsync();
                     //end
                     var l1Comment = await _repoComment.FindAll(x =>
                                                x.PeriodTypeId == SystemPeriodType.HalfYear
@@ -561,6 +584,15 @@ namespace A4KPI.Services
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
                                               && l1.Manager == x.CreatedBy
+                                              && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
+                                          .FirstOrDefaultAsync();
+                    var l0SelfScoreComment = await _repoComment.FindAll(x =>
+                                               x.PeriodTypeId == SystemPeriodType.HalfYear
+                                              && x.CreatedTime.Year == DateTime.Today.Year
+                                              && x.Period == item
+                                              && x.ScoreType == ScoreType.L0
+                                              && accountId == x.AccountId
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -662,19 +694,20 @@ namespace A4KPI.Services
                                            .Select(x => x.Point)
                                          .FirstOrDefaultAsync();
                     double A_total = Math.Round(await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0), 2);
-                    double L1 = Math.Round((l1Q3ScoreKPI + l1Q4ScoreKPI) / 2 ?? 0, 2);
-                    double L2 = Math.Round((l2Q3ScoreKPI + l2Q4ScoreKPI) / 2 ?? 0, 2);
-                    double Smart = Math.Round((GHRQ3ScoreKPI + GHRQ4ScoreKPI) / 2 ?? 0, 2);
+                    double L1 = await MathL1(l1Q3ScoreKPI ?? 0, l1Q4ScoreKPI ?? 0);
+                    double L2 = await MathL2(l2Q3ScoreKPI ?? 0, l2Q4ScoreKPI ?? 0);
+                    double Smart = await MathSmart(GHRQ3ScoreKPI ?? 0, GHRQ4ScoreKPI ?? 0);
                     double B_selfScore = Math.Round(await BSelfScore(l0ScoreKPI ?? 0), 2);
-                    double B_L1 = Math.Round(await BL1((l1Q3ScoreKPI + l1Q4ScoreKPI) / 2 ?? 0), 2);
-                    double B_L2 = Math.Round(await BL2((l2Q3ScoreKPI + l2Q4ScoreKPI) / 2 ?? 0), 2);
-                    double B_Smart = Math.Round(await BSmart((GHRQ3ScoreKPI + GHRQ4ScoreKPI) / 2 ?? 0), 2);
+                    double B_L1 = Math.Round(await BL1(L1), 2);
+                    double B_L2 = Math.Round(await BL2(L2), 2);
+                    double B_Smart = Math.Round(await BSmart(Smart), 2);
                     dataH2 = new H1H2ReportDto(item, periods_quarterly.Value, currentYear)
                     {
                         FullName = ocuser.FullName,
                         OC = ocuser.OC,
                         L1Score = l1ScoreKPI ?? 0,
                         L1Comment = l1Comment ?? "",
+                        L0SelfScoreComment = l0SelfScoreComment,
                         L1Q1Comment = l1Q3Comment ?? "",
                         L1Q2Comment = l1Q4Comment ?? "",
                         L2Score = l2ScoreKPI ?? 0,
@@ -688,6 +721,7 @@ namespace A4KPI.Services
                         FLScore = FLScore ?? 0,
                         selfScore = l0ScoreKPI ?? 0,
                         SpecialScore = Score_special ?? 0,
+                        SpecialComment = Score_special_comment,
                         L1 = L1,
                         L2 = L2,
                         Smart = Smart,
@@ -761,18 +795,16 @@ namespace A4KPI.Services
                                                 && x.Period == item
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
                     //start
                     double? l0ScoreKPI = await _repoKPIScore.FindAll(x =>
-                                                 x.PeriodTypeId == SystemPeriodType.Quarterly
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q2
+                                                && x.Period == HalfYear.H1
                                                 && x.ScoreType == ScoreType.L0
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -782,7 +814,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -792,7 +823,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -802,7 +832,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -812,7 +841,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -822,7 +850,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q1
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -833,7 +860,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q2
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -841,13 +867,23 @@ namespace A4KPI.Services
                     double? Score_special = await _repoSpecial.FindAll(x =>
                                                  x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q2
+                                                && x.Period == HalfYear.H1
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
+
+                    var Score_special_comment = await _repoContribution.FindAll(x =>
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
+                                                && x.CreatedTime.Year == DateTime.Today.Year
+                                                && x.Period == HalfYear.H1
+                                                && x.ScoreType == ScoreType.L2
+                                                && accountId == x.AccountId
+                                                && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
+                                            .FirstOrDefaultAsync();
+
                     //end
 
                     var l1Comment = await _repoComment.FindAll(x =>
@@ -856,7 +892,15 @@ namespace A4KPI.Services
                                               && x.Period == item
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
+                                              && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
+                                          .FirstOrDefaultAsync();
+                    var l0SelfScoreComment = await _repoComment.FindAll(x =>
+                                               x.PeriodTypeId == SystemPeriodType.HalfYear
+                                              && x.CreatedTime.Year == DateTime.Today.Year
+                                              && x.Period == item
+                                              && x.ScoreType == ScoreType.L0
+                                              && accountId == x.AccountId
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -866,7 +910,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q1
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -876,7 +919,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q2
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -886,7 +928,6 @@ namespace A4KPI.Services
                                               && x.Period == item
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -958,18 +999,19 @@ namespace A4KPI.Services
                                            .Select(x => x.Point)
                                          .FirstOrDefaultAsync();
                     double A_total = Math.Round(await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0), 2);
-                    double L1 = Math.Round((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0, 2);
-                    double L2 = Math.Round((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0, 2);
-                    double Smart = Math.Round((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0, 2);
+                    double L1 = await MathL1(l1Q1ScoreKPI ?? 0, l1Q2ScoreKPI ?? 0);
+                    double L2 = await MathL2(l2Q1ScoreKPI ?? 0, l2Q2ScoreKPI ?? 0);
+                    double Smart = await MathSmart(GHRQ1ScoreKPI ?? 0, GHRQ2ScoreKPI ?? 0) ;
                     double B_selfScore = Math.Round(await BSelfScore(l0ScoreKPI ?? 0), 2);
-                    double B_L1 = Math.Round(await BL1((l1Q1ScoreKPI + l1Q2ScoreKPI) / 2 ?? 0), 2);
-                    double B_L2 = Math.Round(await BL2((l2Q1ScoreKPI + l2Q2ScoreKPI) / 2 ?? 0), 2);
-                    double B_Smart = Math.Round(await BSmart((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2 ?? 0), 2);
+                    double B_L1 = Math.Round(await BL1(L1), 2);
+                    double B_L2 = Math.Round(await BL2(L2), 2);
+                    double B_Smart = Math.Round(await BSmart(Smart), 2);
                     dataH1 = new H1H2ReportDto(item, periods_quarterly.Value, currentYear)
                     {
                         FullName = ocuser.FullName,
                         OC = ocuser.OC,
                         L1Score = l1ScoreKPI ?? 0,
+                        L0SelfScoreComment = l0SelfScoreComment,
                         L1Comment = l1Comment ?? "",
                         L1Q1Comment = l1Q1Comment ?? "",
                         L1Q2Comment = l1Q2Comment ?? "",
@@ -984,6 +1026,7 @@ namespace A4KPI.Services
                         FLScore = FLScore ?? 0,
                         selfScore = l0ScoreKPI ?? 0,
                         SpecialScore = Score_special ?? 0,
+                        SpecialComment = Score_special_comment,
                         L1 = L1,
                         L2 = L2,
                         Smart = Smart,
@@ -992,7 +1035,7 @@ namespace A4KPI.Services
                         B_L2 = B_L2,
                         B_Smart = B_Smart,
                         A_total = A_total,
-                        B_total = B_selfScore + B_L1 + B_L2 + B_Smart,
+                        B_total = Math.Round(B_selfScore + B_L1 + B_L2 + B_Smart , 2),
                         C_total = Score_special ?? 0,
                         D_total = Math.Round(A_total + (B_selfScore + B_L1 + B_L2 + B_Smart) + (Score_special ?? 0), 2)
                     };
@@ -1006,18 +1049,16 @@ namespace A4KPI.Services
                                                 && x.Period == item
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
                     //start
                     double? l0ScoreKPI = await _repoKPIScore.FindAll(x =>
-                                                 x.PeriodTypeId == SystemPeriodType.Quarterly
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q4
+                                                && x.Period == HalfYear.H2
                                                 && x.ScoreType == ScoreType.L0
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1027,7 +1068,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q3
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1037,7 +1077,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q4
                                                 && x.ScoreType == ScoreType.L1
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1047,7 +1086,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q3
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1057,7 +1095,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q4
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1067,7 +1104,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q3
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1078,7 +1114,6 @@ namespace A4KPI.Services
                                                 && x.Period == Quarter.Q4
                                                 && x.ScoreType == ScoreType.GHR
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
                                             .FirstOrDefaultAsync();
@@ -1086,12 +1121,20 @@ namespace A4KPI.Services
                     double? Score_special = await _repoSpecial.FindAll(x =>
                                                  x.PeriodTypeId == SystemPeriodType.HalfYear
                                                 && x.CreatedTime.Year == DateTime.Today.Year
-                                                && x.Period == Quarter.Q4
+                                                && x.Period == HalfYear.H2
                                                 && x.ScoreType == ScoreType.L2
                                                 && accountId == x.AccountId
-                                                && l1.Manager == x.ScoreBy
                                                 && x.AccountId != l1.Manager)
                                             .Select(x => x.Point)
+                                            .FirstOrDefaultAsync();
+                    var Score_special_comment = await _repoContribution.FindAll(x =>
+                                                 x.PeriodTypeId == SystemPeriodType.HalfYear
+                                                && x.CreatedTime.Year == DateTime.Today.Year
+                                                && x.Period == HalfYear.H2
+                                                && x.ScoreType == ScoreType.L2
+                                                && accountId == x.AccountId
+                                                && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
                                             .FirstOrDefaultAsync();
                     //end
                     var l1Comment = await _repoComment.FindAll(x =>
@@ -1104,13 +1147,21 @@ namespace A4KPI.Services
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
+                    var l0SelfScoreComment = await _repoComment.FindAll(x =>
+                                               x.PeriodTypeId == SystemPeriodType.HalfYear
+                                              && x.CreatedTime.Year == DateTime.Today.Year
+                                              && x.Period == item
+                                              && x.ScoreType == ScoreType.L0
+                                              && accountId == x.AccountId
+                                              && x.AccountId != l1.Manager)
+                                            .Select(x => x.Content)
+                                          .FirstOrDefaultAsync();
                     var l1H2Comment = await _repoComment.FindAll(x =>
                                                x.PeriodTypeId == SystemPeriodType.HalfYear
                                               && x.CreatedTime.Year == DateTime.Today.Year
                                               && x.Period == item
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -1129,7 +1180,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q3
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -1139,7 +1189,6 @@ namespace A4KPI.Services
                                               && x.Period == Quarter.Q4
                                               && x.ScoreType == ScoreType.L1
                                               && accountId == x.AccountId
-                                              && l1.Manager == x.CreatedBy
                                               && x.AccountId != l1.Manager)
                                             .Select(x => x.Content)
                                           .FirstOrDefaultAsync();
@@ -1202,19 +1251,21 @@ namespace A4KPI.Services
                                            .Select(x => x.Point)
                                          .FirstOrDefaultAsync();
                     double A_total = Math.Round(await ConvertAtotal(l1ScoreKPI ?? 0, l2ScoreKPI ?? 0, FLScore ?? 0), 2);
-                    double L1 = Math.Round((l1Q3ScoreKPI + l1Q4ScoreKPI) / 2 ?? 0, 2);
-                    double L2 = Math.Round((l2Q3ScoreKPI + l2Q4ScoreKPI) / 2 ?? 0, 2);
-                    double Smart = Math.Round((GHRQ3ScoreKPI + GHRQ4ScoreKPI) / 2 ?? 0, 2);
+                    double L1 = await MathL1(l1Q3ScoreKPI ?? 0, l1Q4ScoreKPI ?? 0);
+                    double L2 = await MathL2(l2Q3ScoreKPI ?? 0, l2Q4ScoreKPI ?? 0);
+                    double Smart = await MathSmart(GHRQ3ScoreKPI ?? 0, GHRQ4ScoreKPI ?? 0);
+                    
                     double B_selfScore = Math.Round(await BSelfScore(l0ScoreKPI ?? 0), 2);
-                    double B_L1 = Math.Round(await BL1((l1Q3ScoreKPI + l1Q4ScoreKPI) / 2 ?? 0), 2);
-                    double B_L2 = Math.Round(await BL2((l2Q3ScoreKPI + l2Q4ScoreKPI) / 2 ?? 0), 2);
-                    double B_Smart = Math.Round(await BSmart((GHRQ3ScoreKPI + GHRQ4ScoreKPI) / 2 ?? 0), 2);
+                    double B_L1 = Math.Round(await BL1(L1), 2);
+                    double B_L2 = Math.Round(await BL2(L2), 2);
+                    double B_Smart = Math.Round(await BSmart(Smart), 2);
                     dataH2 = new H1H2ReportDto(item, periods_quarterly.Value, currentYear)
                     {
                         FullName = ocuser.FullName,
                         OC = ocuser.OC,
                         L1Score = l1ScoreKPI ?? 0,
                         L1Comment = l1Comment ?? "",
+                        L0SelfScoreComment = l0SelfScoreComment,
                         L1Q1Comment = l1Q3Comment ?? "",
                         L1Q2Comment = l1Q4Comment ?? "",
                         L2Score = l2ScoreKPI ?? 0,
@@ -1228,6 +1279,7 @@ namespace A4KPI.Services
                         FLScore = FLScore ?? 0,
                         selfScore = l0ScoreKPI ?? 0,
                         SpecialScore = Score_special ?? 0,
+                        SpecialComment = Score_special_comment,
                         L1 = L1,
                         L2 = L2,
                         Smart = Smart,
@@ -1368,6 +1420,10 @@ namespace A4KPI.Services
             {
                 if (FLScore == 0)
                 {
+                    if (true)
+                    {
+
+                    }
                     result = (l1ScoreKPI + l2ScoreKPI) / 2;
                 } else
                 {
@@ -1382,6 +1438,77 @@ namespace A4KPI.Services
             }
 
         }
+
+        public async Task<double> MathL1(double l1Q1Score, double l1Q2Score)
+        {
+            double result = 0;
+            try
+            {
+                if (l1Q1Score == 0)
+                {
+                 
+                    result = l1Q2Score;
+                }
+                else
+                {
+                    result = Math.Round((l1Q1Score + l1Q2Score) / 2, 2); 
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return result;
+            }
+
+        }
+        public async Task<double> MathL2(double l2Q1Score, double l2Q2Score)
+        {
+            double result = 0;
+            try
+            {
+                if (l2Q1Score == 0)
+                {
+
+                    result = l2Q2Score;
+                }
+                else
+                {
+                    result = Math.Round((l2Q1Score + l2Q2Score) / 2, 2); 
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return result;
+            }
+
+        }
+        public async Task<double> MathSmart(double GHRQ1ScoreKPI, double GHRQ2ScoreKPI)
+        {
+            double result = 0;
+            try
+            {
+                if (GHRQ1ScoreKPI == 0)
+                {
+
+                    result = GHRQ2ScoreKPI;
+                }
+                else
+                {
+                    result = Math.Round((GHRQ1ScoreKPI + GHRQ2ScoreKPI) / 2, 2);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return result;
+            }
+
+        }
+
 
         public async Task<object> GetH1H2Data()
         {

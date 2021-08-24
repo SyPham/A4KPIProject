@@ -157,9 +157,9 @@
           <thead>
             <tr>
               <th scope="col" style="width:10%">L0 Self-Evaluation</th>
-              <th scope="col" style="width:40%">H1:</th>
+              <th scope="col" style="width:40%">H1: {{detailH1 !== undefined ? detailH1.l0SelfScoreComment : ""}}</th>
               <th scope="col" style="width:10%">L0 Self-Evaluation</th>
-              <th scope="col" style="width:40%">H2:</th>
+              <th scope="col" style="width:40%">H2: {{detailH2 !== undefined ? detailH2.l0SelfScoreComment : ""}}</th>
             </tr>
           </thead>
           <tbody>
@@ -316,6 +316,19 @@
                   <td>{{detailH2 !== undefined ? detailH2.specialScore : 0}}</td>
                 </tr>
               </th>
+
+            </tr>
+            <tr>
+              <th scope="col" style="width:10%">Special contribution or mistake comment</th>
+              <span style="vertical-align: top;">
+                {{detailH1 !== undefined ? detailH1.specialComment : ""}}
+              </span>
+
+              <th scope="col" style="width:10%">Special contribution or mistake comment</th>
+              <span style="vertical-align: top;">
+                {{detailH2 !== undefined ? detailH2.specialComment : ""}}
+              </span>
+
 
             </tr>
           </thead>

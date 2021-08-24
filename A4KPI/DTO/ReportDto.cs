@@ -77,6 +77,7 @@ namespace A4KPI.DTO
         public double D_total { get; set; }
         public double total { get; set; }
         public string L2Comment { get; set; }
+        public string L0SelfScoreComment { get; set; }
         public string L2HComment { get; set; }
         public string L2H2Comment { get; set; }
         public string L2Q1Comment { get; set; }
@@ -84,6 +85,7 @@ namespace A4KPI.DTO
         public double FLScore { get; set; }
         public double SmartScore { get; set; }
         public double SpecialScore { get; set; }
+        public string SpecialComment { get; set; }
         public int HalfYear { get; set; }
         public int Quater { get; set; }
         public int Year { get; set; }
