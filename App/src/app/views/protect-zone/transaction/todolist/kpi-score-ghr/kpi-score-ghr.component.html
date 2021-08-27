@@ -25,11 +25,11 @@
     </e-column>
     <e-column field='deadline' format='yyyy/MM/dd' type='Date' textAlign='Center' headerText='Deadline'>
     </e-column>
-    <e-column field='isReject' headerText='Reject' textAlign='Center'>
+    <!-- <e-column field='isReject' headerText='Reject' textAlign='Center'>
       <ng-template #template let-data>
         <input type="checkbox" name="isReject" id="isReject" (ngModelChange)='onchangeReject($event, data)' [(ngModel)]="data.isReject" />
        </ng-template>
-    </e-column>
+    </e-column> -->
   </e-columns>
 </ejs-grid>
 <div class="row mt-2 d-flex justify-content-center">
@@ -91,6 +91,6 @@
 
 <div class="modal-footer justify-content-end">
   <button type="button" class="btn btn-success" (click)="release()" >{{'Release' }}</button>
-  <button type="button" class="btn btn-warning" (click)="reject()" >{{'Reject' }}</button>
+  <!-- <button type="button" class="btn btn-warning" (click)="reject()" >{{'Reject' }}</button> -->
     <button type="button" class="btn btn-danger" (click)="activeModal.close('Close click')">{{'Close' }}</button>
 </div>

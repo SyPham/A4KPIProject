@@ -1420,11 +1420,8 @@ namespace A4KPI.Services
             {
                 if (FLScore == 0)
                 {
-                    if (true)
-                    {
-
-                    }
-                    result = (l1ScoreKPI + l2ScoreKPI) / 2;
+                   
+                    result = l1ScoreKPI + l2ScoreKPI;
                 } else
                 {
                     result = (l1ScoreKPI + l2ScoreKPI + FLScore) *20 / 30;

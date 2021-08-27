@@ -33,17 +33,22 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field='topic' headerText="{{'Period' | translate}}" width='200' textAlign='Center'>
+            <e-column field='topic' headerText="{{'Period' }}" width='200' textAlign='Center'>
             </e-column>
-            <e-column field='accounts' headerText="{{'PIC' | translate}}" width='200' textAlign='Center'>
+            <e-column field='accounts' headerText="{{'PIC' }}" width='200' textAlign='Center'>
               <ng-template #editTemplate let-data>
                   <ejs-dropdownlist #accountGroupDropdownlist [dataSource]='accountGroupData' [value]="data.accountGroupId"
                       [fields]='fields' [allowFiltering]='true' (change)='onChangeAccountGroup($event)'>
                   </ejs-dropdownlist>
               </ng-template>
               </e-column>
-              <e-column field='date'  type='date' format='MM-dd-yyyy' headerText="{{'Date' | translate}}" width='200' textAlign='Center'>
+              <e-column field='date'  type='date' format='MM-dd-yyyy' headerText="{{'Date' }}" width='200' textAlign='Center'>
               </e-column>
+                <e-column field='option'  width='80' headerText='Option' textAlign='Center'>
+      <ng-template #template let-data>
+       <button class="btn btn-danger btn-sm" (click)='delete(data.id)'><i class="fa fa-trash"></i></button>
+       </ng-template>
+    </e-column>
           </e-columns>
         </ejs-grid>
       </div>
@@ -57,10 +62,10 @@
     <h4 class="modal-title">
       <i class="fas fa-plus"></i>
       <span *ngIf="model?.id > 0">
-        {{ 'Update KPI Object' | translate}}
+        {{ 'Update KPI Object' }}
       </span>
       <span *ngIf="model?.id === 0">
-        {{ 'Add new KPI Object' | translate}}
+        {{ 'Add new KPI Object' }}
       </span>
     </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -89,9 +94,9 @@
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">{{'Close' | translate}}</button>
-    <button type="button" class="btn btn-success" *ngIf="model.id  === 0" (click)="create()">{{'Finish' | translate}}</button>
-    <button type="button" class="btn btn-success" *ngIf="model.id  > 0" (click)="update()">{{'Finish' | translate}}</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">{{'Close' }}</button>
+    <button type="button" class="btn btn-success" *ngIf="model.id  === 0" (click)="create()">{{'Finish' }}</button>
+    <button type="button" class="btn btn-success" *ngIf="model.id  > 0" (click)="update()">{{'Finish' }}</button>
   </div>
 
 </ng-template>
