@@ -56,7 +56,7 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
     date: new Date().toLocaleDateString(),
     accountIdList: this.accountIdList
   };
-  toolbarOptions = ['Add','Delete', 'Search'];
+  toolbarOptions = ['Add', 'Search'];
   constructor(
     private service: ObjectiveService,
     private periodService: PeriodService,
@@ -155,17 +155,24 @@ export class ObjectiveComponent extends BaseComponent implements OnInit {
     });
   }
   delete(id) {
-    this.service.delete(id).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.DELETED_OK_MSG);
-          this.loadData();
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+    this.alertify.confirm(
+      "Delete",
+      'Are you sure you want to delete the objective?',
+      () => {
+        this.service.delete(id).subscribe(
+          (res) => {
+            if (res.success === true) {
+              this.alertify.success(MessageConstants.DELETED_OK_MSG);
+              this.loadData();
+            } else {
+              this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+            }
+          },
+          (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+        );
+      }
     );
+
 
   }
   create() {

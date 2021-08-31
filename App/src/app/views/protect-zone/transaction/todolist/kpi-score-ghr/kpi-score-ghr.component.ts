@@ -254,13 +254,13 @@ export class KpiScoreGHRComponent implements OnInit {
       this.alertify.warning('Not yet complete. Can not release. 尚未完成，無法提交', true);
       return;
     }
-    if (
-      !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
-      this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
-    ) {
-      this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
-      return;
-    }
+    // if (
+    //   !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
+    //   this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
+    // ) {
+    //   this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
+    //   return;
+    // }
     const comment = this.addComment();
     const release = this.service.release(ids);
     forkJoin([comment, release]).subscribe(response => {
@@ -279,13 +279,13 @@ export class KpiScoreGHRComponent implements OnInit {
   }
   finish() {
 
-    if (
-      !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
-      this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
-    ) {
-      this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
-      return;
-    }
+    // if (
+    //   !this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content) ||
+    //   this.utilitiesService.isUndefinedOrNull(this.point) && this.utilitiesService.isUndefinedOrNullOrEmpty(this.content)
+    // ) {
+    //   this.alertify.warning('Please leave a comment. 尚未完成，無法提交', true);
+    //   return;
+    // }
 
     const comment = this.addComment();
     forkJoin([comment]).subscribe(response => {
