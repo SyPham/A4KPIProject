@@ -27,6 +27,10 @@ export class ReportService {
     return this.http.get<any>(`${this.baseUrl}Report/GetQ1Q3Data`, {});
   }
 
+  getGHRData(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/GetGHRData`, {});
+  }
+
   getQ1Q3DataByLeo(currentTime): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/getQ1Q3DataByLeo?currentTime=${currentTime}`, {});
   }
@@ -48,6 +52,24 @@ export class ReportService {
   getH1H2ReportInfo(accountId): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/getH1H2ReportInfo?accountId=${accountId}`, {});
   }
+  getGHRReportH1Info(accountId): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/GetGHRReportH1Info?accountId=${accountId}`, {});
+  }
+
+  getGHRReportH2Info(accountId): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}Report/GetGHRReportH2Info?accountId=${accountId}`, {});
+  }
+
+  ReportUpdateComment(model) {
+    return this.http.put(`${this.baseUrl}Report/ReportUpdateComment`, model);
+  }
+  ReportUpdateAtScore(model) {
+    return this.http.put(`${this.baseUrl}Report/ReportUpdateAtScore`, model);
+  }
+  ReportUpdateSpe(model) {
+    return this.http.put(`${this.baseUrl}Report/ReportUpdateSpeComment`, model);
+  }
+
   geHQHRData(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}Report/GetHQHRData`, {});
   }

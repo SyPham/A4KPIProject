@@ -39,6 +39,124 @@ namespace A4KPI.DTO
         public H1H2ReportDto H2 { get; set; }
         public double avg { get; set; }
     }
+    public class KPICommentDto
+    {
+        public KPICommentDto()
+        {
+        }
+
+
+        public string KPIComment { get; set; }
+        public string Q1 { get; set; }
+        public int Q1ID { get; set; }
+        public string Q2 { get; set; }
+        public int Q2ID { get; set; }
+    }
+
+    public class AttitudeCommentDto
+    {
+        public AttitudeCommentDto()
+        {
+        }
+
+
+        public string AttitudeComment { get; set; }
+        public string H1 { get; set; }
+        public int H1ID { get; set; }
+    }
+
+    public class AtScoreDto
+    {
+        public AtScoreDto()
+        {
+        }
+
+
+        public double L1 { get; set; }
+        public int L1ID { get; set; }
+        public double L2 { get; set; }
+        public int L2ID { get; set; }
+        public double FL { get; set; }
+        public int FLID { get; set; }
+    }
+
+    public class ScoreKPIDto
+    {
+        public ScoreKPIDto()
+        {
+        }
+
+
+        public double Self { get; set; }
+        public double L1 { get; set; }
+        public double L2 { get; set; }
+        public double GHRSmartScore { get; set; }
+    }
+    public class CommentUpdateDto
+    {
+        public CommentUpdateDto()
+        {
+        }
+
+
+        public int ID { get; set; }
+        public string Content { get; set; }
+    }
+
+    public class AtScoreUpdateDto
+    {
+        public AtScoreUpdateDto()
+        {
+        }
+
+
+        public int ID { get; set; }
+        public int Point { get; set; }
+    }
+
+    public class ScoreSpecialDto
+    {
+        public ScoreSpecialDto()
+        {
+        }
+
+
+        public double score { get; set; }
+        public int ID { get; set; }
+        public string comment { get; set; }
+    }
+
+    public class GHRDataDto
+    {
+        public GHRDataDto()
+        {
+        }
+
+        public int Id { get; set; }
+        public string OC { get; set; }
+        public string FullName { get; set; }
+        public double Score { get; set; }
+    }
+
+    public class DataGHRDto
+    {
+        public DataGHRDto()
+        {
+        }
+
+        public object dataObjectH1 { get; set; }
+        public object H1 { get; set; }
+        public object kpicommentH1 { get; set; }
+        public object attitudecomment { get; set; }
+        public object attitudeScore { get; set; }
+        public object kpiScore { get; set; }
+        public object SpecialScore { get; set; }
+        public object H2 { get; set; }
+        public double H1Score { get; set; }
+        public string dept { get; set; }
+        public string Name { get; set; }
+       
+    }
 
     public class H1H2ReportDto
     {

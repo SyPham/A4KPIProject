@@ -1,3 +1,4 @@
+import { ScrollToTopComponent } from './containers/scrollToTop/scrollToTop.component';
 import { FooterComponent } from './views/layout/footer/footer.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -23,7 +24,6 @@ import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
-
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
@@ -66,7 +66,7 @@ import { AuthGuard } from './_core/_guards/auth.guard';
 import { AlertifyService } from './_core/_service/alertify.service';
 import { Authv2Service } from './_core/_service/authv2.service';
 import { HttpLoaderFactory } from './views/protect-zone/system/system.module';
-
+import * as $ from "jquery";
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -128,6 +128,7 @@ export function tokenGetter() {
     P500Component,
     LoginComponent,
     LayoutComponent,
+    ScrollToTopComponent,
     RegisterComponent
   ],
   providers: [

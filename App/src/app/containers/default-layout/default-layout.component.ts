@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../_core/_service/auth.service';
 import { AlertifyService } from '../../_core/_service/alertify.service';
 import { Router } from '@angular/router';
@@ -53,7 +53,10 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   zh: any;
   menus: any;
   modalReference: any;
-
+  @HostListener('window:scroll', ['$event'])
+  onScroll(e) {
+    console.log('window', e);
+  }
   online: number;
   userID: number;
   userName: any;
@@ -86,6 +89,12 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
+  }
+  onActivate(event) {
+    window.scroll(0,0);
+    console.log(event);
+    //or document.body.scrollTop = 0;
+    //or document.querySelector('body').scrollTo(0,0)
   }
   ngOnInit(): void {
     if (signalr.CONNECTION_HUB.state === HubConnectionState.Connected) {

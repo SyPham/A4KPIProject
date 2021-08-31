@@ -101,11 +101,11 @@ namespace A4KPI.Services
             // vao ocUser tim theo ocId list 
             var accountIds = await _repoOCAccount.FindAll(x => ocs.Contains(x.OCId)).Select(x => x.AccountId).Distinct().ToListAsync();
             var pics = await _repoPIC.FindAll(x => accountIds.Contains(x.AccountId)).Select(x => x.AccountId).Distinct().ToListAsync();
-
             var model = await _repoOCAccount.FindAll(x => pics.Contains(x.AccountId))
                 .Select(x => new
                 {
                     Id = x.AccountId,
+                    OC = x.OC.Name,
                     FullName = x.Account.FullName,
                 }).ToListAsync();
 

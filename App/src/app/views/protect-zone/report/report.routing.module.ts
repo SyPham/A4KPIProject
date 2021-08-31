@@ -1,3 +1,4 @@
+import { GhrReportComponent } from './ghr-report/ghr-report.component';
 import { HqHrReportComponent } from './hq-hr-report/hq-hr-report.component';
 import { H1H2ReportComponent } from './h1-h2-report/h1-h2-report.component';
 import { Q1Q3ReportComponent } from './q1-q3-report/q1-q3-report.component';
@@ -41,6 +42,16 @@ const routes: Routes = [
           title: 'HQ HR Report 年中考核名單',
           breadcrumb: 'HQ HR Report 年中考核名單',
           functionCode: 'q1-q3-report'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'ghr-report',
+        component: GhrReportComponent,
+        data: {
+          title: 'GHR Report',
+          breadcrumb: 'GHR Report',
+          functionCode: 'ghr-report'
         },
         // canActivate: [AuthGuard]
       },

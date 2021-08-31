@@ -1,3 +1,4 @@
+import { GhrReportComponent } from './ghr-report/ghr-report.component';
 import { HqHrReportComponent } from './hq-hr-report/hq-hr-report.component';
 import { H1H2ReportComponent } from './h1-h2-report/h1-h2-report.component';
 import { Q1Q3ReportComponent } from './q1-q3-report/q1-q3-report.component';
@@ -48,12 +49,13 @@ if (lang === 'vi') {
 } else {
   defaultLang = 'en';
 }
-
+import { NgxScrollTopModule } from 'ngx-scrolltop';
 
 @NgModule({
   imports: [
     NgxPrettyCheckboxModule,
     CommonModule,
+    NgxScrollTopModule,
     FormsModule,
     ReactiveFormsModule,
     DropDownListModule,
@@ -81,7 +83,9 @@ if (lang === 'vi') {
   declarations: [
     Q1Q3ReportComponent,
     H1H2ReportComponent,
-    HqHrReportComponent
+    HqHrReportComponent,
+    GhrReportComponent
+
   ]
 })
 export class ReportModule { vi: any;

@@ -18,6 +18,7 @@ namespace A4KPI.Services
     {
       
         Task<object> GetHQHRData();
+        
 
         Task<object> GetAllKPIScoreL0ByPeriod(int period);
     }

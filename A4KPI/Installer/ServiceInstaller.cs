@@ -42,6 +42,7 @@ namespace A4KPI.Installer
             services.AddScoped<IPerformanceService, PerformanceService>();
             services.AddScoped<IQ1Q3Service, Q1Q3Service>();
             services.AddScoped<IH1H2Service, H1H2Service>();
+            services.AddScoped<IGHRService, GHRService>();
             services.AddScoped<IHQHRService, HQHRService>();
             services.AddScoped<IScoreService, ScoreService>();
         }
