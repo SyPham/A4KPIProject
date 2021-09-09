@@ -49,13 +49,11 @@ if (lang === 'vi') {
 } else {
   defaultLang = 'en';
 }
-import { NgxScrollTopModule } from 'ngx-scrolltop';
 
 @NgModule({
   imports: [
     NgxPrettyCheckboxModule,
     CommonModule,
-    NgxScrollTopModule,
     FormsModule,
     ReactiveFormsModule,
     DropDownListModule,

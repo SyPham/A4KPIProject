@@ -141,25 +141,33 @@
               </ng-template>
             </e-column>
             <e-column field='q1' headerText='Q1' type='string'>
+
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.q1 === ''; else elseTemplate">
-                  {{data.q1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-                </ng-template>
+                <span [ngClass]="data.q1 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.q1 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.q1" name="q1"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.q1"  name="q1">
+                  </ng-template>
+                </span>
               </ng-template>
+
 
             </e-column>
             <e-column field='q2' headerText='Q2' type='string'>
+
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.q2 === ''; else elseTemplate">
-                  {{data.q2}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.q2 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.q2 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.q2"  name="q2" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.q2" name="q2" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
           </e-columns>
         </ejs-grid>
@@ -186,15 +194,19 @@
               </ng-template>
             </e-column>
             <e-column field='h1' headerText='H1' type='string'>
+
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.h1 === ''; else elseTemplate">
-                  {{data.h1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.h1 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.h1 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.h1" name="h1" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.h1" name="h1">
+                  </ng-template>
+                </span>
               </ng-template>
+
+
             </e-column>
           </e-columns>
         </ejs-grid>
@@ -215,37 +227,45 @@
            >
           <e-columns>
             <e-column field='l1' textAlign='Center' headerText='L1' type='string'>
+
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.l1 === 0; else elseTemplate">
-                  {{data.l1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.l1 === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.l1 === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.l1" name="l1" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.l1" name="l1">
+                  </ng-template>
+                </span>
               </ng-template>
+
+
             </e-column>
             <e-column field='l2' textAlign='Center' headerText='L2' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.l2 === 0; else elseTemplate">
-                  {{data.l2}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.l2 === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.l2 === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.l2" name="l2" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.l2" name="l2" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
             <e-column field='fl' textAlign='Center' headerText='Functional leader' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.fl === 0; else elseTemplate">
-                  {{data.fl}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.fl === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.fl === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.fl" name="fl"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.fl" name="fl" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
 
           </e-columns>
@@ -295,14 +315,16 @@
             </e-column>
             <e-column field='comment' headerText='Special Contribution or Mistake (If any) 重大貢獻或錯誤(如有)' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.comment === ''; else elseTemplate">
-                  {{data.comment}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.comment === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.comment === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.comment" name="comment"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.comment" name="comment" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
 
           </e-columns>
@@ -317,45 +339,7 @@
         </div>
 
       </div>
-      <!-- <ngx-scrolltop> ↑ </ngx-scrolltop> -->
-      <!-- <div class="col-md-6">
 
-        <div class="d-flex justify-content-end">
-          <span>H2：Q3-Q4</span>
-        </div>
-        <ejs-grid #grid
-            id='grid'
-            [dataSource]="data"
-            [allowPaging]='true'
-            [allowResizing]='true'
-            [showColumnMenu]='true'
-            gridLines='Both'
-            [locale]='locale'
-            [toolbar]='toolbarOptions'
-            [pageSettings]='pageSettings'
-            [allowExcelExport]='true'
-            [editSettings]='editSettings'
-          >
-            <e-columns>
-              <e-column field="ID" textAlign='Center' width="80" isPrimaryKey="true" headerText="#">
-                <ng-template #template let-data>
-                  {{NO(data.index)}}
-                </ng-template>
-                <ng-template #editTemplate let-data>
-                  #
-                </ng-template>
-              </e-column>
-              <e-column field="oc" textAlign='Center' headerText="Dept."> </e-column>
-              <e-column field="fullName" textAlign='Center' headerText="Name"> </e-column>
-              <e-column field="" textAlign='Center' headerText="Score"> </e-column>
-              <e-column field="#" textAlign='Center' headerText="Option">
-                <ng-template #template let-data>
-                  <button class="btn btn-sm btn-success" (click)='openModal(data,detailModal)'>Detail</button>
-                </ng-template>
-              </e-column>
-            </e-columns>
-        </ejs-grid>
-      </div> -->
     </div>
 
   </div>
@@ -456,25 +440,29 @@
             </e-column>
             <e-column field='q1' headerText='Q3' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.q1 === ''; else elseTemplate">
-                  {{data.q1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.q1 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.q1 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.q1" name="q1" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.q1" name="q1">
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
             <e-column field='q2' headerText='Q4' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.q2 === ''; else elseTemplate">
-                  {{data.q2}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.q2 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.q2 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.q2" name="q2"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.q2" name="q2" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
           </e-columns>
         </ejs-grid>
@@ -502,14 +490,16 @@
             </e-column>
             <e-column field='h1' headerText='H2' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.h1 === ''; else elseTemplate">
-                  {{data.h1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.h1 === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.h1 === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.h1" name="h1"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.h1" name="h1" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
           </e-columns>
         </ejs-grid>
@@ -531,36 +521,42 @@
            <e-columns>
             <e-column field='l1' textAlign='Center' headerText='L1' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.l1 === 0; else elseTemplate">
-                  {{data.l1}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.l1 === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.l1 === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.l1" name="l1"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.l1" name="l1" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
             <e-column field='l2' textAlign='Center' headerText='L2' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.l2 === 0; else elseTemplate">
-                  {{data.l2}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.l2 === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.l2 === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.l2" name="l2"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.l2" name="l2" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
             <e-column field='fl' textAlign='Center' headerText='Functional leader' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.fl === 0; else elseTemplate">
-                  {{data.fl}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.fl === 0 ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.fl === 0; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.fl"  name="fl" style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.fl" name="fl" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
 
           </e-columns>
@@ -610,14 +606,16 @@
             </e-column>
             <e-column field='comment' headerText='Special Contribution or Mistake (If any) 重大貢獻或錯誤(如有)' type='string'>
               <ng-template #editTemplate let-data>
-                <ng-container *ngIf="data.comment === ''; else elseTemplate">
-                  {{data.comment}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-
+                <span [ngClass]="data.comment === '' ? 'e-input-group e-control-wrapper e-valid-input e-disabled' : 'e-input-group e-control-wrapper e-valid-input' "  >
+                  <ng-container *ngIf="data.comment === ''; else elseTemplate">
+                    <input class="e-field e-input e-defaultcell" disabled="disabled" type="text" [value]="data.comment" name="comment"  style="text-align:Center">
+                  </ng-container>
+                  <ng-template #elseTemplate>
+                    <input class="e-field e-input e-defaultcell" type="text" [value]="data.comment" name="comment" >
+                  </ng-template>
+                </span>
               </ng-template>
+
             </e-column>
 
           </e-columns>
@@ -633,44 +631,7 @@
 
       </div>
 
-      <!-- <div class="col-md-6">
 
-        <div class="d-flex justify-content-end">
-          <span>H2：Q3-Q4</span>
-        </div>
-        <ejs-grid #grid
-            id='grid'
-            [dataSource]="data"
-            [allowPaging]='true'
-            [allowResizing]='true'
-            [showColumnMenu]='true'
-            gridLines='Both'
-            [locale]='locale'
-            [toolbar]='toolbarOptions'
-            [pageSettings]='pageSettings'
-            [allowExcelExport]='true'
-            [editSettings]='editSettings'
-          >
-            <e-columns>
-              <e-column field="ID" textAlign='Center' width="80" isPrimaryKey="true" headerText="#">
-                <ng-template #template let-data>
-                  {{NO(data.index)}}
-                </ng-template>
-                <ng-template #editTemplate let-data>
-                  #
-                </ng-template>
-              </e-column>
-              <e-column field="oc" textAlign='Center' headerText="Dept."> </e-column>
-              <e-column field="fullName" textAlign='Center' headerText="Name"> </e-column>
-              <e-column field="" textAlign='Center' headerText="Score"> </e-column>
-              <e-column field="#" textAlign='Center' headerText="Option">
-                <ng-template #template let-data>
-                  <button class="btn btn-sm btn-success" (click)='openModal(data,detailModal)'>Detail</button>
-                </ng-template>
-              </e-column>
-            </e-columns>
-        </ejs-grid>
-      </div> -->
     </div>
 
   </div>
