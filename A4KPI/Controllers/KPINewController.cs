@@ -51,7 +51,7 @@ namespace A4KPI.Controllers
             return StatusCodeResult(await _service.UpdateAsync(model));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             return StatusCodeResult(await _service.DeleteAsync(id));

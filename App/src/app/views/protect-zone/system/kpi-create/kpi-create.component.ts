@@ -158,6 +158,7 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
       if(res) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
         this.getKPIByOc(this.OCId)
+        this.refreshData()
       }else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
@@ -195,12 +196,17 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
         break;
     }
   }
-
+  refreshData() {
+    this.policyId = 0
+    this.picId = 0
+    this.typeId = 0
+  }
   create(model) {
     this.kpiNewService.add(model).subscribe(res => {
       if(res) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
         this.getKPIByOc(this.OCId)
+        this.refreshData()
       }else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }

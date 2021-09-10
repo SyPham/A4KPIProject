@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A4KPI.Models.Interface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace A4KPI.Models
 {
-   
+
 
     [Table("KPINew")]
-    public class KPINew
+    public class KPINew : IDateTracking
     {
         [Key]
         public int Id { get; set; }
@@ -20,6 +21,8 @@ namespace A4KPI.Models
         public int TypeId { get; set; }
         public int Pic { get; set; }
         public int UpdateBy { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
         public DateTime UpdateDate { get; set; }
 
     }
