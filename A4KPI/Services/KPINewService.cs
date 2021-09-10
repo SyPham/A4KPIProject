@@ -88,6 +88,7 @@ namespace A4KPI.Services
                 var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
                 model.UpdateBy = accountId;
                 var item = _mapper.Map<KPINew>(model);
+                item.UpdateDate = DateTime.Now;
                 _repo.Add(item);
                 await _unitOfWork.SaveChangeAsync();
 
