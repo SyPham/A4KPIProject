@@ -45,6 +45,9 @@ namespace A4KPI.Installer
             services.AddScoped<IGHRService, GHRService>();
             services.AddScoped<IHQHRService, HQHRService>();
             services.AddScoped<IScoreService, ScoreService>();
+            services.AddScoped<IOCPolicyService, OCPolicyService>();
+            services.AddScoped<IOCNewService, OCNewService>();
+            services.AddScoped<IKPINewService, KPINewService>();
         }
     }
 }

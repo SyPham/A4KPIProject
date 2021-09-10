@@ -1,3 +1,5 @@
+import { KpiCreateComponent } from './kpi-create/kpi-create.component';
+import { PolicyComponent } from './policy/policy.component';
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -19,7 +21,6 @@ import { AccountComponent } from './account/account.component'
 import { AccountGroupComponent } from './account-group/account-group.component'
 import { SystemRoutingModule } from './system.routing.module'
 import { ProgressComponent } from './progress/progress.component'
-
 // import { PeriodComponent } from './period/period.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -54,7 +55,9 @@ if (lang === 'vi') {
     OcComponent,
     OcUserComponent,
     PeriodTypeComponent,
-    AccountGroupPeriodComponent
+    AccountGroupPeriodComponent,
+    PolicyComponent,
+    KpiCreateComponent
   ],
   imports: [
     CommonModule,

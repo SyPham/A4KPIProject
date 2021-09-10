@@ -12,20 +12,33 @@ namespace A4KPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class OCController : ApiControllerBase
+    public class OCPolicyController : ApiControllerBase
     {
-        private readonly IOCService _service;
+        private readonly IOCPolicyService _service;
 
-        public OCController(IOCService service)
+        public OCPolicyController(IOCPolicyService service)
         {
             _service = service;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<bool> DeletePolicy(int id)
+        {
+            var data = await _service.DeletePolicy(id);
+            return data;
+        }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()
         {
             return Ok(await _service.GetAllAsync());
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllPolicy()
+        {
+            return Ok(await _service.GetAllPolicy());
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllLevel3()
         {
@@ -38,11 +51,6 @@ namespace A4KPI.Controllers
             var ocs = await _service.GetAllAsTreeView();
             return Ok(ocs);
         }
-        [HttpPost]
-        public async Task<ActionResult> AddAsync([FromBody] OCDto model)
-        {
-            return StatusCodeResult(await _service.AddAsync(model));
-        }
 
        
         [HttpGet("{ocID}")]
@@ -51,12 +59,21 @@ namespace A4KPI.Controllers
             var result = await _service.GetUserByOcID(ocID);
             return Ok(result);
         }
+
         [HttpPost]
-        public async Task<IActionResult> MappingUserOC([FromBody]OCAccountDto OcUserDto)
+        public async Task<IActionResult> MappingPolicyOC([FromBody]OCPolicyDto Dto)
         {
-            var result = await _service.MappingUserOC(OcUserDto);
+            var result = await _service.MappingPolicyOC(Dto);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemovePolicyOC([FromBody] OCPolicyDto Dto)
+        {
+            var result = await _service.RemovePolicyOC(Dto);
+            return Ok(result);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> MappingRangeUserOC(OCAccountDto OcUserDto)
@@ -72,11 +89,7 @@ namespace A4KPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> UpdateAsync([FromBody] OCDto model)
-        {
-            return StatusCodeResult(await _service.UpdateAsync(model));
-        }
+        
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)

@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210909121420_UpdateTableV1")]
+    partial class UpdateTableV1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,7 +353,7 @@ namespace A4KPI.Migrations
                     b.Property<int>("Pic")
                         .HasColumnType("int");
 
-                    b.Property<int>("PolicyId")
+                    b.Property<int>("PolicyID")
                         .HasColumnType("int");
 
                     b.Property<int>("TypeId")
@@ -505,27 +507,6 @@ namespace A4KPI.Migrations
                     b.HasIndex("OCId");
 
                     b.ToTable("OCAccounts");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.OCNew", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OCNew");
                 });
 
             modelBuilder.Entity("A4KPI.Models.OCPolicy", b =>
@@ -974,21 +955,6 @@ namespace A4KPI.Migrations
                     b.HasIndex("ObjectiveId");
 
                     b.ToTable("ToDoList");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.Types", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("A4KPI.Models.Account", b =>

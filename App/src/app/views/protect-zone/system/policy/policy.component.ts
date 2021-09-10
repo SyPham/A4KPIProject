@@ -1,3 +1,4 @@
+import { OcPolicyService } from './../../../../_core/_service/OcPolicy.service';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
@@ -9,14 +10,16 @@ import { Account } from 'src/app/_core/_model/account';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
+import { OcService } from 'src/app/_core/_service/oc.service';
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
+  selector: 'app-policy',
+  templateUrl: './policy.component.html',
+  styleUrls: ['./policy.component.scss'],
   providers: [ToolbarService, EditService, PageService]
 })
-export class AccountComponent extends BaseComponent implements OnInit {
+export class PolicyComponent extends BaseComponent implements OnInit {
+
   data: Account[] = [];
   password = '';
   modalReference: NgbModalRef;
@@ -38,19 +41,36 @@ export class AccountComponent extends BaseComponent implements OnInit {
   leaderId: number;
   managerId: number;
   accounts: any[];
+  oclv3Data: any [];
+  policyData: Object;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
+    private ocService: OcService,
+    private ocPolicyService: OcPolicyService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
   ) { super(); }
 
   ngOnInit() {
     // this.Permission(this.route);
-    this.loadData();
-    this.getAccounts();
-    this.loadAccountGroupData();
+    // this.loadData();
+    // this.getAccounts();
+    // this.loadAccountGroupData();
+    this.getAllOcLv3();
+    this.getAllPolicy();
+
+  }
+  getAllPolicy(){
+    this.ocPolicyService.getAllPolicy().subscribe(res => {
+      this.policyData = res ;
+    })
+  }
+  getAllOcLv3() {
+    this.ocService.getAllLv3().subscribe((res: any) => {
+      this.oclv3Data = res
+    })
   }
   // life cycle ejs-grid
   createdManager($event, data) {
@@ -66,34 +86,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   initialModel() {
     this.accountGroupItem = [];
-    this.leaderId = 0;
-    this.managerId = 0;
-    this.accountCreate = {
-      id: 0,
-      username: null,
-      password: null,
-      fullName: null,
-      email: null,
-      accountTypeId: 2,
-      isLock: false,
-      createdBy: 0,
-      createdTime: new Date().toLocaleDateString(),
-      modifiedBy: 0,
-      modifiedTime: null,
-      accountGroupIds: null,
-      accountGroupText: null,
-      accountType: null,
-      leader: this.leaderId,
-      manager: this.managerId,
-      leaderName: null,
-      managerName: null,
-    };
-
   }
   updateModel(data) {
-    this.accountGroupItem = data.accountGroupIds;
-    this.managerId = data.manager;
-    this.leaderId = data.leader;
+    this.accountGroupItem = data.factory;
   }
   actionBegin(args) {
     if (args.requestType === 'add') {
@@ -104,67 +99,43 @@ export class AccountComponent extends BaseComponent implements OnInit {
       this.updateModel(item);
     }
     if (args.requestType === 'save' && args.action === 'add') {
-      this.accountCreate = {
-        id: 0,
-        username: args.data.username ,
-        password: args.data.password,
-        fullName: args.data.fullName,
-        email: args.data.email,
-        accountTypeId: 2,
-        isLock: false,
-        createdBy: 0,
-        createdTime: new Date().toLocaleDateString(),
-        modifiedBy: 0,
-        modifiedTime: null,
-        accountType: null,
-        accountGroupIds: this.accountGroupItem,
-        accountGroupText: null,
-        leader: this.leaderId,
-        manager: this.managerId,
-        leaderName: null,
-        managerName: null,
-      };
 
-      if (args.data.username === undefined) {
-        this.alertify.error('Please key in a account! <br> Vui lòng nhập tài khoản đăng nhập!');
+      const model = {
+        Name: args.data.name,
+        OcIdList: this.accountGroupItem
+      }
+      if (args.data.name === undefined) {
+        this.alertify.error('Please key in policy name! <br> Vui lòng nhập Policy!');
         args.cancel = true;
         return;
       }
-      if (args.data.password === undefined) {
-        this.alertify.error('Please key in a password! <br> Vui lòng nhập mật khẩu!');
-        args.cancel = true;
-        return;
-      }
-      this.create();
+
+      this.create(model);
+
     }
     if (args.requestType === 'save' && args.action === 'edit') {
-      this.accountUpdate = {
-        id: args.data.id,
-        username: args.data.username ,
-        password: args.data.password,
-        fullName: args.data.fullName,
-        email: args.data.email,
-        isLock: args.data.isLock,
-        accountTypeId: args.data.accountTypeId,
-        createdBy: args.data.createdBy,
-        createdTime: args.data.createdTime,
-        modifiedBy:args.data.modifiedBy,
-        modifiedTime: args.data.modifiedTime,
-        accountType: null,
-        accountGroupIds: this.accountGroupItem,
-        accountGroupText: null,
-        leader: this.leaderId,
-        manager: this.managerId,
-        leaderName: null,
-        managerName: null,
-      };
-      this.update();
+      const model = {
+        ID: args.data.id,
+        Name: args.data.name,
+        OcIdList: this.accountGroupItem
+      }
+      this.update(model);
     }
     if (args.requestType === 'delete') {
       this.delete(args.data[0].id);
     }
   }
-
+ deleteOption(id) {
+  this.ocPolicyService.deletePolicy(id).subscribe(res => {
+    if(res) {
+      this.alertify.success(MessageConstants.CREATED_OK_MSG);
+      this.getAllPolicy()
+      this.accountGroupItem = []
+    } else {
+      this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+    }
+  })
+ }
   toolbarClick(args) {
     switch (args.item.id) {
       case 'grid_excelexport':
@@ -176,7 +147,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   actionComplete(args) {
     if (args.requestType === 'add') {
-      args.form.elements.namedItem('username').focus(); // Set focus to the Target element
+      args.form.elements.namedItem('name').focus(); // Set focus to the Target element
     }
   }
 
@@ -202,14 +173,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
   loadData() {
     this.service.getAll().subscribe(data => {
       this.data = data;
-      console.log(data);
     });
   }
   getAccounts() {
     this.service.getAccounts().subscribe(data => {
       this.accounts = data;
       this.leaders = data.filter(x=> x.isLeader);
-      console.log(this.leaders);
       this.managers = data;
     });
   }
@@ -219,56 +188,42 @@ export class AccountComponent extends BaseComponent implements OnInit {
     });
   }
   delete(id) {
-    this.service.delete(id).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.DELETED_OK_MSG);
-          this.loadData();
-        } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
-    );
-
-  }
-  create() {
-    this.service.add(this.accountCreate).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.CREATED_OK_MSG);
-          this.loadData();
-          this.getAccounts();
-
-          this.accountCreate = {} as Account;
-        } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-
-      },
-      (error) => {
+    this.ocPolicyService.deletePolicy(id).subscribe(res => {
+      if(res) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.getAllPolicy()
+        this.accountGroupItem = []
+      } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
-    );
+    })
   }
-  update() {
-    this.service.update(this.accountUpdate).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.UPDATED_OK_MSG);
-          this.loadData();
-        } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (error) => {
+  create(model) {
+    this.ocPolicyService.addPolicy(model).subscribe(res => {
+      if(res) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.getAllPolicy()
+        this.accountGroupItem = []
+      } else {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
-    );
+    })
+  }
+  update(model) {
+    this.ocPolicyService.updatePolicy(model).subscribe(res => {
+      if(res) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.getAllPolicy()
+        this.accountGroupItem = []
+      } else {
+        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+      }
+    })
   }
   // end api
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }
+
 
 }

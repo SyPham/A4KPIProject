@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace A4KPI.Services
 {
-    public interface IOCService: IServiceBase<OC, OCDto>
+    public interface IOCNewService: IServiceBase<OCNew, OCNewDto>
     {
         // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
         // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
-        Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
+        Task<IEnumerable<HierarchyNode<OCNewDto>>> GetAllAsTreeView();
         Task<List<OCAccountDto>> GetUserByOcID(int ocID);
         Task<object> MappingUserOC(OCAccountDto OCAccountDto);
         Task<object> MappingRangeUserOC(OCAccountDto model);
@@ -28,18 +28,18 @@ namespace A4KPI.Services
         Task<object> RemoveUserOC(OCAccountDto OCAccountDto);
       
     }
-    public class OCService : ServiceBase<OC, OCDto>, IOCService
+    public class OCNewService : ServiceBase<OCNew, OCNewDto>, IOCNewService
     {
         private OperationResult operationResult;
 
-        private readonly IRepositoryBase<OC> _repo;
+        private readonly IRepositoryBase<OCNew> _repo;
         private readonly IRepositoryBase<OCAccount> _repoOCAccount;
         private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public OCService(
-            IRepositoryBase<OC> repo, 
+        public OCNewService(
+            IRepositoryBase<OCNew> repo, 
             IRepositoryBase<OCAccount> repoOCAccount,
             IRepositoryBase<Account> repoAccount,
             IUnitOfWork unitOfWork,
@@ -61,9 +61,9 @@ namespace A4KPI.Services
             var lists = (await _repo.FindAll(x => x.Level == 3).ToListAsync());
             return lists;
         }
-        public async Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView()
+        public async Task<IEnumerable<HierarchyNode<OCNewDto>>> GetAllAsTreeView()
         {
-            var lists = (await _repo.FindAll().ProjectTo<OCDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).AsHierarchy(x => x.Id, y => y.ParentId);
+            var lists = (await _repo.FindAll().ProjectTo<OCNewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).AsHierarchy(x => x.Id, y => y.ParentId);
             return lists;
         }
 

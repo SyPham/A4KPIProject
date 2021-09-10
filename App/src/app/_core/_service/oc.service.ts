@@ -34,6 +34,9 @@ export class OcService {
   GetUserByOcID(ocID) {
     return this.http.get(`${this.baseUrl}Oc/GetUserByOcID/${ocID}`, {});
   }
+  getAllLv3() {
+    return this.http.get(`${this.baseUrl}Oc/GetAllLevel3`, {});
+  }
   addOC(oc) {
     return this.http.post(`${this.baseUrl}Oc/Add`, oc);
   }
