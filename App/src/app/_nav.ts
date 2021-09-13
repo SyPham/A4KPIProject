@@ -43,6 +43,16 @@ export const navItems: INavData[] = [
         url: '/system/oc-user',
         icon: 'icon-puzzle'
       },
+      {
+        name: '0.6 Policy',
+        url: '/system/policy',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '0.6 KPI Create',
+        url: '/system/kpi-create',
+        icon: 'icon-puzzle'
+      },
     ]
   },
   {
@@ -79,11 +89,7 @@ export const navItems: INavData[] = [
     url: '/kanban',
     icon: 'icon-star',
     children: [
-      // {
-      //   name: 'KPI Objective',
-      //   url: '/kanban/objective',
-      //   icon: 'icon-cursor'
-      // },
+
     ]
   },
    {

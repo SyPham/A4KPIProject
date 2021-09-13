@@ -13,6 +13,11 @@ namespace A4KPI.Data
     public class DataContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Policy> Policies { get; set; }
+        public DbSet<OCPolicy> OCPolicies { get; set; }
+        public DbSet<KPINew> KPINews { get; set; }
+        public DbSet<Types> Types { get; set; }
+        public DbSet<OCNew> OCNews { get; set; }
         public DbSet<AccountType> AccountTypes { get; set; }
         public DbSet<Mailing> Mailings { get; set; }
         public DbSet<Progress> Progresses { get; set; }

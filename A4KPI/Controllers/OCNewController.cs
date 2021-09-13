@@ -12,11 +12,11 @@ namespace A4KPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class OCController : ApiControllerBase
+    public class OCNewController : ApiControllerBase
     {
-        private readonly IOCService _service;
+        private readonly IOCNewService _service;
 
-        public OCController(IOCService service)
+        public OCNewController(IOCNewService service)
         {
             _service = service;
         }
@@ -39,7 +39,7 @@ namespace A4KPI.Controllers
             return Ok(ocs);
         }
         [HttpPost]
-        public async Task<ActionResult> AddAsync([FromBody] OCDto model)
+        public async Task<ActionResult> AddAsync([FromBody] OCNewDto model)
         {
             return StatusCodeResult(await _service.AddAsync(model));
         }
@@ -73,7 +73,7 @@ namespace A4KPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateAsync([FromBody] OCDto model)
+        public async Task<ActionResult> UpdateAsync([FromBody] OCNewDto model)
         {
             return StatusCodeResult(await _service.UpdateAsync(model));
         }

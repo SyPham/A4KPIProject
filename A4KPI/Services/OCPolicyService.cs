@@ -16,31 +16,38 @@ using System.Threading.Tasks;
 
 namespace A4KPI.Services
 {
-    public interface IOCService: IServiceBase<OC, OCDto>
+    public interface IOCPolicyService : IServiceBase<OCPolicy, OCPolicyDto>
     {
         // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
         // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
         Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
         Task<List<OCAccountDto>> GetUserByOcID(int ocID);
-        Task<object> MappingUserOC(OCAccountDto OCAccountDto);
+        Task<object> MappingPolicyOC(OCPolicyDto Dto);
+        Task<object> RemovePolicyOC(OCPolicyDto Dto);
         Task<object> MappingRangeUserOC(OCAccountDto model);
         Task<object> GetAllLevel3();
+        Task<object> GetAllPolicy();
+        Task<bool> DeletePolicy(int id);
         Task<object> RemoveUserOC(OCAccountDto OCAccountDto);
       
     }
-    public class OCService : ServiceBase<OC, OCDto>, IOCService
+    public class OCPolicyService : ServiceBase<OCPolicy, OCPolicyDto>, IOCPolicyService
     {
         private OperationResult operationResult;
 
-        private readonly IRepositoryBase<OC> _repo;
+        private readonly IRepositoryBase<OCPolicy> _repo;
+        private readonly IRepositoryBase<OC> _repoOc;
+        private readonly IRepositoryBase<Policy> _repoPolicy;
         private readonly IRepositoryBase<OCAccount> _repoOCAccount;
         private readonly IRepositoryBase<Account> _repoAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly MapperConfiguration _configMapper;
-        public OCService(
-            IRepositoryBase<OC> repo, 
+        public OCPolicyService(
+            IRepositoryBase<OCPolicy> repo, 
+            IRepositoryBase<OC> repoOc,
             IRepositoryBase<OCAccount> repoOCAccount,
+            IRepositoryBase<Policy> repoPolicy,
             IRepositoryBase<Account> repoAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper, 
@@ -49,16 +56,70 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper,  configMapper)
         {
             _repo = repo;
+            _repoOc = repoOc;
             _repoOCAccount = repoOCAccount;
             _repoAccount = repoAccount;
+            _repoPolicy = repoPolicy;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _configMapper = configMapper;
         }
 
+        public async Task<object> RemovePolicyOC(OCPolicyDto Dto)
+        {
+            var item_policy = _repoPolicy.FindById(Dto.ID);
+            item_policy.Name = Dto.Name;
+            await _unitOfWork.SaveChangeAsync();
+
+            var item = _repo.FindAll(x => x.PolicyId == Dto.ID).ToList();
+            if (item != null)
+            {
+                _repo.RemoveMultiple(item);
+                await _unitOfWork.SaveChangeAsync();
+                foreach (var items in Dto.OcIdList)
+                {
+                    _repo.Add(new OCPolicy
+                    {
+                        OcId = items,
+                        PolicyId = Dto.ID,
+                        OcName = _repoOc.FindAll().FirstOrDefault(x => x.Id == items).Name
+                    });
+                }
+                try
+                {
+                    await _unitOfWork.SaveChangeAsync();
+                    return new
+                    {
+                        status = true,
+                        message = "Successfully!"
+                    };
+                }
+                catch (Exception)
+                {
+
+                    return new
+                    {
+                        status = false,
+                        message = "Failed on save!"
+                    };
+                }
+            }
+            throw new NotImplementedException();
+        }
+        public async Task<object> GetAllPolicy()
+        {
+            var data = await _repoPolicy.FindAll().Select(x => new OCPolicyDto
+            {
+                ID = x.Id,
+                Name = x.Name,
+                Factory = _repo.FindAll().Where(y => y.PolicyId == x.Id).Select(y => y.OcId).ToList(),
+                FactoryName = String.Join(",", _repo.FindAll().Where(y => y.PolicyId == x.Id).Select(y => y.OcName))
+            }).ToListAsync();
+            return data;
+        }
         public async Task<object> GetAllLevel3()
         {
-            var lists = (await _repo.FindAll(x => x.Level == 3).ToListAsync());
+            var lists = (await _repo.FindAll(x => x.OcId == 3).ToListAsync());
             return lists;
         }
         public async Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView()
@@ -68,22 +129,37 @@ namespace A4KPI.Services
         }
 
 
-        public async Task<object> MappingUserOC(OCAccountDto OCAccountDto)
+        public async Task<object> MappingPolicyOC(OCPolicyDto Dto)
         {
-            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
+            var item = await _repoPolicy.FindAll().FirstOrDefaultAsync(x => x.Name.ToUpper().Equals(Dto.Name.ToUpper()));
             if (item == null)
             {
-                _repoOCAccount.Add(new OCAccount {
-                    AccountId = OCAccountDto.AccountId,
-                    OCId = OCAccountDto.OCId
-                });
+                var dataAdd = new Policy
+                {
+                    Name = Dto.Name
+                };
+                _repoPolicy.Add(dataAdd);
+                await _unitOfWork.SaveChangeAsync();
+                foreach (var items in Dto.OcIdList)
+                {
+                    var itemOc = await _repo.FindAll().FirstOrDefaultAsync(x => x.OcId == items && x.PolicyId == dataAdd.Id);
+                    if (itemOc == null)
+                    {
+                        _repo.Add(new OCPolicy
+                        {
+                            OcId = items,
+                            PolicyId = dataAdd.Id,
+                            OcName = _repoOc.FindAll().FirstOrDefault(x => x.Id == items).Name
+                        });
+                    }
+                }
                 try
                 {
                    await _unitOfWork.SaveChangeAsync();
                     return new
                     {
                         status = true,
-                        message = "Mapping Successfully!"
+                        message = "Successfully!"
                     };
                 }
                 catch (Exception)
@@ -100,7 +176,7 @@ namespace A4KPI.Services
                 return new
                 {
                     status = false,
-                    message = "The User belonged with other building!"
+                    message = "The Policy Already Exist!"
                 };
             }
         }
@@ -182,6 +258,31 @@ namespace A4KPI.Services
         public async Task<List<OCAccountDto>> GetUserByOcID(int ocID)
         {
             return await _repoOCAccount.FindAll().Where(x=>x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
+        }
+
+        public async Task<bool> DeletePolicy(int id)
+        {
+            var data_policy = _repoPolicy.FindById(id);
+            if (data_policy != null)
+            {
+                _repoPolicy.Remove(data_policy);
+            }
+            var data_oc_policy = _repo.FindAll(x => x.PolicyId == id).ToList();
+            if (data_oc_policy != null)
+            {
+                _repo.RemoveMultiple(data_oc_policy);
+            }
+            try
+            {
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,3 +1,5 @@
+import { KpiCreateComponent } from './kpi-create/kpi-create.component';
+import { PolicyComponent } from './policy/policy.component';
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { AuthGuard } from 'src/app/_core/_guards/auth.guard'
@@ -88,7 +90,28 @@ const routes: Routes = [
           functionCode: 'oc-user'
         },
         // canActivate: [AuthGuard]
+      },
+      {
+        path: 'policy',
+        component: PolicyComponent,
+        data: {
+          title: 'Policy',
+          breadcrumb: 'Policy',
+          functionCode: 'policy'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'kpi-create',
+        component: KpiCreateComponent,
+        data: {
+          title: 'KPI Create',
+          breadcrumb: 'KPI Create',
+          functionCode: 'kpi-create'
+        },
+        // canActivate: [AuthGuard]
       }
+
     ]
   },
 ];

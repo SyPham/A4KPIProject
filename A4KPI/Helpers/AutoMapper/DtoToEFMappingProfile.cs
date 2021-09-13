@@ -52,6 +52,8 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<SpecialScoreDto, SpecialScore>();
             CreateMap<SmartScoreDto, SmartScore>();
             CreateMap<PerformanceDto, Performance>();
+            CreateMap<PolicyDto, Policy>();
+            CreateMap<KPINewDto, KPINew>();
         }
     }
 }
