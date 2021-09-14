@@ -21,6 +21,9 @@ export class BasicAuthInterceptor implements HttpInterceptor {
             //          The system does not work due to network error. Please press F5 to try again!
             //   `);
             console.error('An error occurred: status = 0');
+
+            return throwError(
+              'Something bad happened; please try again later.');
         } else {
             // The backend returned an unsuccessful response code.
             switch (error.status) {

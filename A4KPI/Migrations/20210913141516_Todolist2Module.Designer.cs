@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210913141516_Todolist2Module")]
+    partial class Todolist2Module
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,16 +182,13 @@ namespace A4KPI.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("Target")
@@ -429,8 +428,6 @@ namespace A4KPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PolicyId");
 
                     b.ToTable("KPINew");
                 });
@@ -1065,22 +1062,16 @@ namespace A4KPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
 
                     b.Property<double>("Performance")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("TargetTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.Property<double>("YTD")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
@@ -1088,38 +1079,6 @@ namespace A4KPI.Migrations
                     b.HasIndex("KPIId");
 
                     b.ToTable("Targets");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("KPIId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("KPIId");
-
-                    b.ToTable("TargetYTD");
                 });
 
             modelBuilder.Entity("A4KPI.Models.ToDoList", b =>
@@ -1277,7 +1236,9 @@ namespace A4KPI.Migrations
 
                     b.HasOne("A4KPI.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 
@@ -1360,17 +1321,6 @@ namespace A4KPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Action");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.KPINew", b =>
-                {
-                    b.HasOne("A4KPI.Models.Policy", "Policy")
-                        .WithMany()
-                        .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("A4KPI.Models.KPIScore", b =>
@@ -1574,17 +1524,6 @@ namespace A4KPI.Migrations
                 });
 
             modelBuilder.Entity("A4KPI.Models.Target", b =>
-                {
-                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
-                        .WithMany()
-                        .HasForeignKey("KPIId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("KPINew");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
                 {
                     b.HasOne("A4KPI.Models.KPINew", "KPINew")
                         .WithMany()

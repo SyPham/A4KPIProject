@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { ObjectiveComponent } from './objective/objective.component';
 import { TodolistComponent } from "./todolist/todolist.component";
 import { UploadKpiComponent } from "./todolist/upload-kpi/upload-kpi.component";
+import { Todolist2Component } from "./todolist2/todolist2.component";
 
 const routes: Routes = [
   {
@@ -28,6 +29,16 @@ const routes: Routes = [
         data: {
           title: 'To Do List',
           breadcrumb: 'To Do List',
+          functionCode: 'todolist'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'todolist2',
+        component: Todolist2Component,
+        data: {
+          title: 'To Do List 2',
+          breadcrumb: 'To Do List 2',
           functionCode: 'todolist'
         },
         // canActivate: [AuthGuard]

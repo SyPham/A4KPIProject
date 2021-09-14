@@ -24,6 +24,10 @@ namespace A4KPI.Models
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
         public DateTime UpdateDate { get; set; }
+        [ForeignKey(nameof(PolicyId))]
+        public virtual Policy  Policy{ get; set; }
+
+        public virtual ICollection<Action> Actions{ get; set; }
 
     }
 }

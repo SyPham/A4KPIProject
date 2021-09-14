@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210914092603_AddTargetTable")]
+    partial class AddTargetTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,16 +182,13 @@ namespace A4KPI.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("Target")
@@ -1077,9 +1076,6 @@ namespace A4KPI.Migrations
                     b.Property<double>("Performance")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("TargetTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("Value")
                         .HasColumnType("float");
 
@@ -1277,7 +1273,9 @@ namespace A4KPI.Migrations
 
                     b.HasOne("A4KPI.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 

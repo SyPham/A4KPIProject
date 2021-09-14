@@ -1,3 +1,6 @@
+import { UploadFileComponent } from './todolist2/upload-file/upload-file.component';
+import { PdcaComponent } from './todolist2/pdca/pdca.component';
+import { PlanComponent } from './todolist2/plan/plan.component';
 import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { AttitudeScoreComponent } from './todolist/attitude-score/attitude-score.component';
 import { NgModule } from '@angular/core';
@@ -31,6 +34,8 @@ import { KpiScoreL2Component } from './todolist/kpi-score-l2/kpi-score-l2.compon
 import { SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { NgTemplateNameDirective } from './ng-template-name.directive';
 import { UploadKpiComponent } from './todolist/upload-kpi/upload-kpi.component';
+import { Todolist2Component } from './todolist2/todolist2.component';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,6 +67,7 @@ if (lang === 'vi') {
   declarations: [
     ObjectiveComponent,
     TodolistComponent,
+    Todolist2Component,
     ActionComponent,
     UpdateResultComponent,
     SelfScoreComponent,
@@ -74,7 +80,10 @@ if (lang === 'vi') {
     KpiScoreGMComponent,
     AttitudeScoreGHRComponent,
     NgTemplateNameDirective,
-    UploadKpiComponent
+    UploadKpiComponent,
+    PlanComponent,
+    PdcaComponent,
+    UploadFileComponent
   ],
   imports: [
     CommonModule,
@@ -92,6 +101,7 @@ if (lang === 'vi') {
     DatePickerModule,
     TabModule,
     SpreadsheetAllModule,
+    UploaderModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
