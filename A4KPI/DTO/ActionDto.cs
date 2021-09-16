@@ -15,5 +15,7 @@ namespace A4KPI.DTO
         public int AccountId { get; set; }
         public int KPIId { get; set; }
         public int? StatusId { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
     }
 }

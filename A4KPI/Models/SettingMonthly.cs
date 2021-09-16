@@ -13,6 +13,7 @@ namespace A4KPI.Models
         [Key]
         public int Id { get; set; }
         public DateTime DisplayTime { get; set; }
+        public DateTime Month { get; set; }
         public int CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public DateTime CreatedTime { get; set; }

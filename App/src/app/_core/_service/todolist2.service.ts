@@ -30,13 +30,43 @@ export class Todolist2Service  {
       .get<any[]>(`${this.base}${this.entity}/L0?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
+  submitUpdatePDCA(model): Observable<OperationResult> {
+    return this.http.post<OperationResult>(`${this.base}${this.entity}/SubmitUpdatePDCA`, model);
+  }
   submitAction(model): Observable<OperationResult> {
     return this.http.post<OperationResult>(`${this.base}${this.entity}/submitAction`, model);
   }
-
+  getStatus(): Observable<any[]> {
+    return this.http
+      .get<any[]>(`${this.base}${this.entity}/getStatus`, {})
+      .pipe(catchError(this.handleError));
+  }
   getActionsForL0(kpiNewId): Observable<any> {
     return this.http
       .get<any>(`${this.base}${this.entity}/GetActionsForL0?kpiNewId=${kpiNewId}`, {})
+      .pipe(catchError(this.handleError));
+  }
+  getPDCAForL0(kpiNewId,currentTime ): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}${this.entity}/GetPDCAForL0?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  getKPIForUpdatePDC(kpiNewId,currentTime ): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}${this.entity}/GetKPIForUpdatePDC?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  getTargetForUpdatePDCA(kpiNewId,currentTime ): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}${this.entity}/GetTargetForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  getActionsForUpdatePDCA(kpiNewId,currentTime ): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}${this.entity}/GetActionsForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
 

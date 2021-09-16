@@ -1,4 +1,5 @@
-﻿using System;
+﻿using A4KPI.Models.Interface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace A4KPI.Models
 {
     [Table("Actions")]
-    public class Action
+    public class Action : IDateTracking
     {
         [Key]
         public int Id { get; set; }
@@ -19,6 +20,8 @@ namespace A4KPI.Models
         public int AccountId { get; set; }
         public int KPIId { get; set; }
         public int? StatusId { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
         [ForeignKey(nameof(StatusId))]
         public virtual Status Status { get; set; }
 

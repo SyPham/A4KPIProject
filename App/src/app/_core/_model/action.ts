@@ -6,4 +6,6 @@ export interface Action {
   accountId: number;
   kPIId: number;
   statusId: number;
+  createdTime: string;
+  modifiedTime: string | null;
 }

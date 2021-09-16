@@ -13,10 +13,10 @@ declare var $: any;
   selector: 'app-plan',
   templateUrl: './plan.component.html',
   styleUrls: ['./plan.component.scss'],
-  providers:[DatePipe]
+  providers: [DatePipe]
 })
 export class PlanComponent implements OnInit, AfterViewInit {
-  @Input() data:any;
+  @Input() data: any;
   @ViewChild('grid') grid: GridComponent;
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   gridData: any;
@@ -30,14 +30,14 @@ export class PlanComponent implements OnInit, AfterViewInit {
   target: Target;
   targetYTD: TargetYTD;
   targetValue = null;
-  targetYTDValue= null;
+  targetYTDValue = null;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
     private alertify: AlertifyService,
-    private dataPipe: DatePipe
+    private datePipe: DatePipe
 
-    ) { }
+  ) { }
   ngAfterViewInit(): void {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -58,6 +58,10 @@ export class PlanComponent implements OnInit, AfterViewInit {
         performance: 0,
         kPIId: this.data.id,
         targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
       };
     }
 
@@ -67,16 +71,16 @@ export class PlanComponent implements OnInit, AfterViewInit {
     if (this.targetYTD != null) {
       this.targetYTD.value = +value;
     } else {
-    this.targetYTD = {
-      id: 0,
-      value: +value,
-      createdTime: new Date().toISOString(),
-      modifiedBy: null,
-      modifiedTime: null,
-      createdBy: +JSON.parse(localStorage.getItem('user')).id,
-      kPIId: this.data.id
-    };
-  }
+      this.targetYTD = {
+        id: 0,
+        value: +value,
+        createdTime: new Date().toISOString(),
+        modifiedBy: null,
+        modifiedTime: null,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id
+      };
+    }
     console.log(this.targetYTD);
   }
   submit() {
@@ -86,10 +90,12 @@ export class PlanComponent implements OnInit, AfterViewInit {
         id: x.id,
         target: x.target,
         content: x.content,
-        deadline: this.dataPipe.transform(x.deadline, 'MM/dd/yyyy'),
+        deadline: this.datePipe.transform(x.deadline, 'MM/dd/yyyy'),
         accountId: +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
+        createdTime: new Date().toISOString(),
+        modifiedTime: null
       }
     })
     const request = {

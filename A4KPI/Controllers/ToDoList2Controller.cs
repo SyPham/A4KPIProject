@@ -23,7 +23,12 @@ namespace A4KPI.Controllers
             _service = service;
           
         }
+        [HttpPost]
+        public async Task<ActionResult> SubmitUpdatePDCA(PDCARequestDto action)
+        {
 
+            return Ok(await _service.SubmitUpdatePDCA(action));
+        }
         [HttpPost]
         public async Task<ActionResult> SubmitAction(ActionRequestDto action)
         {
@@ -37,10 +42,43 @@ namespace A4KPI.Controllers
             return Ok(await _service.L0(currentTime));
         }
         [HttpGet]
+        public async Task<ActionResult> GetStatus()
+        {
+
+            return Ok(await _service.GetStatus());
+        }
+        [HttpGet]
         public async Task<ActionResult> GetActionsForL0(int kpiNewId)
         {
 
             return Ok(await _service.GetActionsForL0(kpiNewId));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetPDCAForL0(int kpiNewId, DateTime currentTime)
+        {
+
+            return Ok(await _service.GetPDCAForL0(kpiNewId, currentTime));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime)
+        {
+
+            return Ok(await _service.GetKPIForUpdatePDC(kpiNewId, currentTime));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetTargetForUpdatePDCA(int kpiNewId, DateTime currentTime)
+        {
+
+            return Ok(await _service.GetTargetForUpdatePDCA(kpiNewId, currentTime));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime)
+        {
+
+            return Ok(await _service.GetActionsForUpdatePDCA(kpiNewId, currentTime));
         }
     }
 }

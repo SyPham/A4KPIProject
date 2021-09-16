@@ -234,8 +234,9 @@ export class Todolist2Component implements OnInit, OnDestroy {
     });
   }
   openUpdatePdcaModalComponent(data) {
-    const modalRef = this.modalService.open(PdcaComponent, { size: 'xl', backdrop: 'static' });
+    const modalRef = this.modalService.open(PdcaComponent, { size: 'xxl', backdrop: 'static', keyboard: false });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.currentTime = this.currentTime;
     modalRef.result.then((result) => {
     }, (reason) => {
     });

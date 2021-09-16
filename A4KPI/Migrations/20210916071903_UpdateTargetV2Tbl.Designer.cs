@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210916071903_UpdateTargetV2Tbl")]
+    partial class UpdateTargetV2Tbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,12 +379,6 @@ namespace A4KPI.Migrations
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -905,17 +901,8 @@ namespace A4KPI.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -1098,9 +1085,6 @@ namespace A4KPI.Migrations
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("Performance")
                         .HasColumnType("float");
 
@@ -1110,8 +1094,8 @@ namespace A4KPI.Migrations
                     b.Property<double>("Value")
                         .HasColumnType("float");
 
-                    b.Property<double>("YTD")
-                        .HasColumnType("float");
+                    b.Property<int>("YTD")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
