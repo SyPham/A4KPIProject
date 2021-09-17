@@ -69,7 +69,11 @@ export class Todolist2Service  {
       .get<any>(`${this.base}${this.entity}/GetActionsForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
-
+  download(kpiId,uploadTime ) {
+    return this.http
+      .get(`${this.base}UploadFile/download?kpiId=${kpiId}&uploadTime=${uploadTime}`, { responseType: 'blob' })
+      .pipe(catchError(this.handleError));
+  }
   protected handleError(errorResponse: any) {
     if (errorResponse?.error?.message) {
         return throwError(errorResponse?.error?.message || 'Server error');

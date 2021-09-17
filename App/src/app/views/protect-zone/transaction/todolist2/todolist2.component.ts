@@ -71,7 +71,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.currentTime = new Date();
     this.content = '';
     this.loadAccountGroupData();
-    this.subscription.push(this.todolistService.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
+    this.subscription.push(this.todolist2Service.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
   }
   isAllowAccess(position: number) {
     const positions = JSON.parse(localStorage.getItem('user')).accountGroupPositions as number[] || [];

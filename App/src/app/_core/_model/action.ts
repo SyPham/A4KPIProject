@@ -2,7 +2,7 @@ export interface Action {
   id: number;
   target: string;
   content: string;
-  deadline: string | null;
+  deadline: any;
   accountId: number;
   kPIId: number;
   statusId: number;

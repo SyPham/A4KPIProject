@@ -146,10 +146,10 @@ namespace A4KPI.Services
          
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-            var result = await _repoResult.FindAll(x => x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
+            var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
                 .ProjectTo<ResultDto>(_configMapper)
                 .FirstOrDefaultAsync();
-            var model = from a in _repoAction.FindAll(x=> x.CreatedTime.Year == currentTime.Year && x.CreatedTime.Month < currentTime.Month)
+            var model = from a in _repoAction.FindAll(x=>x.KPIId == kpiNewId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult)
                         join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
                         from sub in ab.DefaultIfEmpty()
                         select new UpdatePDCADto
@@ -183,12 +183,14 @@ namespace A4KPI.Services
         {
             var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
             var nextMonth = currentTime.Month;
-            var nextYear = currentTime.Month;
+            var nextYear = currentTime.Year;
+
             var nextMonthTarget = await _repoTarget.FindAll(x => x.KPIId == kpiNewId && x.TargetTime.Year == currentTime.Year && x.TargetTime.Month == currentTime.Month).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
             var thisMonth = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYear = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId && x.TargetTime.Year == thisYear && x.TargetTime.Month == thisMonth).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
-            var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == currentTime.Year).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
+          
+            var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == thisYear).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
 
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
@@ -225,14 +227,18 @@ namespace A4KPI.Services
                 UpdatePeformance = false
             }).ToListAsync();
             var latestMonth = ct.Month - 1;
+            var month2 = currentTime.Month == 1 ? 12 : currentTime.Month;
+            var year = month2 == 1 ? currentTime.Year - 1 : currentTime.Year;
             var updatePDCA = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any()).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
                 Type = "UpdatePDCA",
-                UpdatePeformance = x.Targets.Any(a=> a.TargetTime.Year == currentTime.Year && a.TargetTime.Month == currentTime.Month)
-            }).Where(x=>!x.UpdatePeformance).ToListAsync();
-            var setting = await _repoSettingMonthly.FindAll(x => x.DisplayTime.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
+                UpdatePeformance = x.Actions.OrderBy(x=>x.CreatedTime).FirstOrDefault(a=> a.CreatedTime.Year == year && a.CreatedTime.Month < month2) != null
+            }).Where(x=> x.UpdatePeformance).ToListAsync();
+
+            // 
+            var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
             if (setting != null)
                 return actions.Concat(updatePDCA);
             return actions;
@@ -319,6 +325,7 @@ namespace A4KPI.Services
                     result.UpdateTime = updateTime;
 
                 }
+                result.CreatedTime = model.CurrentTime;
 
                 if (currentTime.Month == 1)
                 {

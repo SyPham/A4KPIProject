@@ -1,6 +1,7 @@
+import { UploadFileComponent } from './../upload-file/upload-file.component';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { Action } from 'src/app/_core/_model/action';
@@ -54,6 +55,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     public todolist2Service: Todolist2Service,
     private datePipe: DatePipe,
     private alertify: AlertifyService,
+    public modalService: NgbModal,
   ) { }
 
   ngAfterViewInit(): void {
@@ -66,6 +68,14 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     this.month = this.months[month == 1 ? 12 : month - 1];
     this.loadStatusData();
     this.loadData();
+  }
+  openUploadModalComponent() {
+    const modalRef = this.modalService.open(UploadFileComponent, { size: 'md', backdrop: 'static', keyboard: false });
+    modalRef.componentInstance.data = this.data;
+    modalRef.componentInstance.currentTime = this.currentTime;
+    modalRef.result.then((result) => {
+    }, (reason) => {
+    });
   }
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
@@ -138,6 +148,19 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       };
     }
   }
+  download() {
+    this.todolist2Service.download(this.data.id, (this.currentTime as Date).toLocaleDateString() ).subscribe((data: any) => {
+      const blob = new Blob([data],
+        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+      const downloadURL = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      const ct = new Date();
+      link.download = `${ct.getFullYear()}${ct.getMonth()}${ct.getDay()}_archive.zip`;
+      link.click();
+    });
+  }
   onChangeTargetYTD(value) {
     if (this.targetYTD != null) {
       this.targetYTD.value = +value;
@@ -187,7 +210,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   }
   loadPDCAAndResultData() {
     this.gridData = [];
-    const currentTime = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
       this.gridData = res.data;
       this.result = res.result;
@@ -196,13 +219,13 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   }
   loadActionData() {
     this.actions = [];
-    const currentTime = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getActionsForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
       this.actions = res.actions as Action[] || [];
     });
   }
   loadKPIData() {
-    const currentTime = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
       this.kpi = res.kpi;
       this.policy = res.policy;
@@ -211,7 +234,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   }
 
   loadTargetData() {
-    const currentTime = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
@@ -274,6 +297,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     this.todolist2Service.submitUpdatePDCA(request).subscribe(
       (res) => {
         if (res.success === true) {
+          this.todolist2Service.changeMessage(true);
           this.activeModal.close();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);

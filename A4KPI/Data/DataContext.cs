@@ -93,7 +93,7 @@ namespace A4KPI.Data
                 {
                     if (item.State == EntityState.Added)
                     {
-                        changedOrAddedItem.CreatedTime = DateTime.Now;
+                        changedOrAddedItem.CreatedTime = changedOrAddedItem.CreatedTime == DateTime.MinValue ? DateTime.Now : changedOrAddedItem.CreatedTime;
                     }
                     else
                     {

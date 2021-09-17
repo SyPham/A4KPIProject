@@ -62,15 +62,20 @@
 <div class="modal-footer d-flex justify-content-end">
   <button type="button"
   class="btn btn-secondary mr-2"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Save data & close the window."
+
   (click)="activeModal.close('Close click')">{{'Back' }}
 </button>
   <button type="button"
   class="btn btn-success"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Save data & Submit then close the window. In L0 tab hide this row." (click)="submit()">{{'Submit' }}</button>
+
+  (click)="submit()">{{'Submit' }}</button>
 </div>
+<!--
+data-toggle="tooltip"
+data-placement="top"
+title="Save data & Submit then close the window. In L0 tab hide this row."
+ data-toggle="tooltip"
+  data-placement="top"
+  title="Save data & close the window."
+-->
 

@@ -25,6 +25,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   kpi = 'SHC CTB IE 工時達成率';
   pic = '生產中心 Lai He';
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
+  @Input() currentTime: any;
 
   actions: Action[] = [];
   target: Target;
@@ -90,7 +91,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         id: x.id,
         target: x.target,
         content: x.content,
-        deadline: this.datePipe.transform(x.deadline, 'MM/dd/yyyy'),
+        deadline: (x.deadline as Date).toLocaleDateString(),
         accountId: +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
@@ -108,6 +109,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {
         if (res.success === true) {
+          this.todolist2Service.changeMessage(true);
           this.activeModal.close();
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
@@ -125,8 +127,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
       this.kpi = res.kpi;
       this.target = res.target;
       this.targetYTD = res.targetYTD;
-      this.targetValue = this.target.value;
-      this.targetYTDValue = this.targetYTD.value;
+      this.targetValue = this.target?.value;
+      this.targetYTDValue = this.targetYTD?.value;
     });
   }
 
