@@ -16,6 +16,8 @@ namespace A4KPI.DTO
         public int PolicyId { get; set; }
         public int TypeId { get; set; }
         public int Pic { get; set; }
+        public bool Submitted { get; set; }
+
         public int UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
 

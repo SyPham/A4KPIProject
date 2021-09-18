@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title">Monthly update PDCA </h4>
+  <h4 class="modal-title">Monthly update PDCA ({{month}}) </h4>
   <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -180,8 +180,7 @@
 <div class="modal-footer d-flex justify-content-end">
   <button type="button"
   class="btn btn-secondary mr-2"
-
-  (click)="activeModal.close('Close click')">{{'Back' }}
+  (click)="back()">{{'Back' }}
 </button>
   <button type="button"
   class="btn btn-success"

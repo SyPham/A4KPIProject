@@ -11,8 +11,8 @@ namespace A4KPI.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Content { get; set; }
-        public DateTime UpdateTime { get; set; }
+        public string Content { get; set; } // noi dung
+        public DateTime UpdateTime { get; set; } // Cap nhat ket qua cho thang?
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
 

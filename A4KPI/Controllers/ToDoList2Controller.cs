@@ -35,6 +35,12 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.SubmitAction(action));
         }
+        [HttpPost]
+        public async Task<ActionResult> SubmitKPINew(int kpiId)
+        {
+
+            return Ok(await _service.SubmitKPINew(kpiId));
+        }
         [HttpGet]
         public async Task<ActionResult> L0(DateTime currentTime)
         {
