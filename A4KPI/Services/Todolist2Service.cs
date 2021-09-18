@@ -221,21 +221,18 @@ namespace A4KPI.Services
                 Id = x.Id,
                 Topic = x.Name,
                 Type = "Action",
-                Submitted = false,
-                UpdatePeformance = false
+                CurrentTarget = false,
             }).ToListAsync();
             var latestMonth = ct.Month - 1;
-            var month2 = currentTime.Month == 1 ? 12 : currentTime.Month;
+            var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = month2 == 1 ? currentTime.Year - 1 : currentTime.Year;
             var updatePDCA = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any()).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
                 Type = "UpdatePDCA",
-                Submitted = x.Targets.Any(a => a.CreatedTime.Year == year && a.CreatedTime.Month == month2) ?
-                 x.Targets.FirstOrDefault(a => a.CreatedTime.Year == year && a.CreatedTime.Month == month2).Submitted : false,
-                UpdatePeformance = x.Actions.OrderBy(x => x.CreatedTime).FirstOrDefault(a => a.CreatedTime.Year == year && a.CreatedTime.Month < month2) != null
-            }).Where(x => x.UpdatePeformance && x.Submitted == false).ToListAsync();
+                CurrentTarget =  x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && (a.Performance == 0 || !a.Submitted && a.Performance > 0)),
+            }).Where(x => x.CurrentTarget).ToListAsync();
 
             // 
             var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
@@ -263,7 +260,10 @@ namespace A4KPI.Services
                 if (target.Id > 0)
                     _repoTarget.Update(target);
                 else
+                {
+                    target.Submitted = false;
                     _repoTarget.Add(target);
+                }
 
                 if (targetYTD.Id > 0)
                     _repoTargetYTD.Update(targetYTD);

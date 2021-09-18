@@ -86,11 +86,16 @@ export class PlanComponent implements OnInit, AfterViewInit {
     console.log(this.targetYTD);
   }
   submit(){
-    this.post();
+
+    this.post(() => {
     this.submitKPINew();
+    });
   }
   back(){
-    this.post();
+    this.post(()=>{
+      this.todolist2Service.changeMessage(true);
+      this.activeModal.close();
+    });
   }
   validate() {
     if (!this.target) {
@@ -110,7 +115,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
     return true;
   }
-  post() {
+  post(callBack) {
     if (this.validate() == false) return;
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
@@ -137,8 +142,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {
         if (res.success === true) {
-          this.todolist2Service.changeMessage(true);
-          this.activeModal.close();
+          callBack();
+
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
@@ -149,6 +154,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
   submitKPINew() {
     this.todolist2Service.submitKPINew(this.data.id).subscribe(
       (res) => {
+        this.todolist2Service.changeMessage(true);
+        this.activeModal.close();
       },
       (err) => {}
     );
