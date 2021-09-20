@@ -1,0 +1,403 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <div class="row my-3">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-1">
+                <div class="font-weight-bold">{{'FILTER_LABEL' | translate}}:</div>
+              </div>
+              <div class="col-md-2">
+                <ejs-dropdownlist [dataSource]='dataLevel' [fields]='levelFields' [allowFiltering]='true'
+                   (change)='filterlevel($event)'
+                   [(ngModel)]='levelId'
+                  placeholder="Select a Level">
+                </ejs-dropdownlist>
+              </div>
+              <div class="col-md-2">
+                <ejs-dropdownlist id='ddlelement' #ddlelement [dataSource]='dataPic' [fields]='picFields' [allowFiltering]='true'
+                   (change)='filterPic($event)'
+                   [(ngModel)]='picId'
+                  placeholder="Select a Pic">
+                </ejs-dropdownlist>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Change System Date</label>
+            <kendo-datepicker style="width: 100%;" [(ngModel)]="currentTime" >
+            </kendo-datepicker>
+          </div>
+        </div>
+        <ejs-grid #grid
+          id='grid'
+          [dataSource]="policyData"
+          [allowPaging]='true'
+          [allowResizing]='true'
+          [showColumnMenu]='true'
+          gridLines='Both'
+          [locale]='locale'
+          (actionBegin)="actionBegin($event)"
+          (actionComplete)="actionComplete($event)"
+          [pageSettings]='pageSettings'
+          [allowExcelExport]='true'
+          (recordDoubleClick)='onDoubleClick($event)'
+          [editSettings]='editSettings'
+        >
+          <e-columns>
+            <e-column field="level" textAlign='Center' width="80" isPrimaryKey="true" headerText="Level"></e-column>
+            <e-column field="name" textAlign='Center' headerText="Objective  (KPI 項目)"> </e-column>
+            <e-column field='picName' headerText="PIC" width='200' textAlign='Center'></e-column>
+
+            <e-column field="option" width="100" textAlign='Center' headerText="PDCA">
+              <ng-template #template let-data>
+                <div class="btn-group">
+                  <button type="button" (click)='openModal(data,detailModal)' class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                </div>
+              </ng-template>
+              <ng-template #editTemplate let-data>
+               N/A
+              </ng-template>
+            </e-column>
+
+          </e-columns>
+        </ejs-grid>
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>
+</div>
+
+<ng-template #detailModal let-modal>
+  <a #top></a>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Monthly Review Meeting
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-7">Policy: {{policyTitle}}</div>
+          <div class="col-md-5">Level: {{levelTitle}}</div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-7">KPI: {{kpiTitle}}</div>
+          <div class="col-md-5">PIC: {{picTitle}}</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+
+
+
+      </div>
+
+
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="chart">
+          <canvas  id="planet-chart" ></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" style="margin-bottom:20px;" id="tblDataChart">
+              <tbody>
+                <tr>
+                  <th  class="text-center" width="5%">月份</th>
+                  <th *ngFor="let item of labels; let i=index" class="text-center">{{item}}</th>
+                </tr>
+                <tr>
+                  <th class="text-center" width="5%">Target 實績</th>
+                  <td *ngFor="let item of targets; let i=index" class="text-center" >{{item}}</td>
+                </tr>
+                <tr>
+                  <th class="text-center" width="5%">Perfomance 目標</th>
+                  <td *ngFor="let item of perfomance; let i=index" class="text-center" >{{item}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <!-- <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2" class="text-center align-middle">月份</th>
+              <th scope="col" rowspan="2" class="text-center align-middle">#</th>
+              <th scope="col" class="text-center">P</th>
+              <th scope="col" class="text-center">Target</th>
+              <th scope="col" class="text-center">Deadline</th>
+              <th scope="col" class="text-center">D</th>
+              <th scope="col" class="text-center">Achievement</th>
+              <th scope="col" class="text-center">Status</th>
+              <th scope="col" class="text-center">C</th>
+              <th scope="col" class="text-center">A</th>
+              <th scope="col" class="text-center">Target</th>
+              <th scope="col" class="text-center">Deadline</th>
+              <th scope="col" class="text-center">Attatchment</th>
+            </tr>
+            <tr>
+              <th scope="col" class="text-center">Content</th>
+              <th scope="col" class="text-center">目標值 </th>
+              <th scope="col" class="text-center">完成期限</th>
+              <th scope="col" class="text-center">執行狀況</th>
+              <th scope="col" class="text-center">實績</th>
+              <th scope="col" class="text-center">狀態</th>
+              <th scope="col" class="text-center">執行分析檢討</th>
+              <th scope="col" class="text-center">計畫執行</th>
+              <th scope="col" class="text-center">目標值</th>
+              <th scope="col" class="text-center">完成期限</th>
+              <th scope="col" class="text-center">附檔</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let item of dataTable; let i= index;">
+              <tr  *ngFor="let items of item.currentMonthData; let i= index;">
+                <th scope="row" [attr.rowspan]="item.currentMonthData.length" *ngIf="i == 0"  class="text-center align-middle">{{item.month}}</th>
+                <th scope="row">{{item.stt}}</th>
+                <td>{{items.content}}</td>
+                <td>{{items.target}}</td>
+                <td>{{items.deadline}}</td>
+                <td >
+                  <input type="text" class="form-control"  [(ngModel)]='items.doContent'>
+                </td>
+                <td>
+                  <input type="text" class="form-control"  [(ngModel)]='items.achievement'>
+                </td>
+                <td>
+
+                </td>
+                <td scope="row" [attr.rowspan]="item.currentMonthData.length"  *ngIf="i == 0" class="text-center align-middle">
+                  <textarea   [(ngModel)]="item.content" disabled id="result" cols="30" rows="10" class="form-control"></textarea>
+                </td>
+                <td ></td>
+              </tr>
+            </ng-container>
+
+          </tbody>
+        </table> -->
+
+        <ejs-grid  #gridDataTable
+          id='grid'
+          [dataSource]="dataTable"
+          [allowResizing]='true'
+          [showColumnMenu]='true'
+          gridLines='Both'
+          isPrimaryKey='true'
+          (queryCellInfo)='queryCellInfoEvent($event)'
+          [allowExcelExport]='true'
+          [editSettings]='editSettings'
+          [pageSettings]='pageSettings'
+        >
+          <e-columns>
+            <e-column field='month' headerTextAlign='Center' headerText='內容'>
+            </e-column>
+            <e-column field='' headerTextAlign='Center' textAlign='Center' headerText='P'>
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
+                    <td >{{item.content}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+
+            </e-column>
+            <e-column field="target" textAlign='Center'  headerText="Target">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
+                    <td >{{item.target}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="deadline" textAlign='Center' headerText="Deadline">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index">
+                    <td>{{item.deadline}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="doContent"  textAlign='Center' headerText="D">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index">
+                    <td >{{item.doContent}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="achievement" textAlign='Center' headerText="Achievement">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
+                    <td>{{item.achievement}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template> </e-column>
+            <e-column field="statusName" textAlign='Center' headerText="Status">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
+                    <td >{{item.statusName}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="content" textAlign='Center'  headerText="C">
+              <ng-template #template let-data>
+                <textarea   [(ngModel)]="data.content" disabled  class="form-control"></textarea>
+              </ng-template>
+
+            </e-column>
+            <e-column field="aContent" textAlign='Center' headerText="A">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
+                    <td >{{item.content}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="aTarget" textAlign='Center' headerText="Target">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
+                    <td >{{item.target}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="aDeadline" textAlign='Center' headerText="Deadline">
+              <ng-template #template let-data>
+                <ng-container >
+                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
+                    <td >{{item.deadline}}</td>
+                  </tr>
+                </ng-container>
+
+              </ng-template>
+            </e-column>
+            <e-column field="" textAlign='Center' headerText="Attatchment">
+              <ng-template #template let-data>
+                <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
+              </ng-template>
+
+            </e-column>
+          </e-columns>
+          <ng-template #rowTemplate let-data>
+            <tr>
+                <td class="border" style='padding-left:18px;'>
+                    <div>{{data.month}}</div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.content}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.target}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.deadline}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.doContent}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.achievement}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.currentMonthData">
+                    <p style="text-align: center;" >{{item.statusName}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <textarea   [(ngModel)]="data.content" disabled  class="form-control"></textarea>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.nextMonthData">
+                    <p style="text-align: center;" >{{item.content}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.nextMonthData">
+                    <p style="text-align: center;" >{{item.target}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div *ngFor="let item of data.nextMonthData">
+                    <p style="text-align: center;" >{{item.deadline}}</p>
+                    <hr>
+                  </div>
+                </td>
+                <td  class="border" style='padding: 10px 10px 10px 10px;'>
+                  <div style="text-align: center;">
+                    <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
+                  </div>
+                </td>
+            </tr>
+          </ng-template>
+        </ejs-grid>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    <span style="color: transparent;">| |</span>
+    <a class="btn btn-outline-warning" (click)="scroll(top)" ><i class="fas fa-chevron-up"></i></a>
+  </div>
+
+
+
+</ng-template>
+

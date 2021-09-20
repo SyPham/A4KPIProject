@@ -1,3 +1,4 @@
+import { MeetingComponent } from './meeting/meeting.component';
 import { UploadFileComponent } from './todolist2/upload-file/upload-file.component';
 import { PdcaComponent } from './todolist2/pdca/pdca.component';
 import { PlanComponent } from './todolist2/plan/plan.component';
@@ -36,7 +37,6 @@ import { NgTemplateNameDirective } from './ng-template-name.directive';
 import { UploadKpiComponent } from './todolist/upload-kpi/upload-kpi.component';
 import { Todolist2Component } from './todolist2/todolist2.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
-
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -68,6 +68,7 @@ if (lang === 'vi') {
     ObjectiveComponent,
     TodolistComponent,
     Todolist2Component,
+    MeetingComponent,
     ActionComponent,
     UpdateResultComponent,
     SelfScoreComponent,

@@ -1,3 +1,4 @@
+import { MeetingComponent } from './meeting/meeting.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { ObjectiveComponent } from './objective/objective.component';
@@ -40,6 +41,16 @@ const routes: Routes = [
           title: 'To Do List 2',
           breadcrumb: 'To Do List 2',
           functionCode: 'todolist'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'meeting',
+        component: MeetingComponent,
+        data: {
+          title: 'Meeting',
+          breadcrumb: 'Meeting',
+          functionCode: 'meeting'
         },
         // canActivate: [AuthGuard]
       },
