@@ -13,8 +13,6 @@ namespace A4KPI.DTO
         public double YTD { get; set; }
         public int KPIId { get; set; }
         public int CreatedBy { get; set; }
-        public bool Submitted { get; set; }
-
         public DateTime TargetTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
         public DateTime CreatedTime { get; set; }

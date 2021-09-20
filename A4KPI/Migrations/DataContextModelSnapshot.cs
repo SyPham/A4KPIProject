@@ -431,9 +431,6 @@ namespace A4KPI.Migrations
                     b.Property<int>("PolicyId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Submitted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
@@ -1106,9 +1103,6 @@ namespace A4KPI.Migrations
 
                     b.Property<double>("Performance")
                         .HasColumnType("float");
-
-                    b.Property<bool>("Submitted")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("TargetTime")
                         .HasColumnType("datetime2");

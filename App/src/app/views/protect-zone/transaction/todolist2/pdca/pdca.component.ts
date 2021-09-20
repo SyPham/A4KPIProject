@@ -128,7 +128,6 @@ export class PdcaComponent implements OnInit, AfterViewInit {
         modifiedTime: null,
         yTD: 0,
         createdBy: +JSON.parse(localStorage.getItem('user')).id,
-        submitted: false
       };
     }
   }
@@ -258,42 +257,8 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     });
   }
   submit() {
-    this.post(true);
-  }
-  back() {
-    this.post(false);
-  }
-  validate() {
-    if (!this.thisMonthTargetValue) {
-      this.alertify.warning('Please input this month target');
-      return false;
-    }
-    if (!this.performanceValue) {
-      this.alertify.warning('Please input this month performance');
-      return false;
-    }
-
-    if (!this.thisMonthYTDValue) {
-      this.alertify.warning('Please input this month YTD');
-      return false;
-    }
-    if (!this.nextMonthTargetValue) {
-      this.alertify.warning('Please input next month target');
-      return false;
-    }
-    const dataSource = (this.grid.dataSource as Action[]) || [];
-
-    if (dataSource.length == 0) {
-      this.alertify.warning('Please create actions');
-      return false;
-    }
-
-    return true;
-  }
-  post(submitted) {
-    if (this.validate() == false) return;
     const target = {
-      id: this.thisMonthTarget.id,
+      id: 0,
       value: this.thisMonthTargetValue,
       performance: this.performanceValue,
       kPIId: this.data.id,
@@ -301,8 +266,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       createdTime: this.thisMonthYTD.createdTime,
       modifiedTime: this.thisMonthYTD.modifiedTime,
       yTD: this.thisMonthYTDValue,
-      createdBy: this.thisMonthYTD.createdBy,
-      submitted: submitted
+      createdBy: this.thisMonthYTD.createdBy
     };
     const updatePDCA = this.gridData;
 

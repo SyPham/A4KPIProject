@@ -63,7 +63,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
         modifiedTime: null,
         yTD: 0,
         createdBy: +JSON.parse(localStorage.getItem('user')).id,
-        submitted: true
       };
     }
 
@@ -85,33 +84,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     }
     console.log(this.targetYTD);
   }
-  submit(){
-    this.post();
-    this.submitKPINew();
-  }
-  back(){
-    this.post();
-  }
-  validate() {
-    if (!this.target) {
-      this.alertify.warning('Please input next month target');
-      return false;
-    }
-    if (!this.targetYTD) {
-      this.alertify.warning('Please input target YTD');
-      return false;
-    }
-    const dataSource = (this.grid.dataSource as Action[]) || [];
-
-    if (dataSource.length == 0) {
-      this.alertify.warning('Please create actions');
-      return false;
-    }
-
-    return true;
-  }
-  post() {
-    if (this.validate() == false) return;
+  submit() {
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
       return {
@@ -129,8 +102,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     const request = {
       actions: actions,
       target: this.target,
-      targetYTD: this.targetYTD,
-      currentTime: (this.currentTime as Date).toLocaleDateString()
+      targetYTD: this.targetYTD
     };
     console.log(request);
 
@@ -146,14 +118,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );
   }
-  submitKPINew() {
-    this.todolist2Service.submitKPINew(this.data.id).subscribe(
-      (res) => {
-      },
-      (err) => {}
-    );
-  }
-
   loadData() {
     this.gridData = [];
     this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {

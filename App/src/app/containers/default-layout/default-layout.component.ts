@@ -159,7 +159,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     }
   }
   home() {
-    return '/transaction/todolist2';
+    return '/ec/execution/todolist-2';
   }
   onChange(args) {
     this.spinner.show();
