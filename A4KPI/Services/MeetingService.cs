@@ -254,7 +254,12 @@ namespace A4KPI.Services
 
             foreach (var item in listLabel)
             {
-                var content = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim();
+                string content = null;
+                var contentExist = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToList();
+                if (contentExist.Count > 0)
+                {
+                    content = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).Content.Trim();
+                }
                 var model = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                             join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
                             from sub in ab.DefaultIfEmpty()

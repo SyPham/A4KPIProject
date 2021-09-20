@@ -213,7 +213,7 @@
           <e-columns>
             <e-column field='month' headerTextAlign='Center' headerText='內容'>
             </e-column>
-            <e-column field='' headerTextAlign='Center' textAlign='Center' headerText='P'>
+            <e-column field='' headerTextAlign='Center' textAlign='Center' headerText='P (月份計劃)'>
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index" >
@@ -224,7 +224,7 @@
               </ng-template>
 
             </e-column>
-            <e-column field="target" textAlign='Center'  headerText="Target">
+            <e-column field="target" textAlign='Center'  headerText="Target (目標值)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index" >
@@ -234,7 +234,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="deadline" textAlign='Center' headerText="Deadline">
+            <e-column field="deadline" textAlign='Center' headerText="Deadline (完成期限)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index">
@@ -244,7 +244,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="doContent"  textAlign='Center' headerText="D">
+            <e-column field="doContent"  textAlign='Center' headerText="D (執行狀況)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index">
@@ -254,7 +254,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="achievement" textAlign='Center' headerText="Achievement">
+            <e-column field="achievement" textAlign='Center' headerText="Achievement (實績)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index" >
@@ -263,7 +263,7 @@
                 </ng-container>
 
               </ng-template> </e-column>
-            <e-column field="statusName" textAlign='Center' headerText="Status">
+            <e-column field="statusName" textAlign='Center' headerText="Status (狀態)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.currentMonthData; let i=index" >
@@ -273,13 +273,13 @@
 
               </ng-template>
             </e-column>
-            <e-column field="content" textAlign='Center'  headerText="C">
+            <e-column field="content" textAlign='Center'  headerText="C (執行分析檢討)">
               <ng-template #template let-data>
                 <textarea   [(ngModel)]="data.content" disabled  class="form-control"></textarea>
               </ng-template>
 
             </e-column>
-            <e-column field="aContent" textAlign='Center' headerText="A">
+            <e-column field="aContent" textAlign='Center' headerText="A (計畫執行)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.nextMonthData; let i=index" >
@@ -289,7 +289,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="aTarget" textAlign='Center' headerText="Target">
+            <e-column field="aTarget" textAlign='Center' headerText="Target (目標值)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.nextMonthData; let i=index" >
@@ -299,7 +299,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="aDeadline" textAlign='Center' headerText="Deadline">
+            <e-column field="aDeadline" textAlign='Center' headerText="Deadline (完成期限)">
               <ng-template #template let-data>
                 <ng-container >
                   <tr *ngFor="let item of data.nextMonthData; let i=index" >
@@ -309,7 +309,7 @@
 
               </ng-template>
             </e-column>
-            <e-column field="" textAlign='Center' headerText="Attatchment">
+            <e-column field="" textAlign='Center' headerText="Attatchment (附檔)">
               <ng-template #template let-data>
                 <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
               </ng-template>
