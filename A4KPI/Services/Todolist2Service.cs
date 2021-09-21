@@ -29,7 +29,7 @@ namespace A4KPI.Services
         Task<object> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime);
         Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime);
 
-
+ Task<OperationResult> SubmitKPINew(int kpiNewId);
 
     }
     public class ToDoList2Service : IToDoList2Service
@@ -300,6 +300,31 @@ namespace A4KPI.Services
             return operationResult;
         }
 
+  public async Task<OperationResult> SubmitKPINew(int kpiNewId)
+        {
+
+            try
+            {
+
+                var item = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
+                item.Submitted = true;
+                _repoKPINew.Update(item);
+
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.AddSuccess,
+                    Success = true,
+                    Data = item
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
         public async Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model)
         {
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
