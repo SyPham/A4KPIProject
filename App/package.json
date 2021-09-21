@@ -89,6 +89,7 @@
     "angularx-qrcode": "^10.0.11",
     "bootstrap": "^4.6.0",
     "chart.js": "^2.9.4",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "classlist.js": "^1.1.20150312",
     "cldr-data": "^36.0.0",
     "codemirror": "^5.61.0",
