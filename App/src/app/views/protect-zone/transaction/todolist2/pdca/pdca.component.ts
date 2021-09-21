@@ -185,8 +185,9 @@ export class PdcaComponent implements OnInit, AfterViewInit {
 
   }
   onChangeStatus(value, i, item) {
-    this.addOrUpdateStatus(item, () => {
+    this.addOrUpdateStatus(item, (res) => {
       this.gridData[i].statusId = JSON.parse(value);
+      this.gridData[i].actionStatusId = res.data.id;
     });
 
   }
@@ -288,6 +289,18 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       this.alertify.warning('Please input C column');
       return false;
     }
+    let check = true;
+    for (const item of this.gridData) {
+      if(item.actionStatusId == null)
+      {
+        check = false;
+        break;
+      }
+    }
+    if (!check) {
+      this.alertify.warning('Please add status');
+      return false;
+    }
     const dataSource = (this.grid.dataSource as Action[]) || [];
 
     if (dataSource.length == 0) {
@@ -358,7 +371,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     }
     this.todolist2Service.addOrUpdateStatus(request).subscribe(
       (res) => {
-        callBack();
+        callBack(res);
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );

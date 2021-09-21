@@ -133,10 +133,10 @@
               <td>{{item.target}}</td>
               <td>{{item.deadline}}</td>
               <td >
-                <input type="text" class="form-control" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'>
+                <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'></textarea>
               </td>
               <td>
-                <input type="text" class="form-control" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement'>
+                <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement'></textarea>
               </td>
               <td>
                 <select class="custom-select" [(ngModel)]="item.statusId"  (ngModelChange)="onChangeStatus($event, i, item)">
@@ -145,7 +145,7 @@
                 </select>
               </td>
             <td scope="row" [attr.rowspan]="gridData.length"  *ngIf="i == 0" class="">
-              <textarea [(ngModel)]="content"  (ngModelChange)="onChangeResult($event)"  id="result" cols="30" rows="10" class="form-control"></textarea>
+              <textarea [(ngModel)]="content"  (ngModelChange)="onChangeResult($event)" cols="30" rows="10" class="form-control"></textarea>
             </td>
             </tr>
           </ng-container>

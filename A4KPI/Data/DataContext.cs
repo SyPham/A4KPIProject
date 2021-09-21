@@ -83,6 +83,11 @@ namespace A4KPI.Data
                .HasForeignKey(u => u.OCId)
                .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Do>()
+           .HasOne(s => s.Action)
+           .WithMany(g => g.Does)
+           .HasForeignKey(s => s.ActionId);
+
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

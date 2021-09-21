@@ -14,6 +14,7 @@ namespace A4KPI.Models
         public int Id { get; set; } 
         public int StatusId { get; set; }
         public int ActionId { get; set; }
+        public bool Submitted { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
         [ForeignKey(nameof(StatusId))]

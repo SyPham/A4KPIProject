@@ -32,5 +32,6 @@ namespace A4KPI.Models
         public virtual Account Account { get; set; }
 
         public virtual ICollection<ActionStatus> ActionStatus { get; set; }
+        public virtual ICollection<Do> Does { get; set; }
     }
 }
