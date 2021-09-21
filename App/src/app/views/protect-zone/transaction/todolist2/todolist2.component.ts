@@ -179,6 +179,8 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.todolistService.l1(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
+    this.gridData = [];
+
   }
   loadDataUpdater() {
     this.gridData = [];
@@ -229,6 +231,8 @@ export class Todolist2Component implements OnInit, OnDestroy {
   openActionModalComponent(data) {
     const modalRef = this.modalService.open(PlanComponent, { size: 'xl', backdrop: 'static', keyboard: false });
     modalRef.componentInstance.data = data;
+    modalRef.componentInstance.currentTime = this.currentTime;
+
     modalRef.result.then((result) => {
     }, (reason) => {
     });

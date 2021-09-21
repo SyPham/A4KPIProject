@@ -37,6 +37,7 @@ import { NgTemplateNameDirective } from './ng-template-name.directive';
 import { UploadKpiComponent } from './todolist/upload-kpi/upload-kpi.component';
 import { Todolist2Component } from './todolist2/todolist2.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { NgxSpinnerModule } from 'ngx-spinner';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -103,6 +104,7 @@ if (lang === 'vi') {
     TabModule,
     SpreadsheetAllModule,
     UploaderModule,
+    NgxSpinnerModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

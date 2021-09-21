@@ -11,6 +11,7 @@ namespace A4KPI.Models
         public List<ActionDto> Actions { get; set; }
         public TargetDto Target { get; set; }
         public TargetYTDDto TargetYTD { get; set; }
+        public DateTime CurrentTime { get; set; }
     }
     public class PDCARequestDto
     {

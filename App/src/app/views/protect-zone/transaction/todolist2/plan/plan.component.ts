@@ -1,3 +1,4 @@
+import { NgxSpinnerService } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -36,7 +37,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
     private alertify: AlertifyService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private spinner: NgxSpinnerService
 
   ) { }
   ngAfterViewInit(): void {
@@ -63,6 +65,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         modifiedTime: null,
         yTD: 0,
         createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: true
       };
     }
 
@@ -85,7 +88,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     console.log(this.targetYTD);
   }
   submit(){
-
+    this.spinner.show();
     this.post(() => {
     this.submitKPINew();
     });
@@ -133,7 +136,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
     const request = {
       actions: actions,
       target: this.target,
-      targetYTD: this.targetYTD
+      targetYTD: this.targetYTD,
+      currentTime: (this.currentTime as Date).toLocaleDateString()
     };
     console.log(request);
 
@@ -154,8 +158,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
       (res) => {
         this.todolist2Service.changeMessage(true);
         this.activeModal.close();
+        this.spinner.hide();
       },
-      (err) => {}
+      (err) => {this.spinner.hide();}
     );
   }
 

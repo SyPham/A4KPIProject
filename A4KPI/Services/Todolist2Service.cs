@@ -28,8 +28,9 @@ namespace A4KPI.Services
         Task<object> GetTargetForUpdatePDCA(int kpiNewId, DateTime currentTime);
         Task<object> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime);
         Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime);
+        Task<OperationResult> SubmitKPINew(int kpiNewId);
 
- Task<OperationResult> SubmitKPINew(int kpiNewId);
+
 
     }
     public class ToDoList2Service : IToDoList2Service
@@ -85,7 +86,7 @@ namespace A4KPI.Services
             _configMapper = configMapper;
         }
 
-       
+
         public async Task<object> GetActionsForL0(int kpiNewId)
         {
 
@@ -115,7 +116,7 @@ namespace A4KPI.Services
         {
             var nextMonth = currentTime.Month;
             var nextYear = currentTime.Year;
-            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == nextYear && x.CreatedTime.Month >= nextMonth).ProjectTo<ActionDto>(_configMapper).ToListAsync();
+            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == nextYear && x.CreatedTime.Month == nextMonth).ProjectTo<ActionDto>(_configMapper).ToListAsync();
             return new
             {
                 Actions = actions,
@@ -131,7 +132,7 @@ namespace A4KPI.Services
             var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
             var policy = policyModel.Name;
-      
+
             return new
             {
                 Kpi = kpi,
@@ -143,13 +144,14 @@ namespace A4KPI.Services
 
         public async Task<object> GetPDCAForL0(int kpiNewId, DateTime currentTime)
         {
-         
+            var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
+
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
                 .ProjectTo<ResultDto>(_configMapper)
                 .FirstOrDefaultAsync();
-            var model = from a in _repoAction.FindAll(x=>x.KPIId == kpiNewId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult)
+            var model = from a in _repoAction.FindAll(x => (displayStatus.Contains(x.StatusId.Value) || x.StatusId == null) && x.KPIId == kpiNewId && x.CreatedTime.Date != currentTime.Date)
                         join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
                         from sub in ab.DefaultIfEmpty()
                         select new UpdatePDCADto
@@ -181,20 +183,15 @@ namespace A4KPI.Services
 
         public async Task<object> GetTargetForUpdatePDCA(int kpiNewId, DateTime currentTime)
         {
-            var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
-            var nextMonth = currentTime.Month;
-            var nextYear = currentTime.Year;
+            var nextMonth = currentTime.Month == 12 ? 1 : currentTime.Month + 1;
+            var nextYear = currentTime.Month == 12 ? currentTime.Year + 1 : currentTime.Year;
 
             var nextMonthTarget = await _repoTarget.FindAll(x => x.KPIId == kpiNewId && x.TargetTime.Year == currentTime.Year && x.TargetTime.Month == currentTime.Month).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
             var thisMonth = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYear = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId && x.TargetTime.Year == thisYear && x.TargetTime.Month == thisMonth).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
-          
             var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == thisYear).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
 
-            var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
-            var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-           
             return new
             {
                 ThisMonthYTD = target,
@@ -219,7 +216,7 @@ namespace A4KPI.Services
             var date = currentTime;
             var month = date.Month;
             //  && x.Actions.Any() == false
-            var actions = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() == false).Select(x => new
+            var actions = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() == false && x.Submitted == false).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
@@ -234,7 +231,7 @@ namespace A4KPI.Services
                 Id = x.Id,
                 Topic = x.Name,
                 Type = "UpdatePDCA",
-                CurrentTarget =  x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && (a.Performance == 0 || !a.Submitted && a.Performance > 0)),
+                CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && (a.Performance == 0 || !a.Submitted && a.Performance > 0)),
             }).Where(x => x.CurrentTarget).ToListAsync();
 
             // 
@@ -255,17 +252,9 @@ namespace A4KPI.Services
 
                 var targetYTD = _mapper.Map<TargetYTD>(model.TargetYTD);
                 var target = _mapper.Map<Target>(model.Target);
-                var currentTime = DateTime.Now;
-                if (currentTime.Month == 12)
-                {
-                    var targetTime = new DateTime(currentTime.Year + 1, 1, currentTime.Day);
-                    target.TargetTime = targetTime;
-                }
-                else
-                {
-                    var targetTime = new DateTime(currentTime.Year, currentTime.Month + 1, currentTime.Day);
-                    target.TargetTime = targetTime;
-                }
+                var currentTime = model.CurrentTime;
+                target.TargetTime = currentTime;
+
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
                 if (target.Id > 0)
@@ -300,7 +289,7 @@ namespace A4KPI.Services
             return operationResult;
         }
 
-  public async Task<OperationResult> SubmitKPINew(int kpiNewId)
+        public async Task<OperationResult> SubmitKPINew(int kpiNewId)
         {
 
             try
@@ -325,6 +314,7 @@ namespace A4KPI.Services
             }
             return operationResult;
         }
+
         public async Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model)
         {
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
@@ -338,49 +328,37 @@ namespace A4KPI.Services
                 var targetYTD = _mapper.Map<TargetYTD>(model.TargetYTD);
                 var target = _mapper.Map<Target>(model.Target);
                 var nextMonthTarget = _mapper.Map<Target>(model.NextMonthTarget);
-                nextMonthTarget.TargetTime = new DateTime(currentTime.Year, currentTime.Month, 1);
+
 
                 var result = _mapper.Map<Result>(model.Result);
 
-                if (currentTime.Month == 1)
-                {
-                    var updateTime = new DateTime(currentTime.Year - 1, 12, 1);
-                    result.UpdateTime = updateTime;
-                }
-                else
-                {
-                    var updateTime = new DateTime(currentTime.Year, currentTime.Month - 1, 1);
-                    result.UpdateTime = updateTime;
 
-                }
-                result.CreatedTime = model.CurrentTime;
 
-                if (currentTime.Month == 1)
-                {
-                    var targetTime = new DateTime(currentTime.Year - 1, 12, 1);
-                    target.TargetTime = targetTime;
-                }
-                else
-                {
-                    var targetTime = new DateTime(currentTime.Year, currentTime.Month - 1, 1);
-                    target.TargetTime = targetTime;
-                }
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
-                if (target.Id > 0)
-                    _repoTarget.Update(target);
-                else
-                    _repoTarget.Add(target);
+                _repoTarget.Update(target);
+
 
                 if (result.Id > 0)
                     _repoResult.Update(result);
                 else
+                {
+                    var yearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+                    var monthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+                    var updateTime = new DateTime(yearResult, monthResult, 1);
+                    result.UpdateTime = updateTime;
+                    result.CreatedTime = model.CurrentTime;
                     _repoResult.Add(result);
+                }
 
                 if (nextMonthTarget.Id > 0)
                     _repoTarget.Update(nextMonthTarget);
                 else
+                {
+                    nextMonthTarget.Submitted = false;
+                    nextMonthTarget.TargetTime = new DateTime(currentTime.Year, currentTime.Month, 1);
                     _repoTarget.Add(nextMonthTarget);
+                }
 
                 _repoTargetYTD.Update(targetYTD);
                 // dynamic currentime
