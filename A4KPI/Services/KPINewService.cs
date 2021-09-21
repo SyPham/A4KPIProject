@@ -26,6 +26,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<KPINew> _repo;
         private readonly IRepositoryBase<Policy> _repoPolicy;
         private readonly IRepositoryBase<OCPolicy> _repoOcPolicy;
+        private readonly IRepositoryBase<OC> _repoOc;
         private readonly IRepositoryBase<Types> _repoType;
         private readonly IRepositoryBase<Account> _repoAc;
         private readonly IUnitOfWork _unitOfWork;
@@ -39,6 +40,7 @@ namespace A4KPI.Services
             IRepositoryBase<Types> repoType, 
             IRepositoryBase<Account> repoAc,
             IRepositoryBase<OCPolicy> repoOcPolicy,
+            IRepositoryBase<OC> repoOc,
             IUnitOfWork unitOfWork,
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper, 
@@ -49,6 +51,7 @@ namespace A4KPI.Services
             _repo = repo;
             _repoPolicy = repoPolicy;
             _repoOcPolicy = repoOcPolicy;
+            _repoOc = repoOc;
             _repoType = repoType;
             _httpContextAccessor = httpContextAccessor;
             _repoAc = repoAc;
@@ -136,12 +139,24 @@ namespace A4KPI.Services
         }
         public async Task<object> GetPolicyByOcID(int ocID)
         {
-            var data =  _repoOcPolicy.FindAll(x => x.OcId == ocID).Select(x => new { 
-                x.Id,
-                x.PolicyId,
-                Name = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? ""
-            }).ToList();
-            return data;
+            var levelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).Level;
+            var parentofLevelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).ParentId;
+            if (levelOc == 3)
+            {
+                return _repoOcPolicy.FindAll(x => x.OcId == ocID).Select(x => new {
+                    x.Id,
+                    x.PolicyId,
+                    Name = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? ""
+                }).ToList();
+            } else
+            {
+                return _repoOcPolicy.FindAll(x => x.OcId == parentofLevelOc).Select(x => new { 
+                    x.Id,
+                    x.PolicyId,
+                    Name = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? ""
+                }).ToList();
+            }
+            //return data;
         }
     }
 }

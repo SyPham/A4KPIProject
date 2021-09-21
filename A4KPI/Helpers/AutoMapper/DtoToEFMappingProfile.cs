@@ -58,6 +58,7 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<TargetDto, Target>();
             CreateMap<ActionDto, Models.Action>();
             CreateMap<ResultDto, Result>();
+            CreateMap<SettingMonthlyDto, SettingMonthly>();
         }
     }
 }
