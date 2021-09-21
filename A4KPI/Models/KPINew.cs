@@ -20,6 +20,8 @@ namespace A4KPI.Models
         public int PolicyId { get; set; }
         public int TypeId { get; set; }
         public int Pic { get; set; }
+        public bool Submitted { get; set; }
+
         public int UpdateBy { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }

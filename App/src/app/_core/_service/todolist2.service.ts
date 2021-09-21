@@ -36,6 +36,9 @@ export class Todolist2Service  {
   submitAction(model): Observable<OperationResult> {
     return this.http.post<OperationResult>(`${this.base}${this.entity}/submitAction`, model);
   }
+  submitKPINew(kpiId): Observable<OperationResult> {
+    return this.http.post<OperationResult>(`${this.base}${this.entity}/SubmitKPINew?kpiId=${kpiId}`, {});
+  }
   getStatus(): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.base}${this.entity}/getStatus`, {})

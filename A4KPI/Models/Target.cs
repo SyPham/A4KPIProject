@@ -17,6 +17,7 @@ namespace A4KPI.Models
         public double Performance { get; set; } // this month performance
         public double YTD { get; set; }
         public int KPIId { get; set; }
+         public bool Submitted { get; set; }
         public int CreatedBy { get; set; }
         public DateTime TargetTime { get; set; }
 
