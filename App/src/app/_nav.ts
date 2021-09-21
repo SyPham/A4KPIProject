@@ -53,6 +53,11 @@ export const navItems: INavData[] = [
         url: '/system/kpi-create',
         icon: 'icon-puzzle'
       },
+      {
+        name: '0.7 Monthly Setting',
+        url: '/system/setting-monthly',
+        icon: 'icon-puzzle'
+      },
     ]
   },
   {

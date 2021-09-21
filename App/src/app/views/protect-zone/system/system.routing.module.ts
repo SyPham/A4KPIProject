@@ -1,3 +1,4 @@
+import { SettingMonthlyComponent } from './setting-monthly/setting-monthly.component';
 import { KpiCreateComponent } from './kpi-create/kpi-create.component';
 import { PolicyComponent } from './policy/policy.component';
 import { NgModule } from '@angular/core'
@@ -38,6 +39,16 @@ const routes: Routes = [
           title: 'Account Group',
           breadcrumb: 'Account Group',
           functionCode: 'account-group'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'setting-monthly',
+        component: SettingMonthlyComponent,
+        data: {
+          title: 'Setting Monthly',
+          breadcrumb: 'Setting Monthly',
+          functionCode: 'setting-monthly'
         },
         // canActivate: [AuthGuard]
       },
