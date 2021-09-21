@@ -181,7 +181,8 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
     this.dataService.setValueLocale(lang);
-    window.location.reload();
+    this.translate.use(lang);
+     window.location.reload();
 
   }
   getBuilding() {

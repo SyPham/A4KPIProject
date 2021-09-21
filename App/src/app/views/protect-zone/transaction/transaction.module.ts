@@ -7,7 +7,7 @@ import { AttitudeScoreComponent } from './todolist/attitude-score/attitude-score
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { CheckBoxAllModule, SwitchModule } from '@syncfusion/ej2-angular-buttons';
 import { DropDownListModule,  MultiSelectAllModule } from '@syncfusion/ej2-angular-dropdowns';
@@ -129,7 +129,8 @@ loadCldr(
 export class TransactionModule{
   vi: any;
   en: any;
-  constructor() {
+  constructor(public translate: TranslateService) {
+    translate.addLangs(['en', 'zh', 'vi']);
     if (lang === 'vi') {
       defaultLang = 'vi';
       setTimeout(() => {
@@ -149,6 +150,7 @@ export class TransactionModule{
         setCulture('zh');
       });
     }
+    translate.use(defaultLang);
   }
 }
 
