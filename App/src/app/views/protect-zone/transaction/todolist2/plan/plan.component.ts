@@ -9,6 +9,7 @@ import { Target } from 'src/app/_core/_model/target';
 import { TargetYTD } from 'src/app/_core/_model/targetytd';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
+import { forkJoin } from 'rxjs';
 declare var $: any;
 @Component({
   selector: 'app-plan',
@@ -88,10 +89,46 @@ export class PlanComponent implements OnInit, AfterViewInit {
     console.log(this.targetYTD);
   }
   submit(){
+    if (this.validate() == false) return;
     this.spinner.show();
-    this.post(() => {
-    this.submitKPINew();
-    });
+    const dataSource = this.grid.dataSource as Action[];
+    const actions = dataSource.map(x => {
+      debugger
+      return {
+        id: x.id,
+        target: x.target,
+        content: x.content,
+        deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
+        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id,
+        statusId: x.statusId,
+        createdTime: new Date().toISOString(),
+        modifiedTime: null
+      }
+    })
+    const request = {
+      actions: actions,
+      target: this.target,
+      targetYTD: this.targetYTD,
+      currentTime: (this.currentTime as Date).toLocaleDateString()
+    };
+    console.log(request);
+
+    const post = this.todolist2Service.submitAction(request)
+    const submitKPINew = this.todolist2Service.submitKPINew(this.data.id);
+    forkJoin([post, submitKPINew]).subscribe(response => {
+      console.log(response)
+      const arr = response.map(x=> x.success);
+      const checker = arr => arr.every(Boolean);
+      if (checker) {
+        this.todolist2Service.changeMessage(true);
+        this.activeModal.close();
+        this.spinner.hide();
+
+      } else {
+        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+      }
+    })
   }
   back(){
     this.post(()=>{
@@ -125,7 +162,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         id: x.id,
         target: x.target,
         content: x.content,
-        deadline: (x.deadline as Date).toLocaleDateString(),
+        deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
         accountId: +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
