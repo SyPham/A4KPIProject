@@ -17,4 +17,13 @@ namespace A4KPI.DTO
         public DateTime? ModifiedTime { get; set; }
         public DateTime CreatedTime { get; set; }
     }
+    public class TargetL0Dto
+    {
+        public double Performance { get; set; } // this month performance
+ 
+        public bool Submitted { get; set; }
+
+        public DateTime TargetTime { get; set; }
+      
+    }
 }
