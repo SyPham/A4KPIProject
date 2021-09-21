@@ -283,6 +283,11 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       this.alertify.warning('Please input next month target');
       return false;
     }
+
+    if (!this.result) {
+      this.alertify.warning('Please input C column');
+      return false;
+    }
     const dataSource = (this.grid.dataSource as Action[]) || [];
 
     if (dataSource.length == 0) {

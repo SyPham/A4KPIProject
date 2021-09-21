@@ -268,7 +268,7 @@ namespace A4KPI.Services
             var date = currentTime;
             var month = date.Month;
             //  && x.Actions.Any() == false
-            var actions = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() == false && x.Submitted == false).Select(x => new
+            var actions = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() == false && x.Submitted == false || (x.Actions.Any() && x.Submitted == false)).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,

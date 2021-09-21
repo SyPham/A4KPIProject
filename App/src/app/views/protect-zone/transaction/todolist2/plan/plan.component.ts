@@ -93,11 +93,12 @@ export class PlanComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
+      debugger
       return {
         id: x.id,
         target: x.target,
         content: x.content,
-        deadline: (x.deadline as Date).toLocaleDateString(),
+        deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
         accountId: +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
@@ -161,7 +162,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         id: x.id,
         target: x.target,
         content: x.content,
-        deadline: (x.deadline as Date).toLocaleDateString(),
+        deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
         accountId: +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
