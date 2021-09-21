@@ -170,6 +170,48 @@ namespace A4KPI.Migrations
                     b.ToTable("AccountTypes");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Action", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KPIId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Target")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("KPIId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Actions");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Attitude", b =>
                 {
                     b.Property<int>("Id")
@@ -320,6 +362,35 @@ namespace A4KPI.Migrations
                     b.ToTable("Contributions");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Do", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Achievement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ActionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionId");
+
+                    b.ToTable("Do");
+                });
+
             modelBuilder.Entity("A4KPI.Models.KPI", b =>
                 {
                     b.Property<int>("Id")
@@ -370,6 +441,8 @@ namespace A4KPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PolicyId");
 
                     b.ToTable("KPINew");
                 });
@@ -822,6 +895,35 @@ namespace A4KPI.Migrations
                     b.ToTable("Progresses");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Result", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KPIId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KPIId");
+
+                    b.ToTable("Results");
+                });
+
             modelBuilder.Entity("A4KPI.Models.ResultOfMonth", b =>
                 {
                     b.Property<int>("Id")
@@ -857,6 +959,36 @@ namespace A4KPI.Migrations
                     b.HasIndex("ObjectiveId");
 
                     b.ToTable("ResultOfMonth");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.SettingMonthly", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DisplayTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Month")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SettingMonthly");
                 });
 
             modelBuilder.Entity("A4KPI.Models.SmartScore", b =>
@@ -932,6 +1064,94 @@ namespace A4KPI.Migrations
                     b.ToTable("SpecialScore");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Status");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Target", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KPIId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Performance")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("TargetTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.Property<double>("YTD")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KPIId");
+
+                    b.ToTable("Targets");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KPIId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModifiedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KPIId");
+
+                    b.ToTable("TargetYTD");
+                });
+
             modelBuilder.Entity("A4KPI.Models.ToDoList", b =>
                 {
                     b.Property<int>("Id")
@@ -997,6 +1217,33 @@ namespace A4KPI.Migrations
                     b.ToTable("Types");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.UploadFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KPIId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UploadTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UploadFile");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Account", b =>
                 {
                     b.HasOne("A4KPI.Models.AccountType", "AccountType")
@@ -1042,6 +1289,31 @@ namespace A4KPI.Migrations
                     b.Navigation("AccountGroup");
 
                     b.Navigation("Period");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Action", b =>
+                {
+                    b.HasOne("A4KPI.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
+                        .WithMany("Actions")
+                        .HasForeignKey("KPIId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+
+                    b.Navigation("Account");
+
+                    b.Navigation("KPINew");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("A4KPI.Models.AttitudeScore", b =>
@@ -1107,6 +1379,28 @@ namespace A4KPI.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("PeriodType");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Do", b =>
+                {
+                    b.HasOne("A4KPI.Models.Action", "Action")
+                        .WithMany()
+                        .HasForeignKey("ActionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Action");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.KPINew", b =>
+                {
+                    b.HasOne("A4KPI.Models.Policy", "Policy")
+                        .WithMany()
+                        .HasForeignKey("PolicyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Policy");
                 });
 
             modelBuilder.Entity("A4KPI.Models.KPIScore", b =>
@@ -1252,6 +1546,17 @@ namespace A4KPI.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Result", b =>
+                {
+                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
+                        .WithMany()
+                        .HasForeignKey("KPIId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KPINew");
+                });
+
             modelBuilder.Entity("A4KPI.Models.ResultOfMonth", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1298,6 +1603,28 @@ namespace A4KPI.Migrations
                     b.Navigation("PeriodType");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Target", b =>
+                {
+                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
+                        .WithMany("Targets")
+                        .HasForeignKey("KPIId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KPINew");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
+                {
+                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
+                        .WithMany()
+                        .HasForeignKey("KPIId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KPINew");
+                });
+
             modelBuilder.Entity("A4KPI.Models.ToDoList", b =>
                 {
                     b.HasOne("A4KPI.Models.Objective", "Objective")
@@ -1328,6 +1655,13 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.AccountType", b =>
                 {
                     b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.KPINew", b =>
+                {
+                    b.Navigation("Actions");
+
+                    b.Navigation("Targets");
                 });
 
             modelBuilder.Entity("A4KPI.Models.OC", b =>

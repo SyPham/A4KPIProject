@@ -32,4 +32,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\UploadingFiles\" />
+    <Folder Include="wwwroot\UploadedFiles\" />
+  </ItemGroup>
+
 </Project>

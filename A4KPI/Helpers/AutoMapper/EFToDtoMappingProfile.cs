@@ -62,6 +62,10 @@ namespace A4KPI.Helpers.AutoMapper
             CreateMap<Policy, PolicyDto>();
             CreateMap<KPINew, KPINewDto>();
 
+            CreateMap<TargetYTD, TargetYTDDto>();
+            CreateMap<Target, TargetDto>();
+            CreateMap<Models.Action, ActionDto>();
+            CreateMap<Result, ResultDto>();
 
         }
     }

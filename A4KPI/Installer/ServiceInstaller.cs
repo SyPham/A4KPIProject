@@ -48,6 +48,9 @@ namespace A4KPI.Installer
             services.AddScoped<IOCPolicyService, OCPolicyService>();
             services.AddScoped<IOCNewService, OCNewService>();
             services.AddScoped<IKPINewService, KPINewService>();
+            services.AddScoped<IToDoList2Service, ToDoList2Service>();
+            services.AddScoped<ITargetYTDService, TargetYTDService>();
+            services.AddScoped<IMeetingService, MeetingService>();
         }
     }
 }

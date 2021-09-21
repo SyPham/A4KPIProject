@@ -44,6 +44,16 @@ namespace A4KPI.Data
         public DbSet<SmartScore> SmartScore { get; set; }
         public DbSet<Performance> Performances { get; set; }
         public DbSet<SpecialContributionScore> SpecialContributionScore { get; set; }
+
+        public DbSet<Models.Action> Actions { get; set; }
+        public DbSet<Do> Do { get; set; }
+        public DbSet<Result> Results { get; set; }
+        public DbSet<SettingMonthly> SettingMonthly { get; set; }
+        public DbSet<Target> Targets { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<UploadFile> UploadFiles { get; set; }
+        public DbSet<TargetYTD> TargetYTDs { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
@@ -71,6 +81,7 @@ namespace A4KPI.Data
                .WithMany(ta => ta.OCAccounts)
                .HasForeignKey(u => u.OCId)
                .OnDelete(DeleteBehavior.NoAction);
+
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -82,7 +93,7 @@ namespace A4KPI.Data
                 {
                     if (item.State == EntityState.Added)
                     {
-                        changedOrAddedItem.CreatedTime = DateTime.Now;
+                        changedOrAddedItem.CreatedTime = changedOrAddedItem.CreatedTime == DateTime.MinValue ? DateTime.Now : changedOrAddedItem.CreatedTime;
                     }
                     else
                     {
