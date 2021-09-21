@@ -184,8 +184,10 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     this.gridData[i].achievement = value;
 
   }
-  onChangeStatus(value, i) {
-    this.gridData[i].statusId = JSON.parse(value);
+  onChangeStatus(value, i, item) {
+    this.addOrUpdateStatus(item, () => {
+      this.gridData[i].statusId = JSON.parse(value);
+    });
 
   }
   onChangeResult(value) {
@@ -338,6 +340,20 @@ export class PdcaComponent implements OnInit, AfterViewInit {
         } else {
           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
+      },
+      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+    );
+  }
+  addOrUpdateStatus(data, callBack) {
+    const request = {
+      actionId: data.actionId,
+      statusId: +data.statusId,
+      actionStatusId: data.actionStatusId || 0,
+      currentTime: (this.currentTime as Date).toLocaleDateString(),
+    }
+    this.todolist2Service.addOrUpdateStatus(request).subscribe(
+      (res) => {
+        callBack();
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );

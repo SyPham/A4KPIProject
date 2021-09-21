@@ -118,7 +118,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     //   this.firstItem = item[0] || {};
     // });
 
-    this.langsData = [{ id: 'vi', name: 'VI' }, { id: 'en', name: 'EN' }];
+    this.langsData = [, { id: 'zh', name: 'ZH' }, { id: 'en', name: 'EN' },{ id: 'vi', name: 'VI' }];
     this.navAdmin = new Nav().getNavAdmin();
     this.navClient = new Nav().getNavClient();
     this.navEc = new Nav().getNavEc();
@@ -162,20 +162,27 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     return '/ec/execution/todolist-2';
   }
   onChange(args) {
+    // this.spinner.show();
+    // const lang = args.itemData.id;
+    // localStorage.removeItem('lang');
+    // localStorage.setItem('lang', lang);
+    // this.dataService.setValueLocale(lang);
+    // this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
+    //   this.navItems = navs;
+    //   localStorage.setItem('navs', JSON.stringify(navs));
+    //   this.spinner.hide();
+    //   window.location.reload();
+
+    // }, (err) => {
+    //   this.spinner.hide();
+    // });
     this.spinner.show();
     const lang = args.itemData.id;
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
     this.dataService.setValueLocale(lang);
-    this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
-      this.navItems = navs;
-      localStorage.setItem('navs', JSON.stringify(navs));
-      this.spinner.hide();
-      window.location.reload();
+    window.location.reload();
 
-    }, (err) => {
-      this.spinner.hide();
-    });
   }
   getBuilding() {
     const userID = JSON.parse(localStorage.getItem('user')).user.id;

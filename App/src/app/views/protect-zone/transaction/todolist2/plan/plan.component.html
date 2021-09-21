@@ -11,10 +11,10 @@
   <div class="row">
     <div class="col-12">
       <p>
-        <label class="font-weight-bold">Policy: </label> <span>{{policy}}</span>
+        <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
       </p>
       <p>
-        <label class="font-weight-bold">KPI: </label> <span>{{kpi}}</span>
+        <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
       </p>
       <p>
         <label class="font-weight-bold">PIC: </label> <span>{{pic}}</span>
@@ -24,14 +24,14 @@
     <div class="col-12 d-flex align-items-start">
       <div class="input-group mb-3" style="width:300px">
         <div class="input-group-prepend">
-          <span class="input-group-text font-weight-bold" id="target">Next month Target</span>
+          <span class="input-group-text font-weight-bold" id="target">{{"Next month Target" | translate}}</span>
         </div>
         <input type="text" class="form-control" (ngModelChange)="onChangeTarget($event)" [(ngModel)]="targetValue" id="next-month-target" aria-describedby="target">
       </div>
 
       <div class="input-group mb-3 ml-5" style="width:300px">
         <div class="input-group-prepend">
-          <span class="input-group-text font-weight-bold" id="ytd">Target YTD</span>
+          <span class="input-group-text font-weight-bold" id="ytd">{{"Target YTD" | translate}}</span>
         </div>
         <input type="text" class="form-control" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="targetYTDValue" id="target-ytd" aria-describedby="ytd">
       </div>

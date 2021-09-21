@@ -8,10 +8,10 @@
     <div class="row">
       <div class="col-12">
         <p>
-          <label class="font-weight-bold">Policy: </label> <span>{{policy}}</span>
+          <label class="font-weight-bold">{{'Policy' | translate}}: </label> <span>{{policy}}</span>
         </p>
         <p>
-          <label class="font-weight-bold">KPI: </label> <span>{{kpi}}</span>
+          <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
         </p>
         <p>
           <label class="font-weight-bold">PIC: </label> <span>{{pic}}</span>
@@ -22,7 +22,7 @@
         <table class="table table-bordered" style="width: 300px; margin-right: 50px;">
           <tbody>
             <tr>
-              <th scope="row">This month Performance
+              <th scope="row">{{"This month Performance" | translate}}
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
@@ -34,7 +34,7 @@
               </td>
             </tr>
             <tr>
-              <th scope="row">This month Target
+              <th scope="row">{{"This month Target" | translate}}
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
@@ -46,7 +46,7 @@
               </td>
             </tr>
             <tr>
-              <th scope="row">Next month Target
+              <th scope="row">{{"Next month Target" | translate}}
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
@@ -62,7 +62,7 @@
         <table class="table table-bordered" style="width: 300px; margin-right: 50px;">
           <tbody>
             <tr>
-              <th scope="row">This month YTD
+              <th scope="row">{{"This month YTD" | translate}}
 
               </th>
               <td>
@@ -75,7 +75,7 @@
               </td>
             </tr>
             <tr>
-              <th scope="row">Target YTD
+              <th scope="row">{{"Target YTD" | translate}}
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
@@ -102,15 +102,15 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th scope="col" rowspan="2" class="text-center align-middle">月份</th>
-              <th scope="col" rowspan="2" class="text-center align-middle">#</th>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%">月份</th>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%">#</th>
               <th scope="col" class="text-center">P</th>
-              <th scope="col" class="text-center">Target</th>
-              <th scope="col" class="text-center">Deadline</th>
-              <th scope="col" class="text-center">D</th>
-              <th scope="col" class="text-center">Achievement</th>
-              <th scope="col" class="text-center">Status</th>
-              <th scope="col" class="text-center">C</th>
+              <th scope="col" class="text-center" >Target</th>
+              <th scope="col" class="text-center" style="width: 8%">Deadline</th>
+              <th scope="col" class="text-center" style="width: 15%">D</th>
+              <th scope="col" class="text-center" style="width: 8%">Achievement</th>
+              <th scope="col" class="text-center" style="width: 10%">Status</th>
+              <th scope="col" class="text-center" style="width: 20%">C</th>
             </tr>
             <tr>
               <th scope="col" class="text-center">Content</th>
@@ -139,12 +139,12 @@
                 <input type="text" class="form-control" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement'>
               </td>
               <td>
-                <select class="custom-select" [(ngModel)]="item.statusId"  (ngModelChange)="onChangeStatus($event, i)">
+                <select class="custom-select" [(ngModel)]="item.statusId"  (ngModelChange)="onChangeStatus($event, i, item)">
                   <option [value]="null">Chose status</option>
                   <option *ngFor="let item of status" [value]="item.id">{{item.name}}</option>
                 </select>
               </td>
-            <td scope="row" [attr.rowspan]="gridData.length"  *ngIf="i == 0" class="text-center align-middle">
+            <td scope="row" [attr.rowspan]="gridData.length"  *ngIf="i == 0" class="">
               <textarea [(ngModel)]="content"  (ngModelChange)="onChangeResult($event)"  id="result" cols="30" rows="10" class="form-control"></textarea>
             </td>
             </tr>

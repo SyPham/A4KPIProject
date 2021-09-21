@@ -31,5 +31,6 @@ namespace A4KPI.Models
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }
 
+        public virtual ICollection<ActionStatus> ActionStatus { get; set; }
     }
 }

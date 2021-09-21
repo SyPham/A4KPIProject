@@ -290,7 +290,14 @@
     "Kilogram": "Kilôgam",
     "Addition2": "Giao thêm",
     "Created Time": "Ngày tạo",
-    "Create Report Time": "Tạo thời gian báo cáo"
+    "Create Report Time": "Tạo thời gian báo cáo",
+    "Policy": "Policy",
+    "KPI": "KPI",
+    "This month Performance": "This month Performance",
+    "This month Target": "This month Target",
+    "Next month Target": "Next month Target",
+    "This month YTD": "This month YTD",
+    "Target YTD": "Target YTD"
 
 
 }

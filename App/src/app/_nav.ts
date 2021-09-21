@@ -26,30 +26,30 @@ export const navItems: INavData[] = [
         icon: 'icon-puzzle'
       },
 
-      {
-        name: '0.3 Period',
-        url: '/system/period',
-        icon: 'icon-puzzle'
-      },
+      // {
+      //   name: '0.3 Period',
+      //   url: '/system/period',
+      //   icon: 'icon-puzzle'
+      // },
 
       {
-        name: '0.4 OC',
+        name: '0.3 OC',
         url: '/system/oc',
         icon: 'icon-puzzle'
       },
 
+      // {
+      //   name: '0.5 OC User',
+      //   url: '/system/oc-user',
+      //   icon: 'icon-puzzle'
+      // },
       {
-        name: '0.5 OC User',
-        url: '/system/oc-user',
-        icon: 'icon-puzzle'
-      },
-      {
-        name: '0.6 Policy',
+        name: '0.4 Policy',
         url: '/system/policy',
         icon: 'icon-puzzle'
       },
       {
-        name: '0.6 KPI Create',
+        name: '0.5 KPI Create',
         url: '/system/kpi-create',
         icon: 'icon-puzzle'
       },
@@ -72,23 +72,23 @@ export const navItems: INavData[] = [
     url: '/transaction',
     icon: 'icon-cursor',
     children: [
+      // {
+      //   name: '2.1 KPI Objective',
+      //   url: '/transaction/objective',
+      //   icon: 'icon-cursor'
+      // },
+      // {
+      //   name: '2.2 To Do List',
+      //   url: '/transaction/todolist',
+      //   icon: 'icon-cursor'
+      // },
       {
-        name: '2.1 KPI Objective',
-        url: '/transaction/objective',
-        icon: 'icon-cursor'
-      },
-      {
-        name: '2.2 To Do List',
-        url: '/transaction/todolist',
-        icon: 'icon-cursor'
-      },
-      {
-        name: '2.2 To Do List 2',
+        name: '2.1 To Do List 2',
         url: '/transaction/todolist2',
         icon: 'icon-cursor'
       },
       {
-        name: '2.3 Meeting',
+        name: '2.2 Meeting',
         url: '/transaction/meeting',
         icon: 'icon-cursor'
       },
@@ -107,26 +107,26 @@ export const navItems: INavData[] = [
     url: '/report',
     icon: 'icon-calculator',
     children: [
-      {
-        name: 'Q1,Q3 Report 季報表',
-        url: '/report/q1-q3-report',
-        icon: 'icon-calculator'
-      },
-      {
-        name: 'H1 & H2 Report',
-        url: '/report/h1-h2-report',
-        icon: 'icon-calculator'
-      },
-      {
-        name: 'HQ HR Report 年中考核名單',
-        url: '/report/hq-hr-report',
-        icon: 'icon-calculator'
-      },
-      {
-        name: 'GHR Report ',
-        url: '/report/ghr-report',
-        icon: 'icon-calculator'
-      },
+      // {
+      //   name: 'Q1,Q3 Report 季報表',
+      //   url: '/report/q1-q3-report',
+      //   icon: 'icon-calculator'
+      // },
+      // {
+      //   name: 'H1 & H2 Report',
+      //   url: '/report/h1-h2-report',
+      //   icon: 'icon-calculator'
+      // },
+      // {
+      //   name: 'HQ HR Report 年中考核名單',
+      //   url: '/report/hq-hr-report',
+      //   icon: 'icon-calculator'
+      // },
+      // {
+      //   name: 'GHR Report ',
+      //   url: '/report/ghr-report',
+      //   icon: 'icon-calculator'
+      // },
     ]
   }
 
