@@ -30,6 +30,7 @@ namespace A4KPI.Services
         Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime);
         Task<OperationResult> SubmitKPINew(int kpiNewId);
 
+        Task<OperationResult> AddOrUpdateStatus(ActionStatusRequestDto request);
 
 
     }
@@ -41,6 +42,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<KPINew> _repoKPINew;
         private readonly IRepositoryBase<TargetYTD> _repoTargetYTD;
         private readonly IRepositoryBase<Result> _repoResult;
+        private readonly IRepositoryBase<ActionStatus> _repoActionStatus;
         private readonly IRepositoryBase<Target> _repoTarget;
         private readonly IRepositoryBase<Models.Status> _repoStatus;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -59,6 +61,7 @@ namespace A4KPI.Services
              IRepositoryBase<KPINew> repoKPINew,
              IRepositoryBase<TargetYTD> repoTargetYTD,
              IRepositoryBase<Result> repoResult,
+             IRepositoryBase<ActionStatus> repoActionStatus,
              IRepositoryBase<Target> repoTarget,
              IRepositoryBase<Models.Status> repoStatus,
              IHttpContextAccessor httpContextAccessor,
@@ -75,6 +78,7 @@ namespace A4KPI.Services
             _repoKPINew = repoKPINew;
             _repoTargetYTD = repoTargetYTD;
             _repoResult = repoResult;
+            _repoActionStatus = repoActionStatus;
             _repoTarget = repoTarget;
             _repoStatus = repoStatus;
             _httpContextAccessor = httpContextAccessor;
@@ -86,6 +90,51 @@ namespace A4KPI.Services
             _configMapper = configMapper;
         }
 
+        public async Task<OperationResult> AddOrUpdateStatus(ActionStatusRequestDto request)
+        {
+
+            try
+            {
+                var yearResult = request.CurrentTime.Month == 1 ? request.CurrentTime.Year - 1 : request.CurrentTime.Year;
+                var monthResult = request.CurrentTime.Month == 1 ? 12 : request.CurrentTime.Month - 1;
+                var updateTime = new DateTime(yearResult, monthResult, 1);
+                var result = new ActionStatus();
+                if (request.ActionStatusId > 0)
+                {
+
+                    var item = await _repoActionStatus.FindAll(x => x.Id == request.ActionStatusId).FirstOrDefaultAsync();
+                    item.StatusId = request.StatusId;
+                    _repoActionStatus.Update(item);
+                    result = item;
+                } else
+                {
+                    var addItem = new ActionStatus
+                    {
+                        ActionId = request.ActionId,
+                        StatusId = request.StatusId,
+                        CreatedTime = updateTime
+                    };
+                    _repoActionStatus.Add(addItem);
+                    result = addItem;
+
+                }
+
+
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.AddSuccess,
+                    Success = true,
+                    Data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
 
         public async Task<object> GetActionsForL0(int kpiNewId)
         {
@@ -162,7 +211,10 @@ namespace A4KPI.Services
                             DoContent = sub == null ? "" : sub.Content,
                             Achievement = sub == null ? "" : sub.Achievement,
                             Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
-                            StatusId = a.StatusId,
+                            StatusId = a.ActionStatus.Any(x=> x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).StatusId : null,
+                            ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Id : null,
                             Target = a.Target
                         };
             var data = await model.ToListAsync();
@@ -329,10 +381,7 @@ namespace A4KPI.Services
                 var target = _mapper.Map<Target>(model.Target);
                 var nextMonthTarget = _mapper.Map<Target>(model.NextMonthTarget);
 
-
                 var result = _mapper.Map<Result>(model.Result);
-
-
 
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
@@ -366,6 +415,7 @@ namespace A4KPI.Services
                 {
                     item.CreatedTime = model.CurrentTime;
                 });
+
                 _repoAction.AddRange(addActions);
                 _repoAction.UpdateRange(updateActions);
                 var updatethisMonthAction = new List<Models.Action>();

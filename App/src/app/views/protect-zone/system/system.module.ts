@@ -41,11 +41,22 @@ loadCldr(
   require('cldr-data/main/vi/numbers.json'),
   require('cldr-data/main/vi/timeZoneNames.json'),
   require('cldr-data/supplemental/weekdata.json')); // To load the culture based first day of week
-if (lang === 'vi') {
-  defaultLang = lang;
-} else {
-  defaultLang = 'en';
-}
+
+
+  loadCldr(
+    require('cldr-data/supplemental/numberingSystems.json'),
+    require('cldr-data/main/zh/ca-gregorian.json'),
+    require('cldr-data/main/zh/numbers.json'),
+    require('cldr-data/main/zh/timeZoneNames.json'),
+    require('cldr-data/supplemental/weekdata.json')); // To load the culture based first day of week
+
+    if (lang === 'vi') {
+      defaultLang = lang;
+    } else if (lang === 'en') {
+      defaultLang = 'en';
+    } else {
+      defaultLang = 'zh';
+    }
 @NgModule({
   declarations: [
     AccountComponent,
@@ -82,7 +93,7 @@ if (lang === 'vi') {
     }),
   ]
 })
-export class SystemModule  {
+export class SystemModule {
   vi: any;
   en: any;
   constructor() {
@@ -92,13 +103,20 @@ export class SystemModule  {
         L10n.load(require('../../../../assets/ej2-lang/vi.json'));
         setCulture('vi');
       });
-    } else {
+    } else if (lang === 'en') {
       defaultLang = 'en';
       setTimeout(() => {
         L10n.load(require('../../../../assets/ej2-lang/en.json'));
         setCulture('en');
       });
+    }else{
+      defaultLang = 'zh';
+      setTimeout(() => {
+        L10n.load(require('../../../../assets/ej2-lang/zh.json'));
+        setCulture('zh');
+      });
     }
   }
 }
+
 

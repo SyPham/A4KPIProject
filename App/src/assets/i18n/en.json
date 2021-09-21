@@ -290,6 +290,13 @@
     "Kilogram": "Kilogram",
     "Addition2": "Addition",
     "Created Time": "Created time",
-    "Create Report Time": "Create Report Time"
+    "Create Report Time": "Create Report Time",
+    "Policy": "Policy",
+    "KPI": "KPI",
+    "This month Performance": "This month Performance",
+    "This month Target": "This month Target",
+    "Next month Target": "Next month Target",
+    "This month YTD": "This month YTD",
+    "Target YTD": "Target YTD"
 
 }

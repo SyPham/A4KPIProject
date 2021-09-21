@@ -18,6 +18,7 @@ namespace A4KPI.DTO
         public string Target { get; set; }
         public string Deadline { get; set; }
         public int? StatusId { get; set; }
+        public int? ActionStatusId { get; set; }
         public string StatusName { get; set; }
         public string DoContent { get; set; }
         public string CContent { get; set; }
@@ -27,5 +28,11 @@ namespace A4KPI.DTO
         public string ADeadline { get; set; }
 
     }
-    
+    public class ActionStatusRequestDto
+    {
+        public int ActionId { get; set; }
+        public int StatusId { get; set; }
+        public int ActionStatusId { get; set; }
+        public DateTime CurrentTime { get; set; }
+    }
 }

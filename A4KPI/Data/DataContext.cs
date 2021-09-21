@@ -53,6 +53,7 @@ namespace A4KPI.Data
         public DbSet<Status> Status { get; set; }
         public DbSet<UploadFile> UploadFiles { get; set; }
         public DbSet<TargetYTD> TargetYTDs { get; set; }
+        public DbSet<ActionStatus> ActionStatus { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {

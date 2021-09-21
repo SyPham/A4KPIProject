@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210918024941_UpdateTargetTable")]
+    partial class UpdateTargetTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,34 +212,6 @@ namespace A4KPI.Migrations
                     b.HasIndex("StatusId");
 
                     b.ToTable("Actions");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.ActionStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ActionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("ActionStatus");
                 });
 
             modelBuilder.Entity("A4KPI.Models.Attitude", b =>
@@ -458,9 +432,6 @@ namespace A4KPI.Migrations
 
                     b.Property<int>("PolicyId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Submitted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
@@ -1350,25 +1321,6 @@ namespace A4KPI.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.ActionStatus", b =>
-                {
-                    b.HasOne("A4KPI.Models.Action", "Action")
-                        .WithMany("ActionStatus")
-                        .HasForeignKey("ActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("A4KPI.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Action");
-
-                    b.Navigation("Status");
-                });
-
             modelBuilder.Entity("A4KPI.Models.AttitudeScore", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1708,11 +1660,6 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.AccountType", b =>
                 {
                     b.Navigation("Accounts");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.Action", b =>
-                {
-                    b.Navigation("ActionStatus");
                 });
 
             modelBuilder.Entity("A4KPI.Models.KPINew", b =>

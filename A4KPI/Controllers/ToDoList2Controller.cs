@@ -86,5 +86,12 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.GetActionsForUpdatePDCA(kpiNewId, currentTime));
         }
+
+        [HttpPost]
+        public async Task<ActionResult> AddOrUpdateStatus(ActionStatusRequestDto action)
+        {
+
+            return Ok(await _service.AddOrUpdateStatus(action));
+        }
     }
 }
