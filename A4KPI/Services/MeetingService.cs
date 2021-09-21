@@ -26,6 +26,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<KPINew> _repoKPINew;
         private readonly IRepositoryBase<Do> _repoDo;
         private readonly IRepositoryBase<Result> _repoResult;
+        private readonly IRepositoryBase<ActionStatus> _repoAcs;
         private readonly IRepositoryBase<OC> _repoOC;
         private readonly IRepositoryBase<Types> _repoType;
         private readonly IRepositoryBase<Policy> _repoPo;
@@ -41,6 +42,7 @@ namespace A4KPI.Services
             IRepositoryBase<Types> repoType,
             IRepositoryBase<Policy> repoPo,
             IRepositoryBase<Target> repoTarget,
+            IRepositoryBase<ActionStatus> repoAcs,
             IRepositoryBase<Account> repoAc,
             IRepositoryBase<KPINew> repoKPINew, 
             IRepositoryBase<Do> repoDo, 
@@ -56,6 +58,7 @@ namespace A4KPI.Services
             _repo = repo;
             _repoOC = repoOC;
             _repoAc = repoAc;
+            _repoAcs = repoAcs;
             _repoPo = repoPo;
             _repoType = repoType;
             _repoTarget = repoTarget;
@@ -273,7 +276,7 @@ namespace A4KPI.Services
                                 Achievement = sub == null ? "" : sub.Achievement,
                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
                                 StatusId = a.StatusId,
-                                StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == a.StatusId).Name.Trim(),
+                                StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.Id == a.StatusId && x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                 Target = a.Target,
                                 
