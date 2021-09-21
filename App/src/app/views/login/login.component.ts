@@ -59,14 +59,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.login();
       }
     }
-    this.uri = this.route.snapshot.queryParams.uri || '/transaction/todolist';
+    this.uri = this.route.snapshot.queryParams.uri || '/transaction/todolist2';
   }
   role: number;
   ngOnInit(): void {
     const accessToken = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refresh_token');
     if (accessToken && refreshToken && this.route.routeConfig.path === 'login') {
-      const uri = decodeURI(this.uri) || '/transaction/todolist';
+      const uri = decodeURI(this.uri) || '/transaction/todolist2';
       this.router.navigate([uri]);
     }
   }
@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       // });
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
-      this.router.navigate(['/transaction/todolist']);
+      this.router.navigate(['/transaction/todolist2']);
 
       // console.log('end getActionInFunctionByRoleID');
       this.alertifyService.success('Login Success!!');
