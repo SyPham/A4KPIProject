@@ -3,7 +3,7 @@ import { OcPolicyService } from './../../../../_core/_service/OcPolicy.service';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
-import { EditService, ToolbarService, PageService, GridComponent, QueryCellInfoEventArgs } from '@syncfusion/ej2-angular-grids';
+import { EditService, ToolbarService, PageService, GridComponent, QueryCellInfoEventArgs, ColumnModel } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Account2Service } from 'src/app/_core/_service/account2.service';
@@ -148,6 +148,67 @@ export class MeetingComponent extends BaseComponent implements OnInit {
   policyTitle: string
   kpiTitle: string
   levelTitle: string
+  public monthColumns = [
+    {
+      headerText: '內容',
+      textAlign: 'Center',
+    }
+  ];
+  public PColumns = [
+    {
+      headerText: '月份計劃',
+      textAlign: 'Center',
+    }
+  ];
+  public TargetColumns = [
+    {
+      headerText: '目標值',
+      textAlign: 'Center',
+    }
+  ];
+  public DeadlineColumns = [
+    {
+      headerText: '完成期限',
+      textAlign: 'Center',
+    }
+  ];
+  public DColumns = [
+    {
+      headerText: '執行狀況',
+      textAlign: 'Center',
+    }
+  ];
+  public AchievementColumns = [
+    {
+      headerText: '實績',
+      textAlign: 'Center',
+    }
+  ];
+  public StatusColumns = [
+    {
+      headerText: '狀態',
+      textAlign: 'Center',
+    }
+  ];
+  public CColumns = [
+    {
+      headerText: '執行分析檢討',
+      textAlign: 'Center',
+    }
+  ];
+  public AColumns = [
+    {
+      headerText: '計畫執行',
+      textAlign: 'Center',
+    }
+  ];
+  public AttatchmentColumns = [
+    {
+      headerText: '附檔',
+      textAlign: 'Center',
+    }
+  ];
+
   picTitle: string
   kpiId: any;
   constructor(
@@ -223,7 +284,7 @@ export class MeetingComponent extends BaseComponent implements OnInit {
     this.kpiId = data.id
     this.loadDataModel(data.id)
     this.loadDataModel2(data.id)
-    this.modalRef = this.modalService.open(model, { size: 'xxl', backdrop: 'static' });
+    this.modalRef = this.modalService.open(model, { size: 'lg', backdrop: 'static' });
   }
   createChart(chartId, labels, unit) {
     const ctx = document.getElementById(chartId) as HTMLCanvasElement;
@@ -358,7 +419,6 @@ export class MeetingComponent extends BaseComponent implements OnInit {
       this.targets = res.targets
       this.labels = res.labels
       this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
-      console.log(this.dataTable);
       this.createChart(
         'planet-chart',
         this.labels,

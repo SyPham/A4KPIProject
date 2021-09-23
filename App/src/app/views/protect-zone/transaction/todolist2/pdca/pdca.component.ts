@@ -264,7 +264,9 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     this.post(true);
   }
   back() {
-    this.post(false);
+    //this.post(false);
+    this.activeModal.close();
+
   }
   validate() {
     if (!this.thisMonthTargetValue) {

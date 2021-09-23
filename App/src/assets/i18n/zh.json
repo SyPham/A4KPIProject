@@ -297,6 +297,21 @@
   "This month Target": "當月目標",
   "Next month Target": "下個月目標",
   "This month YTD": "當月YTD",
-  "Target YTD": "目標YTD"
+  "Target YTD": "目標YTD",
+
+  "meetingMonth": "月份",
+  "meetingP": "月份計劃",
+  "meetingTarget": "目標值",
+  "meetingDeadline": "期限",
+  "meetingD": "執行狀況",
+  "meetingAtri": "實績",
+  "meetingStatus": "狀態",
+  "meetingC": "執行分析檢討",
+  "meetingA": "計畫執行",
+  "meetingPer": "目標",
+  "meetingAt": "附檔",
+  "Content": "月份計劃",
+  "Target": "目標值",
+  "Deadline": "完成期限"
 
 }

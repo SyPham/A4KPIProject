@@ -32,32 +32,7 @@ export const navItems: INavData[] = [
       //   icon: 'icon-puzzle'
       // },
 
-      {
-        name: '0.3 OC',
-        url: '/system/oc',
-        icon: 'icon-puzzle'
-      },
 
-      // {
-      //   name: '0.5 OC User',
-      //   url: '/system/oc-user',
-      //   icon: 'icon-puzzle'
-      // },
-      {
-        name: '0.4 Policy',
-        url: '/system/policy',
-        icon: 'icon-puzzle'
-      },
-      {
-        name: '0.5 KPI Create',
-        url: '/system/kpi-create',
-        icon: 'icon-puzzle'
-      },
-      {
-        name: '0.7 Monthly Setting',
-        url: '/system/setting-monthly',
-        icon: 'icon-puzzle'
-      },
     ]
   },
   {
@@ -65,11 +40,27 @@ export const navItems: INavData[] = [
     url: '/maintain',
     icon: 'icon-bell',
     children: [
-      // {
-      //   name: '1.1 Mailing',
-      //   url: '/maintain/mailing',
-      //   icon: 'icon-bell'
-      // },
+      {
+        name: '1.1 OC',
+        url: '/system/oc',
+        icon: 'icon-puzzle'
+      },
+
+      {
+        name: '1.2 Policy',
+        url: '/system/policy',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.3 KPI Create',
+        url: '/system/kpi-create',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.4 Monthly Setting',
+        url: '/system/setting-monthly',
+        icon: 'icon-puzzle'
+      },
     ]
   },
   {

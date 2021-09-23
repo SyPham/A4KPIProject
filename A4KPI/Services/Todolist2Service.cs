@@ -201,7 +201,7 @@ namespace A4KPI.Services
             var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
                 .ProjectTo<ResultDto>(_configMapper)
                 .FirstOrDefaultAsync();
-            var model = from a in _repoAction.FindAll(x =>   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < currentTime.Month  )
+            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < currentTime.Month  )
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||

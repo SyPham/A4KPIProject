@@ -38,7 +38,7 @@
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
-                  <input type="text" class="form-control" (ngModelChange)="onChangeThisMonthTarget($event)" [(ngModel)]="thisMonthTargetValue" >
+                  <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeThisMonthTarget($event)" [(ngModel)]="thisMonthTargetValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
                   </div>
@@ -79,7 +79,7 @@
               </th>
               <td>
                 <div class="input-group" style="width: 80px;">
-                  <input type="text" class="form-control" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="ytdValue" >
+                  <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="ytdValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
                   </div>
@@ -128,7 +128,7 @@
             <ng-container *ngFor="let item of gridData; let i= index;">
             <tr>
               <th scope="row" [attr.rowspan]="gridData.length" *ngIf="i == 0"  class="text-center align-middle">{{month}}</th>
-              <th scope="row">{{item.stt}}</th>
+              <th scope="row">{{i + 1}}</th>
               <td>{{item.content}}</td>
               <td>{{item.target}}</td>
               <td>{{item.deadline}}</td>

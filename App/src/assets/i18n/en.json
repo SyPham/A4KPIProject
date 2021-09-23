@@ -297,6 +297,21 @@
     "This month Target": "This month Target",
     "Next month Target": "Next month Target",
     "This month YTD": "This month YTD",
-    "Target YTD": "Target YTD"
+    "Target YTD": "Target YTD",
+
+    "meetingMonth": "Month",
+    "meetingP": "P",
+    "meetingTarget": "Target",
+    "meetingDeadline": "Deadline",
+    "meetingD": "D",
+    "meetingAtri": "Achievement",
+    "meetingStatus": "Status",
+    "meetingC": "C",
+    "meetingA": "A",
+    "meetingPer": "Perfomance",
+    "meetingAt": "Attatchment",
+    "Content": "Content",
+    "Target": "Target",
+    "Deadline": "Deadline"
 
 }

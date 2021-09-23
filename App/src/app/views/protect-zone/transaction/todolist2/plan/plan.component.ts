@@ -89,7 +89,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     console.log(this.targetYTD);
   }
   submit(){
-    if (this.validate() == false) return;
+    if (this.validate(true) == false) return;
     this.spinner.show();
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
@@ -134,9 +134,11 @@ export class PlanComponent implements OnInit, AfterViewInit {
     this.post(()=>{
       this.todolist2Service.changeMessage(true);
       this.activeModal.close();
-    });
+    }, false);
+    // this.activeModal.close();
+
   }
-  validate() {
+  validate(isSubmit) {
     if (!this.target) {
       this.alertify.warning('Please input next month target');
       return false;
@@ -146,16 +148,18 @@ export class PlanComponent implements OnInit, AfterViewInit {
       return false;
     }
     const dataSource = (this.grid.dataSource as Action[]) || [];
-
-    if (dataSource.length == 0) {
-      this.alertify.warning('Please create actions');
-      return false;
+    if (isSubmit) {
+      if (dataSource.length == 0) {
+        this.alertify.warning('Please create actions');
+        return false;
+      }
     }
+
 
     return true;
   }
-  post(callBack) {
-    if (this.validate() == false) return;
+  post(callBack, isSubmit = true) {
+    if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
       return {

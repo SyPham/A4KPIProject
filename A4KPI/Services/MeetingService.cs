@@ -257,13 +257,57 @@ namespace A4KPI.Services
 
             foreach (var item in listLabel)
             {
-                string content = null;
+               string content = null;
                 var contentExist = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToList();
                 if (contentExist.Count > 0)
                 {
                     content = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).Content.Trim();
                 }
-                var model = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
+                //var thisMonthResults = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+                var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
+                var model = new List<UpdatePDCADto>();
+                var acs = _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
+
+                if (acs.Count > 0)
+                {
+                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item )
+                             join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
+                             from sub in ab.DefaultIfEmpty()
+                             select new UpdatePDCADto
+                             {
+                                 Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                 ActionId = a.Id,
+                                 DoId = sub == null ? 0 : sub.Id,
+                                 Content = a.Content,
+                                 CreatedTime = a.CreatedTime,
+                                 DoContent = sub == null ? "" : sub.Content,
+                                 Achievement = sub == null ? "" : sub.Achievement,
+                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                 StatusId = a.StatusId,
+                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item ).Status.Name.Trim(),
+                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
+                                 Target = a.Target,
+                             }).ToList();
+                    foreach (var itemAcs in acs)
+                    {
+                        model.Add(new UpdatePDCADto 
+                        {
+                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                            ActionId = itemAcs.ActionId,
+                            Content = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Content,
+                            CreatedTime = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).CreatedTime,
+                            DoContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId).Content,
+                            Achievement = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId).Achievement,
+                            Deadline = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Deadline.Value.ToString("MM/dd"),
+                            StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == itemAcs.StatusId).Name.Trim(),
+                            CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
+                            Target = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Target,
+                        });
+                    }
+                }
+                else
+                {
+                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                             join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
                             from sub in ab.DefaultIfEmpty()
                             select new UpdatePDCADto
@@ -274,13 +318,15 @@ namespace A4KPI.Services
                                 Content = a.Content,
                                 DoContent = sub == null ? "" : sub.Content,
                                 Achievement = sub == null ? "" : sub.Achievement,
-                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
+                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                 StatusId = a.StatusId,
-                                StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.Id == a.StatusId && x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                 Target = a.Target,
-                                
-                            };
+
+                            }).ToList();
+                }
+                //var 
                 var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
                             join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
                             from sub in ab.DefaultIfEmpty()
@@ -292,7 +338,7 @@ namespace A4KPI.Services
                                 Content = a.Content,
                                 DoContent = sub == null ? "" : sub.Content,
                                 Achievement = sub == null ? "" : sub.Achievement,
-                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
+                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                 StatusId = a.StatusId,
                                 StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == a.StatusId).Name.Trim(),
                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
@@ -305,7 +351,7 @@ namespace A4KPI.Services
                 var test = new DataTable()
                 {
                     Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                    CurrentMonthData = model,
+                    CurrentMonthData = model.OrderBy(x => x.CreatedTime),
                     Content = content,
                     Date = $"{thisYearResult}/{item}/01",
                     KpiId = kpiId,

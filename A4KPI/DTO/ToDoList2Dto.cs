@@ -26,6 +26,7 @@ namespace A4KPI.DTO
         public string Achievement { get; set; }
         public string ATarget { get; set; }
         public string ADeadline { get; set; }
+         public DateTime CreatedTime { get; set; }
 
     }
     public class ActionStatusRequestDto
