@@ -80,6 +80,16 @@ export class Todolist2Service  {
       .get(`${this.base}UploadFile/download?kpiId=${kpiId}&uploadTime=${uploadTime}`, { responseType: 'blob' })
       .pipe(catchError(this.handleError));
   }
+  getAttackFiles(kpiId,uploadTime ) {
+    return this.http
+      .get(`${this.base}UploadFile/GetAttackFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .pipe(catchError(this.handleError));
+  }
+  getDownloadFiles(kpiId,uploadTime ) {
+    return this.http
+      .get(`${this.base}UploadFile/GetDownloadFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .pipe(catchError(this.handleError));
+  }
   protected handleError(errorResponse: any) {
     if (errorResponse?.error?.message) {
         return throwError(errorResponse?.error?.message || 'Server error');

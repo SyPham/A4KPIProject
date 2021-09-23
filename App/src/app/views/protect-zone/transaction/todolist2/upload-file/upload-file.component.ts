@@ -1,3 +1,4 @@
+import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileInfo, RemovingEventArgs, SelectedEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
@@ -15,14 +16,20 @@ export class UploadFileComponent implements OnInit {
   @Input() currentTime: any;
   base = environment.apiUrl;
   public allowExtensions: string = '.doc, .docx, .xls, .xlsx, .pdf';
-  constructor( public activeModal: NgbActiveModal) { }
+  constructor(
+    public activeModal: NgbActiveModal,
+    public service: Todolist2Service,
 
+    ) { }
+  files = [
+  ]
   public dropElement: HTMLElement = document.getElementsByClassName('control_wrapper')[0] as HTMLElement;
 
   public path: Object = {
     saveUrl: ''
 };
   ngOnInit() {
+    this.loadData();
     this.path = {
       saveUrl: `${this.base}UploadFile/Save?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`,
       removeUrl: `${this.base}UploadFile/remove?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`
@@ -33,6 +40,12 @@ export class UploadFileComponent implements OnInit {
   }
   public onFileRemove(args: RemovingEventArgs): void {
     args.postRawFile = false;
+}
+loadData() {
+  this.files = [];
+  this.service.getAttackFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {
+    this.files = res as any || [];
+  });
 }
 beforeUpload(args) {
   console.log(args);
@@ -52,6 +65,8 @@ public onSelected(args : SelectedEventArgs) : void {
       args.modifiedFilesData = args.filesData;
   }
   args.isModified = true;
+  console.log(args);
+
 }
 
 }

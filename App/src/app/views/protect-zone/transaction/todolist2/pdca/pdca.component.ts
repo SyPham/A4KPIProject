@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment';
 import { UploadFileComponent } from './../upload-file/upload-file.component';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
@@ -50,6 +51,12 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   nextMonthTargetValue;
   ytdValue;
   thisMonthYTDValue;
+
+  base = environment.apiUrl.replace('/api/', '');
+  public allowExtensions: string = '.doc, .docx, .xls, .xlsx, .pdf';
+  files = [];
+  filesLeft = [];
+  filesRight = [];
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -66,6 +73,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     const month = this.currentTime.getMonth();
     this.month = this.months[month == 1 ? 12 : month - 1];
+    this.getDownloadFiles();
     this.loadStatusData();
     this.loadData();
   }
@@ -161,7 +169,9 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       link.download = `${ct.getFullYear()}${ct.getMonth()}${ct.getDay()}_archive.zip`;
       link.click();
     });
+
   }
+
   onChangeTargetYTD(value) {
     if (this.targetYTD != null) {
       this.targetYTD.value = +value;
@@ -377,5 +387,29 @@ export class PdcaComponent implements OnInit, AfterViewInit {
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );
+  }
+
+  getDownloadFiles() {
+    this.files = [];
+    this.filesLeft = [];
+    this.filesRight = [];
+    this.todolist2Service.getDownloadFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {
+      const files = res as any || [];
+      this.files = files.map(x=> {
+        return {
+          name: x.name,
+          path: this.base + x.path
+        }
+      });
+      let i = 0;
+      for (const item of this.files) {
+        i++;
+        if (i <= 3) {
+          this.filesLeft.push(item);
+        } else {
+          this.filesRight.push(item);
+        }
+      }
+    });
   }
 }

@@ -42,7 +42,7 @@
 
   <div class="row">
     <div class="col-12">
-      <ejs-grid #grid [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
+      <ejs-grid #grid [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' allowTextWrap='true'
       gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
       <e-columns>
         <e-column field='#' headerText='#' [allowEditing]='false' textAlign='Center' width=80 type='number'>
