@@ -25,7 +25,7 @@
               <th scope="row">{{"This month Performance" | translate}}
               </th>
               <td>
-                <div class="input-group" style="width: 80px;">
+                <div class="input-group" style="width: 100px;">
                   <input type="text" class="form-control" (ngModelChange)="onChangeThisMonthPerformance($event)" [(ngModel)]="performanceValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
@@ -37,7 +37,7 @@
               <th scope="row">{{"This month Target" | translate}}
               </th>
               <td>
-                <div class="input-group" style="width: 80px;">
+                <div class="input-group" style="width: 100px;">
                   <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeThisMonthTarget($event)" [(ngModel)]="thisMonthTargetValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
@@ -49,7 +49,7 @@
               <th scope="row">{{"Next month Target" | translate}}
               </th>
               <td>
-                <div class="input-group" style="width: 80px;">
+                <div class="input-group" style="width: 100px;">
                   <input type="text" class="form-control" (ngModelChange)="onChangeNextMonthTarget($event)" [(ngModel)]="nextMonthTargetValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
@@ -66,7 +66,7 @@
 
               </th>
               <td>
-                <div class="input-group" style="width: 80px;">
+                <div class="input-group" style="width: 100px;">
                   <input type="text" class="form-control" (ngModelChange)="onChangeThisMonthYTD($event)" [(ngModel)]="thisMonthYTDValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
@@ -78,7 +78,7 @@
               <th scope="row">{{"Target YTD" | translate}}
               </th>
               <td>
-                <div class="input-group" style="width: 80px;">
+                <div class="input-group" style="width: 100px;">
                   <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="ytdValue" >
                   <div class="input-group-append">
                     <span class="input-group-text" >%</span>
@@ -113,7 +113,7 @@
               <th scope="col" class="text-center" style="width: 20%">C</th>
             </tr>
             <tr>
-              <th scope="col" class="text-center">Content</th>
+              <th scope="col" class="text-center">月份計劃</th>
               <th scope="col" class="text-center">目標值 </th>
               <th scope="col" class="text-center">完成期限</th>
               <th scope="col" class="text-center">執行狀況</th>
@@ -164,11 +164,11 @@
               {{NO(data.index)}}
             </ng-template>
           </e-column>
-          <e-column field='content' headerText='Content' headerTextAlign='Center' type='string'>
+          <e-column field='content' headerText='{{"Content2" | translate}}' headerTextAlign='Center' type='string'>
           </e-column>
-          <e-column field='target' headerText='Target' width=80 headerTextAlign='Center' type='string'>
+          <e-column field='target' headerText='{{"Target" | translate}}' width=80 headerTextAlign='Center' type='string'>
           </e-column>
-          <e-column field='deadline' headerText='Deadline' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
+          <e-column field='deadline' headerText='{{"Deadline" | translate}}' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
           </e-column>
         </e-columns>
       </ejs-grid>

@@ -79,14 +79,14 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
-    let systemRole = 0;
-    if (this.content === '') {
-      this.content = this.accountGroupData[0]?.name;
-      systemRole =SystemRole[this.accountGroupData[0]?.name] as any  || 0;
-    } else {
-      systemRole =SystemRole[this.content] as any  || 0;
+    let systemRole = 1;
+    // if (this.content === '') {
+    //   this.content = this.accountGroupData[0]?.name;
+    //   systemRole =SystemRole[this.accountGroupData[0]?.name] as any  || 0;
+    // } else {
+    //   systemRole =SystemRole[this.content] as any  || 0;
 
-    }
+    // }
     switch (systemRole) {
       case SystemRole.L0:
         this.scoreType = SystemScoreType.L0;
