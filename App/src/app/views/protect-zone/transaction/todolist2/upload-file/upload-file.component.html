@@ -13,6 +13,7 @@
       #defaultupload id='defaultfileupload'
       (failure)='beforeUpload($event)'
       [asyncSettings]='path'
+      (success)='success($event)'
       [dropArea]='dropElement' (removing)='onFileRemove($event)'></ejs-uploader>
     </div>
   </div>

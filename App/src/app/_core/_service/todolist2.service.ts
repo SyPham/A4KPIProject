@@ -14,7 +14,9 @@ import { OperationResult } from '../_model/operation.result';
 })
 export class Todolist2Service  {
   messageSource = new BehaviorSubject<boolean>(null);
+  messageUploadSource = new BehaviorSubject<boolean>(null);
   currentMessage = this.messageSource.asObservable();
+  currentUploadMessage = this.messageUploadSource.asObservable();
   entity = 'Todolist2';
   base = environment.apiUrl;
   // có thể subcribe theo dõi thay đổi value của biến này thay cho messageSource
@@ -24,7 +26,9 @@ export class Todolist2Service  {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-
+  changeUploadMessage(message) {
+    this.messageUploadSource.next(message);
+  }
   l0(currentTime): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.base}${this.entity}/L0?currentTime=${currentTime}`, {})

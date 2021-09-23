@@ -62,7 +62,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   ) {
   }
   ngOnDestroy(): void {
-    // this.subscription.forEach(item => item.unsubscribe());
+    this.subscription.forEach(item => item.unsubscribe());
   }
   onChangeReportTime(value: Date): void {
     this.loadData();

@@ -41,6 +41,10 @@ export class UploadFileComponent implements OnInit {
   public onFileRemove(args: RemovingEventArgs): void {
     args.postRawFile = false;
 }
+success(args) {
+  this.service.changeUploadMessage(true);
+
+}
 loadData() {
   this.files = [];
   this.service.getAttackFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {

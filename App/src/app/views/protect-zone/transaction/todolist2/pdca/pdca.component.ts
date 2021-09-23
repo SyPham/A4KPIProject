@@ -1,13 +1,14 @@
 import { environment } from './../../../../../../environments/environment';
 import { UploadFileComponent } from './../upload-file/upload-file.component';
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridComponent } from '@syncfusion/ej2-angular-grids';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { Action } from 'src/app/_core/_model/action';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
+import { Subscription } from 'rxjs';
 declare var $: any;
 
 @Component({
@@ -16,7 +17,7 @@ declare var $: any;
   styleUrls: ['./pdca.component.scss'],
   providers: [DatePipe]
 })
-export class PdcaComponent implements OnInit, AfterViewInit {
+export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() data: any;
   @Input() currentTime: any;
   @ViewChild('grid') grid: GridComponent;
@@ -51,7 +52,7 @@ export class PdcaComponent implements OnInit, AfterViewInit {
   nextMonthTargetValue;
   ytdValue;
   thisMonthYTDValue;
-
+  subscription: Subscription[] = [];
   base = environment.apiUrl.replace('/api/', '');
   public allowExtensions: string = '.doc, .docx, .xls, .xlsx, .pdf';
   files = [];
@@ -64,13 +65,16 @@ export class PdcaComponent implements OnInit, AfterViewInit {
     private alertify: AlertifyService,
     public modalService: NgbModal,
   ) { }
-
+  ngOnDestroy(): void {
+    this.subscription.forEach(item => item.unsubscribe());
+  }
   ngAfterViewInit(): void {
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
     })
   }
   ngOnInit() {
+    this.subscription.push(this.todolist2Service.currentUploadMessage.subscribe(message => { if (message) { this.getDownloadFiles(); } }));
     const month = this.currentTime.getMonth();
     this.month = this.months[month == 1 ? 12 : month - 1];
     this.getDownloadFiles();
