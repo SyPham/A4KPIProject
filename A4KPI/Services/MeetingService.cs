@@ -279,7 +279,6 @@ namespace A4KPI.Services
                 if (acs.Count > 0)
                 {
                     model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
-                             join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
                              select new UpdatePDCADto
