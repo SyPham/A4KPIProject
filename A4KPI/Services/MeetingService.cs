@@ -266,12 +266,21 @@ namespace A4KPI.Services
                 //var thisMonthResults = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var model = new List<UpdatePDCADto>();
-                var acs = _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
-
+                //var acs = _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
+                var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item -1)
+                                    join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1) on a.Id equals c.ActionId
+                                    select new 
+                                    {
+                                        c.Id,
+                                        c.StatusId,
+                                        c.CreatedTime,
+                                        c.ActionId
+                                    }).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
                 if (acs.Count > 0)
                 {
-                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item )
-                             join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
+                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
+                             join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
+                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
                              select new UpdatePDCADto
                              {
@@ -284,13 +293,13 @@ namespace A4KPI.Services
                                  Achievement = sub == null ? "" : sub.Achievement,
                                  Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                  StatusId = a.StatusId,
-                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item ).Status.Name.Trim(),
+                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
                                  CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                  Target = a.Target,
                              }).ToList();
                     foreach (var itemAcs in acs)
                     {
-                        model.Add(new UpdatePDCADto 
+                        model.Add(new UpdatePDCADto
                         {
                             Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
                             ActionId = itemAcs.ActionId,
@@ -308,7 +317,28 @@ namespace A4KPI.Services
                 else
                 {
                     model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
-                            join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
+                             join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
+                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                             from sub in ab.DefaultIfEmpty()
+                             select new UpdatePDCADto
+                             {
+                                 Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                 ActionId = a.Id,
+                                 DoId = sub == null ? 0 : sub.Id,
+                                 Content = a.Content,
+                                 DoContent = sub == null ? "" : sub.Content,
+                                 Achievement = sub == null ? "" : sub.Achievement,
+                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                 StatusId = a.StatusId,
+                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
+                                 Target = a.Target,
+
+                             }).ToList();
+                }
+                //var 
+                var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
+                            join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
                             from sub in ab.DefaultIfEmpty()
                             select new UpdatePDCADto
                             {
@@ -322,33 +352,13 @@ namespace A4KPI.Services
                                 StatusId = a.StatusId,
                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
-                                Target = a.Target,
-
-                            }).ToList();
-                }
-                //var 
-                var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
-                            join b in _repoDo.FindAll() on a.Id equals b.ActionId into ab
-                            from sub in ab.DefaultIfEmpty()
-                            select new UpdatePDCADto
-                            {
-                                Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                                ActionId = a.Id,
-                                DoId = sub == null ? 0 : sub.Id,
-                                Content = a.Content,
-                                DoContent = sub == null ? "" : sub.Content,
-                                Achievement = sub == null ? "" : sub.Achievement,
-                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                StatusId = a.StatusId,
-                                StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == a.StatusId).Name.Trim(),
-                                CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                 Target = a.Target
 
                             };
 
 
 
-                var test = new DataTable()
+                var dataAdd = new DataTable()
                 {
                     Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
                     CurrentMonthData = model.OrderBy(x => x.CreatedTime),
@@ -357,7 +367,7 @@ namespace A4KPI.Services
                     KpiId = kpiId,
                     NextMonthData = model2
                 };
-                dataTable.Add(test);
+                dataTable.Add(dataAdd);
             }
 
             

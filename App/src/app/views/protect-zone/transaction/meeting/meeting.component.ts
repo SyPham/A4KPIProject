@@ -419,6 +419,7 @@ export class MeetingComponent extends BaseComponent implements OnInit {
       this.targets = res.targets
       this.labels = res.labels
       this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
+      console.log(this.dataTable );
       this.createChart(
         'planet-chart',
         this.labels,
