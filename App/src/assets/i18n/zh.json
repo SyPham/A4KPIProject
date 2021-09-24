@@ -313,6 +313,12 @@
   "Content": "月份計劃",
   "Target": "目標值",
   "Deadline": "完成期限",
-  "Content2": "計劃執行"
+  "Content2": "計劃執行",
+
+  "Processing": "進行中",
+  "Not yet start": "未開始",
+  "Postpone": "暫停",
+  "Terminate": "終止",
+  "Complete": "已完成"
 
 }

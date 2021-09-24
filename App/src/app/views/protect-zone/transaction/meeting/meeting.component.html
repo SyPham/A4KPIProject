@@ -157,9 +157,7 @@
         >
           <e-columns>
             <e-column field='month' textAlign="Center" width='30px' headerText='內容'   >
-              <!-- <ng-template #headerTemplate let-data>
-                <span>{{"meetingMonth" | translate}}</span>
-              </ng-template> -->
+
               <ng-template #headerTemplate>
                 <ejs-tooltip [content]="'meetingMonth' | translate">
                   <span style="font-size: 14px; font-weight: bold;">
@@ -177,14 +175,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
-                    <td >{{item.content}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
 
             </e-column>
             <e-column field="target" textAlign='Center' width='50px'  headerText="Target">
@@ -195,14 +186,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
-                    <td >{{item.target}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="deadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
@@ -212,14 +196,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index">
-                    <td>{{item.deadline}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="doContent"  textAlign='Center' width='210px'  headerText="D">
               <ng-template #headerTemplate let-data>
@@ -229,14 +206,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index">
-                    <td >{{item.doContent}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="achievement" textAlign='Center' width='50px' headerText="Achievement">
               <ng-template #headerTemplate let-data>
@@ -246,14 +216,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
-                    <td>{{item.achievement}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="statusName" textAlign='Center' width='80px' headerText="Status">
               <ng-template #headerTemplate let-data>
@@ -263,14 +226,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.currentMonthData; let i=index" >
-                    <td >{{item.statusName}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="content" textAlign='Center' width='210px' headerText="C">
               <ng-template #headerTemplate let-data>
@@ -280,9 +236,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <textarea   [(ngModel)]="data.content" disabled  class="form-control"></textarea>
-              </ng-template>
+
 
             </e-column>
             <e-column field="aContent" textAlign='Center' width='210px' headerText="A">
@@ -293,14 +247,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
-                    <td >{{item.content}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="aTarget" textAlign='Center' width='50px' headerText="Target">
               <ng-template #headerTemplate let-data>
@@ -310,14 +257,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
-                    <td >{{item.target}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="aDeadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
@@ -327,14 +267,7 @@
                   </span>
                 </ejs-tooltip>
               </ng-template>
-              <ng-template #template let-data>
-                <ng-container >
-                  <tr *ngFor="let item of data.nextMonthData; let i=index" >
-                    <td >{{item.deadline}}</td>
-                  </tr>
-                </ng-container>
 
-              </ng-template>
             </e-column>
             <e-column field="" textAlign='Center' width='50px' headerText="Attatchment">
               <ng-template #headerTemplate let-data>
@@ -343,9 +276,6 @@
                     {{"meetingAt" | translate}}
                   </span>
                 </ejs-tooltip>
-              </ng-template>
-              <ng-template #template let-data>
-                <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
               </ng-template>
 
             </e-column>
@@ -365,7 +295,7 @@
                 {{items.achievement}}
               </td>
               <td style="font-size: 14px; font-weight: bold;" class="border text-center">
-                {{items.statusName}}
+                {{items.statusName | translate}}
               </td>
               <td style="font-size: 14px; font-weight: bold;" scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border align-middle">
                 {{data.content}}
@@ -376,9 +306,9 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border align-middle">
+              class="border align-top " >
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
-                  <p  #content>{{itemss.content}}</p>
+                  <p style="height: 350px; overflow-y: scroll;">{{itemss.content}}</p>
                   <hr>
                 </span>
               </td>
@@ -387,10 +317,10 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border text-center align-middle"
+              class="border align-top text-center"
               >
                 <span  *ngFor="let itemss of data.nextMonthData; let i= index;">
-                  <p >{{itemss.target}}</p>
+                  <p style="height: 350px; padding-top: 175px;">{{itemss.target}}</p>
                   <hr>
                 </span>
               </td>
@@ -399,9 +329,9 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border text-center align-middle">
+              class="border text-center align-top">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
-                  <p>{{itemss.deadline}}</p>
+                  <p style="height: 350px; padding-top: 175px;">{{itemss.deadline}}</p>
                   <hr>
                 </span>
               </td>

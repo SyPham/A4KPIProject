@@ -313,7 +313,14 @@
     "Content": "Content",
     "Target": "Target",
     "Deadline": "Deadline",
-    "Content2": "Content"
+    "Content2": "Content",
+
+
+    "Processing": "Processing",
+    "Not yet start": "Not yet start",
+    "Postpone": "Postpone",
+    "Terminate": "Content",
+    "Complete": "Complete"
 
 
 
