@@ -58,6 +58,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   files = [];
   filesLeft = [];
   filesRight = [];
+  type: any;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -245,6 +246,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   loadKPIData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
+      this.type  = res.type
       this.kpi = res.kpi;
       this.policy = res.policy;
       this.pic = res.pic;

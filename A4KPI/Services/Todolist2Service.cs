@@ -177,6 +177,7 @@ namespace A4KPI.Services
         public async Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime)
         {
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            var type = _repoKPINew.FindAll().FirstOrDefault(x => x.Id == kpiNewId).TypeId;
             var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
             var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
@@ -185,6 +186,7 @@ namespace A4KPI.Services
             return new
             {
                 Kpi = kpi,
+                Type = type,
                 Policy = policy,
                 Pic = pic.FullName,
             };
