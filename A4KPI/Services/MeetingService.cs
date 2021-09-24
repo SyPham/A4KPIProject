@@ -31,6 +31,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<Types> _repoType;
         private readonly IRepositoryBase<Policy> _repoPo;
         private readonly IRepositoryBase<Target> _repoTarget;
+        private readonly IRepositoryBase<TargetYTD> _repoTargetYTD;
         private readonly IRepositoryBase<Models.Action> _repoAction;
         private readonly IRepositoryBase<Models.Status> _repoStatus;
         private readonly IUnitOfWork _unitOfWork;
@@ -42,6 +43,7 @@ namespace A4KPI.Services
             IRepositoryBase<Types> repoType,
             IRepositoryBase<Policy> repoPo,
             IRepositoryBase<Target> repoTarget,
+            IRepositoryBase<TargetYTD> repoTargetYTD,
             IRepositoryBase<ActionStatus> repoAcs,
             IRepositoryBase<Account> repoAc,
             IRepositoryBase<KPINew> repoKPINew, 
@@ -62,6 +64,7 @@ namespace A4KPI.Services
             _repoPo = repoPo;
             _repoType = repoType;
             _repoTarget = repoTarget;
+            _repoTargetYTD = repoTargetYTD;
             _repoKPINew = repoKPINew;
             _repoDo = repoDo;
             _repoResult = repoResult;
@@ -186,7 +189,7 @@ namespace A4KPI.Services
             List<double> listPerfomance = new List<double>();
             var dataTable = new List<DataTable>();
             var data = _repoTarget.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult).ToList();
-            for (int i = 1; i <= thisMonthResult; i++)
+            for (int i = 1; i <= 12; i++)
             {
                 listLabel.Add(i);
             }
@@ -253,7 +256,7 @@ namespace A4KPI.Services
                 }
             }
             
-            var YTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId).YTD;
+            var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
 
             foreach (var item in listLabel)
             {
@@ -268,7 +271,7 @@ namespace A4KPI.Services
                 var model = new List<UpdatePDCADto>();
                 //var acs = _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
                 var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item -1)
-                                    join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1) on a.Id equals c.ActionId
+                                    join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
                                     select new 
                                     {
                                         c.Id,
@@ -304,8 +307,8 @@ namespace A4KPI.Services
                             ActionId = itemAcs.ActionId,
                             Content = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Content,
                             CreatedTime = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).CreatedTime,
-                            DoContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId).Content,
-                            Achievement = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId).Achievement,
+                            DoContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Content,
+                            Achievement = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Achievement,
                             Deadline = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Deadline.Value.ToString("MM/dd"),
                             StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == itemAcs.StatusId).Name.Trim(),
                             CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),

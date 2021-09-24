@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { OcPolicyService } from './../../../../_core/_service/OcPolicy.service';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { EditService, ToolbarService, PageService, GridComponent, QueryCellInfoEventArgs, ColumnModel } from '@syncfusion/ej2-angular-grids';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -18,13 +18,14 @@ import * as Chart from 'chart.js';
 import { EmitType } from '@syncfusion/ej2-base';
 import { DatePipe } from '@angular/common';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
+import { Tooltip } from '@syncfusion/ej2-angular-popups';
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
   styleUrls: ['./meeting.component.scss'],
   providers: [DatePipe]
 })
-export class MeetingComponent extends BaseComponent implements OnInit {
+export class MeetingComponent extends BaseComponent implements OnInit , AfterViewInit {
 
   data: Account[] = [];
   password = '';
@@ -148,69 +149,11 @@ export class MeetingComponent extends BaseComponent implements OnInit {
   policyTitle: string
   kpiTitle: string
   levelTitle: string
-  public monthColumns = [
-    {
-      headerText: '內容',
-      textAlign: 'Center',
-    }
-  ];
-  public PColumns = [
-    {
-      headerText: '月份計劃',
-      textAlign: 'Center',
-    }
-  ];
-  public TargetColumns = [
-    {
-      headerText: '目標值',
-      textAlign: 'Center',
-    }
-  ];
-  public DeadlineColumns = [
-    {
-      headerText: '完成期限',
-      textAlign: 'Center',
-    }
-  ];
-  public DColumns = [
-    {
-      headerText: '執行狀況',
-      textAlign: 'Center',
-    }
-  ];
-  public AchievementColumns = [
-    {
-      headerText: '實績',
-      textAlign: 'Center',
-    }
-  ];
-  public StatusColumns = [
-    {
-      headerText: '狀態',
-      textAlign: 'Center',
-    }
-  ];
-  public CColumns = [
-    {
-      headerText: '執行分析檢討',
-      textAlign: 'Center',
-    }
-  ];
-  public AColumns = [
-    {
-      headerText: '計畫執行',
-      textAlign: 'Center',
-    }
-  ];
-  public AttatchmentColumns = [
-    {
-      headerText: '附檔',
-      textAlign: 'Center',
-    }
-  ];
-
   picTitle: string
+  @ViewChild('content', { static: true }) elementView: ElementRef;
+  contentHeight: number;
   kpiId: any;
+  YTD: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -228,6 +171,10 @@ export class MeetingComponent extends BaseComponent implements OnInit {
     this.getAllOcLv3();
     this.getAllKpi();
     this.currentTime = new Date();
+
+  }
+  ngAfterViewInit() {
+
   }
   filterlevel(args) {
     this.levelId = args.value
@@ -424,8 +371,18 @@ export class MeetingComponent extends BaseComponent implements OnInit {
       link.click();
     });
   }
+  headerCellInfo(args) {
+    if ( args.cell.column.field === 'CustomerID') {
+     const toolcontent = args.cell.column.headerText;
+     const tooltip: Tooltip = new Tooltip({
+       content: toolcontent
+   });
+    tooltip.appendTo(args.node);
+    }
+ }
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
+      this.YTD = res.ytd
       this.perfomance = res.perfomances
       this.targets = res.targets
       this.labels = res.labels

@@ -46,6 +46,7 @@
           [pageSettings]='pageSettings'
           [allowExcelExport]='true'
           (recordDoubleClick)='onDoubleClick($event)'
+          [editSettings]='editSettings'
         >
           <e-columns>
             <e-column field="level" textAlign='Center' width="80" isPrimaryKey="true" headerText="Level"></e-column>
@@ -119,14 +120,17 @@
                 <tr>
                   <th  class="text-center" width="5%">{{"meetingMonth" | translate}}</th>
                   <th *ngFor="let item of labels; let i=index" class="text-center">{{item}}</th>
+                  <th  class="text-center">YTD</th>
                 </tr>
                 <tr>
                   <th class="text-center" width="5%">{{"meetingTarget" | translate}} </th>
                   <td *ngFor="let item of targets; let i=index" class="text-center" >{{item}}</td>
+                  <td  class="text-center" ></td>
                 </tr>
                 <tr>
                   <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
                   <td *ngFor="let item of perfomance; let i=index" class="text-center" >{{item}}</td>
+                  <td  class="text-center" >{{YTD}}</td>
                 </tr>
               </tbody>
             </table>
@@ -148,18 +152,30 @@
           (queryCellInfo)='queryCellInfoEvent($event)'
           [allowExcelExport]='true'
           [editSettings]='editSettings'
+          (headerCellInfo)='headerCellInfo($event)'
           [pageSettings]='pageSettings'
         >
           <e-columns>
             <e-column field='month' textAlign="Center" width='30px' headerText='內容'   >
-              <ng-template #headerTemplate let-data>
+              <!-- <ng-template #headerTemplate let-data>
                 <span>{{"meetingMonth" | translate}}</span>
+              </ng-template> -->
+              <ng-template #headerTemplate>
+                <ejs-tooltip [content]="'meetingMonth' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingMonth" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
 
             </e-column>
             <e-column field=''  textAlign='Center' width='210px'  headerText='P'>
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingP" | translate}}</span>
+                <ejs-tooltip [content]="'meetingP' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingP" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -173,7 +189,11 @@
             </e-column>
             <e-column field="target" textAlign='Center' width='50px'  headerText="Target">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingTarget" | translate}}</span>
+                <ejs-tooltip [content]="'meetingTarget' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingTarget" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -186,7 +206,11 @@
             </e-column>
             <e-column field="deadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingDeadline" | translate}}</span>
+                <ejs-tooltip [content]="'meetingDeadline' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingDeadline" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -199,7 +223,11 @@
             </e-column>
             <e-column field="doContent"  textAlign='Center' width='210px'  headerText="D">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingD" | translate}}</span>
+                <ejs-tooltip [content]="'meetingD' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingD" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -210,9 +238,13 @@
 
               </ng-template>
             </e-column>
-            <e-column field="achievement" textAlign='Center' width='40px' headerText="Achievement">
+            <e-column field="achievement" textAlign='Center' width='50px' headerText="Achievement">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingAtri" | translate}}</span>
+                <ejs-tooltip [content]="'meetingAtri' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingAtri" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -225,7 +257,11 @@
             </e-column>
             <e-column field="statusName" textAlign='Center' width='80px' headerText="Status">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingStatus" | translate}}</span>
+                <ejs-tooltip [content]="'meetingStatus' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingStatus" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -238,7 +274,11 @@
             </e-column>
             <e-column field="content" textAlign='Center' width='210px' headerText="C">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingC" | translate}}</span>
+                <ejs-tooltip [content]="'meetingC' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingC" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <textarea   [(ngModel)]="data.content" disabled  class="form-control"></textarea>
@@ -247,7 +287,11 @@
             </e-column>
             <e-column field="aContent" textAlign='Center' width='210px' headerText="A">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingA" | translate}}</span>
+                <ejs-tooltip [content]="'meetingA' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingA" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -260,7 +304,11 @@
             </e-column>
             <e-column field="aTarget" textAlign='Center' width='50px' headerText="Target">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingTarget" | translate}}</span>
+                <ejs-tooltip [content]="'meetingTarget' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingTarget" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -273,7 +321,11 @@
             </e-column>
             <e-column field="aDeadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingDeadline" | translate}}</span>
+                <ejs-tooltip [content]="'meetingDeadline' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingDeadline" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <ng-container >
@@ -286,7 +338,11 @@
             </e-column>
             <e-column field="" textAlign='Center' width='50px' headerText="Attatchment">
               <ng-template #headerTemplate let-data>
-                <span>{{"meetingAt" | translate}}</span>
+                <ejs-tooltip [content]="'meetingAt' | translate">
+                  <span style="font-size: 14px; font-weight: bold;">
+                    {{"meetingAt" | translate}}
+                  </span>
+                </ejs-tooltip>
               </ng-template>
               <ng-template #template let-data>
                 <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
@@ -316,24 +372,40 @@
                 <!-- <textarea   [(ngModel)]="data.content" disabled id="result" cols="30" rows="10" class="form-control"></textarea> -->
               </td>
 
-              <td style="font-size: 14px; font-weight: bold;" scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border align-middle">
+              <td style="font-size: 14px; font-weight: bold;"
+              scope="row"
+              [attr.rowspan]="data.currentMonthData.length"
+              *ngIf="i == 0"
+              class="border align-middle">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
-                  <p>{{itemss.content}}</p>
+                  <p  #content>{{itemss.content}}</p>
                   <hr>
                 </span>
               </td>
-              <td style="font-size: 14px; font-weight: bold;" scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
-                <span *ngFor="let itemss of data.nextMonthData; let i= index;">
-                  <p>{{itemss.target}}</p>
+
+              <td style="font-size: 14px; font-weight: bold;"
+              scope="row"
+              [attr.rowspan]="data.currentMonthData.length"
+              *ngIf="i == 0"
+              class="border text-center align-middle"
+              >
+                <span  *ngFor="let itemss of data.nextMonthData; let i= index;">
+                  <p >{{itemss.target}}</p>
                   <hr>
                 </span>
               </td>
-              <td style="font-size: 14px; font-weight: bold;" scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
+
+              <td style="font-size: 14px; font-weight: bold;"
+              scope="row"
+              [attr.rowspan]="data.currentMonthData.length"
+              *ngIf="i == 0"
+              class="border text-center align-middle">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <p>{{itemss.deadline}}</p>
                   <hr>
                 </span>
               </td>
+
               <td style="font-size: 14px; font-weight: bold;" scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
                 <div style="text-align: center;">
                   <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
