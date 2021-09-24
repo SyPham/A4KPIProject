@@ -282,9 +282,20 @@ export class MeetingComponent extends BaseComponent implements OnInit {
     this.unitId = data.typeId
     this.unitName = data.typeName
     this.kpiId = data.id
-    this.loadDataModel(data.id)
     this.loadDataModel2(data.id)
     this.modalRef = this.modalService.open(model, { size: 'lg', backdrop: 'static' });
+    this.modalRef.result.then((result) => {
+      this.perfomance = []
+      this.targets = []
+      this.labels = []
+      this.dataTable = []
+    }, (reason) => {
+      this.perfomance = []
+      this.targets = []
+      this.labels = []
+      this.dataTable = []
+
+    });
   }
   createChart(chartId, labels, unit) {
     const ctx = document.getElementById(chartId) as HTMLCanvasElement;
