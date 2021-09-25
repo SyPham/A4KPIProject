@@ -194,6 +194,31 @@ namespace A4KPI.Controllers
             });
             return Ok(list);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDownloadFilesMeeting(int kpiId, DateTime uploadTime)
+        {
+            var kpiid = kpiId;
+            var month = uploadTime.Month == 1 ? 12 : uploadTime.Month;
+            var year = uploadTime.Month == 1 ? uploadTime.Year - 1 : uploadTime.Year;
+            var ut = new DateTime(year, month, 1);
+
+            var data = await _context.UploadFiles.Where(x => x.KPIId == kpiid && x.UploadTime == ut).ToListAsync();
+            var files = data.Select(x => x.Path).ToList();
+            var list = new List<DownloadFileDto>();
+            files.ForEach(file =>
+            {
+                string filePath = _currentEnvironment.WebRootPath + file;
+                var info = new FileInfo(filePath);
+                list.Add(new DownloadFileDto
+                {
+                    Name = Path.GetFileName(filePath),
+                    Path = file
+
+                });
+            });
+            return Ok(list);
+        }
         #region Download File  
         private (string fileType, byte[] archiveData, string archiveName) DownloadFiles(int kpiId , DateTime uploadTime)
         {

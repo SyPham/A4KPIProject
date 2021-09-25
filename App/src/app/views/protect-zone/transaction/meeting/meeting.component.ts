@@ -19,6 +19,7 @@ import { EmitType } from '@syncfusion/ej2-base';
 import { DatePipe } from '@angular/common';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { Tooltip } from '@syncfusion/ej2-angular-popups';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
@@ -52,6 +53,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   modalRef: NgbModalRef;
   policyData: Object;
   @ViewChild('detailModal') detailModal: NgbModalRef;
+  @ViewChild('fileModal') fileModal: NgbModalRef;
   unit: string = null;
   period: string = null
   plugins: any = [pluginDataLabels]
@@ -152,8 +154,11 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   picTitle: string
   @ViewChild('content', { static: true }) elementView: ElementRef;
   contentHeight: number;
+  files = [];
   kpiId: any;
+  base = environment.apiUrl.replace('/api/', '');
   YTD: any;
+  targetYTD: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -358,18 +363,31 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     //   )
     // })
   }
-  download(date) {
-    this.todolist2Service.download(this.kpiId, date).subscribe((data: any) => {
-      const blob = new Blob([data],
-        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  download(date, model) {
+    this.modalRef = this.modalService.open(model, { size: 'sm', backdrop: 'static' });
+    console.log(this.kpiId);
+    console.log(date);
+    this.todolist2Service.getDownloadFilesMeeting(this.kpiId,date).subscribe((res: any) => {
+      console.log(res);
+      const files = res as any || [];
+      this.files = files.map(x=> {
+        return {
+          name: x.name,
+          path: this.base + x.path
+        }
+      });
+    })
+    // this.todolist2Service.download(this.kpiId, date).subscribe((data: any) => {
+    //   const blob = new Blob([data],
+    //     { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-      const downloadURL = window.URL.createObjectURL(data);
-      const link = document.createElement('a');
-      link.href = downloadURL;
-      const ct = new Date();
-      link.download = `${ct.getFullYear()}${ct.getMonth()}${ct.getDay()}_archive.zip`;
-      link.click();
-    });
+    //   const downloadURL = window.URL.createObjectURL(data);
+    //   const link = document.createElement('a');
+    //   link.href = downloadURL;
+    //   const ct = new Date();
+    //   link.download = `${ct.getFullYear()}${ct.getMonth()}${ct.getDay()}_archive.zip`;
+    //   link.click();
+    // });
   }
   headerCellInfo(args) {
     if ( args.cell.column.field === 'CustomerID') {
@@ -382,7 +400,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
  }
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
+      console.log(res);
       this.YTD = res.ytd
+      this.targetYTD = res.targetYTD
       this.perfomance = res.perfomances
       this.targets = res.targets
       this.labels = res.labels

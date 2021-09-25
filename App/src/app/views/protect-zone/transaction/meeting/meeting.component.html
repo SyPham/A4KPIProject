@@ -125,12 +125,12 @@
                 <tr>
                   <th class="text-center" width="5%">{{"meetingTarget" | translate}} </th>
                   <td *ngFor="let item of targets; let i=index" class="text-center" >{{item}}</td>
-                  <td  class="text-center" ></td>
+                  <td  class="text-center" >{{YTD}}</td>
                 </tr>
                 <tr>
                   <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
                   <td *ngFor="let item of perfomance; let i=index" class="text-center" >{{item}}</td>
-                  <td  class="text-center" >{{YTD}}</td>
+                  <td  class="text-center" >{{targetYTD}}</td>
                 </tr>
               </tbody>
             </table>
@@ -358,7 +358,7 @@
 
               <td style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
                 <div style="text-align: center;">
-                  <button type="button" (click)='download(data.date)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
+                  <button type="button" (click)='download(data.date, fileModal)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
                 </div>
               </td>
             </tr>
@@ -366,6 +366,45 @@
         </ejs-grid>
       </div>
     </div>
+
+  </div>
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    <span style="color: transparent;">| |</span>
+    <a class="btn btn-outline-warning" (click)="scroll(top)" ><i class="fas fa-chevron-up"></i></a>
+  </div>
+
+
+</ng-template>
+
+<ng-template #fileModal let-modal>
+  <a #top></a>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <i class="fas fa-plus"></i> Download File
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="mt-3 d-flex justify-content-start">
+      <ng-container *ngIf="files.length > 0; else elseTemplate">
+
+        <ul class="list-group" style="width: 100%;" >
+          <li class="list-group-item" *ngFor="let item of files">
+            <a [id]='item.path' [href]="item.path">{{item.name}}</a>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <span>No data</span>
+      </ng-template>
+
+  </div>
+
 
   </div>
   <div class="modal-footer">

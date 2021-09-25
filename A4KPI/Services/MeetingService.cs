@@ -257,6 +257,7 @@ namespace A4KPI.Services
             }
             
             var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
+            var TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult).YTD;
 
             foreach (var item in listLabel)
             {
@@ -379,6 +380,7 @@ namespace A4KPI.Services
                 perfomances = listPerfomance.ToArray(),
                 targets = listTarget.ToArray(),
                 YTD = YTD,
+                TargetYTD = TargetYTD,
                 DataTable = dataTable
             };
         }

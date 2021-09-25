@@ -94,6 +94,11 @@ export class Todolist2Service  {
       .get(`${this.base}UploadFile/GetDownloadFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
       .pipe(catchError(this.handleError));
   }
+  getDownloadFilesMeeting(kpiId,uploadTime ) {
+    return this.http
+      .get(`${this.base}UploadFile/GetDownloadFilesMeeting?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .pipe(catchError(this.handleError));
+  }
   protected handleError(errorResponse: any) {
     if (errorResponse?.error?.message) {
         return throwError(errorResponse?.error?.message || 'Server error');
