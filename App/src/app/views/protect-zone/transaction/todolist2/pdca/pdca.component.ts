@@ -321,10 +321,10 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const dataSource = (this.grid.dataSource as Action[]) || [];
 
-    if (dataSource.length == 0) {
-      this.alertify.warning('Please create actions');
-      return false;
-    }
+    // if (dataSource.length == 0) {
+    //   this.alertify.warning('Please create actions');
+    //   return false;
+    // }
 
     return true;
   }
