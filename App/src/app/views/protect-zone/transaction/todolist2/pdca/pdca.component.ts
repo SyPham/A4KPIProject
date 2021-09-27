@@ -281,7 +281,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   back() {
     //this.post(false);
-    this.activeModal.close();
+    this.post(false);
+    // this.activeModal.close();
 
   }
   validate() {

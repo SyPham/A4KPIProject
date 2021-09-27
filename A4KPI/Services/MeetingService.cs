@@ -258,10 +258,10 @@ namespace A4KPI.Services
             
             var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
             double TargetYTD = 0;
-            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToList();
+            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.TargetTime.Month == currentTime.Month && x.CreatedTime.Year == thisYearResult).ToList();
             if (TargetYTDs.Count > 0)
             {
-                TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).YTD;
+                TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.TargetTime.Month == currentTime.Month && x.CreatedTime.Year == thisYearResult).YTD;
             }
 
             foreach (var item in listLabel)
