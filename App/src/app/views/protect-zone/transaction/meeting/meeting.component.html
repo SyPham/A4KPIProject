@@ -119,18 +119,51 @@
               <tbody>
                 <tr>
                   <th  class="text-center" width="5%">{{"meetingMonth" | translate}}</th>
-                  <th *ngFor="let item of labels; let i=index" class="text-center">{{item}}</th>
+                  <th *ngFor="let item of labels; let i=index" class="text-center">
+                    {{item}}
+                  </th>
                   <th  class="text-center">YTD</th>
                 </tr>
                 <tr>
                   <th class="text-center" width="5%">{{"meetingTarget" | translate}} </th>
-                  <td *ngFor="let item of targets; let i=index" class="text-center" >{{item}}</td>
-                  <td  class="text-center" >{{YTD}}</td>
+                  <td *ngFor="let item of targets; let i=index" class="text-center" >
+                    <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      {{item}} %
+
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      {{item}}
+                    </ng-template>
+
+                  </td>
+                  <ng-container *ngIf="typeId === 1; else elseTemplate">
+                    <td  class="text-center"  >{{YTD}} %</td>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+
+                    <td  class="text-center"  >{{YTD}}</td>
+                  </ng-template>
+
                 </tr>
                 <tr>
                   <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
-                  <td *ngFor="let item of perfomance; let i=index" class="text-center" >{{item}}</td>
-                  <td  class="text-center" >{{targetYTD}}</td>
+                  <td *ngFor="let item of perfomance; let i=index" class="text-center" >
+                    <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      {{item}} %
+
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      {{item}}
+                    </ng-template>
+                  </td>
+                  <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      <td  class="text-center"  >{{targetYTD}} %</td>
+
+                    </ng-container>
+                    <ng-template #elseTemplate>
+
+                      <td  class="text-center"  >{{targetYTD}}</td>
+                    </ng-template>
                 </tr>
               </tbody>
             </table>

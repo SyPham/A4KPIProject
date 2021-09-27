@@ -49,6 +49,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   leaderId: number;
   managerId: number;
   accounts: any[];
+  typeId: any;
   oclv3Data: any [];
   modalRef: NgbModalRef;
   policyData: Object;
@@ -401,6 +402,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
       console.log(res);
+      this.typeId = res.typeId,
       this.YTD = res.ytd
       this.targetYTD = res.targetYTD
       this.perfomance = res.perfomances

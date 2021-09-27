@@ -21,6 +21,7 @@ namespace A4KPI.DTO
         public double YTD { get; set; }
         public double TargetYTD { get; set; }
         public object DataTable { get; set; }
+        public int TypeId { get; set; }
     }
 
     public class DataTable

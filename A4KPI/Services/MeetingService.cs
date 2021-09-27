@@ -182,7 +182,7 @@ namespace A4KPI.Services
         {
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-
+            var typeId = _repoKPINew.FindById(kpiId).TypeId;
             List<string> listLabels = new List<string>();
             List<int> listLabel = new List<int>();
             List<double> listTarget = new List<double>();
@@ -257,7 +257,12 @@ namespace A4KPI.Services
             }
             
             var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
-            var TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult).YTD;
+            double TargetYTD = 0;
+            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToList();
+            if (TargetYTDs.Count > 0)
+            {
+                TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).YTD;
+            }
 
             foreach (var item in listLabel)
             {
@@ -380,6 +385,7 @@ namespace A4KPI.Services
                 perfomances = listPerfomance.ToArray(),
                 targets = listTarget.ToArray(),
                 YTD = YTD,
+                TypeId = typeId,
                 TargetYTD = TargetYTD,
                 DataTable = dataTable
             };
