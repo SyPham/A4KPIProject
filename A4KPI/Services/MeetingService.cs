@@ -185,6 +185,7 @@ namespace A4KPI.Services
             var typeId = _repoKPINew.FindById(kpiId).TypeId;
             List<string> listLabels = new List<string>();
             List<int> listLabel = new List<int>();
+            List<int> listLabelData = new List<int>();
             List<double> listTarget = new List<double>();
             List<double> listPerfomance = new List<double>();
             var dataTable = new List<DataTable>();
@@ -192,6 +193,10 @@ namespace A4KPI.Services
             for (int i = 1; i <= 12; i++)
             {
                 listLabel.Add(i);
+            }
+            for (int i = 1; i <= thisMonthResult; i++)
+            {
+                listLabelData.Add(i);
             }
 
             foreach (var a in listLabel)
@@ -258,13 +263,13 @@ namespace A4KPI.Services
             
             var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
             double TargetYTD = 0;
-            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.TargetTime.Month == currentTime.Month && x.CreatedTime.Year == thisYearResult).ToList();
+            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToList();
             if (TargetYTDs.Count > 0)
             {
-                TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.TargetTime.Month == currentTime.Month && x.CreatedTime.Year == thisYearResult).YTD;
+                TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).YTD;
             }
 
-            foreach (var item in listLabel)
+            foreach (var item in listLabelData)
             {
                string content = null;
                 var contentExist = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToList();
@@ -275,16 +280,24 @@ namespace A4KPI.Services
                 //var thisMonthResults = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var model = new List<UpdatePDCADto>();
-                //var acs = _repoAcs.FindAll(x => x.CreatedTime.Month == item - 1).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
-                var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item -1)
-                                    join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
-                                    select new 
-                                    {
-                                        c.Id,
-                                        c.StatusId,
-                                        c.CreatedTime,
-                                        c.ActionId
-                                    }).Where(x => x.StatusId != Constants.Status.Complete && x.StatusId != Constants.Status.Terminate).ToList();
+                var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
+                //start tim lai list cong viec cua thang truoc chua lam xong
+                var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
+                        .Where(x =>
+                         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
+                        ||
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
+                        || x.ActionStatus.Count == 0
+                        )
+                        select new UpdatePDCADto
+                        {
+                            ActionId = a.Id,
+                            StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
+                            ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
+                        }).ToList();
+                //end tim lai list cong viec cua thang truoc chua lam xong
                 if (acs.Count > 0)
                 {
                     model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
@@ -305,6 +318,7 @@ namespace A4KPI.Services
                                  CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                  Target = a.Target,
                              }).ToList();
+                    //add them list cong viec chua lam xong cua thang truoc vao thang hien tai
                     foreach (var itemAcs in acs)
                     {
                         model.Add(new UpdatePDCADto
@@ -321,6 +335,7 @@ namespace A4KPI.Services
                             Target = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Target,
                         });
                     }
+                    //end
                 }
                 else
                 {
