@@ -206,20 +206,23 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
   }
-  onChangeResult(value) {
-    this.content = value || '';
-    if (this.result != null) {
-      this.result.content = value;
-    } else {
-      this.result = {
-        id: 0,
-        content: this.content,
-        kPIId: this.data.id,
-        createdTime: new Date().toISOString(),
-        updateTime: new Date().toISOString(),
-        modifiedTime: null
-      };
-    }
+  // onChangeResult(value , i) {
+  //   this.content = value || '';
+  //   if (this.result != null) {
+  //     this.result.content = value;
+  //   } else {
+  //     this.result = {
+  //       id: 0,
+  //       content: this.content,
+  //       kPIId: this.data.id,
+  //       createdTime: new Date().toISOString(),
+  //       updateTime: new Date().toISOString(),
+  //       modifiedTime: null
+  //     };
+  //   }
+  // }
+  onChangeResult(value, i) {
+    this.gridData[i].resultContent = value;
   }
   loadData() {
     this.loadKPIData();
@@ -231,6 +234,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gridData = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
+      console.log(res);
       this.gridData = res.data;
       this.result = res.result;
       this.content = this.result?.content;
@@ -304,10 +308,10 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       return false;
     }
 
-    if (!this.result) {
-      this.alertify.warning('Please input C column');
-      return false;
-    }
+    // if (!this.result) {
+    //   this.alertify.warning('Please input C column');
+    //   return false;
+    // }
     let check = true;
     for (const item of this.gridData) {
       if(item.actionStatusId == null)
@@ -368,7 +372,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       result: this.result,
       currentTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
     }
-    console.log(request);
     this.todolist2Service.submitUpdatePDCA(request).subscribe(
       (res) => {
         if (res.success === true) {

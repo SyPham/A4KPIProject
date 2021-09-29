@@ -74,7 +74,6 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
   }
   getPolicyByOc(id) {
     this.kpiNewService.getPolicyByOcID(id).subscribe(res => {
-      console.log('getPolicyByOc', res);
       this.policyData = res
     })
   }
@@ -86,7 +85,6 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
   }
   getAllType() {
     this.kpiNewService.getAllType().subscribe(res => {
-      console.log('getAllType', res);
       this.typeData = res
     })
   }

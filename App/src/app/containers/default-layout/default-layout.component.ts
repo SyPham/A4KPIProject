@@ -20,7 +20,7 @@ import { VersionService } from 'src/app/_core/_service/version.service';
 declare var require: any;
 import * as signalr from '../../../assets/js/ec-client.js';
 import { HubConnectionState } from '@microsoft/signalr';
-import { navItems } from 'src/app/_nav';
+import { navItems, navItemsEN, navItemsVI } from 'src/app/_nav';
 import { Authv2Service } from 'src/app/_core/_service/authv2.service';
 
 @Component({
@@ -86,6 +86,8 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     const user = JSON.parse(localStorage.getItem("user"));
     this.userName = user?.fullName;
     this.userID = user?.id;
+    const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
+    this.navItems = navs
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;

@@ -28,6 +28,9 @@ export class OcService {
   getOCs() {
     return this.http.get(`${this.baseUrl}Oc/GetAllAsTreeView`);
   }
+  getAll() {
+    return this.http.get(`${this.baseUrl}Oc/GetAll`);
+  }
   GetUserByOCname(ocName) {
     return this.http.get(`${this.baseUrl}Oc/GetUserByOCname/${ocName}`, {});
   }

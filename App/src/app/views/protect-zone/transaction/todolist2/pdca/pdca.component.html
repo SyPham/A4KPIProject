@@ -159,8 +159,9 @@
                   <option *ngFor="let item of status" [value]="item.id">{{item.name}}</option>
                 </select>
               </td>
-            <td scope="row" [attr.rowspan]="gridData.length"  *ngIf="i == 0" class="">
-              <textarea [(ngModel)]="content"  (ngModelChange)="onChangeResult($event)" cols="30" rows="10" class="form-control"></textarea>
+            <td >
+              <!-- <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'></textarea> -->
+              <textarea [(ngModel)]="item.resultContent"  (ngModelChange)="onChangeResult($event,i)" cols="30" rows="10" class="form-control"></textarea>
             </td>
             </tr>
           </ng-container>

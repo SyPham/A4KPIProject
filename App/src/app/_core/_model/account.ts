@@ -9,6 +9,9 @@ export interface Account {
   email: string;
   isLock: boolean;
   accountTypeId: number | null;
+  factId: number | null;
+  centerId: number | null;
+  deptId: number | null;
   createdBy: number;
   modifiedBy: number | null;
   createdTime: string;

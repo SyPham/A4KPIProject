@@ -32,6 +32,7 @@ namespace A4KPI.Controllers
             var oc = await _service.GetAllLevel3();
             return Ok(oc);
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetAllAsTreeView()
         {

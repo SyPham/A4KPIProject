@@ -320,7 +320,13 @@
     "Not yet start": "Not yet start",
     "Postpone": "Postpone",
     "Terminate": "Content",
-    "Complete": "Complete"
+    "Complete": "Complete",
+
+    "KPI Name": "KPI Name",
+    "Factory": "Factory",
+    "Center": "Center",
+    "Dept": "Dept.",
+    "PIC": "PIC"
 
 
 

@@ -24,6 +24,7 @@ namespace A4KPI.Services
     public class AccountService : ServiceBase<Account, AccountDto>, IAccountService
     {
         private readonly IRepositoryBase<Account> _repo;
+        private readonly IRepositoryBase<OC> _repoOc;
         private readonly IRepositoryBase<AccountGroupAccount> _repoAccountGroupAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -32,6 +33,7 @@ namespace A4KPI.Services
 
         public AccountService(
             IRepositoryBase<Account> repo,
+            IRepositoryBase<OC> repoOC,
             IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -40,6 +42,7 @@ namespace A4KPI.Services
             : base(repo, unitOfWork, mapper, configMapper)
         {
             _repo = repo;
+            _repoOc = repoOC;
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -97,6 +100,9 @@ namespace A4KPI.Services
                 item.FullName = model.FullName;
                 item.Email = model.Email;
                 item.Leader = model.Leader;
+                item.FactId = model.FactId;
+                item.CenterId = model.CenterId;
+                item.DeptId = model.DeptId;
                 item.Manager = model.Manager;
                 _repo.Update(item);
                 await _unitOfWork.SaveChangeAsync();
@@ -139,6 +145,9 @@ namespace A4KPI.Services
                             Id = a.Id,
                             Username = a.Username,
                             Password = a.Password,
+                            FactId = a.FactId != null  ? a.FactId : 0,
+                            CenterId = a.CenterId != null  ? a.CenterId : 0,
+                            DeptId = a.DeptId != null  ? a.DeptId : 0,
                             CreatedBy = a.CreatedBy,
                             CreatedTime = a.CreatedTime,
                             ModifiedBy = a.ModifiedBy,
@@ -153,6 +162,9 @@ namespace A4KPI.Services
                             Manager = a.Manager != null ? a.Manager : 0,
                             Leader = a.Leader != null ? a.Leader : 0,
                             ManagerName = ac1 != null ? ac1.FullName : "N/A",
+                            FactName = a.FactId != null ? _repoOc.FindById(a.FactId).Name : "N/A",
+                            CenterName = a.CenterId != null ? _repoOc.FindById(a.CenterId).Name : "N/A",
+                            DeptName = a.DeptId != null ? _repoOc.FindById(a.DeptId).Name : "N/A",
 
                         };
             var data = await model.ToListAsync();

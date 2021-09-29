@@ -80,6 +80,16 @@
                 <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist>
               </ng-template>
             </e-column>
+            <e-column field="updateName" headerText="Mgmt. Arrange" textAlign='Center'>
+              <ng-template #template let-data>
+                <span *ngIf="data.factId > 0 && data.centerId === 0 && data.deptId === 0"> {{data.factName}}</span>
+                <span *ngIf="data.factId > 0 && data.centerId > 0 && data.deptId === 0"> {{data.centerName}}</span>
+                <span *ngIf="data.factId > 0 && data.centerId > 0 && data.deptId > 0"> {{data.DeptName}}</span>
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+              </ng-template>
+            </e-column>
             <e-column field="updateName" headerText="The last editor" textAlign='Center'>
               <ng-template #editTemplate let-data>
                 {{data.updateName}}

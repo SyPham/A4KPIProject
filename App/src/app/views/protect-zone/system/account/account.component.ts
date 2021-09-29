@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
@@ -9,6 +10,7 @@ import { Account } from 'src/app/_core/_model/account';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
+import { OcService } from 'src/app/_core/_service/oc.service';
 
 @Component({
   selector: 'app-account',
@@ -23,6 +25,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   fields: object = { text: 'name', value: 'id' };
   leaderFields: object = { text: 'fullName', value: 'id' };
   managerFields: object = { text: 'fullName', value: 'id' };
+  ocFields: object = { text: 'name', value: 'id' };
   // toolbarOptions = ['Search'];
   passwordFake = `aRlG8BBHDYjrood3UqjzRl3FubHFI99nEPCahGtZl9jvkexwlJ`;
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
@@ -37,11 +40,18 @@ export class AccountComponent extends BaseComponent implements OnInit {
   managers: any[] = [];
   leaderId: number;
   managerId: number;
+  factId: number;
+  centerId: number;
+  deptId: number;
   accounts: any[];
+  dataOclv3: any;
+  dataOclv4: any;
+  dataOclv5: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
+    private ocService: OcService,
     private alertify: AlertifyService,
     private route: ActivatedRoute,
   ) { super(); }
@@ -50,7 +60,34 @@ export class AccountComponent extends BaseComponent implements OnInit {
     // this.Permission(this.route);
     this.loadData();
     this.getAccounts();
+    this.getAllOc();
     this.loadAccountGroupData();
+  }
+  getAllOc(){
+    this.ocService.getAll().subscribe((res: any) => {
+      //Oclv3
+      this.dataOclv3 = res.filter(x => x.level === 3)
+      this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
+      //end Oclv3
+
+      //Oclv4
+      this.dataOclv4 = res.filter(x => x.level === 4)
+      this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
+      //end Oclv4
+
+      //Oclv5
+      this.dataOclv5 = res.filter(x => x.level === 5)
+      this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
+
+      //end Oclv5
+
+    })
+  }
+  loadData() {
+    this.service.getAll().subscribe(data => {
+      console.log(data);
+      this.data = data;
+    });
   }
   // life cycle ejs-grid
   createdManager($event, data) {
@@ -68,6 +105,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.accountGroupItem = [];
     this.leaderId = 0;
     this.managerId = 0;
+    this.factId = 0;
+    this.centerId = 0;
+    this.deptId = 0;
     this.accountCreate = {
       id: 0,
       username: null,
@@ -83,6 +123,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
       accountGroupIds: null,
       accountGroupText: null,
       accountType: null,
+      factId: this.factId,
+      centerId: this.centerId,
+      deptId: this.deptId,
       leader: this.leaderId,
       manager: this.managerId,
       leaderName: null,
@@ -94,6 +137,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.accountGroupItem = data.accountGroupIds;
     this.managerId = data.manager;
     this.leaderId = data.leader;
+    this.factId = data.factId;
+    this.centerId = data.centerId;
+    this.deptId = data.deptId;
   }
   actionBegin(args) {
     if (args.requestType === 'add') {
@@ -117,6 +163,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
         modifiedBy: 0,
         modifiedTime: null,
         accountType: null,
+        deptId: this.deptId,
+        centerId: this.centerId,
+        factId: this.factId,
         accountGroupIds: this.accountGroupItem,
         accountGroupText: null,
         leader: this.leaderId,
@@ -151,6 +200,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
         modifiedBy:args.data.modifiedBy,
         modifiedTime: args.data.modifiedTime,
         accountType: null,
+        factId: this.factId,
+        centerId: this.centerId,
+        deptId: this.deptId,
         accountGroupIds: this.accountGroupItem,
         accountGroupText: null,
         leader: this.leaderId,
@@ -199,17 +251,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
     );
   }
 
-  loadData() {
-    this.service.getAll().subscribe(data => {
-      this.data = data;
-      console.log(data);
-    });
-  }
+
   getAccounts() {
     this.service.getAccounts().subscribe(data => {
       this.accounts = data;
       this.leaders = data.filter(x=> x.isLeader);
-      console.log(this.leaders);
       this.managers = data;
     });
   }

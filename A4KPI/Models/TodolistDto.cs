@@ -15,7 +15,7 @@ namespace A4KPI.Models
     }
     public class PDCARequestDto
     {
-        public Result Result { get; set; }
+        //public Result Result { get; set; }
         public TargetDto Target { get; set; }
         public TargetDto NextMonthTarget { get; set; }
         public TargetYTDDto TargetYTD { get; set; }

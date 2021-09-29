@@ -28,14 +28,54 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="username" textAlign='Center' headerText="{{ 'Username'}}"> </e-column>
-            <e-column field="fullName" textAlign='Center' headerText="{{ 'FullName'}}"> </e-column>
-            <e-column field="password" textAlign='Center' headerText="{{ 'Password'}}">
+            <e-column field="username" textAlign='Center' width="100" headerText="{{ 'Username'}}"> </e-column>
+            <e-column field="fullName" textAlign='Center' width="100" headerText="{{ 'FullName'}}"> </e-column>
+            <e-column field="password" textAlign='Center' width="100" headerText="{{ 'Password'}}">
               <ng-template #template let-data>
                 ************
               </ng-template>
             </e-column>
             <e-column field="email" textAlign='Center' headerText="Email"> </e-column>
+            <e-column field="factName" textAlign='Center' width="100" headerText="Factory">
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.factName !== null; else elseTemplate">
+                  {{data.factName}}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  {{'N/A'}}
+                </ng-template>
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='factId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Factory' [dataSource]='dataOclv3'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+            <e-column field="centerName" textAlign='Center' width="100" headerText="Center">
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.centerName !== null; else elseTemplate">
+                  {{data.centerName}}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  {{'N/A'}}
+                </ng-template>
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='centerId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Center' [dataSource]='dataOclv4'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+            <e-column field="deptName" textAlign='Center' width="100" headerText="Dept">
+              <ng-template #template let-data>
+                <ng-container *ngIf="data.deptName !== null; else elseTemplate">
+                  {{data.deptName}}
+                </ng-container>
+                <ng-template #elseTemplate>
+                  {{'N/A'}}
+                </ng-template>
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='deptId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Dept.' [dataSource]='dataOclv5'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+
             <e-column field='accountGroupText' headerText="{{'Account Group'}}" width='200' textAlign='Center'>
               <ng-template #template let-data>
                 {{data.accountGroupText}}
@@ -43,26 +83,26 @@
               <ng-template #editTemplate let-data>
                 <ejs-multiselect [(ngModel)]='accountGroupItem' [fields]="fields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select months of the Year' [dataSource]='accountGroupData'></ejs-multiselect>
               </ng-template>
-              </e-column>
+            </e-column>
 
 
-                <e-column field='manager' headerText="{{'L1 Manager'}}" width='150' textAlign='Center'>
-                  <ng-template #template let-data>
-                    {{data.managerName}}
-                  </ng-template>
-                  <ng-template #editTemplate let-data>
-                    <ejs-dropdownlist [(ngModel)]='managerId' [allowFiltering]='true' (created)='createdManager($event, data)' [fields]="managerFields" placeholder='Select a manager' [dataSource]='managers'></ejs-dropdownlist>
-                  </ng-template>
-                  </e-column>
+            <e-column field='manager' headerText="{{'L1 Manager'}}" width='150' textAlign='Center'>
+              <ng-template #template let-data>
+                {{data.managerName}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='managerId' [allowFiltering]='true' (created)='createdManager($event, data)' [fields]="managerFields" placeholder='Select a manager' [dataSource]='managers'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
 
-                  <e-column field='leaderName' headerText="{{'Functional Leader'}}" width='150' textAlign='Center'>
-                    <ng-template #template let-data>
-                      {{data.leaderName}}
-                    </ng-template>
-                    <ng-template #editTemplate let-data>
-                      <ejs-dropdownlist [(ngModel)]='leaderId' [allowFiltering]='true' (created)='createdLeader($event, data)' [fields]="leaderFields" placeholder='Select a leader' [dataSource]='leaders'></ejs-dropdownlist>
-                    </ng-template>
-                    </e-column>
+            <e-column field='leaderName' headerText="{{'Functional Leader'}}" width='150' textAlign='Center'>
+              <ng-template #template let-data>
+                {{data.leaderName}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='leaderId' [allowFiltering]='true' (created)='createdLeader($event, data)' [fields]="leaderFields" placeholder='Select a leader' [dataSource]='leaders'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
 
             <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option'}}">
               <ng-template #template let-data>

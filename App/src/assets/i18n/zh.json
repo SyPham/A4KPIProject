@@ -281,7 +281,7 @@
   "Time Period Dispatch": "Time Period Dispatch",
   "Building Name": "Building Name",
   "Building List": "Building List",
-  "Level": "Level",
+  "Level": "階",
   "Type": "Type",
   "Job Type": "Job Type",
   "Subpackage Btn": "Subpackage",
@@ -319,6 +319,12 @@
   "Not yet start": "未開始",
   "Postpone": "暫停",
   "Terminate": "終止",
-  "Complete": "已完成"
+  "Complete": "已完成",
+
+  "KPI Name": "KPI 名稱",
+  "Factory": "廠區",
+  "Center": "中心",
+  "Dept": "部.",
+  "PIC": "負責人"
 
 }

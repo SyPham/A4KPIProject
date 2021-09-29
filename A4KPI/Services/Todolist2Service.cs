@@ -219,6 +219,8 @@ namespace A4KPI.Services
                             Content = a.Content,
                             DoContent = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
                             a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Content : "",
+                            ResultContent = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                            a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).ReusltContent : "",
                             Achievement = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
                             a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Achievement : "",
                             Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
@@ -392,24 +394,24 @@ namespace A4KPI.Services
                 var target = _mapper.Map<Target>(model.Target);
                 var nextMonthTarget = _mapper.Map<Target>(model.NextMonthTarget);
 
-                var result = _mapper.Map<Result>(model.Result);
+                //var result = _mapper.Map<Result>(model.Result);
 
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
                 _repoTarget.Update(target);
 
 
-                if (result.Id > 0)
-                    _repoResult.Update(result);
-                else
-                {
-                    var yearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-                    var monthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
-                    var updateTime = new DateTime(yearResult, monthResult, 1);
-                    result.UpdateTime = updateTime;
-                    result.CreatedTime = model.CurrentTime;
-                    _repoResult.Add(result);
-                }
+                //if (result.Id > 0)
+                //    _repoResult.Update(result);
+                //else
+                //{
+                //    var yearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+                //    var monthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+                //    var updateTime = new DateTime(yearResult, monthResult, 1);
+                //    result.UpdateTime = updateTime;
+                //    result.CreatedTime = model.CurrentTime;
+                //    _repoResult.Add(result);
+                //}
 
                 if (nextMonthTarget.Id > 0)
                     _repoTarget.Update(nextMonthTarget);
@@ -442,7 +444,7 @@ namespace A4KPI.Services
                     var updateTime = new DateTime(yearResult, monthResult, 1);
                     if (item.DoId == 0)
                     {
-                       var addDoItem = new Do(item.DoContent, item.Achievement, item.ActionId);
+                       var addDoItem = new Do(item.DoContent,item.ResultContent, item.Achievement, item.ActionId);
                         addDoItem.CreatedTime = updateTime;
                         addDoList.Add(addDoItem);
                     }

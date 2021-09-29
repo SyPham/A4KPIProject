@@ -22,6 +22,9 @@ namespace A4KPI.Models
         public string Email { get; set; }
         public bool IsLock { get; set; }
         public int? AccountTypeId { get; set; }
+        public int? FactId { get; set; }
+        public int? CenterId { get; set; }
+        public int? DeptId { get; set; }
         public int? Leader { get; set; }
         public int? Manager { get; set; }
         public int CreatedBy { get; set; }

@@ -21,6 +21,7 @@ namespace A4KPI.DTO
         public int? ActionStatusId { get; set; }
         public string StatusName { get; set; }
         public string DoContent { get; set; }
+        public string ResultContent { get; set; }
         public string CContent { get; set; }
         public string AContent { get; set; }
         public string Achievement { get; set; }

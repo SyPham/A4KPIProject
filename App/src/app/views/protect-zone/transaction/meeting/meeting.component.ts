@@ -142,11 +142,17 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   dataTable: any;
   @ViewChild('gridDataTable') public grid2: GridComponent;
   dataLevel: any
+  dataFact: any
+  dataCenter: any
+  dataDept: any
   dataPic: any
   levelFields: object = { text: 'name', value: 'id' };
   picFields: object = { text: 'name', value: 'id' };
   policyDataTamp: any;
   levelId: number = 0
+  factId: number = 0
+  centerId: number = 0
+  deptId: number = 0
   picId: number = 0
   currentTime: any;
   policyTitle: string
@@ -182,17 +188,77 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   ngAfterViewInit() {
 
   }
-  filterlevel(args) {
-    this.levelId = args.value
-    if(this.levelId === 0) {
+  filterFact(args) {
+    this.factId = args.value
+    if(this.factId === 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
       this.policyData = this.policyDataTamp
     }
-    if(this.levelId > 0) {
+    if(this.factId > 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
+    }
+  }
+  filterCenter(args) {
+    this.centerId = args.value
+    if(this.centerId === 0 && this.factId === 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp
+    }
+    if(this.centerId > 0 && this.factId === 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.centerId == this.centerId)
+    }
+    if(this.centerId > 0 && this.factId > 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
+    }
+  }
+  filterDept(args) {
+    this.deptId = args.value
+
+    if(this.deptId === 0 && this.factId === 0 && this.centerId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp
+    }
+    if(this.deptId > 0 && this.factId === 0 && this.centerId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.deptId == this.deptId)
+    }
+    if(this.deptId > 0 && this.factId > 0 && this.centerId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.deptId == this.deptId)
+    }
+    if(this.deptId > 0 && this.centerId > 0 && this.factId > 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
+    }
+  }
+  filterlevel(args) {
+    this.levelId = args.value
+    if(this.levelId === 0 && this.factId === 0 && this.centerId === 0 && this.deptId === 0) {
+      this.policyData = this.policyDataTamp
+    }
+    if(this.levelId > 0 && this.factId === 0 && this.centerId === 0 && this.deptId === 0) {
       this.policyData = this.policyDataTamp.filter(x => x.level == this.levelId)
     }
-
-    if(this.levelId === 0 && this.picId > 0) {
-      this.policyData = this.policyDataTamp.filter(x =>  x.picId == this.picId)
+    if(this.levelId > 0 && this.factId > 0 && this.deptId === 0 && this.centerId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.level == this.levelId)
+    }
+    if(this.levelId > 0 && this.factId > 0 && this.centerId > 0 && this.deptId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.level == this.levelId)
+    }
+    if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
     }
   }
   filterPic(args) {
@@ -421,6 +487,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
 
   getAllKpi() {
     this.meetingService.getAllKpi().subscribe((res: any) => {
+      console.log(res);
       this.policyData = res
       this.policyDataTamp = res
       const level = res.map((item: any) => {
@@ -433,6 +500,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
         return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
       });
 
+      //pic
       const pic = res.map((item: any) => {
         return {
           id: item.picId,
@@ -443,6 +511,46 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.dataPic = pic.filter((thing, i, arr) => {
         return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
       });
+      //end pic
+
+      //factory
+      const factory = res.map((item: any) => {
+        return {
+          id: item.factId,
+          name: item.factName
+        }
+      })
+      this.dataFact = [...new Map(factory.map(items => [items[items.id], items])).values()];
+      this.dataFact = factory.filter((thing, i, arr) => {
+        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      });
+      //end pic
+
+      //center
+      const center = res.map((item: any) => {
+        return {
+          id: item.centerId,
+          name: item.centerName
+        }
+      })
+      this.dataCenter = [...new Map(center.map(items => [items[items.id], items])).values()];
+      this.dataCenter = center.filter((thing, i, arr) => {
+        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      });
+      //end center
+
+      //dept
+      const dept = res.map((item: any) => {
+        return {
+          id: item.deptId,
+          name: item.deptName
+        }
+      })
+      this.dataDept = [...new Map(dept.map(items => [items[items.id], items])).values()];
+      this.dataDept = dept.filter((thing, i, arr) => {
+        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      });
+      //end dept
 
       this.dataLevel.unshift({ name: "All", id: 0 });
       this.dataPic.unshift({ name: "All", id: 0 });

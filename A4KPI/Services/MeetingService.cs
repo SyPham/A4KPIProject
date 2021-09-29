@@ -90,7 +90,15 @@ namespace A4KPI.Services
                 PolicyName = _repoPo.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
                 x.TypeId,
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
-                Level = _repoOC.FindAll().FirstOrDefault(y => y.Id == x.OcId).Level
+                Level = _repoOC.FindAll().FirstOrDefault(y => y.Id == x.OcId).Level,
+
+                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
+                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
+                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
+
+                FactName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
+                CenterName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
+                DeptName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
             }).ToList();
             return data;
         }
@@ -311,11 +319,11 @@ namespace A4KPI.Services
                                  Content = a.Content,
                                  CreatedTime = a.CreatedTime,
                                  DoContent = sub == null ? "" : sub.Content,
+                                 ResultContent = sub == null ? "" : sub.ReusltContent,
                                  Achievement = sub == null ? "" : sub.Achievement,
                                  Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                  StatusId = a.StatusId,
                                  StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
-                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                  Target = a.Target,
                              }).ToList();
                     //add them list cong viec chua lam xong cua thang truoc vao thang hien tai
@@ -328,10 +336,10 @@ namespace A4KPI.Services
                             Content = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Content,
                             CreatedTime = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).CreatedTime,
                             DoContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Content,
+                            ResultContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ReusltContent,
                             Achievement = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Achievement,
                             Deadline = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Deadline.Value.ToString("MM/dd"),
                             StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == itemAcs.StatusId).Name.Trim(),
-                            CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                             Target = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Target,
                         });
                     }
@@ -350,11 +358,11 @@ namespace A4KPI.Services
                                  DoId = sub == null ? 0 : sub.Id,
                                  Content = a.Content,
                                  DoContent = sub == null ? "" : sub.Content,
+                                 ResultContent = sub == null ? "" : sub.ReusltContent,
                                  Achievement = sub == null ? "" : sub.Achievement,
                                  Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                  StatusId = a.StatusId,
                                  StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
-                                 CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                  Target = a.Target,
 
                              }).ToList();
@@ -370,11 +378,11 @@ namespace A4KPI.Services
                                 DoId = sub == null ? 0 : sub.Id,
                                 Content = a.Content,
                                 DoContent = sub == null ? "" : sub.Content,
+                                ResultContent = sub == null ? "" : sub.ReusltContent,
                                 Achievement = sub == null ? "" : sub.Achievement,
                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                 StatusId = a.StatusId,
                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
-                                CContent = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Content.Trim(),
                                 Target = a.Target
 
                             };

@@ -79,7 +79,16 @@ namespace A4KPI.Services
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
                 UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
-                UpdateDate = x.UpdateDate.ToString("MM-dd-yyyy")
+                UpdateDate = x.UpdateDate.ToString("MM-dd-yyyy"),
+
+                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
+                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
+                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
+
+                FactName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
+                CenterName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
+                DeptName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
+                //Mgmt = _re
             }).ToList();
             return data;
         }
