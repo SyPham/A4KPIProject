@@ -28,6 +28,7 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   toolbarOptions = ['Add','Update',  'Delete', 'Cancel', 'Search'];
   accountIdList: any = [];
+  typeData: Object;
   accountData: Account[];
   fields: object = { text: 'fullName', value: 'id' };
   accountList: any = [];
@@ -49,7 +50,6 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
   policyId: number = 0;
   picId: number = 0;
   typeId: number = 0;
-  typeData: Object;
   constructor(
     private ocService: OcService,
     private kpiNewService: KpinewService,
@@ -113,7 +113,7 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
         TypeId: this.typeId,
         Pic: this.picId
       }
-      if (args.data.name === undefined) {
+      if (args.data.name === null) {
         this.alertify.error('Please key in policy name! <br> Vui lòng nhập Policy!');
         args.cancel = true;
         return;
@@ -151,6 +151,7 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
       this.delete(args.data[0].id);
     }
   }
+
   update(model) {
     this.kpiNewService.update(model).subscribe(res => {
       if(res) {
@@ -162,6 +163,7 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
       }
     })
   }
+
   delete(id) {
     this.kpiNewService.delete(id).subscribe(res => {
       if(res) {

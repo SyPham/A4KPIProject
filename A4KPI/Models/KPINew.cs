@@ -16,10 +16,12 @@ namespace A4KPI.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int OcId { get; set; }
+        public int Level { get; set; }
+        public int? OcId { get; set; }
         public int PolicyId { get; set; }
         public int TypeId { get; set; }
         public int Pic { get; set; }
+        public int? ParentId { get; set; }
         public bool Submitted { get; set; }
 
         public int UpdateBy { get; set; }

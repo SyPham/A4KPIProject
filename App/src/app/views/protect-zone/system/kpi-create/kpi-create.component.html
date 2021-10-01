@@ -5,7 +5,6 @@
         <h3 class="card-title"><i class="fa fa-building-o"></i> Organization Chart
         </h3>
       </div>
-      <!-- /.card-header -->
 
       <div class="card-body table-responsive p-0">
         <ejs-treegrid #treegridBuilding [dataSource]="data"
@@ -24,7 +23,6 @@
           </e-columns>
         </ejs-treegrid>
       </div>
-      <!-- /.card-body -->
     </div>
   </div>
   <div class="col-md-9">
@@ -33,7 +31,6 @@
         <h3 class="card-title"><i class="fa fa-list-ol"></i> KPI
         </h3>
       </div>
-      <!-- /.card-header -->
 
       <div class="card-body table-responsive p-0">
 
@@ -50,11 +47,6 @@
           [editSettings]='editSettingOCs'
         >
           <e-columns>
-            <!-- <e-column field="ID" width="80" isPrimaryKey="true" textAlign='Center' headerText="#">
-              <ng-template #template let-data>
-              <ejs-switch onLabel="ON" offLabel="OFF" (change)='onChangeMap($event, data)' [(ngModel)]="data.Status" [checked]="data.Status"></ejs-switch>
-              </ng-template>
-            </e-column> -->
             <e-column field="name" headerText="KPI Name" width="200" textAlign='Center'> </e-column>
             <e-column field="policyName" headerText="Policy" textAlign='Center'>
               <ng-template #template let-data>
@@ -103,7 +95,6 @@
           </e-columns>
         </ejs-grid>
       </div>
-      <!-- /.card-body -->
     </div>
   </div>
 

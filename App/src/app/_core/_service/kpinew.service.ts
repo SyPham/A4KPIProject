@@ -29,7 +29,9 @@ export class KpinewService {
   getKPIByOcID(ocID) {
     return this.http.get(`${this.baseUrl}KPINew/GetKPIByOcID/${ocID}`, {});
   }
-
+  getTree(){
+    return this.http.get(`${this.baseUrl}KPINew/GetAllAsTreeView`, {});
+  }
   getPolicyByOcID(ocID) {
     return this.http.get(`${this.baseUrl}KPINew/GetPolicyByOcID/${ocID}`, {});
   }

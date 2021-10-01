@@ -37,7 +37,12 @@ namespace A4KPI.Controllers
         {
             return Ok((await _service.GetAllAsync()));
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsTreeView()
+        {
+            var ocs = await _service.GetAllAsTreeView();
+            return Ok(ocs);
+        }
         [HttpPost]
         public async Task<ActionResult> AddAsync([FromBody] KPINewDto model)
         {
@@ -54,7 +59,7 @@ namespace A4KPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            return StatusCodeResult(await _service.DeleteAsync(id));
+            return Ok(await _service.Delete(id));
         }
 
         [HttpGet]

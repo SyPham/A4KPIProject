@@ -12,6 +12,8 @@ using A4KPI.Helpers;
 using A4KPI.Constants;
 using Microsoft.AspNetCore.Http;
 using NetUtility;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace A4KPI.Services
 {
@@ -20,6 +22,8 @@ namespace A4KPI.Services
         Task<object> GetKPIByOcID(int ocID);
         Task<object> GetPolicyByOcID(int ocID);
         Task<object> GetAllType();
+        Task<bool> Delete(int id);
+        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView();
     }
     public class KPINewService : ServiceBase<KPINew, KPINewDto>, IKPINewService
     {
@@ -59,7 +63,32 @@ namespace A4KPI.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
+        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView()
+        {
+            var lists = (await _repo.FindAll().ProjectTo<KPINewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                Name = x.Name,
+                PolicyId = x.PolicyId,
+                UpdateBy = x.UpdateBy,
+                Pic = x.Pic,
+                TypeId = x.TypeId,
+                Level = x.Level,
+                PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
+                TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
+                PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
+                UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
+                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
+                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
+                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
+                UpdateDate = x.UpdateDate,
+                FactName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name,
+                CenterName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name,
+                DeptName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name,
 
+            }).ToList().AsHierarchy(x => x.Id, y => y.ParentId);
+            return lists;
+        }
         public async Task<object> GetAllType()
         {
             var data = _repoType.FindAll();
@@ -74,8 +103,9 @@ namespace A4KPI.Services
                 x.Pic,
                 x.PolicyId,
                 x.UpdateBy,
-                PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
                 x.TypeId,
+
+                PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
                 UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
@@ -85,7 +115,7 @@ namespace A4KPI.Services
                 CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
                 DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
 
-                FactName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
+                FactName =  _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
                 CenterName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
                 DeptName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
                 //Mgmt = _re
@@ -166,6 +196,29 @@ namespace A4KPI.Services
                 }).ToList();
             }
             //return data;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var item = _repo.FindById(id);
+            var itemChild = _repo.FindAll().Where(x => x.ParentId == id).ToList();
+            if (itemChild != null)
+            {
+                _repo.RemoveMultiple(itemChild);
+               await _unitOfWork.SaveChangeAsync();
+            }
+            try
+            {
+                _repo.Remove(item);
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+           
         }
     }
 }
