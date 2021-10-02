@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -24,28 +25,31 @@ export class KpinewService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public env: EnvService
+    ) { }
 
   getKPIByOcID(ocID) {
-    return this.http.get(`${this.baseUrl}KPINew/GetKPIByOcID/${ocID}`, {});
+    return this.http.get(`${this.env.apiUrl}KPINew/GetKPIByOcID/${ocID}`, {});
   }
   getTree(){
-    return this.http.get(`${this.baseUrl}KPINew/GetAllAsTreeView`, {});
+    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView`, {});
   }
   getPolicyByOcID(ocID) {
-    return this.http.get(`${this.baseUrl}KPINew/GetPolicyByOcID/${ocID}`, {});
+    return this.http.get(`${this.env.apiUrl}KPINew/GetPolicyByOcID/${ocID}`, {});
   }
 
   getAllType() {
-    return this.http.get(`${this.baseUrl}KPINew/getAllType`, {});
+    return this.http.get(`${this.env.apiUrl}KPINew/getAllType`, {});
   }
   add(model) {
-    return this.http.post(`${this.baseUrl}KPINew/Add`, model);
+    return this.http.post(`${this.env.apiUrl}KPINew/Add`, model);
   }
   update(model) {
-    return this.http.put(`${this.baseUrl}KPINew/update`, model);
+    return this.http.put(`${this.env.apiUrl}KPINew/update`, model);
   }
   delete(id) {
-    return this.http.delete(`${this.baseUrl}KPINew/delete/${id}`);
+    return this.http.delete(`${this.env.apiUrl}KPINew/delete/${id}`);
   }
 }

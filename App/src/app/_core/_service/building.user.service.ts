@@ -1,10 +1,10 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Tutorial } from '../_model/tutorial';
 import { PaginatedResult } from '../_model/pagination';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -24,22 +24,22 @@ export class BuildingUserService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public env: EnvService) { }
   getBuildingsAsTreeView() {
-    return this.http.get(`${this.baseUrl}Building/GetAllAsTreeView`);
+    return this.http.get(`${this.env.apiUrl}Building/GetAllAsTreeView`);
   }
   mappingUserWithBuilding(obj) {
-    return this.http.post(`${this.baseUrl}BuildingUser/MappingUserWithBuilding`, obj);
+    return this.http.post(`${this.env.apiUrl}BuildingUser/MappingUserWithBuilding`, obj);
   }
   removeBuildingUser(obj) {
-    return this.http.post(`${this.baseUrl}BuildingUser/RemoveBuildingUser`, obj);
+    return this.http.post(`${this.env.apiUrl}BuildingUser/RemoveBuildingUser`, obj);
   }
   getAllUsers(page?, pageSize? ): Observable<PaginatedResult<object[]>> {
     const paginatedResult: PaginatedResult<object[]> = new PaginatedResult<
     object[]
     >();
     return this.http
-      .get<object[]>(`${this.authUrl}Users/GetAllUsers/${environment.systemCode}/${page}/${pageSize}`, {
+      .get<object[]>(`${this.env.apiUrl}Users/GetAllUsers/${environment.systemCode}/${page}/${pageSize}`, {
         observe: 'response'
       })
       .pipe(
@@ -54,13 +54,13 @@ export class BuildingUserService {
         })
       );
   }
-  deleteUser(id) { return this.http.delete(`${this.authUrl}Users/Delete/${id}`); }
-  updateUser(update) { return this.http.post(`${this.authUrl}Users/Update`, update); }
-  createUser(create) { return this.http.post(`${this.authUrl}Users/Create`, create); }
+  deleteUser(id) { return this.http.delete(`${this.env.apiUrl}Users/Delete/${id}`); }
+  updateUser(update) { return this.http.post(`${this.env.apiUrl}Users/Update`, update); }
+  createUser(create) { return this.http.post(`${this.env.apiUrl}Users/Create`, create); }
   getAllBuildingUsers() {
-    return this.http.get(`${this.baseUrl}BuildingUser/getAllBuildingUsers`);
+    return this.http.get(`${this.env.apiUrl}BuildingUser/getAllBuildingUsers`);
     }
   getBuildingUserByBuildingID(buildingID) {
-    return this.http.get(`${this.baseUrl}BuildingUser/GetBuildingUserByBuildingID/${buildingID}`);
+    return this.http.get(`${this.env.apiUrl}BuildingUser/GetBuildingUserByBuildingID/${buildingID}`);
     }
 }

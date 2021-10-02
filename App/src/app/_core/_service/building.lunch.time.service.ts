@@ -1,10 +1,10 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Tutorial } from '../_model/tutorial';
 import { HierarchyNode, IBuilding } from '../_model/building';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -23,39 +23,39 @@ export class BuildingLunchTimeService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public env: EnvService) { }
   getBuildings() {
-    return this.http.get<Array<IBuilding>>(`${this.baseUrl}BuildingLunchTime/GetAllBuildings`);
+    return this.http.get<Array<IBuilding>>(`${this.env.apiUrl}BuildingLunchTime/GetAllBuildings`);
   }
   getPeriodMixingByBuildingID(buildingID: number) {
-    return this.http.get(`${this.baseUrl}BuildingLunchTime/getPeriodMixingByBuildingID/${buildingID}`);
+    return this.http.get(`${this.env.apiUrl}BuildingLunchTime/getPeriodMixingByBuildingID/${buildingID}`);
   }
   addOrUpdateLunchTime(item: any) {
-    return this.http.post(`${this.baseUrl}BuildingLunchTime/AddOrUpdateLunchTime`, item);
+    return this.http.post(`${this.env.apiUrl}BuildingLunchTime/AddOrUpdateLunchTime`, item);
   }
   updatePeriodMixing(item: any) {
-    return this.http.put(`${this.baseUrl}BuildingLunchTime/updatePeriodMixing`, item);
+    return this.http.put(`${this.env.apiUrl}BuildingLunchTime/updatePeriodMixing`, item);
   }
   addPeriodMixing(item: any) {
-    return this.http.post(`${this.baseUrl}BuildingLunchTime/addPeriodMixing`, item);
+    return this.http.post(`${this.env.apiUrl}BuildingLunchTime/addPeriodMixing`, item);
   }
   deletePeriodMixing(id) {
-    return this.http.delete(`${this.baseUrl}BuildingLunchTime/deletePeriodMixing/${id}`);
+    return this.http.delete(`${this.env.apiUrl}BuildingLunchTime/deletePeriodMixing/${id}`);
   }
 
   addLunchTimeBuilding(item: any) {
-    return this.http.put(`${this.baseUrl}BuildingLunchTime/AddLunchTimeBuilding`, item);
+    return this.http.put(`${this.env.apiUrl}BuildingLunchTime/AddLunchTimeBuilding`, item);
   }
   updatePeriodDispatch(item: any) {
-    return this.http.put(`${this.baseUrl}BuildingLunchTime/updatePeriodDispatch`, item);
+    return this.http.put(`${this.env.apiUrl}BuildingLunchTime/updatePeriodDispatch`, item);
   }
   addPeriodDispatch(item: any) {
-    return this.http.post(`${this.baseUrl}BuildingLunchTime/addPeriodDispatch`, item);
+    return this.http.post(`${this.env.apiUrl}BuildingLunchTime/addPeriodDispatch`, item);
   }
   deletePeriodDispatch(id) {
-    return this.http.delete(`${this.baseUrl}BuildingLunchTime/deletePeriodDispatch/${id}`);
+    return this.http.delete(`${this.env.apiUrl}BuildingLunchTime/deletePeriodDispatch/${id}`);
   }
   getPeriodDispatchByPeriodMixingID(periodMixingID: number) {
-    return this.http.get(`${this.baseUrl}BuildingLunchTime/GetPeriodDispatchByPeriodMixingID/${periodMixingID}`);
+    return this.http.get(`${this.env.apiUrl}BuildingLunchTime/GetPeriodDispatchByPeriodMixingID/${periodMixingID}`);
   }
 }

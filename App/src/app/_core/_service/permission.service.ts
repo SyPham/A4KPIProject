@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -20,83 +21,83 @@ export class PermissionService {
     this.messageSource.next(message);
   }
   constructor(
-    private http: HttpClient, private utilitiesService: UtilitiesService
+    private http: HttpClient, public env: EnvService, private utilitiesService: UtilitiesService
   ) { }
 // #region Permisison
   getAllPermission() {
-    return this.http.get(this.baseUrl + 'Permission/GetAll', {});
+    return this.http.get(this.env.apiUrl + 'Permission/GetAll', {});
   }
   create(model) {
-    return this.http.post(this.baseUrl + 'Permission/Create', model);
+    return this.http.post(this.env.apiUrl + 'Permission/Create', model);
   }
   update(model) {
-    return this.http.put(this.baseUrl + 'Permission/Update', model);
+    return this.http.put(this.env.apiUrl + 'Permission/Update', model);
   }
   delete(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/Delete/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/Delete/' + id);
   }
 // #endregion
 
   // #region Module
   getAllModule() {
-    return this.http.get(this.baseUrl + 'Permission/GetAllModule', {});
+    return this.http.get(this.env.apiUrl + 'Permission/GetAllModule', {});
   }
   createModule(model) {
-    return this.http.post(this.baseUrl + 'Permission/CreateModule', model);
+    return this.http.post(this.env.apiUrl + 'Permission/CreateModule', model);
   }
   updateModule(model) {
-    return this.http.put(this.baseUrl + 'Permission/UpdateModule', model);
+    return this.http.put(this.env.apiUrl + 'Permission/UpdateModule', model);
   }
   deleteModule(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/DeleteModule/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/DeleteModule/' + id);
   }
   deleteModuleTranslation(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/DeleteModuleTranslation/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/DeleteModuleTranslation/' + id);
   }
 // #endregion
 
   // #region Function
   getAllFunction() {
-    return this.http.get(this.baseUrl + 'Permission/GetAllFunction', {});
+    return this.http.get(this.env.apiUrl + 'Permission/GetAllFunction', {});
   }
   getFunctionsAsTreeView() {
-    return this.http.get(this.baseUrl + 'Permission/GetFunctionsAsTreeView', {});
+    return this.http.get(this.env.apiUrl + 'Permission/GetFunctionsAsTreeView', {});
   }
   createFunction(model) {
-    return this.http.post(this.baseUrl + 'Permission/CreateFunction', model);
+    return this.http.post(this.env.apiUrl + 'Permission/CreateFunction', model);
   }
   updateFunction(model) {
-    return this.http.put(this.baseUrl + 'Permission/UpdateFunction', model);
+    return this.http.put(this.env.apiUrl + 'Permission/UpdateFunction', model);
   }
   deleteFunction(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/DeleteFunction/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/DeleteFunction/' + id);
   }
   deleteFunctionTranslation(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/DeleteFunctionTranslation/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/DeleteFunctionTranslation/' + id);
   }
   getActionInFunctionByRoleID(id: number) {
-    return this.http.get(this.baseUrl + 'Permission/GetActionInFunctionByRoleID/' + id);
+    return this.http.get(this.env.apiUrl + 'Permission/GetActionInFunctionByRoleID/' + id);
   }
 // #endregion
 
 
   // #region Action
   getAllAction() {
-    return this.http.get(this.baseUrl + 'Permission/GetAllAction', {});
+    return this.http.get(this.env.apiUrl + 'Permission/GetAllAction', {});
   }
   createAction(model) {
-    return this.http.post(this.baseUrl + 'Permission/CreateAction', model);
+    return this.http.post(this.env.apiUrl + 'Permission/CreateAction', model);
   }
   updateAction(model) {
-    return this.http.put(this.baseUrl + 'Permission/UpdateAction', model);
+    return this.http.put(this.env.apiUrl + 'Permission/UpdateAction', model);
   }
   deleteAction(id: number) {
-    return this.http.delete(this.baseUrl + 'Permission/DeleteAction/' + id);
+    return this.http.delete(this.env.apiUrl + 'Permission/DeleteAction/' + id);
   }
   // #endregion
 
   getMenuByUserPermission(userId) {
-    return this.http.get<[]>(this.baseUrl + 'Permission/GetMenuByUserPermission/' + userId, {})
+    return this.http.get<[]>(this.env.apiUrl + 'Permission/GetMenuByUserPermission/' + userId, {})
     .pipe(map(response => {
       const menus = response as any[];
       const navs: INavData[] = [
@@ -141,32 +142,32 @@ export class PermissionService {
   }
 
   putPermissionByRoleId(roleID, request) {
-    return this.http.put(this.baseUrl + 'Permission/putPermissionByRoleId/' + roleID, request);
+    return this.http.put(this.env.apiUrl + 'Permission/putPermissionByRoleId/' + roleID, request);
   }
   postActionToFunction(functionID, request) {
-    return this.http.post(this.baseUrl + 'Permission/PostActionToFunction/' + functionID, request);
+    return this.http.post(this.env.apiUrl + 'Permission/PostActionToFunction/' + functionID, request);
   }
   deleteActionToFunction(functionID, request) {
-    return this.http.delete(`${this.baseUrl}Permission/deleteActionToFunction/${functionID}?actionIds=${request.actionIds}`);
+    return this.http.delete(`${this.env.apiUrl}Permission/deleteActionToFunction/${functionID}?actionIds=${request.actionIds}`);
   }
   getScreenAction(functionID) {
-    return this.http.get<[]>(this.baseUrl + 'Permission/GetScreenAction/' + functionID, {});
+    return this.http.get<[]>(this.env.apiUrl + 'Permission/GetScreenAction/' + functionID, {});
   }
   getScreenFunctionAndAction(roleID) {
-    return this.http.get<[]>(this.baseUrl + 'Permission/GetScreenFunctionAndAction/' + roleID, { });
+    return this.http.get<[]>(this.env.apiUrl + 'Permission/GetScreenFunctionAndAction/' + roleID, { });
   }
 
   // language
   getAllLanguage() {
-    return this.http.get<[]>(this.baseUrl + 'Permission/getAllLanguage', {});
+    return this.http.get<[]>(this.env.apiUrl + 'Permission/getAllLanguage', {});
   }
 
   getModulesAsTreeView() {
-    return this.http.get<[]>(this.baseUrl + 'Permission/GetModulesAsTreeView', {});
+    return this.http.get<[]>(this.env.apiUrl + 'Permission/GetModulesAsTreeView', {});
   }
 
   getMenuByLangID(userID, langID) {
-    return this.http.get<[]>(`${this.baseUrl}Permission/GetMenuByLangID?userID=${userID}&langID=${langID}` , {})
+    return this.http.get<[]>(`${this.env.apiUrl}Permission/GetMenuByLangID?userID=${userID}&langID=${langID}` , {})
       .pipe(map(response => {
         const menus = response as any[];
         const navs: INavData[] = [

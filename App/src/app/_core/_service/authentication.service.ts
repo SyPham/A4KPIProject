@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { AlertifyService } from './alertify.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
@@ -41,7 +42,7 @@ export class AuthenticationService implements OnDestroy {
   levelSource = new BehaviorSubject<any>({});
   currentLevel = this.levelSource.asObservable();
 
-  private readonly apiUrl = `${environment.apiUrl}account`;
+  private readonly apiUrl = `${this.env.apiUrl}account`;
   private timer: Subscription;
   // tslint:disable-next-line:variable-name
   private _user = new BehaviorSubject<ApplicationUser>(null);
@@ -95,6 +96,7 @@ export class AuthenticationService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
+    public env: EnvService,
     private cookieService: CookieService  ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
   }
@@ -122,7 +124,7 @@ export class AuthenticationService implements OnDestroy {
       );
   }
   getBuildingUserByUserID(userID) {
-    const url = `${environment.apiUrlEC}BuildingUser/GetBuildingUserByUserID/${userID}`;
+    const url = `${this.env.apiUrlEC}BuildingUser/GetBuildingUserByUserID/${userID}`;
     return this.http.get<ResponseDetail<IBuilding[]>>(url, {});
   }
   logout() {

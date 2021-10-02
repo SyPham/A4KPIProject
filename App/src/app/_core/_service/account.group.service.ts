@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { AccountGroup } from './../_model/account.group';
 import { CURDService } from './CURD.service';
 import { Injectable } from '@angular/core';
@@ -10,11 +11,11 @@ import { Observable } from 'rxjs';
 })
 export class AccountGroupService extends CURDService<AccountGroup> {
 
-  constructor(http: HttpClient,utilitiesService: UtilitiesService)
+  constructor(http: HttpClient,utilitiesService: UtilitiesService, env: EnvService)
   {
-    super(http,"AccountGroup", utilitiesService);
+    super(http,"AccountGroup", utilitiesService , env);
   }
   getAccountGroupForTodolistByAccountId(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.base}${this.entity}/GetAccountGroupForTodolistByAccountId`);
+    return this.http.get<any[]>(`${this.env.apiUrl}${this.entity}/GetAccountGroupForTodolistByAccountId`);
   }
 }

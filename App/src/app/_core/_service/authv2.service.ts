@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { AlertifyService } from './alertify.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
@@ -37,7 +38,7 @@ export class Authv2Service implements OnDestroy {
   levelSource = new BehaviorSubject<any>({});
   currentLevel = this.levelSource.asObservable();
 
-  private readonly apiUrl = `${environment.apiUrl}auth`;
+  private readonly apiUrl = `${this.env.apiUrl}auth`;
   private timer: Subscription;
   // tslint:disable-next-line:variable-name
   private _user = new BehaviorSubject<ApplicationUser>(null);
@@ -91,6 +92,7 @@ export class Authv2Service implements OnDestroy {
 
   constructor(
     private http: HttpClient,
+    public env: EnvService,
     private cookieService: CookieService  ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
   }

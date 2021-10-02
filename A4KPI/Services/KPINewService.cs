@@ -65,7 +65,8 @@ namespace A4KPI.Services
         }
         public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView()
         {
-            var lists = (await _repo.FindAll().ProjectTo<KPINewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto {
+            var lists = (await _repo.FindAll().ProjectTo<KPINewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+            {
                 Id = x.Id,
                 ParentId = x.ParentId,
                 Name = x.Name,
@@ -82,12 +83,38 @@ namespace A4KPI.Services
                 CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
                 DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
                 UpdateDate = x.UpdateDate,
-                FactName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name,
-                CenterName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name,
-                DeptName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == null ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name,
+                //FactName =  _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name,
+                //CenterName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name,
+                //DeptName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name,
+
+            }).ToList();
+            var data = lists.Select(x => new KPINewDto
+            {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                Name = x.Name,
+                PolicyId = x.PolicyId,
+                UpdateBy = x.UpdateBy,
+                Pic = x.Pic,
+                TypeId = x.TypeId,
+                Level = x.Level,
+                PolicyName = x.PolicyName,
+                TypeName = x.TypeName,
+                PICName = x.PICName,
+                UpdateName = x.UpdateName,
+                FactId = x.FactId,
+                CenterId = x.CenterId,
+                DeptId = x.DeptId,
+                UpdateDate = x.UpdateDate,
+                FactName = x.FactId == 0 ? "N/A" : _repoOc.FindById(x.FactId).Name,
+                CenterName = x.CenterId == 0 ? "N/A" : _repoOc.FindById(x.CenterId).Name,
+                DeptName = x.DeptId == 0 ? "N/A" : _repoOc.FindById(x.DeptId).Name
+                //FactName =  _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name,
+                //CenterName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name,
+                //DeptName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name,
 
             }).ToList().AsHierarchy(x => x.Id, y => y.ParentId);
-            return lists;
+            return data;
         }
         public async Task<object> GetAllType()
         {

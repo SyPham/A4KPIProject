@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { CURDService } from './CURD.service';
 import { Injectable } from '@angular/core';
 
@@ -9,9 +10,9 @@ import { AccountGroupPeriod } from '../_model/account.group.period';
 })
 export class AccountGroupPeriodService extends CURDService<AccountGroupPeriod> {
 
-  constructor(http: HttpClient,utilitiesService: UtilitiesService)
+  constructor(http: HttpClient,utilitiesService: UtilitiesService , env: EnvService)
   {
-    super(http,"AccountGroupPeriod", utilitiesService);
+    super(http,"AccountGroupPeriod", utilitiesService ,env);
   }
 
 }

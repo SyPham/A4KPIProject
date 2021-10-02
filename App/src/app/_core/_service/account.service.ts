@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,13 +25,13 @@ export class AccountService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public env: EnvService) { }
   getAllUsers(page?, pageSize? ): Observable<PaginatedResult<object[]>> {
     const paginatedResult: PaginatedResult<object[]> = new PaginatedResult<
     object[]
     >();
     return this.http
-      .get<object[]>(`${this.authUrl}Users/GetAllUsers/${page}/${pageSize}`, {
+      .get<object[]>(`${this.env.apiUrl}Users/GetAllUsers/${page}/${pageSize}`, {
         observe: 'response'
       })
       .pipe(
@@ -45,24 +46,24 @@ export class AccountService {
         })
       );
   }
-  deleteUser(id) { return this.http.delete(`${this.authUrl}Users/Delete/${id}/${environment.systemCode}`); }
-  mapBuildingUser(userid, buildingid) { return this.http.get(`${this.baseUrl}BuildingUser/MapBuildingUser/${userid}/${buildingid}`); }
-  getBuildings() { return this.http.get(`${this.baseUrl}Building/GetBuildings`); }
-  updateUser(update) { return this.http.post(`${this.authUrl}Users/Update`, update); }
-  createUser(create) { return this.http.post(`${this.authUrl}Users/Create`, create); }
+  deleteUser(id) { return this.http.delete(`${this.env.apiUrl}Users/Delete/${id}/${environment.systemCode}`); }
+  mapBuildingUser(userid, buildingid) { return this.http.get(`${this.env.apiUrlEC}BuildingUser/MapBuildingUser/${userid}/${buildingid}`); }
+  getBuildings() { return this.http.get(`${this.env.apiUrlEC}Building/GetBuildings`); }
+  updateUser(update) { return this.http.post(`${this.env.apiUrl}Users/Update`, update); }
+  createUser(create) { return this.http.post(`${this.env.apiUrl}Users/Create`, create); }
   getBuildingUsers() {
-      return this.http.get(`${this.baseUrl}BuildingUser/GetAllBuildingUsers`);
+      return this.http.get(`${this.env.apiUrlEC}BuildingUser/GetAllBuildingUsers`);
   }
   getLineByUserID(userid: number, buildingID: any) {
-    return this.http.get<ResponseDetail<any>>(`${this.baseUrl}BuildingUser/GetLineByUserID/${userid}/${buildingID}`);
+    return this.http.get<ResponseDetail<any>>(`${this.env.apiUrlEC}BuildingUser/GetLineByUserID/${userid}/${buildingID}`);
   }
-  removeLineUser(create) { return this.http.post(`${this.baseUrl}BuildingUser/RemoveLineUser`, create); }
-  mapLineUser(create) { return this.http.post(`${this.baseUrl}BuildingUser/mapLineUser`, create); }
+  removeLineUser(create) { return this.http.post(`${this.env.apiUrlEC}BuildingUser/RemoveLineUser`, create); }
+  mapLineUser(create) { return this.http.post(`${this.env.apiUrlEC}BuildingUser/mapLineUser`, create); }
 
   getBuildingByUserID(userid: number) {
-    return this.http.get<ResponseDetail<any>>(`${this.baseUrl}BuildingUser/GetBuildingByUserID/${userid}`);
+    return this.http.get<ResponseDetail<any>>(`${this.env.apiUrlEC}BuildingUser/GetBuildingByUserID/${userid}`);
   }
-  removeMultipleBuildingUser(create) { return this.http.post(`${this.baseUrl}BuildingUser/RemoveMultipleBuildingUser`, create); }
-  mapMultipleBuildingUser(create) { return this.http.post(`${this.baseUrl}BuildingUser/MapMultipleBuildingUser`, create); }
+  removeMultipleBuildingUser(create) { return this.http.post(`${this.env.apiUrlEC}BuildingUser/RemoveMultipleBuildingUser`, create); }
+  mapMultipleBuildingUser(create) { return this.http.post(`${this.env.apiUrlEC}BuildingUser/MapMultipleBuildingUser`, create); }
 
 }

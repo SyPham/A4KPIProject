@@ -8,6 +8,7 @@ import { OperationResult } from '../_model/operation.result';
 
 import { BaseService } from './base.service';
 import { UtilitiesService } from './utilities.service';
+import { EnvService } from './env.service';
 //#region
 // Copyright Phạm Tiến Sỹ
 //#endregion
@@ -38,7 +39,8 @@ export class CURDService<T> extends BaseService implements ICURDService<T> {
   constructor(
     protected http: HttpClient,
     @Inject(String) protected entity: string,
-    protected utilitiesService: UtilitiesService
+    protected utilitiesService: UtilitiesService,
+    protected env: EnvService
   ) {
     super();
     this._sharedHeaders = this._sharedHeaders.set(
@@ -50,7 +52,7 @@ export class CURDService<T> extends BaseService implements ICURDService<T> {
 
   //#region LoadData
   getAll(): Observable<T[]> {
-    return this.http.get<T[]>(`${this.base}${this.entity}/getall`, {}).pipe(
+    return this.http.get<T[]>(`${this.env.apiUrl}${this.entity}/getall`, {}).pipe(
       map((data) => {
         let idSequence = 1;
         data.forEach((item) => {
@@ -64,7 +66,7 @@ export class CURDService<T> extends BaseService implements ICURDService<T> {
   }
   getById(id): Observable<T> {
     return this.http
-      .get<T>(`${this.base}${this.entity}/getById?id=${id}`, {})
+      .get<T>(`${this.env.apiUrl}${this.entity}/getById?id=${id}`, {})
       .pipe(catchError(this.handleError));
   }
   //#endregion
@@ -73,44 +75,44 @@ export class CURDService<T> extends BaseService implements ICURDService<T> {
   insertWithFormData(model: T): Observable<OperationResult> {
     const params = this.utilitiesService.ToFormData(model);
     return this.http
-      .post<OperationResult>(`${this.base}${this.entity}/insert`, params)
+      .post<OperationResult>(`${this.env.apiUrl}${this.entity}/insert`, params)
       .pipe(catchError(this.handleError));
   }
   updateWithFormData(model: T): Observable<OperationResult> {
     const params = this.utilitiesService.ToFormData(model);
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/update`, params)
+      .put<OperationResult>(`${this.env.apiUrl}${this.entity}/update`, params)
       .pipe(catchError(this.handleError));
   }
 
   add(model: T): Observable<OperationResult> {
     return this.http
-      .post<OperationResult>(`${this.base}${this.entity}/add`, model)
+      .post<OperationResult>(`${this.env.apiUrl}${this.entity}/add`, model)
       .pipe(catchError(this.handleError));
   }
   addRange(model: T[]): Observable<OperationResult> {
     return this.http
-      .post<OperationResult>(`${this.base}${this.entity}/addRange`, model)
+      .post<OperationResult>(`${this.env.apiUrl}${this.entity}/addRange`, model)
       .pipe(catchError(this.handleError));
   }
   updateRange(model: T[]): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/updateRange`, model)
+      .put<OperationResult>(`${this.env.apiUrl}${this.entity}/updateRange`, model)
       .pipe(catchError(this.handleError));
   }
   update(model: T): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/update`, model)
+      .put<OperationResult>(`${this.env.apiUrl}${this.entity}/update`, model)
       .pipe(catchError(this.handleError));
   }
   updatestatus(id: T): Observable<OperationResult> {
     return this.http
-      .put<OperationResult>(`${this.base}${this.entity}/updatestatus?id=${id}`, {})
+      .put<OperationResult>(`${this.env.apiUrl}${this.entity}/updatestatus?id=${id}`, {})
       .pipe(catchError(this.handleError));
   }
   delete(id: any): Observable<OperationResult> {
     return this.http
-      .delete<OperationResult>(`${this.base}${this.entity}/delete?id=${id}`)
+      .delete<OperationResult>(`${this.env.apiUrl}${this.entity}/delete?id=${id}`)
       .pipe(catchError(this.handleError));
   }
   deleterange(ids: object[]): Observable<OperationResult> {
@@ -119,7 +121,7 @@ export class CURDService<T> extends BaseService implements ICURDService<T> {
       query += `id=${id}&`;
     }
     return this.http
-      .delete<OperationResult>(`${this.base}${this.entity}/deleterange?${query}`)
+      .delete<OperationResult>(`${this.env.apiUrl}${this.entity}/deleterange?${query}`)
       .pipe(catchError(this.handleError));
   }
 

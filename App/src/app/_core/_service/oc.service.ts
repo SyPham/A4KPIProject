@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -22,39 +23,39 @@ export class OcService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
-  delete(id) { return this.http.delete(`${this.baseUrl}Oc/Delete/${id}`); }
-  rename(edit) { return this.http.put(`${this.baseUrl}Oc/Update`, edit); }
+  constructor(private http: HttpClient, public env: EnvService) { }
+  delete(id) { return this.http.delete(`${this.env.apiUrl}Oc/Delete/${id}`); }
+  rename(edit) { return this.http.put(`${this.env.apiUrl}Oc/Update`, edit); }
   getOCs() {
-    return this.http.get(`${this.baseUrl}Oc/GetAllAsTreeView`);
+    return this.http.get(`${this.env.apiUrl}Oc/GetAllAsTreeView`);
   }
   getAll() {
-    return this.http.get(`${this.baseUrl}Oc/GetAll`);
+    return this.http.get(`${this.env.apiUrl}Oc/GetAll`);
   }
   GetUserByOCname(ocName) {
-    return this.http.get(`${this.baseUrl}Oc/GetUserByOCname/${ocName}`, {});
+    return this.http.get(`${this.env.apiUrl}Oc/GetUserByOCname/${ocName}`, {});
   }
   GetUserByOcID(ocID) {
-    return this.http.get(`${this.baseUrl}Oc/GetUserByOcID/${ocID}`, {});
+    return this.http.get(`${this.env.apiUrl}Oc/GetUserByOcID/${ocID}`, {});
   }
   getAllLv3() {
-    return this.http.get(`${this.baseUrl}Oc/GetAllLevel3`, {});
+    return this.http.get(`${this.env.apiUrl}Oc/GetAllLevel3`, {});
   }
   addOC(oc) {
-    return this.http.post(`${this.baseUrl}Oc/Add`, oc);
+    return this.http.post(`${this.env.apiUrl}Oc/Add`, oc);
   }
   updateOC(oc) {
-    return this.http.put(`${this.baseUrl}Oc/Update`, oc);
+    return this.http.put(`${this.env.apiUrl}Oc/Update`, oc);
   }
   mapUserOC(model) {
-    return this.http.post(`${this.baseUrl}Oc/MappingUserOC`, model);
+    return this.http.post(`${this.env.apiUrl}Oc/MappingUserOC`, model);
   }
   mapRangeUserOC(model) {
-    return this.http.post(`${this.baseUrl}Oc/MappingRangeUserOC`, model);
+    return this.http.post(`${this.env.apiUrl}Oc/MappingRangeUserOC`, model);
   }
   removeUserOC(model) {
-    return this.http.post(`${this.baseUrl}Oc/RemoveUserOC`, model);
+    return this.http.post(`${this.env.apiUrl}Oc/RemoveUserOC`, model);
   }
-  createMainOC(oc) { return this.http.post(`${this.baseUrl}Ocs/CreateOc`, oc); }
-  createSubOC(oc) { return this.http.post(`${this.baseUrl}Ocs/CreateSubOC`, oc); }
+  createMainOC(oc) { return this.http.post(`${this.env.apiUrl}Ocs/CreateOc`, oc); }
+  createSubOC(oc) { return this.http.post(`${this.env.apiUrl}Ocs/CreateSubOC`, oc); }
 }

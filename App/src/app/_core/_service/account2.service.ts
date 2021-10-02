@@ -7,23 +7,28 @@ import { CURDService } from './CURD.service'
 import { Account } from '../_model/account'
 import { UtilitiesService } from './utilities.service'
 import { OperationResult } from '../_model/operation.result'
+import { EnvService } from './env.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class Account2Service extends CURDService<Account> {
 
-  constructor(http: HttpClient,utilitiesService: UtilitiesService)
+  constructor(
+      http: HttpClient,
+      utilitiesService: UtilitiesService,
+      env: EnvService
+    )
   {
-    super(http,"Account", utilitiesService);
+    super(http,"Account", utilitiesService,env);
   }
   lock(id): Observable<OperationResult> {
-    return this.http.put<OperationResult>(`${this.base}Account/lock?id=${id}`, {}).pipe(
+    return this.http.put<OperationResult>(`${this.env.apiUrl}Account/lock?id=${id}`, {}).pipe(
       catchError(this.handleError)
     );
   }
   getAccounts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.base}Account/GetAccounts`);
+    return this.http.get<any[]>(`${this.env.apiUrl}Account/GetAccounts`);
   }
 
 }

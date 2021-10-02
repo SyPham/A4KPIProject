@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace A4KPI.Services
 {
@@ -82,25 +83,43 @@ namespace A4KPI.Services
         }
         public async Task<object> GetAllKPI()
         {
-            var data = _repoKPINew.FindAll().Select(x => new {
+            var data = (await _repoKPINew.FindAll().ToListAsync()).Select(x => new {
                 x.Id,
                 x.Name,
                 PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
-                PicId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).Id,
+                PicId = x.Pic,
                 PolicyName = _repoPo.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
                 x.TypeId,
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
-                Level = _repoOC.FindAll().FirstOrDefault(y => y.Id == x.OcId).Level,
+                Level = x.Level,
 
                 FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
                 CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
                 DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
 
-                FactName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
-                CenterName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
-                DeptName = _repoOC.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
+                //FactName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
+                //CenterName =  _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
+                //DeptName =  _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
             }).ToList();
-            return data;
+            var model = data.Select(x => new KPINewDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                FactId = x.FactId,
+                CenterId = x.CenterId,
+                DeptId = x.DeptId,
+                Pic = x.PicId,
+                PICName = x.PICName,
+                TypeId = x.TypeId,
+                Level = x.Level,
+                PolicyName = x.PolicyName,
+                TypeName = x.TypeName,
+                FactName = x.FactId == 0 ? "N/A" : _repoOC.FindById(x.FactId).Name,
+                CenterName = x.CenterId == 0 ? "N/A" : _repoOC.FindById(x.CenterId).Name,
+                DeptName = x.DeptId == 0 ? "N/A" : _repoOC.FindById(x.DeptId).Name,
+
+            }).ToList();
+            return model;
         }
 
        
@@ -297,6 +316,7 @@ namespace A4KPI.Services
                         (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
                         || x.ActionStatus.Count == 0
                         )
+
                         select new UpdatePDCADto
                         {
                             ActionId = a.Id,

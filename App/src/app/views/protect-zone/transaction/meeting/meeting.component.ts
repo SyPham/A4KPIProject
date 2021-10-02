@@ -553,6 +553,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       //end dept
 
       this.dataLevel.unshift({ name: "All", id: 0 });
+      this.dataDept.unshift({ name: "All", id: 0 });
+      this.dataCenter.unshift({ name: "All", id: 0 });
+      this.dataFact.unshift({ name: "All", id: 0 });
       this.dataPic.unshift({ name: "All", id: 0 });
     })
   }

@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -31,10 +32,11 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private alertify: AlertifyService,
+    public env: EnvService,
     private cookieService: CookieService) {}
 
   login(model: any) {
-    return this.http.post(this.baseUrl, model).pipe(
+    return this.http.post(this.env.apiUrl, model).pipe(
       map((response: any) => {
         const data = response;
         if (data) {
@@ -60,7 +62,7 @@ export class AuthService {
   }
 
   getBuildingUserByUserID(userID) {
-    const url = `${environment.apiUrlEC}BuildingUser/GetBuildingUserByUserID/${userID}`;
+    const url = `${this.env.apiUrlEC}BuildingUser/GetBuildingUserByUserID/${userID}`;
     return this.http.get<ResponseDetail<IBuilding[]>>(url, {});
   }
   loggedIn() {

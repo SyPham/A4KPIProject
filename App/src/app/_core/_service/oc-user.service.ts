@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { PaginatedResult } from '../_model/pagination';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -16,13 +17,13 @@ export class OcUserService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient , public env: EnvService) { }
   getOCs() {
-    return this.http.get(`${this.baseUrl}Ocs/GetListTree`);
+    return this.http.get(`${this.env.apiUrl}Ocs/GetListTree`);
   }
   getListUser(page = 1, pageSize = 10, ocid = 0): Observable<PaginatedResult<any[]>> {
     const paginatedResult: PaginatedResult<any[]> = new PaginatedResult<any[]>();
-    return this.http.get(`${this.baseUrl}OcUsers/GetUsers/${page}/${pageSize}/${ocid}`, {
+    return this.http.get(`${this.env.apiUrl}OcUsers/GetUsers/${page}/${pageSize}/${ocid}`, {
       observe: 'response'
     }).pipe(
       map((response: any) => {
@@ -38,7 +39,7 @@ export class OcUserService {
   }
   search(page = 1, pageSize = 10, ocid = 0, text = '%20'): Observable<PaginatedResult<any[]>> {
     const paginatedResult: PaginatedResult<any[]> = new PaginatedResult<any[]>();
-    return this.http.get(`${this.baseUrl}OcUsers/GetUsers/${page}/${pageSize}/${ocid}/${text}`, {
+    return this.http.get(`${this.env.apiUrl}OcUsers/GetUsers/${page}/${pageSize}/${ocid}/${text}`, {
       observe: 'response'
     }).pipe(
       map((response: any) => {
@@ -53,6 +54,6 @@ export class OcUserService {
     );
   }
   addOrUpdate(userid, ocid, status) {
-    return this.http.get(`${this.baseUrl}OCUsers/AddOrUpdate/${userid}/${ocid}/${status}`)
+    return this.http.get(`${this.env.apiUrl}OCUsers/AddOrUpdate/${userid}/${ocid}/${status}`)
   }
 }

@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,38 +18,38 @@ export class RoleService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public env: EnvService) { }
   getAll() {
     return this.http
-      .get<IRole[]>(`${this.baseUrl}Role/GetAll`);
+      .get<IRole[]>(`${this.env.apiUrl}Role/GetAll`);
   }
   mappingUserRole(userRole: IUserRole) {
     return this.http
-      .post(`${this.baseUrl}UserRole/MappingUserRole`, userRole);
+      .post(`${this.env.apiUrl}UserRole/MappingUserRole`, userRole);
   }
   mapUserRole(userID: number, roleID: number) {
-    return this.http.put(`${this.baseUrl}UserRole/MapUserRole/${userID}/${roleID}`, {} );
+    return this.http.put(`${this.env.apiUrl}UserRole/MapUserRole/${userID}/${roleID}`, {} );
   }
   lock(userRole: IUserRole) {
-    return this.http.put(`${this.baseUrl}UserRole/Lock`, userRole);
+    return this.http.put(`${this.env.apiUrl}UserRole/Lock`, userRole);
   }
   isLock(userRole: IUserRole) {
-    return this.http.put(`${this.baseUrl}UserRole/IsLock`, userRole);
+    return this.http.put(`${this.env.apiUrl}UserRole/IsLock`, userRole);
   }
   getRoleByUserID(userid: number) {
-    return this.http.get<any>(`${this.baseUrl}UserRole/GetRoleByUserID/${userid}`);
+    return this.http.get<any>(`${this.env.apiUrl}UserRole/GetRoleByUserID/${userid}`);
   }
   create(model) {
-    return this.http.post(this.baseUrl + 'Role/Create', model);
+    return this.http.post(this.env.apiUrl + 'Role/Create', model);
   }
   update(model) {
-    return this.http.put(this.baseUrl + 'Role/Update', model);
+    return this.http.put(this.env.apiUrl + 'Role/Update', model);
   }
   delete(id: number) {
-    return this.http.delete(this.baseUrl + 'Role/Delete/' + id);
+    return this.http.delete(this.env.apiUrl + 'Role/Delete/' + id);
   }
   getScreenFunctionAndAction(roleIDs: any) {
-    return this.http.post(`${this.baseUrl}Permission/GetScreenFunctionAndAction`, {
+    return this.http.post(`${this.env.apiUrl}Permission/GetScreenFunctionAndAction`, {
       roleIDs
     }).pipe(map((data: any[]) => {
       const data2 = data;

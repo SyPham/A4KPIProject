@@ -62,6 +62,7 @@ export class KpiCreate2Component implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(window.location.hostname);
     this.editing = { allowDeleting: true, allowEditing: true, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();

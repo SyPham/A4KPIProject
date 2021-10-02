@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { PaginatedResult } from '../_model/pagination';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -18,31 +19,34 @@ export class MeetingService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public env: EnvService
+    ) { }
   getOCs() {
-    return this.http.get(`${this.baseUrl}Ocs/GetListTree`);
+    return this.http.get(`${this.env.apiUrl}Ocs/GetListTree`);
   }
   getAllKpi() {
-    return this.http.get(`${this.baseUrl}Meeting/GetAllKPI`);
+    return this.http.get(`${this.env.apiUrl}Meeting/GetAllKPI`);
   }
   getChart(kpiId) {
-    return this.http.get(`${this.baseUrl}Meeting/GetChart/${kpiId}`);
+    return this.http.get(`${this.env.apiUrl}Meeting/GetChart/${kpiId}`);
   }
   getChartWithTime(kpiId, dateTime) {
-    return this.http.get(`${this.baseUrl}Meeting/GetChartWithDateTime/${kpiId}/${dateTime}`);
-    // return this.http.get<any>(`${this.baseUrl}Meeting/GetChartWithDateTime?kpiId=${kpiId}?currentTime=${dateTime}`, {});
+    return this.http.get(`${this.env.apiUrl}Meeting/GetChartWithDateTime/${kpiId}/${dateTime}`);
+    // return this.http.get<any>(`${this.env.apiUrl}Meeting/GetChartWithDateTime?kpiId=${kpiId}?currentTime=${dateTime}`, {});
   }
   addPolicy(model) {
-    return this.http.post(`${this.baseUrl}Ocpolicy/MappingPolicyOc`, model);
+    return this.http.post(`${this.env.apiUrl}Ocpolicy/MappingPolicyOc`, model);
   }
   updatePolicy(model) {
-    return this.http.post(`${this.baseUrl}Ocpolicy/RemovePolicyOC`, model);
+    return this.http.post(`${this.env.apiUrl}Ocpolicy/RemovePolicyOC`, model);
   }
   deletePolicy(id) {
-    return this.http.delete(`${this.baseUrl}Ocpolicy/DeletePolicy/${id}`);
+    return this.http.delete(`${this.env.apiUrl}Ocpolicy/DeletePolicy/${id}`);
   }
   getAllPolicy(){
-    return this.http.get(`${this.baseUrl}Ocpolicy/GetAllPolicy`);
+    return this.http.get(`${this.env.apiUrl}Ocpolicy/GetAllPolicy`);
   }
 
 }

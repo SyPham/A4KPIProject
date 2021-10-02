@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { environment } from 'src/environments/environment';
 import { CURDService } from './CURD.service';
 import { Injectable } from '@angular/core';
@@ -20,7 +21,7 @@ export class Todolist2Service  {
   entity = 'Todolist2';
   base = environment.apiUrl;
   // có thể subcribe theo dõi thay đổi value của biến này thay cho messageSource
-  constructor(private http: HttpClient, utilitiesService: UtilitiesService) {
+  constructor(private http: HttpClient, public env: EnvService, utilitiesService: UtilitiesService) {
   }
   // method này để change source message
   changeMessage(message) {
@@ -31,72 +32,72 @@ export class Todolist2Service  {
   }
   l0(currentTime): Observable<any[]> {
     return this.http
-      .get<any[]>(`${this.base}${this.entity}/L0?currentTime=${currentTime}`, {})
+      .get<any[]>(`${this.env.apiUrl}${this.entity}/L0?currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
   submitUpdatePDCA(model): Observable<OperationResult> {
-    return this.http.post<OperationResult>(`${this.base}${this.entity}/SubmitUpdatePDCA`, model);
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/SubmitUpdatePDCA`, model);
   }
   submitAction(model): Observable<OperationResult> {
-    return this.http.post<OperationResult>(`${this.base}${this.entity}/submitAction`, model);
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/submitAction`, model);
   }
   submitKPINew(kpiId): Observable<OperationResult> {
-    return this.http.post<OperationResult>(`${this.base}${this.entity}/SubmitKPINew?kpiId=${kpiId}`, {});
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/SubmitKPINew?kpiId=${kpiId}`, {});
   }
   addOrUpdateStatus(request): Observable<OperationResult> {
-    return this.http.post<OperationResult>(`${this.base}${this.entity}/AddOrUpdateStatus`, request);
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/AddOrUpdateStatus`, request);
   }
   getStatus(): Observable<any[]> {
     return this.http
-      .get<any[]>(`${this.base}${this.entity}/getStatus`, {})
+      .get<any[]>(`${this.env.apiUrl}${this.entity}/getStatus`, {})
       .pipe(catchError(this.handleError));
   }
   getActionsForL0(kpiNewId): Observable<any> {
     return this.http
-      .get<any>(`${this.base}${this.entity}/GetActionsForL0?kpiNewId=${kpiNewId}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForL0?kpiNewId=${kpiNewId}`, {})
       .pipe(catchError(this.handleError));
   }
   getPDCAForL0(kpiNewId,currentTime ): Observable<any> {
     return this.http
-      .get<any>(`${this.base}${this.entity}/GetPDCAForL0?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetPDCAForL0?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
 
   getKPIForUpdatePDC(kpiNewId,currentTime ): Observable<any> {
     return this.http
-      .get<any>(`${this.base}${this.entity}/GetKPIForUpdatePDC?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetKPIForUpdatePDC?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
 
   getTargetForUpdatePDCA(kpiNewId,currentTime ): Observable<any> {
     return this.http
-      .get<any>(`${this.base}${this.entity}/GetTargetForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetTargetForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
 
   getActionsForUpdatePDCA(kpiNewId,currentTime ): Observable<any> {
     return this.http
-      .get<any>(`${this.base}${this.entity}/GetActionsForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
       .pipe(catchError(this.handleError));
   }
   download(kpiId,uploadTime ) {
     return this.http
-      .get(`${this.base}UploadFile/download?kpiId=${kpiId}&uploadTime=${uploadTime}`, { responseType: 'blob' })
+      .get(`${this.env.apiUrl}UploadFile/download?kpiId=${kpiId}&uploadTime=${uploadTime}`, { responseType: 'blob' })
       .pipe(catchError(this.handleError));
   }
   getAttackFiles(kpiId,uploadTime ) {
     return this.http
-      .get(`${this.base}UploadFile/GetAttackFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .get(`${this.env.apiUrl}UploadFile/GetAttackFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
       .pipe(catchError(this.handleError));
   }
   getDownloadFiles(kpiId,uploadTime ) {
     return this.http
-      .get(`${this.base}UploadFile/GetDownloadFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .get(`${this.env.apiUrl}UploadFile/GetDownloadFiles?kpiId=${kpiId}&uploadTime=${uploadTime}`)
       .pipe(catchError(this.handleError));
   }
   getDownloadFilesMeeting(kpiId,uploadTime ) {
     return this.http
-      .get(`${this.base}UploadFile/GetDownloadFilesMeeting?kpiId=${kpiId}&uploadTime=${uploadTime}`)
+      .get(`${this.env.apiUrl}UploadFile/GetDownloadFilesMeeting?kpiId=${kpiId}&uploadTime=${uploadTime}`)
       .pipe(catchError(this.handleError));
   }
   protected handleError(errorResponse: any) {

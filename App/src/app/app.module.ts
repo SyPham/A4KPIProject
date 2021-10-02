@@ -67,6 +67,7 @@ import { AlertifyService } from './_core/_service/alertify.service';
 import { Authv2Service } from './_core/_service/authv2.service';
 import { HttpLoaderFactory } from './views/protect-zone/system/system.module';
 import * as $ from "jquery";
+import { EnvServiceProvider } from './_core/_service/env.service.provider';
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -132,6 +133,7 @@ export function tokenGetter() {
     RegisterComponent
   ],
   providers: [
+    EnvServiceProvider,
     AuthGuard,
     AlertifyService,
     AuthGuard,

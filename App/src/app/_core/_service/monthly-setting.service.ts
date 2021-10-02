@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { PaginatedResult } from '../_model/pagination';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -18,19 +19,22 @@ export class MonthlySettingService {
   changeMessage(message) {
     this.messageSource.next(message);
   }
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    public env: EnvService
+    ) { }
 
   getAll() {
-    return this.http.get(`${this.baseUrl}SettingMonth/getall`);
+    return this.http.get(`${this.env.apiUrl}SettingMonth/getall`);
   }
   add(model) {
-    return this.http.post(`${this.baseUrl}SettingMonth/add`, model);
+    return this.http.post(`${this.env.apiUrl}SettingMonth/add`, model);
   }
   update(model) {
-    return this.http.put(`${this.baseUrl}SettingMonth/update`, model);
+    return this.http.put(`${this.env.apiUrl}SettingMonth/update`, model);
   }
   delete(id) {
-    return this.http.delete(`${this.baseUrl}SettingMonth/delete/${id}`);
+    return this.http.delete(`${this.env.apiUrl}SettingMonth/delete/${id}`);
   }
 
 }

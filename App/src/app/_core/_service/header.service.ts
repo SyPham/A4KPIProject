@@ -1,3 +1,4 @@
+import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { PaginatedResult } from '../_model/pagination';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -21,7 +22,10 @@ export class HeaderService {
   currentMessage = this.messageSource.asObservable();
   imgSource = new BehaviorSubject<string>('');
   currentImage = this.imgSource.asObservable();
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public env: EnvService
+    ) {}
   // method này để change source message
   changeMessage(message) {
     this.messageSource.next(message);
@@ -30,7 +34,7 @@ export class HeaderService {
     this.imgSource.next(message);
   }
   getAllNotificationCurrentUser(page, pageSize, userid) {
-    return this.http.get(`${this.baseUrl}Home/getAllNotificationCurrentUser/${page}/${pageSize}/${userid}`).pipe(
+    return this.http.get(`${this.env.apiUrl}Home/getAllNotificationCurrentUser/${page}/${pageSize}/${userid}`).pipe(
       map(response => {
         // console.log('getAllNotificationCurrentUser: ', response);
         return response;
@@ -38,10 +42,10 @@ export class HeaderService {
     );
   }
   seen(item) {
-    return this.http.get(`${this.baseUrl}Home/Seen/${item.ID}`);
+    return this.http.get(`${this.env.apiUrl}Home/Seen/${item.ID}`);
   }
 
   checkTask(userId = 0) {
-    return this.http.get(`${this.baseUrl}Home/TaskListIsLate`);
+    return this.http.get(`${this.env.apiUrl}Home/TaskListIsLate`);
   }
 }
