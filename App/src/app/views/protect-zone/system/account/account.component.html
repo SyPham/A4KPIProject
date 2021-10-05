@@ -28,15 +28,33 @@
                 #
               </ng-template>
             </e-column>
-            <e-column field="username" textAlign='Center' width="100" headerText="{{ 'Username'}}"> </e-column>
-            <e-column field="fullName" textAlign='Center' width="100" headerText="{{ 'FullName'}}"> </e-column>
+            <e-column field="username" textAlign='Center' width="100" headerText="{{ 'Username'}}">
+              <ng-template #headerTemplate let-data>
+                {{"Username" | translate}}
+              </ng-template>
+            </e-column>
+            <e-column field="fullName" textAlign='Center' width="100" headerText="{{ 'FullName'}}">
+              <ng-template #headerTemplate let-data>
+                {{"editdate" | translate}}
+              </ng-template>
+            </e-column>
             <e-column field="password" textAlign='Center' width="100" headerText="{{ 'Password'}}">
+              <ng-template #headerTemplate let-data>
+                {{"Password" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 ************
               </ng-template>
             </e-column>
-            <e-column field="email" textAlign='Center' headerText="Email"> </e-column>
+            <e-column field="email" textAlign='Center' headerText="Email">
+              <ng-template #headerTemplate let-data>
+                {{"Email" | translate}}
+              </ng-template>
+            </e-column>
             <e-column field="factName" textAlign='Center' width="100" headerText="Factory">
+              <ng-template #headerTemplate let-data>
+                {{"FactoryA" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <ng-container *ngIf="data.factName !== null; else elseTemplate">
                   {{data.factName}}
@@ -50,6 +68,9 @@
               </ng-template>
             </e-column>
             <e-column field="centerName" textAlign='Center' width="100" headerText="Center">
+              <ng-template #headerTemplate let-data>
+                {{"CenterA" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <ng-container *ngIf="data.centerName !== null; else elseTemplate">
                   {{data.centerName}}
@@ -63,6 +84,9 @@
               </ng-template>
             </e-column>
             <e-column field="deptName" textAlign='Center' width="100" headerText="Dept">
+              <ng-template #headerTemplate let-data>
+                {{"DeptA" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <ng-container *ngIf="data.deptName !== null; else elseTemplate">
                   {{data.deptName}}
@@ -77,6 +101,9 @@
             </e-column>
 
             <e-column field='accountGroupText' headerText="{{'Account Group'}}" width='200' textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"AccountGroup" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.accountGroupText}}
               </ng-template>
@@ -86,7 +113,11 @@
             </e-column>
 
 
+
             <e-column field='manager' headerText="{{'L1 Manager'}}" width='150' textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"L1Manager" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.managerName}}
               </ng-template>
@@ -96,6 +127,9 @@
             </e-column>
 
             <e-column field='leaderName' headerText="{{'Functional Leader'}}" width='150' textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"FunctionalLeader" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 {{data.leaderName}}
               </ng-template>
@@ -105,6 +139,9 @@
             </e-column>
 
             <e-column field="option" width="100" textAlign='Center' headerText="{{ 'Option'}}">
+              <ng-template #headerTemplate let-data>
+                {{"OptionA" | translate}}
+              </ng-template>
               <ng-template #template let-data>
                 <div class="btn-group">
                   <button type="button" *ngIf="data.isLock" (click)='lock(data.id)' class="btn btn-xs btn-danger"><i class="fa fa-lock"></i></button>

@@ -275,8 +275,7 @@
     "Select a building": "Select a building",
     "Name": "Name",
     "Supplier Name": "Supplier Name",
-    "Username": "Username",
-    "Password": "Password",
+
     "Time Period Mixing": "Time Period Mixing",
     "Time Period Dispatch": "Time Period Dispatch",
     "Building Name": "Building Name",
@@ -325,6 +324,29 @@
     "Factory": "Factory",
     "Center": "Center",
     "Dept": "Dept.",
-    "PIC": "PIC"
+    "PIC": "PIC",
+
+    "KPI Name 2": "KPI Name",
+    "LevelKPINew": "Level",
+    "PolicyNew": "Policy",
+    "TypeNew": "Type",
+    "PICNew": "PIC",
+
+    "MGMT": "Mgmt. Arrange",
+    "editor": "The last editor",
+    "editdate": "The last edit date",
+
+
+    "Username": "Username",
+    "Password": "Password",
+    "Email": "Email",
+    "FactoryA": "Factory",
+    "CenterA": "Center",
+    "DeptA": "Dept.",
+    "AccountGroup": "Account Group",
+    "L1Manager": "L1 Manager",
+    "FunctionalLeader": "Functional Leader",
+    "OptionA": "Option",
+    "FullName": "Full Name"
 
 }

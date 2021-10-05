@@ -275,8 +275,8 @@
   "Select a building": "Select a building",
   "Name": "Name",
   "Supplier Name": "Supplier Name",
-  "Username": "Username",
-  "Password": "Password",
+  "Username": "帳號",
+  "Password": "密碼",
   "Time Period Mixing": "Time Period Mixing",
   "Time Period Dispatch": "Time Period Dispatch",
   "Building Name": "Building Name",
@@ -325,6 +325,26 @@
   "Factory": "廠區",
   "Center": "中心",
   "Dept": "部.",
-  "PIC": "負責人"
+  "PIC": "負責人",
+
+  "KPI Name 2": "KPI名稱",
+  "LevelKPINew": "階",
+  "PolicyNew": "項目",
+  "TypeNew": "數據型態",
+  "PICNew": "負責人",
+
+  "MGMT": "管理範圍",
+  "editor": "最後編輯者",
+  "editdate": "最後編輯時間",
+
+  "Email": "Email",
+    "FactoryA": "廠區",
+    "CenterA": "中心",
+    "DeptA": "部",
+    "AccountGroup": "角色群組",
+    "L1Manager": "一階主管",
+    "FunctionalLeader": "功能主管",
+    "OptionA": "權限開放",
+    "FullName": "名字"
 
 }
