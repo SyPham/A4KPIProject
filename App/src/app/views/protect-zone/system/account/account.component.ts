@@ -184,6 +184,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
         args.cancel = true;
         return;
       }
+      if (this.factId === 0) {
+        this.alertify.error('Please Select Factory! <br> Vui lòng chọn Factory!');
+        args.cancel = true;
+        return;
+      }
       this.create();
     }
     if (args.requestType === 'save' && args.action === 'edit') {

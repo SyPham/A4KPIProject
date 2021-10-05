@@ -178,6 +178,8 @@ namespace A4KPI.Services
 
         public override async Task<OperationResult> UpdateAsync(KPINewDto model)
         {
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
             try
             {
                 var item = await _repo.FindByIdAsync(model.Id);
@@ -185,6 +187,7 @@ namespace A4KPI.Services
                 item.PolicyId = model.PolicyId;
                 item.TypeId = model.TypeId;
                 item.Pic = model.Pic;
+                item.UpdateBy = accountId;
                 item.UpdateDate = DateTime.Now;
                 _repo.Update(item);
                 await _unitOfWork.SaveChangeAsync();
