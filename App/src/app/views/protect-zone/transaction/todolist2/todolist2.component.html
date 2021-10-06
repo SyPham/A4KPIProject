@@ -36,6 +36,9 @@
         </ng-template>
       </e-column>
       <e-column field='topic' headerText='KPI Objective' type='string'>
+        <ng-template #headerTemplate let-data>
+          {{"KPIOBJ" | translate}}
+        </ng-template>
         <ng-template #template let-data>
           <span>{{data.topic}}</span> <span *ngIf="data.isReject && data.isDisplayAction"
             class="badge badge-danger">Rejected</span>
@@ -43,6 +46,9 @@
         </ng-template>
       </e-column>
       <e-column field='option' headerText='Option'>
+        <ng-template #headerTemplate let-data>
+          {{"OptioTo" | translate}}
+        </ng-template>
         <ng-template #template let-data>
           <div class="btn-group">
             <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.type == 'Action'"

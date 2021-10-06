@@ -346,7 +346,10 @@
     "L1Manager": "L1 Manager",
     "FunctionalLeader": "Functional Leader",
     "OptionA": "Option",
-    "FullName": "Full Name"
+    "FullName": "Full Name",
+
+    "KPIOBJ": "KPI Objective",
+    "OptioTo": "Option"
 
 
 
