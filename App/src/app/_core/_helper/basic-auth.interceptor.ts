@@ -60,6 +60,9 @@ export class BasicAuthInterceptor implements HttpInterceptor {
               setHeaders: { Authorization: `Bearer ${accessToken}` },
             });
         }
+        if(accessToken === null) {
+          this.router.navigate(['login']);
+        }
         // return next.handle(request);
         return next.handle(request).pipe(
             retry(1),

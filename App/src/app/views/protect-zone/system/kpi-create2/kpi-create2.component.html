@@ -9,6 +9,7 @@
           (toolbarClick)="toolbarClick($event)"
           [treeColumnIndex]="1"
           allowSorting="true"
+          id='treegrid'
           gridLines="Both"
           (created)="created()"
           [editSettings]="editing"
@@ -80,7 +81,7 @@
               <ng-template #template let-data>
                 <span *ngIf="data.entity.factId > 0 && data.entity.centerId === 0 && data.entity.deptId === 0"> {{data.entity.factName}}</span>
                 <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId === 0"> {{data.entity.centerName}}</span>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId > 0"> {{data.entity.DeptName}}</span>
+                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId > 0"> {{data.entity.deptName}}</span>
               </ng-template>
 
               <ng-template #editTemplate let-data>
