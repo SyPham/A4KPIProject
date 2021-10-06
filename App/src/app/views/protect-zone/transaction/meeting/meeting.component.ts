@@ -41,6 +41,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   accountCreate: Account;
   accountUpdate: Account;
   setFocus: any;
+  editSettingsMeeting = { showDeleteConfirmDialog: false, allowEditing: false, allowAdding: false, allowDeleting: false, mode: 'Normal' };
   locale = localStorage.getItem('lang');
   accountGroupData: AccountGroup[];
   accountGroupItem: any;
@@ -166,6 +167,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   base = environment.apiUrl.replace('/api/', '');
   YTD: any;
   targetYTD: any;
+  dataOc: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -182,14 +184,44 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   ngOnInit() {
     this.getAllOcLv3();
     this.getAllKpi();
+    this.getAllOc();
     this.currentTime = new Date();
 
+  }
+  getAllOc(){
+    this.ocService.getAll().subscribe((res: any) => {
+      this.dataOc = res
+
+      this.dataFact = res.filter(x => x.level === 3)
+      console.log(this.dataFact);
+
+      this.dataFact.unshift({ name: "All", id: 0 });
+      //Oclv3
+      // this.dataOclv3 = res.filter(x => x.level === 3)
+      // this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
+      // //end Oclv3
+
+      // //Oclv4
+      // this.dataOclv4 = res.filter(x => x.level === 4)
+      // this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
+      // //end Oclv4
+
+      // //Oclv5
+      // this.dataOclv5 = res.filter(x => x.level === 5)
+      // this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
+
+      //end Oclv5
+
+    })
   }
   ngAfterViewInit() {
 
   }
   filterFact(args) {
     this.factId = args.value
+    this.dataCenter = this.dataOc.filter(x => x.parentId === this.factId)
+    this.dataCenter.unshift({ name: "All", id: 0 });
+    console.log(this.dataCenter);
     if(this.factId === 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
       this.policyData = this.policyDataTamp
     }
@@ -208,11 +240,20 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   }
   filterCenter(args) {
     this.centerId = args.value
+    this.dataDept = this.dataOc.filter(x => x.parentId === this.centerId)
+    this.dataDept.unshift({ name: "All", id: 0 });
+    console.log(this.dataDept);
     if(this.centerId === 0 && this.factId === 0 && this.deptId === 0 && this.levelId === 0) {
       this.policyData = this.policyDataTamp
     }
     if(this.centerId > 0 && this.factId === 0 && this.deptId === 0 && this.levelId === 0) {
       this.policyData = this.policyDataTamp.filter(x => x.centerId == this.centerId)
+    }
+    if(this.centerId > 0 && this.factId > 0 && this.deptId === 0 && this.levelId > 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.level == this.levelId)
+    }
+    if(this.centerId === 0 && this.factId > 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId)
     }
     if(this.centerId > 0 && this.factId > 0 && this.deptId === 0 && this.levelId === 0) {
       this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId)
@@ -242,6 +283,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
       this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
     }
+    if(this.deptId === 0 && this.centerId > 0 && this.factId > 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.factId == this.factId)
+    }
   }
   filterlevel(args) {
     this.levelId = args.value
@@ -259,6 +303,15 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     }
     if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
       this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
+    }
+    if(this.factId > 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId )
+    }
+    if(this.factId === 0 && this.centerId > 0 && this.deptId === 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.centerId == this.centerId )
+    }
+    if(this.factId === 0 && this.centerId === 0 && this.deptId > 0 && this.levelId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.deptId == this.deptId )
     }
   }
   filterPic(args) {
@@ -278,17 +331,17 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
     // console.log(args);
-    const data = args.data as any;
-    const dataTable = this.dataTable.filter((thing, i, arr) => {
-      return arr.indexOf(arr.find(t => t.actionId === thing.actionId)) === i;
-    });
-    const fields = ['month', 'cContent'];
-    if (fields.includes(args.column.field)) {
-      args.rowSpan = this.dataTable.filter(
-        item => item.month === data.month &&
-          item.cContent === data.cContent
-      ).length;
-    }
+    // const data = args.data as any;
+    // const dataTable = this.dataTable.filter((thing, i, arr) => {
+    //   return arr.indexOf(arr.find(t => t.actionId === thing.actionId)) === i;
+    // });
+    // const fields = ['month', 'cContent'];
+    // if (fields.includes(args.column.field)) {
+    //   args.rowSpan = this.dataTable.filter(
+    //     item => item.month === data.month &&
+    //       item.cContent === data.cContent
+    //   ).length;
+    // }
   }
   scroll(el: HTMLElement) {
     el.scrollIntoView();
@@ -432,10 +485,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   }
   download(date, model) {
     this.modalRef = this.modalService.open(model, { size: 'sm', backdrop: 'static' });
-    console.log(this.kpiId);
-    console.log(date);
     this.todolist2Service.getDownloadFilesMeeting(this.kpiId,date).subscribe((res: any) => {
-      console.log(res);
       const files = res as any || [];
       this.files = files.map(x=> {
         return {
@@ -467,7 +517,6 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
  }
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
-      console.log(res);
       this.typeId = res.typeId,
       this.YTD = res.ytd
       this.targetYTD = res.targetYTD
@@ -475,7 +524,6 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.targets = res.targets
       this.labels = res.labels
       this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
-      console.log(this.dataTable );
       this.createChart(
         'planet-chart',
         this.labels,
@@ -487,7 +535,6 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
 
   getAllKpi() {
     this.meetingService.getAllKpi().subscribe((res: any) => {
-      console.log(res);
       this.policyData = res
       this.policyDataTamp = res
       const level = res.map((item: any) => {
@@ -514,49 +561,49 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       //end pic
 
       //factory
-      const factory = res.map((item: any) => {
-        return {
-          id: item.factId,
-          name: item.factName
-        }
-      })
-      this.dataFact = [...new Map(factory.map(items => [items[items.id], items])).values()];
-      this.dataFact = factory.filter((thing, i, arr) => {
-        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-      });
-      //end pic
+      // const factory = res.map((item: any) => {
+      //   return {
+      //     id: item.factId,
+      //     name: item.factName
+      //   }
+      // })
+      // this.dataFact = [...new Map(factory.map(items => [items[items.id], items])).values()];
+      // this.dataFact = factory.filter((thing, i, arr) => {
+      //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      // });
+      // //end pic
 
-      //center
-      const center = res.map((item: any) => {
-        return {
-          id: item.centerId,
-          name: item.centerName
-        }
-      })
-      this.dataCenter = [...new Map(center.map(items => [items[items.id], items])).values()];
-      this.dataCenter = center.filter((thing, i, arr) => {
-        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-      });
-      //end center
+      // //center
+      // const center = res.map((item: any) => {
+      //   return {
+      //     id: item.centerId,
+      //     name: item.centerName
+      //   }
+      // })
+      // this.dataCenter = [...new Map(center.map(items => [items[items.id], items])).values()];
+      // this.dataCenter = center.filter((thing, i, arr) => {
+      //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      // });
+      // //end center
 
-      //dept
-      const dept = res.map((item: any) => {
-        return {
-          id: item.deptId,
-          name: item.deptName
-        }
-      })
-      this.dataDept = [...new Map(dept.map(items => [items[items.id], items])).values()];
-      this.dataDept = dept.filter((thing, i, arr) => {
-        return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
-      });
+      // //dept
+      // const dept = res.map((item: any) => {
+      //   return {
+      //     id: item.deptId,
+      //     name: item.deptName
+      //   }
+      // })
+      // this.dataDept = [...new Map(dept.map(items => [items[items.id], items])).values()];
+      // this.dataDept = dept.filter((thing, i, arr) => {
+      //   return arr.indexOf(arr.find(t => t.id === thing.id)) === i;
+      // });
       //end dept
 
       this.dataLevel.unshift({ name: "All", id: 0 });
-      this.dataDept.unshift({ name: "All", id: 0 });
-      this.dataCenter.unshift({ name: "All", id: 0 });
-      this.dataFact.unshift({ name: "All", id: 0 });
-      this.dataPic.unshift({ name: "All", id: 0 });
+      // this.dataDept.unshift({ name: "All", id: 0 });
+      // this.dataCenter.unshift({ name: "All", id: 0 });
+      // this.dataFact.unshift({ name: "All", id: 0 });
+      // this.dataPic.unshift({ name: "All", id: 0 });
     })
   }
 

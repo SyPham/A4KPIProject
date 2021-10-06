@@ -219,7 +219,7 @@ export const navItemsVI: INavData[] = [
       //   icon: 'icon-cursor'
       // },
       {
-        name: '2.1 To Do List 2',
+        name: '2.1 To Do List',
         url: '/transaction/todolist2',
         icon: 'icon-cursor'
       },
@@ -353,7 +353,7 @@ export const navItemsEN: INavData[] = [
       //   icon: 'icon-cursor'
       // },
       {
-        name: '2.1 To Do List 2',
+        name: '2.1 To Do List',
         url: '/transaction/todolist2',
         icon: 'icon-cursor'
       },
