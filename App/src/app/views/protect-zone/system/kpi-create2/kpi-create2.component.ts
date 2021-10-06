@@ -182,8 +182,9 @@ export class KpiCreate2Component implements OnInit {
   }
 
   toolbarClick(args) {
-    switch (args.item.text) {
-      case "Add":
+    console.log(args);
+    switch (args.item.id) {
+      case "treegrid_gridcontrol_add":
         args.cancel = true;
         this.openMainModal();
         break;
