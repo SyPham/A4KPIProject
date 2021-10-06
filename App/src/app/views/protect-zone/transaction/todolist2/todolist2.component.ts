@@ -220,7 +220,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
   loadAccountGroupData() {
     this.accountGroupService.getAccountGroupForTodolistByAccountId().subscribe(data => {
-      this.accountGroupData = data;
+      this.accountGroupData = data.filter(x => x.position === 1);
       this.loadData();
     });
   }
