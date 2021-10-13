@@ -349,7 +349,13 @@
     "FullName": "Full Name",
 
     "KPIOBJ": "KPI Objective",
-    "OptioTo": "Option"
+    "OptioTo": "Option",
+
+
+    "TextModal": "Monthly update PDCA",
+    "PICPDCA": "PIC",
+    "Download": "Download",
+    "Upload file": "Upload file"
 
 
 

@@ -291,7 +291,7 @@
   "Addition2": "Addition zh",
   "Created Time": "Created time",
   "Create Report Time": "Create Report Time",
-  "Policy": "效率精進",
+  "Policy": "項目",
   "KPI": "2階KPI重點工作",
   "This month Performance": "當月實績",
   "This month Target": "當月目標",
@@ -347,6 +347,11 @@
     "OptionA": "權限開放",
     "FullName": "姓名",
     "KPIOBJ": "KPI 名稱",
-    "OptioTo": "更新PDCA"
+    "OptioTo": "更新PDCA",
+
+    "TextModal": "月更新PDCA",
+    "PICPDCA": "負責人",
+    "Download": "全部下載",
+    "Upload file": "上傳附檔"
 
 }

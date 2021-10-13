@@ -2,7 +2,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridComponent } from '@syncfusion/ej2-angular-grids';
+import { GridComponent, IEditCell } from '@syncfusion/ej2-angular-grids';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { Action } from 'src/app/_core/_model/action';
 import { Target } from 'src/app/_core/_model/target';
@@ -10,6 +10,7 @@ import { TargetYTD } from 'src/app/_core/_model/targetytd';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { forkJoin } from 'rxjs';
+import { isNumeric } from 'rxjs/util/isNumeric';
 declare var $: any;
 @Component({
   selector: 'app-plan',
@@ -28,7 +29,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   pic = '生產中心 Lai He';
   editSettings = { showDeleteConfirmDialog: false, allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
   @Input() currentTime: any;
-
+  public dpParams: IEditCell;
   actions: Action[] = [];
   target: Target;
   targetYTD: TargetYTD;
@@ -50,7 +51,10 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadData();
-
+    this.dpParams = { params: {
+      value: new Date() ,
+      min: new Date()
+    } };
   }
   onChangeTarget(value) {
     if (this.target != null) {
@@ -70,7 +74,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
       };
     }
 
-    console.log(this.target);
   }
   onChangeTargetYTD(value) {
     if (this.targetYTD != null) {
@@ -86,9 +89,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
         kPIId: this.data.id
       };
     }
-    console.log(this.targetYTD);
   }
   submit(){
+    // console.log(Number(this.targetValue))
     if (this.validate(true) == false) return;
     this.spinner.show();
     const dataSource = this.grid.dataSource as Action[];
@@ -139,12 +142,22 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
   }
   validate(isSubmit) {
+
     if (!this.target) {
       this.alertify.warning('Please input next month target');
       return false;
     }
     if (!this.targetYTD) {
       this.alertify.warning('Please input target YTD');
+      return false;
+    }
+
+    if (isNumeric(this.targetValue) === false){
+      this.alertify.warning('Next month target value is number');
+      return false;
+    }
+    if (isNumeric(this.targetYTDValue) === false){
+      this.alertify.warning('Target YTD value is number');
       return false;
     }
     const dataSource = (this.grid.dataSource as Action[]) || [];
@@ -180,7 +193,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(request);
 
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {

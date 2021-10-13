@@ -17,7 +17,7 @@
         <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
       </p>
       <p>
-        <label class="font-weight-bold">PIC: </label> <span>{{pic}}</span>
+        <label class="font-weight-bold">{{"PICPDCA" | translate}}: </label> <span>{{pic}}</span>
       </p>
     </div>
 
@@ -54,7 +54,7 @@
         </e-column>
         <e-column field='target' headerText='{{"Target" | translate}}' type='string'>
         </e-column>
-        <e-column field='deadline' headerText='{{"Deadline" | translate}}' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
+        <e-column field='deadline' editType= 'datepickeredit' [edit]='dpParams' headerText='{{"Deadline" | translate}}' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
         </e-column>
       </e-columns>
     </ejs-grid>
