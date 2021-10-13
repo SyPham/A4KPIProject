@@ -351,15 +351,15 @@ namespace A4KPI.Services
                     {
                         model.Add(new UpdatePDCADto
                         {
-                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                           Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
                             ActionId = itemAcs.ActionId,
                             Content = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Content,
                             CreatedTime = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).CreatedTime,
-                            DoContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Content,
-                            ResultContent = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ReusltContent,
-                            Achievement = _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Achievement,
+                            DoContent = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Content,
+                            ResultContent = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ReusltContent ,
+                            Achievement = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll().FirstOrDefault(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).Achievement,
                             Deadline = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Deadline.Value.ToString("MM/dd"),
-                            StatusName = _repoStatus.FindAll().FirstOrDefault(x => x.Id == itemAcs.StatusId).Name.Trim(),
+                            StatusName = _repoStatus.FindAll().Where(x => x.Id == itemAcs.StatusId).ToList().Count == 0 ? "" : _repoStatus.FindAll().FirstOrDefault(x => x.Id == itemAcs.StatusId).Name.Trim(),
                             Target = _repoAction.FindAll().FirstOrDefault(x => x.Id == itemAcs.ActionId).Target,
                         });
                     }

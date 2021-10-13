@@ -64,7 +64,7 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     // canActivate: [AuthGuard],
     data: {
-      title: 'Home'
+      title: ''
     },
     children: [
       {

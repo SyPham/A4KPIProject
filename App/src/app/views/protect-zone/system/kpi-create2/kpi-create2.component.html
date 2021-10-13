@@ -11,6 +11,8 @@
           allowSorting="true"
           id='treegrid'
           gridLines="Both"
+          [allowResizing]='true'
+          [showColumnMenu]='true'
           (created)="created()"
           [editSettings]="editing"
           [contextMenuItems]="contextMenuItems"

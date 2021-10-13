@@ -10,8 +10,8 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Transaction',
-      breadcrumb: 'Transaction'
+      title: '',
+      breadcrumb: ''
     },
     children: [
       {

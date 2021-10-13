@@ -19,8 +19,8 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'System',
-      breadcrumb: 'System'
+      title: '',
+      breadcrumb: ''
     },
     children: [
       {
@@ -127,9 +127,9 @@ const routes: Routes = [
         path: 'kpi-create2',
         component: KpiCreate2Component,
         data: {
-          title: 'KPI Create 2',
-          breadcrumb: 'KPI Create 2',
-          functionCode: 'kpi-create2'
+          title: 'KPI Create',
+          breadcrumb: 'KPI Create',
+          functionCode: 'kpi-create'
         },
         // canActivate: [AuthGuard]
       }

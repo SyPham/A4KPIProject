@@ -87,7 +87,7 @@ namespace A4KPI.Services
                 //CenterName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name,
                 //DeptName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == null || _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId == 0 ? "N/A" : _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name,
 
-            }).ToList();
+            }).ToList().OrderBy(x => x.PolicyId).ToList();
             var data = lists.Select(x => new KPINewDto
             {
                 Id = x.Id,
