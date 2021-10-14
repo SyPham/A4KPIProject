@@ -155,8 +155,8 @@
               </td>
               <td>
                 <select class="custom-select" [(ngModel)]="item.statusId"  (ngModelChange)="onChangeStatus($event, i, item)">
-                  <option [value]="null">Chose status</option>
-                  <option *ngFor="let item of status" [value]="item.id">{{item.name}}</option>
+                  <option [value]="null">{{"Chose Status" | translate}}</option>
+                  <option *ngFor="let item of status" [value]="item.id">{{item.name | translate}}</option>
                 </select>
               </td>
             <td >
