@@ -207,7 +207,7 @@ namespace A4KPI.Services
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
-                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult && !c.Submitted) != null)
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult && !c.Submitted) != null)
                         || x.ActionStatus.Count == 0
                         )
 
