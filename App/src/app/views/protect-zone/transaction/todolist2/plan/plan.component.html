@@ -26,14 +26,14 @@
         <div class="input-group-prepend">
           <span class="input-group-text font-weight-bold" id="target">{{"Next month Target" | translate}}</span>
         </div>
-        <input type="text" class="form-control" (ngModelChange)="onChangeTarget($event)" [(ngModel)]="targetValue" id="next-month-target" aria-describedby="target">
+        <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeTarget($event)" [(ngModel)]="targetValue" id="next-month-target" aria-describedby="target">
       </div>
 
       <div class="input-group mb-3 ml-5" style="width:300px">
         <div class="input-group-prepend">
           <span class="input-group-text font-weight-bold" id="ytd">{{"Target YTD" | translate}}</span>
         </div>
-        <input type="text" class="form-control" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="targetYTDValue" id="target-ytd" aria-describedby="ytd">
+        <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="targetYTDValue" id="target-ytd" aria-describedby="ytd">
       </div>
 
     </div>

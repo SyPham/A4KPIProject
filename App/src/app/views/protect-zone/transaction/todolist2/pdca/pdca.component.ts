@@ -266,17 +266,18 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   loadTargetData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
+      console.log(res);
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
       this.thisMonthTarget = res.thisMonthTarget;
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = this.thisMonthPerformance?.performance;
+      this.performanceValue = "";
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
       this.nextMonthTargetValue = this.nextMonthTarget?.value;
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = this.thisMonthYTD?.ytd
+      this.thisMonthYTDValue = ""
     });
   }
   loadStatusData() {
