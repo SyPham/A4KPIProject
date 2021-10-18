@@ -180,15 +180,18 @@
               {{NO(data.index)}}
             </ng-template>
           </e-column>
-          <e-column field='content' headerText='{{"Content2" | translate}}' headerTextAlign='Center' type='string'>
+          <e-column field='content' headerText='A' [columns]='contentColumns' textAlign='Center' type='string'>
+
           </e-column>
-          <e-column field='target' headerText='{{"Target" | translate}}' width=80 headerTextAlign='Center' type='string'>
+          <e-column field='target'  headerText='Target' [columns]='targetColumns' textAlign='Center' width=80  type='string'>
           </e-column>
-          <e-column field='deadline' editType= 'datepickeredit' [edit]='dpParams' headerText='{{"Deadline" | translate}}' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
+          <e-column field='deadline' headerText='Deadline' [columns]='deadlineColumns' textAlign='Center'   >
           </e-column>
         </e-columns>
       </ejs-grid>
+
       </div>
+
     </div>
 
 

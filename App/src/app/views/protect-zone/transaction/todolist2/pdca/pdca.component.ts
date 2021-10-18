@@ -3,7 +3,7 @@ import { UploadFileComponent } from './../upload-file/upload-file.component';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridComponent, IEditCell } from '@syncfusion/ej2-angular-grids';
+import { ColumnModel, GridComponent, IEditCell } from '@syncfusion/ej2-angular-grids';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { Action } from 'src/app/_core/_model/action';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
@@ -59,6 +59,9 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   filesLeft = [];
   filesRight = [];
   type: any;
+  public contentColumns: ColumnModel[];
+  public targetColumns: ColumnModel[];
+  public deadlineColumns: ColumnModel[];
   public dpParams: IEditCell;
   constructor(
     public activeModal: NgbActiveModal,
@@ -77,6 +80,39 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   ngOnInit() {
+    this.contentColumns = [
+      {
+        field: 'content',
+        headerText: '計劃執行',
+        type: 'string',
+        textAlign: 'Center'
+      },
+    ];
+    this.targetColumns = [
+      {
+        field: 'target',
+        headerText: '目標值',
+        type: 'string',
+        textAlign: 'Center',
+        width: 80
+      },
+    ];
+    this.deadlineColumns = [
+      {
+        field: 'deadline',
+        headerText: '完成期限',
+        textAlign: 'Center',
+        editType: 'datepickeredit',
+        type: 'date',
+        format: 'MM/dd/yyyy',
+        edit: {
+          params : {
+            value: new Date() ,
+            min: new Date()
+          }
+        }
+      },
+    ];
     this.dpParams = { params: {
       value: new Date() ,
       min: new Date()
