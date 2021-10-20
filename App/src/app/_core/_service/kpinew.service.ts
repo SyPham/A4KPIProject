@@ -36,12 +36,18 @@ export class KpinewService {
   getTree(){
     return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView`, {});
   }
+  getTree2nd3rd(){
+    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView2nd3rd`, {});
+  }
   getPolicyByOcID(ocID) {
     return this.http.get(`${this.env.apiUrl}KPINew/GetPolicyByOcID/${ocID}`, {});
   }
 
   getAllType() {
     return this.http.get(`${this.env.apiUrl}KPINew/getAllType`, {});
+  }
+  getListPic() {
+    return this.http.get(`${this.env.apiUrl}KPINew/GetListPic`, {});
   }
   add(model) {
     return this.http.post(`${this.env.apiUrl}KPINew/Add`, model);

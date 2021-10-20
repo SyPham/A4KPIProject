@@ -63,6 +63,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   public targetColumns: ColumnModel[];
   public deadlineColumns: ColumnModel[];
   public dpParams: IEditCell;
+  typeText: any;
+  target: { id: any; value: any; performance: any; kPIId: any; targetTime: any; createdTime: any; modifiedTime: any; yTD: any; createdBy: any; submitted: any; };
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -293,6 +295,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
       this.type  = res.type
+      this.typeText = res.typeText
       this.kpi = res.kpi;
       this.policy = res.policy;
       this.pic = res.pic;
@@ -333,22 +336,25 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   validate() {
-    if (!this.thisMonthTargetValue) {
-      this.alertify.warning('Please input this month target');
-      return false;
-    }
-    if (!this.performanceValue) {
-      this.alertify.warning('Please input this month performance');
-      return false;
-    }
+    if (this.typeText !== 'string') {
 
-    if (!this.thisMonthYTDValue) {
-      this.alertify.warning('Please input this month YTD');
-      return false;
-    }
-    if (!this.nextMonthTargetValue) {
-      this.alertify.warning('Please input next month target');
-      return false;
+      if (!this.thisMonthTargetValue) {
+        this.alertify.warning('Please input this month target');
+        return false;
+      }
+      if (!this.performanceValue) {
+        this.alertify.warning('Please input this month performance');
+        return false;
+      }
+
+      if (!this.thisMonthYTDValue) {
+        this.alertify.warning('Please input this month YTD');
+        return false;
+      }
+      if (!this.nextMonthTargetValue) {
+        this.alertify.warning('Please input next month target');
+        return false;
+      }
     }
 
     // if (!this.result) {
@@ -378,18 +384,47 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   post(submitted) {
     if (this.validate() == false) return;
-    const target = {
-      id: this.thisMonthTarget.id,
-      value: this.thisMonthTargetValue,
-      performance: this.performanceValue,
-      kPIId: this.data.id,
-      targetTime: this.thisMonthYTD.targetTime,
-      createdTime: this.thisMonthYTD.createdTime,
-      modifiedTime: this.thisMonthYTD.modifiedTime,
-      yTD: this.thisMonthYTDValue,
-      createdBy: this.thisMonthYTD.createdBy,
-      submitted: submitted
-    };
+    if(this.typeText !== 'string') {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: this.performanceValue ?? 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: this.thisMonthYTDValue ?? 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      };
+    } else {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      };
+
+      this.nextMonthTarget = {
+        id: 0,
+        value: 0,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: false
+      };
+
+    }
     const updatePDCA = this.gridData;
 
     const dataSource = this.grid.dataSource as Action[];
@@ -407,7 +442,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     })
     const request = {
-      target: target,
+      target: this.target,
       targetYTD: this.targetYTD,
       nextMonthTarget: this.nextMonthTarget,
       actions: actions,

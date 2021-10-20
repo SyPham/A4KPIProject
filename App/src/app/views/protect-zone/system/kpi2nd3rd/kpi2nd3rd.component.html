@@ -1,0 +1,169 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <ejs-treegrid
+          #treegrid
+          [dataSource]="data"
+          (contextMenuClick)="contextMenuClick($event)"
+          (toolbarClick)="toolbarClick($event)"
+          [treeColumnIndex]="1"
+          allowSorting="true"
+          id='treegrid'
+          gridLines="Both"
+          [allowResizing]='true'
+          [showColumnMenu]='true'
+          (created)="created()"
+          [editSettings]="editing"
+          [contextMenuItems]="contextMenuItems"
+          (actionComplete)="actionComplete($event)"
+          [toolbar]="toolbar"
+          childMapping="childNodes"
+          allowExcelExport="true"
+          allowPdfExport="true"
+          (contextMenuOpen)='contextMenuOpen($event)'
+          (rowSelected)="rowSelected($event)"
+        >
+          <e-columns>
+            <e-column
+              field="entity.level"
+              width="80"
+              isPrimaryKey="true"
+              headerText="Level"
+            >
+              <ng-template #headerTemplate let-data>
+                {{"LevelKPINew" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+
+                <p *ngIf="data.entity.level == '1'"  style="text-align: left;"> {{ data.entity.level }}</p>
+                <p *ngIf="data.entity.level == '2'"  style="text-align: center;"> {{ data.entity.level }}</p>
+                <p *ngIf="data.entity.level == '3'"  style="text-align: right;"> {{ data.entity.level }}</p>
+
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                {{ data.entity.level }}
+              </ng-template>
+            </e-column>
+
+            <e-column field="entity.name" headerText="KPI Name" width="200" textAlign='Left'>
+              <ng-template #headerTemplate let-data>
+                {{"KPI Name 2" | translate}}
+              </ng-template>
+            </e-column>
+            <e-column field="policyName" headerText="Policy" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"PolicyNew" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.entity.policyName}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+            <e-column field="typeName" headerText="Type" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"TypeNew" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.entity.typeName}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='typeId' [allowFiltering]='true' [fields]="typeFields" placeholder='Select a Type' [dataSource]='typeData'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+            <e-column field="picName" headerText="PIC" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"PICNew" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.entity.picName}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist>
+              </ng-template>
+            </e-column>
+            <e-column field="" headerText="Mgmt. Arrange" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"MGMT" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                <span *ngIf="data.entity.factId > 0 && data.entity.centerId === 0 && data.entity.deptId === 0"> {{data.entity.factName}}</span>
+                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId === 0"> {{data.entity.centerName}}</span>
+                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId > 0"> {{data.entity.deptName}}</span>
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+              </ng-template>
+            </e-column>
+            <e-column field="entity.updateName" headerText="The last editor" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"editor" | translate}}
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                {{data.entity.updateName}}
+              </ng-template>
+            </e-column>
+            <e-column field="entity.updateDate" headerText="The last edit date" textAlign='Center'>
+              <ng-template #headerTemplate let-data>
+                {{"editdate" | translate}}
+              </ng-template>
+              <ng-template #template let-data>
+                {{data.entity.updateDate | date: 'MM/dd/yyyy'}}
+              </ng-template>
+
+              <ng-template #editTemplate let-data>
+                {{data.entity.updateDate | date: 'MM/dd/yyyy'}}
+              </ng-template>
+            </e-column>
+          </e-columns>
+        </ejs-treegrid>
+
+
+
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">{{title}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+
+                <div class="form-group">
+                  <label for="">KPI Name</label>
+                  <textarea [(ngModel)]="kpiname"  cols="30" rows="10" class="form-control"></textarea>
+                </div>
+
+
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="">Policy</label>
+                  <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist>
+                </div>
+
+                <div class="form-group">
+                  <label for="">Type</label>
+                  <ejs-dropdownlist [(ngModel)]='typeId' [allowFiltering]='true' [fields]="typeFields" placeholder='Select a Type' [dataSource]='typeData'></ejs-dropdownlist>
+                </div>
+                <div class="form-group">
+                  <label for="">PIC</label>
+                  <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+            <button type="submit" (click)='createOC()' class="btn btn-primary">Save</button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

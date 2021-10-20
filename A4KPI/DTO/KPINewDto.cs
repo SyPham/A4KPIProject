@@ -20,9 +20,14 @@ namespace A4KPI.DTO
         public bool Submitted { get; set; }
         public int? ParentId { get; set; }
         public int UpdateBy { get; set; }
-
+        public int CreateBy { get; set; }
+        public int? LevelOcCreateBy { get; set; }
+        public int? LevelOcPolicy { get; set; }
+        public int? OcIdPolicy { get; set; }
+        public int? OcIdCreateBy { get; set; }
         public string PolicyName { get; set; }
         public string TypeName { get; set; }
+        public string TypeText { get; set; }
         public string PICName { get; set; }
         public string UpdateName { get; set; }
 

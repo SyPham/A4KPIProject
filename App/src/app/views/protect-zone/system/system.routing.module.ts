@@ -1,3 +1,5 @@
+import { ViewKPIComponent } from './viewKPI/viewKPI.component';
+import { Kpi2nd3rdComponent } from './kpi2nd3rd/kpi2nd3rd.component';
 import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
 import { SettingMonthlyComponent } from './setting-monthly/setting-monthly.component';
 import { KpiCreateComponent } from './kpi-create/kpi-create.component';
@@ -130,6 +132,22 @@ const routes: Routes = [
           title: 'KPI Create',
           breadcrumb: 'KPI Create',
           functionCode: 'kpi-create'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'kpi-2nd3rd',
+        component: Kpi2nd3rdComponent,
+        data: {
+          title: 'KPI 2nd & 3rd Create',
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'view-kpi',
+        component: ViewKPIComponent,
+        data: {
+          title: 'KPI View',
         },
         // canActivate: [AuthGuard]
       }

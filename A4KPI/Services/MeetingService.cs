@@ -92,7 +92,7 @@ namespace A4KPI.Services
                 x.TypeId,
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 Level = x.Level,
-
+                TypeText = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Description ?? "",
                 FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
                 CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
                 DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
@@ -114,6 +114,7 @@ namespace A4KPI.Services
                 Level = x.Level,
                 PolicyName = x.PolicyName,
                 TypeName = x.TypeName,
+                TypeText = x.TypeText,
                 FactName = x.FactId == 0 ? "N/A" : _repoOC.FindById(x.FactId).Name,
                 CenterName = x.CenterId == 0 ? "N/A" : _repoOC.FindById(x.CenterId).Name,
                 DeptName = x.DeptId == 0 ? "N/A" : _repoOC.FindById(x.DeptId).Name,

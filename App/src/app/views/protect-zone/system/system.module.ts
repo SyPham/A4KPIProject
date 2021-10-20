@@ -1,3 +1,5 @@
+import { ViewKPIComponent } from './viewKPI/viewKPI.component';
+import { Kpi2nd3rdComponent } from './kpi2nd3rd/kpi2nd3rd.component';
 import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
 import { SettingMonthlyComponent } from './setting-monthly/setting-monthly.component';
 import { KpiCreateComponent } from './kpi-create/kpi-create.component';
@@ -72,7 +74,9 @@ loadCldr(
     PolicyComponent,
     SettingMonthlyComponent,
     KpiCreateComponent,
-    KpiCreate2Component
+    KpiCreate2Component,
+    Kpi2nd3rdComponent,
+    ViewKPIComponent
   ],
   imports: [
     CommonModule,

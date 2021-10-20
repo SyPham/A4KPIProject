@@ -32,7 +32,6 @@ namespace A4KPI.Controllers
         [HttpPost]
         public async Task<ActionResult> SubmitAction(ActionRequestDto action)
         {
-
             return Ok(await _service.SubmitAction(action));
         }
          [HttpPost]

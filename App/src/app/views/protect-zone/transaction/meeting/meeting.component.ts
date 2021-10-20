@@ -168,6 +168,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   YTD: any;
   targetYTD: any;
   dataOc: any;
+  typeText: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -347,6 +348,8 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     el.scrollIntoView();
   }
   openModal(data, model) {
+    console.log(data);
+    this.typeText = data.typeText
     this.policyTitle = data.policyName
     this.kpiTitle = data.name
     this.levelTitle = data.level

@@ -21,6 +21,13 @@ namespace A4KPI.Controllers
             var result = await _service.GetKPIByOcID(ocID);
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListPic()
+        {
+            var result = await _service.GetListPic();
+            return Ok(result);
+        }
         [HttpGet("{ocID}")]
         public async Task<IActionResult> GetPolicyByOcID(int ocID)
         {
@@ -41,6 +48,13 @@ namespace A4KPI.Controllers
         public async Task<IActionResult> GetAllAsTreeView()
         {
             var ocs = await _service.GetAllAsTreeView();
+            return Ok(ocs);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsTreeView2nd3rd()
+        {
+            var ocs = await _service.GetAllAsTreeView2nd3rd();
             return Ok(ocs);
         }
         [HttpPost]

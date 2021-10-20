@@ -20,6 +20,11 @@ namespace A4KPI.Models
         public int? OcId { get; set; }
         public int PolicyId { get; set; }
         public int TypeId { get; set; }
+        public int CreateBy { get; set; }
+        public int? LevelOcCreateBy { get; set; }
+        public int? LevelOcPolicy { get; set; }
+        public int? OcIdPolicy { get; set; }
+        public int? OcIdCreateBy { get; set; }
         public int Pic { get; set; }
         public int? ParentId { get; set; }
         public bool Submitted { get; set; }

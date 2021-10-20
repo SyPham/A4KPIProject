@@ -18,7 +18,7 @@
         </p>
 
         <div class="d-flex align-items-start">
-          <table class="table table-bordered" style="width: 300px; margin-right: 50px;">
+          <table *ngIf="typeText !== 'string'" class="table table-bordered" style="width: 300px; margin-right: 50px;">
             <tbody>
               <tr>
                 <th scope="row">{{"This month Performance" | translate}}
@@ -58,7 +58,8 @@
               </tr>
             </tbody>
           </table>
-          <table class="table table-bordered" style="width: 300px; margin-right: 50px;">
+
+          <table *ngIf="typeText !== 'string'" class="table table-bordered" style="width: 300px; margin-right: 50px;">
             <tbody>
               <tr>
                 <th scope="row">{{"This month YTD" | translate}}
@@ -90,6 +91,7 @@
           </table>
         </div>
       </div>
+
       <div class="col-6">
         <button type="button" class="btn btn-secondary ml-2" (click)='download()'>{{'Download' | translate}}</button>
         <button type="button" class="btn btn-secondary" (click)='openUploadModalComponent()' >{{'Upload file' | translate}}</button>

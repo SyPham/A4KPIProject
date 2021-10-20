@@ -20,10 +20,12 @@ namespace A4KPI.Services
     public interface IKPINewService: IServiceBase<KPINew, KPINewDto>
     {
         Task<object> GetKPIByOcID(int ocID);
+        Task<object> GetListPic();
         Task<object> GetPolicyByOcID(int ocID);
         Task<object> GetAllType();
         Task<bool> Delete(int id);
         Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView();
+        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd();
     }
     public class KPINewService : ServiceBase<KPINew, KPINewDto>, IKPINewService
     {
@@ -63,6 +65,46 @@ namespace A4KPI.Services
             _mapper = mapper;
             _configMapper = configMapper;
         }
+
+        public async Task<object> GetListPic()
+        {
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
+
+            var dataAc = _repoAc.FindById(accountId);
+            var list = new List<AccountDto>();
+            var lists = (await _repoAc.FindAll().ProjectTo<AccountDto>(_configMapper).OrderBy(x => x.FullName).ToListAsync()).Select(x => new AccountDto
+            {
+                Id = x.Id,
+                FullName = x.FullName,
+                FactId = x.FactId,
+                DeptId = x.DeptId,
+                CenterId = x.CenterId
+
+            }).ToList();
+            if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
+            {
+                List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.FactId).Select(x => x.Id).ToList();
+                list = lists.Where(x => OcIdUnder.Contains(x.CenterId.ToInt())).ToList();
+            }
+            if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
+            {
+                List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.CenterId).Select(x => x.Id).ToList();
+                list = lists.Where(x => OcIdUnder.Contains(x.DeptId.ToInt()) || x.Id == accountId).ToList();
+            }
+            if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
+            {
+                List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.CenterId).Select(x => x.Id).ToList();
+                list = lists.Where(x => x.DeptId == dataAc.DeptId).ToList();
+            }
+            var data = list.Select(x => new AccountDto { 
+                Id = x.Id,
+                FullName = x.FullName
+            }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView()
         {
             var lists = (await _repo.FindAll().ProjectTo<KPINewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
@@ -116,6 +158,96 @@ namespace A4KPI.Services
             }).ToList().AsHierarchy(x => x.Id, y => y.ParentId);
             return data;
         }
+
+        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd()
+        {
+
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
+
+            var dataAc = _repoAc.FindById(accountId);
+            var list = new List<KPINewDto>();
+            var lists = (await _repo.FindAll().ProjectTo<KPINewDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+            {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                Name = x.Name,
+                PolicyId = x.PolicyId,
+                UpdateBy = x.UpdateBy,
+                Pic = x.Pic,
+                CreateBy= x.CreateBy,
+                LevelOcPolicy = x.LevelOcPolicy,
+                LevelOcCreateBy = x.LevelOcCreateBy,
+                OcIdCreateBy = x.OcIdCreateBy,
+                TypeId = x.TypeId,
+                Level = x.Level,
+                PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
+                TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
+                PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
+                UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
+                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
+                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
+                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
+                UpdateDate = x.UpdateDate,
+                
+
+            }).ToList().OrderBy(x => x.PolicyId).ToList();
+            if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
+            {
+                list = lists;
+            }
+            if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
+            {
+                List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.CenterId).Select(x => x.Id).ToList();
+                var OcIdOver = _repoOc.FindAll().FirstOrDefault(x => x.Id == dataAc.CenterId).ParentId;
+                var picOver = _repoAc.FindAll().FirstOrDefault(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).Id;
+                var th1 = lists.Where(x => x.LevelOcCreateBy == 1 || x.LevelOcCreateBy == 2 || x.LevelOcCreateBy == 3).ToList();
+                list = th1.Where(x => x.CreateBy == accountId || x.Pic == accountId || x.Pic == picOver || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
+            }
+            if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
+            {
+                List<int> picOver = _repoAc.FindAll(x => x.FactId == dataAc.FactId && x.CenterId == dataAc.CenterId && x.DeptId == 0).Select(x => x.Id).ToList();
+                list = lists.Where(x => x.CreateBy == accountId || x.Pic == accountId || picOver.Contains(x.Pic)).ToList();
+
+                foreach (var item in list)
+                {
+                    if (item.Level == 2)
+                    {
+                        item.ParentId = null;
+                    }
+                }
+
+            }
+            var data = list.Select(x => new KPINewDto
+            {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                Name = x.Name,
+                PolicyId = x.PolicyId,
+                UpdateBy = x.UpdateBy,
+                Pic = x.Pic,
+                TypeId = x.TypeId,
+                CreateBy = x.CreateBy,
+                Level = x.Level,
+                PolicyName = x.PolicyName,
+                TypeName = x.TypeName,
+                PICName = x.PICName,
+                UpdateName = x.UpdateName,
+                FactId = x.FactId,
+                CenterId = x.CenterId,
+                DeptId = x.DeptId,
+                UpdateDate = x.UpdateDate,
+                FactName = x.FactId == 0 ? "N/A" : _repoOc.FindById(x.FactId).Name,
+                CenterName = x.CenterId == 0 ? "N/A" : _repoOc.FindById(x.CenterId).Name,
+                DeptName = x.DeptId == 0 ? "N/A" : _repoOc.FindById(x.DeptId).Name
+                
+
+            }).ToList().AsHierarchy(x => x.Id, y => y.ParentId);
+
+            
+            return data;
+        }
+
         public async Task<object> GetAllType()
         {
             var data = _repoType.FindAll();
@@ -155,6 +287,73 @@ namespace A4KPI.Services
             {
                 string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
                 var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
+                var dataAc = _repoAc.FindById(accountId);
+                var dataAcPo = _repoAc.FindById(model.Pic);
+                var levelCreateBy = 0;
+                if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
+                {
+                    levelCreateBy = 1;
+                }
+                if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
+                {
+                    levelCreateBy = 2;
+
+                }
+                if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
+                {
+                    levelCreateBy = 3;
+
+                }
+                var levelPic = 0;
+
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId == 0 && dataAcPo.DeptId == 0)
+                {
+                    levelPic = 1;
+                }
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId > 0 && dataAcPo.DeptId == 0)
+                {
+                    levelPic = 2;
+                }
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId > 0 && dataAcPo.DeptId > 0)
+                {
+                    levelPic = 3;
+                }
+
+                var ocIdCreate = 0;
+
+                if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
+                {
+                    ocIdCreate = dataAc.FactId.ToInt();
+                }
+                if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
+                {
+                    ocIdCreate = dataAc.CenterId.ToInt();
+
+                }
+                if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
+                {
+                    ocIdCreate = dataAc.DeptId.ToInt();
+                }
+
+                var ocIdPic = 0;
+
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId == 0 && dataAcPo.DeptId == 0)
+                {
+                    ocIdPic = dataAcPo.FactId.ToInt();
+                }
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId > 0 && dataAcPo.DeptId == 0)
+                {
+                    ocIdPic = dataAcPo.CenterId.ToInt();
+                }
+                if (dataAcPo.FactId > 0 && dataAcPo.CenterId > 0 && dataAcPo.DeptId > 0)
+                {
+                    ocIdPic = dataAcPo.DeptId.ToInt();
+                }
+                model.OcIdCreateBy = ocIdCreate;
+                model.OcIdPolicy = ocIdPic;
+                model.LevelOcCreateBy = levelCreateBy;
+                model.LevelOcPolicy = levelPic;
+                model.CreateBy = accountId;
                 model.UpdateBy = accountId;
                 var item = _mapper.Map<KPINew>(model);
                 item.UpdateDate = DateTime.Now;
@@ -250,5 +449,7 @@ namespace A4KPI.Services
             }
            
         }
+
+        
     }
 }

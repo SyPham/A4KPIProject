@@ -35,6 +35,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   targetYTD: TargetYTD;
   targetValue = null;
   targetYTDValue = null;
+  typeText: any;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -94,11 +95,33 @@ export class PlanComponent implements OnInit, AfterViewInit {
     // console.log(Number(this.targetValue))
     if (this.validate(true) == false) return;
     this.spinner.show();
+    if(this.typeText === 'string') {
+      this.target = {
+        id: 0,
+        value: 0,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: true
+      };
+      this.targetYTD = {
+        id: 0,
+        value: 0,
+        createdTime: new Date().toISOString(),
+        modifiedBy: null,
+        modifiedTime: null,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id
+      };
+    }
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
-      debugger
       return {
-        id: x.id,
+        id: x.id ?? 0,
         target: x.target,
         content: x.content,
         deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
@@ -112,7 +135,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     const request = {
       actions: actions,
       target: this.target,
-      targetYTD: this.targetYTD,
+      targetYTD: this.targetYTD ,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
     console.log(request);
@@ -142,23 +165,24 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
   }
   validate(isSubmit) {
+    if(this.typeText !== 'string') {
+      if (!this.target) {
+        this.alertify.warning('Please input next month target');
+        return false;
+      }
+      if (!this.targetYTD) {
+        this.alertify.warning('Please input target YTD');
+        return false;
+      }
 
-    if (!this.target) {
-      this.alertify.warning('Please input next month target');
-      return false;
-    }
-    if (!this.targetYTD) {
-      this.alertify.warning('Please input target YTD');
-      return false;
-    }
-
-    if (isNumeric(this.targetValue) === false){
-      this.alertify.warning('Next month target value is number');
-      return false;
-    }
-    if (isNumeric(this.targetYTDValue) === false){
-      this.alertify.warning('Target YTD value is number');
-      return false;
+      if (isNumeric(this.targetValue) === false){
+        this.alertify.warning('Next month target value is number');
+        return false;
+      }
+      if (isNumeric(this.targetYTDValue) === false){
+        this.alertify.warning('Target YTD value is number');
+        return false;
+      }
     }
     const dataSource = (this.grid.dataSource as Action[]) || [];
     if (isSubmit) {
@@ -226,6 +250,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
       this.kpi = res.kpi;
       this.target = res.target;
       this.targetYTD = res.targetYTD;
+      this.typeText = res.typeText;
       this.targetValue = this.target?.value;
       this.targetYTDValue = this.targetYTD?.value;
     });

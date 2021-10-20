@@ -331,7 +331,17 @@ export const navItemsEN: INavData[] = [
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 Monthly Setting',
+        name: '1.4 KPI 2nd & 3rd Create',
+        url: '/system/kpi-2nd3rd',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.5 View KPI',
+        url: '/system/view-kpi',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.6 Monthly Setting',
         url: '/system/setting-monthly',
         icon: 'icon-puzzle'
       },
@@ -342,16 +352,7 @@ export const navItemsEN: INavData[] = [
     url: '/transaction',
     icon: 'icon-cursor',
     children: [
-      // {
-      //   name: '2.1 KPI Objective',
-      //   url: '/transaction/objective',
-      //   icon: 'icon-cursor'
-      // },
-      // {
-      //   name: '2.2 To Do List',
-      //   url: '/transaction/todolist',
-      //   icon: 'icon-cursor'
-      // },
+
       {
         name: '2.1 To Do List',
         url: '/transaction/todolist2',

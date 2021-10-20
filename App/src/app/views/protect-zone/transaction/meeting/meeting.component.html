@@ -182,7 +182,7 @@
 
 
     </div>
-    <div class="row">
+    <div *ngIf="typeText !== 'string'" class="row">
       <div class="col-md-12">
         <div class="chart">
           <canvas  id="planet-chart" ></canvas>
@@ -190,7 +190,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div *ngIf="typeText !== 'string'" class="row">
       <div class="col-md-12">
         <div class="box-body">
           <div class="table-responsive">
