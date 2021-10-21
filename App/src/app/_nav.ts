@@ -58,17 +58,17 @@ export const navItems: INavData[] = [
       //   icon: 'icon-puzzle'
       // },
       {
-        name: '1.3 建立KPI',
+        name: '1.3 建立一階KPI',
         url: '/system/kpi-create2',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 KPI 2nd & 3rd Create',
+        name: '1.4 建立二階&三階KPI',
         url: '/system/kpi-2nd3rd',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.5 View KPI',
+        name: '1.5 查看所有KPI',
         url: '/system/view-kpi',
         icon: 'icon-puzzle'
       },
