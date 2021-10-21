@@ -250,21 +250,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
   }
-  // onChangeResult(value , i) {
-  //   this.content = value || '';
-  //   if (this.result != null) {
-  //     this.result.content = value;
-  //   } else {
-  //     this.result = {
-  //       id: 0,
-  //       content: this.content,
-  //       kPIId: this.data.id,
-  //       createdTime: new Date().toISOString(),
-  //       updateTime: new Date().toISOString(),
-  //       modifiedTime: null
-  //     };
-  //   }
-  // }
+
   onChangeResult(value, i) {
     this.gridData[i].resultContent = value;
   }
