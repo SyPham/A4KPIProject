@@ -52,6 +52,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   modalReference: NgbModalRef
   kpiname: any
   userId: number
+  currentLevel: any
   constructor(
     private ocService: OcService,
     private modalServices: NgbModal,
@@ -194,14 +195,20 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    console.log(args);
-    switch (args.item.id) {
-      case "treegrid_gridcontrol_Add Sub":
-        args.cancel = true;
-        this.openMainModal();
-        break;
-      default:
-        break;
+    console.log(this.level);
+    if (this.currentLevel === 3) {
+      args.cancel = true;
+      this.alertify.warning("Currently, you cannot create KPIs smaller than this level");
+      return;
+    } else {
+      switch (args.item.id) {
+        case "treegrid_gridcontrol_Add Sub":
+          args.cancel = true;
+          this.openMainModal();
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -283,6 +290,14 @@ export class Kpi2nd3rdComponent implements OnInit {
       args.cancel = true;
       return;
     }
+
+    if (this.currentLevel === 3) {
+      args.cancel = true;
+      this.alertify.warning("Currently, you cannot create KPIs smaller than this level");
+      return;
+    }
+
+
     console.log(args);
   }
   rowSelected(args) {
@@ -291,6 +306,8 @@ export class Kpi2nd3rdComponent implements OnInit {
     // }
     this.parentId = args.data.entity.id
     this.level = args.data.entity.level + 1
+
+    this.currentLevel = args.data.entity.level
 
   }
 
