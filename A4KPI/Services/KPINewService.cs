@@ -194,7 +194,7 @@ namespace A4KPI.Services
             }).ToList().OrderBy(x => x.PolicyId).ToList();
             if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
             {
-                list = lists;
+                list = new List<KPINewDto>();
             }
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
             {
