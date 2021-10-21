@@ -63,7 +63,17 @@ export const navItems: INavData[] = [
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 設定更新月份',
+        name: '1.4 KPI 2nd & 3rd Create',
+        url: '/system/kpi-2nd3rd',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.5 View KPI',
+        url: '/system/view-kpi',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.6 設定更新月份',
         url: '/system/setting-monthly',
         icon: 'icon-puzzle'
       },
@@ -191,13 +201,24 @@ export const navItemsVI: INavData[] = [
       //   url: '/system/kpi-create',
       //   icon: 'icon-puzzle'
       // },
+
       {
         name: '1.3 KPI Create',
         url: '/system/kpi-create2',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 Monthly Setting',
+        name: '1.4 KPI 2nd & 3rd Create',
+        url: '/system/kpi-2nd3rd',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.5 View KPI',
+        url: '/system/view-kpi',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.6 Monthly Setting',
         url: '/system/setting-monthly',
         icon: 'icon-puzzle'
       },
