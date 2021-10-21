@@ -321,7 +321,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.activeModal.close();
 
   }
-  validate() {
+  validate(submitted) {
     if (this.typeText !== 'string') {
 
       if (!this.thisMonthTargetValue) {
@@ -348,16 +348,23 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     //   return false;
     // }
     let check = true;
-    for (const item of this.gridData) {
-      if(item.actionStatusId == null)
-      {
-        check = false;
-        break;
+    if(submitted === true) {
+      for (const item of this.gridData) {
+        if(item.actionStatusId == null)
+        {
+          check = false;
+          break;
+        }
       }
-    }
-    if (!check) {
-      this.alertify.warning('Please add status');
-      return false;
+      if (!check) {
+        this.alertify.warning('Please add status');
+        return false;
+      }
+    } else {
+
+      for (let item in this.gridData) {
+        this.gridData[item].actionStatusId = 0
+      }
     }
     const dataSource = (this.grid.dataSource as Action[]) || [];
 
@@ -369,7 +376,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
   post(submitted) {
-    if (this.validate() == false) return;
+
+    if (this.validate(submitted) == false) return;
     if(this.typeText !== 'string') {
       this.target = {
         id: this.thisMonthTarget.id,
@@ -412,7 +420,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
     const updatePDCA = this.gridData;
-
+    console.log(updatePDCA);
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
       return {
