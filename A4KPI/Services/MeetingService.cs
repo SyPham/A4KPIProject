@@ -383,7 +383,7 @@ namespace A4KPI.Services
                                  Achievement = sub == null ? "" : sub.Achievement,
                                  Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
                                  StatusId = a.StatusId,
-                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                 StatusName = _repoAcs.FindAll().FirstOrDefault(x => x.ActionId == a.Id && a.CreatedTime.Month == item).Status.Name.Trim(),
                                  Target = a.Target,
 
                              }).ToList();

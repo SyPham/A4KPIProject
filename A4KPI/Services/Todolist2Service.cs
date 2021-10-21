@@ -303,7 +303,7 @@ namespace A4KPI.Services
                 Id = x.Id,
                 Topic = x.Name,
                 Type = "UpdatePDCA",
-                CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false && a.Performance == 0)),
+                CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false)),
             }).Where(x => x.CurrentTarget).ToListAsync();
 
             // 
