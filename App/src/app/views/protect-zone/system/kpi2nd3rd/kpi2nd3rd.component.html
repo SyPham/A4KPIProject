@@ -28,6 +28,7 @@
             <e-column
               field="entity.level"
               width="80"
+              textAlign='Center'
               isPrimaryKey="true"
               headerText="Level"
             >
@@ -35,10 +36,8 @@
                 {{"LevelKPINew" | translate}}
               </ng-template>
               <ng-template #template let-data>
+                {{ data.entity.level }}
 
-                <p *ngIf="data.entity.level == '1'"  style="text-align: left;"> {{ data.entity.level }}</p>
-                <p *ngIf="data.entity.level == '2'"  style="text-align: center;"> {{ data.entity.level }}</p>
-                <p *ngIf="data.entity.level == '3'"  style="text-align: right;"> {{ data.entity.level }}</p>
 
               </ng-template>
               <ng-template #editTemplate let-data>
