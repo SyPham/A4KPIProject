@@ -182,7 +182,10 @@
               {{NO(data.index)}}
             </ng-template>
           </e-column>
-          <e-column field='content' headerText='A' [columns]='contentColumns' textAlign='Center' type='string'>
+          <e-column field='content' headerText='A' [columns]='contentColumns'  type='string'>
+            <ng-template #editTemplate let-data>
+              <textarea type="text"   class="form-control" [value]="data.content" name="A" style="text-align:left; height: 350px;"></textarea>
+            </ng-template>
 
           </e-column>
           <e-column field='target'  headerText='Target' [columns]='targetColumns' textAlign='Center' width=80  type='string'>

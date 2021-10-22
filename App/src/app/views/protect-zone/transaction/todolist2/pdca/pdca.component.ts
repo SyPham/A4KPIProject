@@ -87,7 +87,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         field: 'content',
         headerText: '計劃執行',
         type: 'string',
-        textAlign: 'Center'
+        textAlign: 'Left'
       },
     ];
     this.targetColumns = [
@@ -298,11 +298,11 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = "";
+      this.performanceValue = this.thisMonthPerformance?.performance;
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
       this.nextMonthTargetValue = this.nextMonthTarget?.value;
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = ""
+      this.thisMonthYTDValue = this.thisMonthYTD?.ytd
     });
   }
   loadStatusData() {

@@ -297,7 +297,7 @@ namespace A4KPI.Services
             }).ToListAsync();
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
-            var year = month2 == 1 ? currentTime.Year - 1 : currentTime.Year;
+            var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var updatePDCA = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any()).Select(x => new
             {
                 Id = x.Id,
