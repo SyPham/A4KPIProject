@@ -97,7 +97,7 @@
         <button type="button" class="btn btn-secondary" (click)='openUploadModalComponent()' >{{'Upload file' | translate}}</button>
 
         <div class="mt-3 d-flex justify-content-start">
-          <ul class="list-group mr-3" style="width: 50%;" [style.width]='filesRight.length > 0 ? "50%": "100%"'>
+          <ul class="list-group mr-3" style="width: 50%;" *ngIf="filesLeft.length > 0" [style.width]='filesRight.length > 0 ? "50%": "100%"'>
             <li class="list-group-item" *ngFor="let item of filesLeft">
               <a [id]='item.path' [href]="item.path">{{item.name}}</a>
             </li>
