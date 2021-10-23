@@ -244,13 +244,13 @@ export class PlanComponent implements OnInit, AfterViewInit {
   loadData() {
     this.gridData = [];
     this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {
+      this.typeText = res.typeText;
       this.actions = res.actions as Action[] || [];
       this.pic = res.pic;
       this.policy = res.policy;
       this.kpi = res.kpi;
       this.target = res.target;
       this.targetYTD = res.targetYTD;
-      this.typeText = res.typeText;
       this.targetValue = this.target?.value;
       this.targetYTDValue = this.targetYTD?.value;
     });

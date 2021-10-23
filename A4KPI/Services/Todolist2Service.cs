@@ -292,6 +292,7 @@ namespace A4KPI.Services
             {
                 Id = x.Id,
                 Topic = x.Name,
+                TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "Action",
                 CurrentTarget = false,
             }).ToListAsync();
@@ -302,6 +303,7 @@ namespace A4KPI.Services
             {
                 Id = x.Id,
                 Topic = x.Name,
+                TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "UpdatePDCA",
                 CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false)),
             }).Where(x => x.CurrentTarget).ToListAsync();

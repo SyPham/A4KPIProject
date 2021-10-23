@@ -1417,6 +1417,7 @@
             "Add line": "加線",
             "Add arrow": "添加箭頭",
             "Add rectangle": "添加矩形",
+
             "Add circle": "添加圈子",
             "Add polygon": "添加多邊形",
             "Add Comments": "添加評論",
@@ -1478,6 +1479,7 @@
             "FilterbarTitle": "的濾網",
             "EmptyDataSourceError": "初始加載時，DataSource不能為空，因為列是從AutoGenerate Column Grid中的dataSource生成的",
             "Add": "新增",
+            "Add Sub": "新增下一階KPI",
             "Edit": "編輯",
             "Cancel": "取消",
             "Update": "更新資料",

@@ -167,7 +167,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     ];
     this.toolbar = [
       "Search",
-      "Add Sub",
+      "新增下一階KPI",
       "Cancel",
       "ExpandAll",
       "CollapseAll",
@@ -195,14 +195,14 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    console.log(this.level);
+    console.log(args.item.id);
     if (this.currentLevel === 3) {
       args.cancel = true;
       this.alertify.warning("Currently, you cannot create KPIs smaller than this level");
       return;
     } else {
       switch (args.item.id) {
-        case "treegrid_gridcontrol_Add Sub":
+        case "treegrid_gridcontrol_新增下一階KPI":
           args.cancel = true;
           this.openMainModal();
           break;

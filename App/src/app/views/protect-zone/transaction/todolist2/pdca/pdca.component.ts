@@ -20,7 +20,7 @@ declare var $: any;
 export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() data: any;
   @Input() currentTime: any;
-  @ViewChild('grid') grid: GridComponent;
+  @ViewChild('grid') public grid: GridComponent;
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   toolbarOptions = ['Add', 'Delete', 'Search'];
   policy = '效率精進';
@@ -59,9 +59,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   filesLeft = [];
   filesRight = [];
   type: any;
-  public contentColumns: ColumnModel[];
-  public targetColumns: ColumnModel[];
-  public deadlineColumns: ColumnModel[];
   public dpParams: IEditCell;
   typeText: any;
   target: { id: any; value: any; performance: any; kPIId: any; targetTime: any; createdTime: any; modifiedTime: any; yTD: any; createdBy: any; submitted: any; };
@@ -82,39 +79,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   ngOnInit() {
-    this.contentColumns = [
-      {
-        field: 'content',
-        headerText: '計劃執行',
-        type: 'string',
-        textAlign: 'Left'
-      },
-    ];
-    this.targetColumns = [
-      {
-        field: 'target',
-        headerText: '目標值',
-        type: 'string',
-        textAlign: 'Center',
-        width: 80
-      },
-    ];
-    this.deadlineColumns = [
-      {
-        field: 'deadline',
-        headerText: '完成期限',
-        textAlign: 'Center',
-        editType: 'datepickeredit',
-        type: 'date',
-        format: 'MM/dd/yyyy',
-        edit: {
-          params : {
-            value: new Date() ,
-            min: new Date()
-          }
-        }
-      },
-    ];
+
     this.dpParams = { params: {
       value: new Date() ,
       min: new Date()
@@ -125,6 +90,12 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getDownloadFiles();
     this.loadStatusData();
     this.loadData();
+  }
+  dataBound(args){
+    var headercelldiv = this.grid.element.getElementsByClassName("e-headercelldiv") as any;
+    for (var i=0; i<headercelldiv.length; i++){
+      headercelldiv[i].style.height = 'auto';
+    };
   }
   openUploadModalComponent() {
     const modalRef = this.modalService.open(UploadFileComponent, { size: 'md', backdrop: 'static', keyboard: false });
@@ -280,8 +251,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   loadKPIData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
-      this.type  = res.type
       this.typeText = res.typeText
+      this.type  = res.type
       this.kpi = res.kpi;
       this.policy = res.policy;
       this.pic = res.pic;
@@ -420,8 +391,9 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
     const updatePDCA = this.gridData;
-    console.log(updatePDCA);
+
     const dataSource = this.grid.dataSource as Action[];
+    console.log(dataSource);
     const actions = dataSource.map(x => {
       return {
         id: x.id,
@@ -435,6 +407,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         modifiedTime: null
       }
     })
+
     const request = {
       target: this.target,
       targetYTD: this.targetYTD,

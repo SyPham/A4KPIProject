@@ -174,26 +174,72 @@
 
     <div class="row">
       <div class="col-12">
-        <ejs-grid #grid [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [editSettings]='editSettings'
-        gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' >
-        <e-columns>
-          <e-column field='#' headerText='#' [allowEditing]='false' textAlign='Center' headerTextAlign='Center' width=30 type='number'>
-            <ng-template #template let-data>
-              {{NO(data.index)}}
-            </ng-template>
-          </e-column>
-          <e-column field='content' headerText='A' [columns]='contentColumns'  type='string'>
-            <ng-template #editTemplate let-data>
-              <textarea type="text"   class="form-control" [value]="data.content" name="A" style="text-align:left; height: 350px;"></textarea>
-            </ng-template>
+        <ejs-grid #grid id='Grid' [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [editSettings]='editSettings'
+          gridLines='Both' (dataBound)="dataBound($event)" [toolbar]='toolbarOptions' [pageSettings]='pageSettings' >
+          <e-columns>
+            <e-column field='#' headerText='#' [allowEditing]='false' textAlign='Center' headerTextAlign='Center' width=30 type='number'>
+              <ng-template #template let-data>
+                {{NO(data.index)}}
+              </ng-template>
+            </e-column>
+            <e-column field='content' headerText='A' textAlign='Center'  type='string'>
+              <ng-template #headerTemplate let-data>
+                <span>
+                    <tr>
+                      <th>
+                        A
+                      </th>
+                    </tr>
+                    <hr>
+                    <tr>
+                      <th>
+                        計劃執行
+                      </th>
+                    </tr>
+                 </span>
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <textarea type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left"></textarea>
+              </ng-template>
 
-          </e-column>
-          <e-column field='target'  headerText='Target' [columns]='targetColumns' textAlign='Center' width=80  type='string'>
-          </e-column>
-          <e-column field='deadline' headerText='Deadline' [columns]='deadlineColumns' textAlign='Center'   >
-          </e-column>
-        </e-columns>
-      </ejs-grid>
+            </e-column>
+            <e-column field='target'  headerText='Target'  textAlign='Center' width=80  type='string'>
+              <ng-template #headerTemplate let-data>
+                <span>
+                    <tr>
+                      <th>
+                        Target
+                      </th>
+                    </tr>
+                    <hr>
+                    <tr>
+                      <th>
+                        目標值
+                      </th>
+                    </tr>
+                 </span>
+              </ng-template>
+            </e-column>
+            <e-column field='deadline' headerText='Deadline' type='date' format='MM/dd/yyyy' [edit]='dpParams' editType='datepickeredit' textAlign='Center'   >
+              <ng-template #headerTemplate let-data>
+                <span>
+                    <tr>
+                      <th>
+                        Deadline
+                      </th>
+                    </tr>
+                    <hr>
+                    <tr>
+                      <th>
+                        完成期限
+                      </th>
+                    </tr>
+                 </span>
+              </ng-template>
+            </e-column>
+          </e-columns>
+        </ejs-grid>
+
 
       </div>
 
