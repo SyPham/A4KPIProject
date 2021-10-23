@@ -195,7 +195,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    console.log(args.item.id);
+    console.log(args);
     if (this.currentLevel === 3) {
       args.cancel = true;
       this.alertify.warning("Currently, you cannot create KPIs smaller than this level");

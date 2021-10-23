@@ -1,3 +1,4 @@
+import { EnvService } from './../../../../../_core/_service/env.service';
 import { environment } from './../../../../../../environments/environment';
 import { UploadFileComponent } from './../upload-file/upload-file.component';
 import { DatePipe } from '@angular/common';
@@ -68,7 +69,10 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     private datePipe: DatePipe,
     private alertify: AlertifyService,
     public modalService: NgbModal,
-  ) { }
+    private env: EnvService
+  ) {
+    this.base = this.env.apiUrl
+   }
   ngOnDestroy(): void {
     this.subscription.forEach(item => item.unsubscribe());
   }
@@ -444,10 +448,9 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDownloadFiles() {
-    this.files = [];
-    this.filesLeft = [];
-    this.filesRight = [];
     this.todolist2Service.getDownloadFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {
+      console.log('getDownloadFiles',res);
+      this.files = [];
       const files = res as any || [];
       this.files = files.map(x=> {
         return {
@@ -455,6 +458,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
           path: this.base + x.path
         }
       });
+      this.filesLeft = [];
+      this.filesRight = [];
       let i = 0;
       for (const item of this.files) {
         i++;

@@ -1,3 +1,4 @@
+import { EnvService } from './../../../../../_core/_service/env.service';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +20,7 @@ export class UploadFileComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     public service: Todolist2Service,
+    public env: EnvService
 
     ) { }
   files = [
@@ -31,8 +33,8 @@ export class UploadFileComponent implements OnInit {
   ngOnInit() {
     this.loadData();
     this.path = {
-      saveUrl: `${this.base}UploadFile/Save?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`,
-      removeUrl: `${this.base}UploadFile/remove?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`
+      saveUrl: `${this.env.apiUrl}UploadFile/Save?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`,
+      removeUrl: `${this.env.apiUrl}UploadFile/remove?kpiId=${this.data.id}&uploadTime=${this.currentTime.toLocaleDateString()}`
 
     }
     this.dropElement = document.getElementsByClassName('control_wrapper')[0] as HTMLElement;
@@ -53,7 +55,12 @@ loadData() {
 }
 beforeUpload(args) {
   console.log(args);
-  args.statusText = args.response.statusText;
+  if(args.response.statusCode == 400) {
+    args.statusText = "不允許的文件類型。允許的文件類型: Excel & Word";
+  }else {
+
+    args.statusText = args.response.statusText;
+  }
 }
 public onSelected(args : SelectedEventArgs) : void {
   args.filesData.splice(5);
