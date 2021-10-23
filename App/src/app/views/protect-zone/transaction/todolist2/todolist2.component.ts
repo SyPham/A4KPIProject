@@ -1,3 +1,5 @@
+import { PdcaStringTypeComponent } from './pdcaStringType/pdcaStringType.component';
+import { PlanStringTypeComponent } from './planStringType/planStringType.component';
 import { PdcaComponent } from './pdca/pdca.component';
 import { PlanComponent } from './plan/plan.component';
 import { PerformanceService } from './../../../../_core/_service/performance.service';
@@ -229,21 +231,43 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
 
   openActionModalComponent(data) {
-    const modalRef = this.modalService.open(PlanComponent, { size: 'xl', backdrop: 'static', keyboard: false });
-    modalRef.componentInstance.data = data;
-    modalRef.componentInstance.currentTime = this.currentTime;
+    console.log('openActionModalComponent',data);
+    if(data.typeText !== 'string') {
+      const modalRef = this.modalService.open(PlanComponent, { size: 'xl', backdrop: 'static', keyboard: false });
+      modalRef.componentInstance.data = data;
+      modalRef.componentInstance.currentTime = this.currentTime;
 
-    modalRef.result.then((result) => {
-    }, (reason) => {
-    });
+      modalRef.result.then((result) => {
+      }, (reason) => {
+      });
+    } else {
+      const modalRef = this.modalService.open(PlanStringTypeComponent, { size: 'xl', backdrop: 'static', keyboard: false });
+      modalRef.componentInstance.data = data;
+      modalRef.componentInstance.currentTime = this.currentTime;
+
+      modalRef.result.then((result) => {
+      }, (reason) => {
+      });
+    }
   }
   openUpdatePdcaModalComponent(data) {
-    const modalRef = this.modalService.open(PdcaComponent, { size: 'xxl', backdrop: 'static', keyboard: false });
-    modalRef.componentInstance.data = data;
-    modalRef.componentInstance.currentTime = this.currentTime;
-    modalRef.result.then((result) => {
-    }, (reason) => {
-    });
+    console.log('openUpdatePdcaModalComponent',data);
+    if(data.typeText !== 'string') {
+      const modalRef = this.modalService.open(PdcaComponent, { size: 'xxl', backdrop: 'static', keyboard: false });
+      modalRef.componentInstance.data = data;
+      modalRef.componentInstance.currentTime = this.currentTime;
+      modalRef.result.then((result) => {
+      }, (reason) => {
+      });
+    } else {
+      const modalRef = this.modalService.open(PdcaStringTypeComponent, { size: 'xxl', backdrop: 'static', keyboard: false });
+      modalRef.componentInstance.data = data;
+      modalRef.componentInstance.currentTime = this.currentTime;
+      modalRef.result.then((result) => {
+      }, (reason) => {
+      });
+    }
+
   }
   openSelfScoreModalComponent(data) {
     // const modalRef = this.modalService.open(SelfScoreComponent, { size: 'xl', backdrop: 'static' });

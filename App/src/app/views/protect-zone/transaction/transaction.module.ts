@@ -1,3 +1,5 @@
+import { PdcaStringTypeComponent } from './todolist2/pdcaStringType/pdcaStringType.component';
+import { PlanStringTypeComponent } from './todolist2/planStringType/planStringType.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { UploadFileComponent } from './todolist2/upload-file/upload-file.component';
 import { PdcaComponent } from './todolist2/pdca/pdca.component';
@@ -96,7 +98,9 @@ loadCldr(
     NgTemplateNameDirective,
     UploadKpiComponent,
     PlanComponent,
+    PlanStringTypeComponent,
     PdcaComponent,
+    PdcaStringTypeComponent,
     UploadFileComponent
   ],
   imports: [

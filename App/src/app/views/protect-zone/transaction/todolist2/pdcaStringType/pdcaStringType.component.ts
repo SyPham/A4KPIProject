@@ -12,12 +12,13 @@ import { Subscription } from 'rxjs';
 declare var $: any;
 
 @Component({
-  selector: 'app-pdca',
-  templateUrl: './pdca.component.html',
-  styleUrls: ['./pdca.component.scss'],
+  selector: 'app-pdcaStringType',
+  templateUrl: './pdcaStringType.component.html',
+  styleUrls: ['./pdcaStringType.component.scss'],
   providers: [DatePipe]
 })
-export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy {
+
   @Input() data: any;
   @Input() currentTime: any;
   @ViewChild('grid') public grid: GridComponent;
@@ -466,4 +467,5 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
+
 }

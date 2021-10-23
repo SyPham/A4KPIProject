@@ -18,77 +18,9 @@
         </p>
 
         <div class="d-flex align-items-start">
-          <table  class="table table-bordered" style="width: 300px; margin-right: 50px;">
-            <tbody>
-              <tr>
-                <th scope="row">{{"This month Performance" | translate}}
-                </th>
-                <td>
-                  <div class="input-group" style="width: 100px;">
-                    <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeThisMonthPerformance($event)" [(ngModel)]="performanceValue" >
-                    <div class="input-group-append" *ngIf="type === 1">
-                      <span class="input-group-text" >%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">{{"This month Target" | translate}}
-                </th>
-                <td>
-                  <div class="input-group" style="width: 100px;">
-                    <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeThisMonthTarget($event)" [(ngModel)]="thisMonthTargetValue" >
-                    <div class="input-group-append" *ngIf="type === 1">
-                      <span class="input-group-text" >%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">{{"Next month Target" | translate}}
-                </th>
-                <td>
-                  <div class="input-group" style="width: 100px;">
-                    <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeNextMonthTarget($event)" [(ngModel)]="nextMonthTargetValue" >
-                    <div class="input-group-append" *ngIf="type === 1">
-                      <span class="input-group-text" >%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
 
-          <table  class="table table-bordered" style="width: 300px; margin-right: 50px;">
-            <tbody>
-              <tr>
-                <th scope="row">{{"This month YTD" | translate}}
 
-                </th>
-                <td>
-                  <div class="input-group" style="width: 100px;">
-                    <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeThisMonthYTD($event)" [(ngModel)]="thisMonthYTDValue" >
-                    <div class="input-group-append" *ngIf="type === 1">
-                      <span class="input-group-text" >%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">{{"Target YTD" | translate}}
-                </th>
-                <td>
-                  <div class="input-group" style="width: 100px;">
-                    <input type="text" class="form-control" style="pointer-events: none;" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="ytdValue" >
-                    <div class="input-group-append" *ngIf="type === 1">
-                      <span class="input-group-text" >%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
 
-            </tbody>
-          </table>
         </div>
       </div>
 
