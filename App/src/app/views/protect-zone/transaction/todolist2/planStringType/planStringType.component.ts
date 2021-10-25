@@ -295,8 +295,8 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
       this.kpi = res.kpi;
       this.target = res.target;
       this.targetYTD = res.targetYTD;
-      this.targetValue = this.target?.value;
-      this.targetYTDValue = this.targetYTD?.value;
+      this.targetValue = this.target?.value !== 0 ? this.target?.value : "";
+      this.targetYTDValue = this.targetYTD?.value !== 0 ? this.targetYTD?.value : "";
     });
   }
 

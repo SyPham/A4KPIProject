@@ -273,11 +273,11 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = this.thisMonthPerformance?.performance;
+      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : "";
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
-      this.nextMonthTargetValue = this.nextMonthTarget?.value;
+      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  "";
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = this.thisMonthYTD?.ytd
+      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : ""
     });
   }
   loadStatusData() {
@@ -297,7 +297,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   validate(submitted) {
-    if (this.typeText !== 'string') {
+    if (this.typeText !== 'string' && submitted === true) {
 
       if (!this.thisMonthTargetValue) {
         this.alertify.warning('Please input this month target');
@@ -367,7 +367,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   post(submitted) {
 
     if (this.validate(submitted) == false) return;
-    if(this.typeText !== 'string') {
+
+    if(this.typeText !== 'string' && submitted === true) {
       this.target = {
         id: this.thisMonthTarget.id,
         value: this.thisMonthTargetValue,
@@ -393,7 +394,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         createdBy: this.thisMonthYTD.createdBy,
         submitted: submitted
       };
-
       this.nextMonthTarget = {
         id: 0,
         value: 0,

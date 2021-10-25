@@ -165,7 +165,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
   }
   validate(isSubmit) {
-    if(this.typeText !== 'string') {
+    if(this.typeText !== 'string' && isSubmit === true) {
       if (!this.target) {
         this.alertify.warning('Please input next month target');
         return false;
@@ -196,7 +196,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
     return true;
   }
   actionBegin(args) {
-    console.log(args);
     if(args.requestType === 'save') {
 
       for (let item in this.grid.dataSource) {
@@ -209,9 +208,33 @@ export class PlanComponent implements OnInit, AfterViewInit {
     }
 
   }
-  post(callBack, isSubmit = true) {
+
+  post(callBack, isSubmit) {
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
+    if(isSubmit === false && this.target === null) {
+      this.target = {
+        id: 0,
+        value: 0,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: true
+      };
+      this.targetYTD = {
+        id: 0,
+        value: 0,
+        createdTime: new Date().toISOString(),
+        modifiedBy: null,
+        modifiedTime: null,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id
+      };
+    }
     const actions = dataSource.map(x => {
       return {
         id: x.id,
@@ -231,7 +254,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-
+    console.log(request);
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {
         if (res.success === true) {
@@ -266,8 +289,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
       this.kpi = res.kpi;
       this.target = res.target;
       this.targetYTD = res.targetYTD;
-      this.targetValue = this.target?.value;
-      this.targetYTDValue = this.targetYTD?.value;
+
+      this.targetValue = this.target?.value !== 0 ? this.target?.value : "";
+      this.targetYTDValue = this.targetYTD?.value !== 0 ? this.targetYTD?.value : "";
     });
   }
 

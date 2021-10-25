@@ -270,11 +270,11 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = this.thisMonthPerformance?.performance;
+      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : "";
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
-      this.nextMonthTargetValue = this.nextMonthTarget?.value;
+      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  "";
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = this.thisMonthYTD?.ytd
+      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : ""
     });
   }
   loadStatusData() {
