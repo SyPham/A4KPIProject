@@ -144,13 +144,14 @@ namespace A4KPI.Services
 
             var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId).ProjectTo<ActionDto>(_configMapper).ToListAsync();
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
-            var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
+            var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            //var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
             var typeText = _repoType.FindAll().FirstOrDefaultAsync(x => x.Id == kpiModel.TypeId).Result.Description;
             var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
             var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == DateTime.Now.Year).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
-            var policy = policyModel.Name;
+            var policy = parentKpi.Name;
             return new
             {
                 Actions = actions,
@@ -183,10 +184,11 @@ namespace A4KPI.Services
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
             var type = _repoKPINew.FindAll().FirstOrDefault(x => x.Id == kpiNewId).TypeId;
             var typeText = _repoType.FindAll().FirstOrDefault(x => x.Id == type).Description;
-            var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
+            var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            //var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
             var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
-            var policy = policyModel.Name;
+            var policy = parentKpi.Name;
 
             return new
             {
@@ -292,6 +294,7 @@ namespace A4KPI.Services
             {
                 Id = x.Id,
                 Topic = x.Name,
+                Level = x.Level,
                 TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "Action",
                 CurrentTarget = false,
@@ -303,6 +306,7 @@ namespace A4KPI.Services
             {
                 Id = x.Id,
                 Topic = x.Name,
+                Level = x.Level,
                 TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "UpdatePDCA",
                 CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false)),
@@ -323,7 +327,6 @@ namespace A4KPI.Services
 
             try
             {
-
                 var targetYTD = _mapper.Map<TargetYTD>(model.TargetYTD);
                 var target = _mapper.Map<Target>(model.Target);
                 var currentTime = model.CurrentTime;
@@ -466,6 +469,7 @@ namespace A4KPI.Services
                         var doItem = await _repoDo.FindAll(x => x.Id == item.DoId).FirstOrDefaultAsync();
                         doItem.Content = item.DoContent;
                         doItem.Achievement = item.Achievement;
+                        doItem.ReusltContent = item.ResultContent;
                         updatedoList.Add(doItem);
                     }
 

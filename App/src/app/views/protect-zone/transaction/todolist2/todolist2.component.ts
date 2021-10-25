@@ -231,7 +231,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
 
   openActionModalComponent(data) {
-    console.log('openActionModalComponent',data);
     if(data.typeText !== 'string') {
       const modalRef = this.modalService.open(PlanComponent, { size: 'xl', backdrop: 'static', keyboard: false });
       modalRef.componentInstance.data = data;
@@ -251,7 +250,6 @@ export class Todolist2Component implements OnInit, OnDestroy {
     }
   }
   openUpdatePdcaModalComponent(data) {
-    console.log('openUpdatePdcaModalComponent',data);
     if(data.typeText !== 'string') {
       const modalRef = this.modalService.open(PdcaComponent, { size: 'xxl', backdrop: 'static', keyboard: false });
       modalRef.componentInstance.data = data;

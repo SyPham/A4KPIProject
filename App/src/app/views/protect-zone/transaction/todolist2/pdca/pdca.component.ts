@@ -350,6 +350,20 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return true;
   }
+  actionBegin(args) {
+    console.log(args);
+    if(args.requestType === 'save') {
+
+      for (let item in this.grid.dataSource) {
+        if(this.grid.dataSource[item].id === args.data.id) {
+          this.grid.dataSource[item].content = args.data.content
+          this.grid.dataSource[item].target = args.data.target
+          this.grid.dataSource[item].deadline = args.data.deadline
+        }
+      }
+    }
+
+  }
   post(submitted) {
 
     if (this.validate(submitted) == false) return;

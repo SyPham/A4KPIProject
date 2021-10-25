@@ -38,6 +38,9 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
   targetValue = null;
   targetYTDValue = null;
   typeText: any;
+  contentText: any;
+  targetText: any;
+  deadlineText: any;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -197,9 +200,48 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
 
     return true;
   }
+  actionBegin(args) {
+    console.log(args);
+    if(args.requestType === 'save') {
+
+      for (let item in this.grid.dataSource) {
+        if(this.grid.dataSource[item].id === args.data.id) {
+          this.grid.dataSource[item].content = args.data.content
+          this.grid.dataSource[item].target = args.data.target
+          this.grid.dataSource[item].deadline = args.data.deadline
+        }
+      }
+    }
+
+  }
   post(callBack, isSubmit = true) {
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
+    console.log(dataSource);
+    if(this.typeText === 'string') {
+      this.target = {
+        id: 0,
+        value: 0,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: true
+      };
+      this.targetYTD = {
+        id: 0,
+        value: 0,
+        createdTime: new Date().toISOString(),
+        modifiedBy: null,
+        modifiedTime: null,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id
+      };
+    }
+
     const actions = dataSource.map(x => {
       return {
         id: x.id,

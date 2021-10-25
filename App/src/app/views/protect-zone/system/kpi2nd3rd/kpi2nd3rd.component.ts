@@ -104,10 +104,10 @@ export class Kpi2nd3rdComponent implements OnInit {
       this.alertify.error('Please key in kpi name! <br> Vui lòng nhập KPI!');
       return false;
     }
-    if (this.policyId === 0) {
-      this.alertify.error('Please select Policy !');
-      return false;
-    }
+    // if (this.policyId === 0) {
+    //   this.alertify.error('Please select Policy !');
+    //   return false;
+    // }
     if (this.typeId === 0) {
       this.alertify.error('Please select a Type! ');
       return false;

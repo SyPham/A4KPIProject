@@ -195,6 +195,20 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
     return true;
   }
+  actionBegin(args) {
+    console.log(args);
+    if(args.requestType === 'save') {
+
+      for (let item in this.grid.dataSource) {
+        if(this.grid.dataSource[item].id === args.data.id) {
+          this.grid.dataSource[item].content = args.data.content
+          this.grid.dataSource[item].target = args.data.target
+          this.grid.dataSource[item].deadline = args.data.deadline
+        }
+      }
+    }
+
+  }
   post(callBack, isSubmit = true) {
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
@@ -244,6 +258,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   loadData() {
     this.gridData = [];
     this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {
+      console.log(res);
       this.typeText = res.typeText;
       this.actions = res.actions as Action[] || [];
       this.pic = res.pic;

@@ -43,7 +43,7 @@
                 {{"KPI Name 2" | translate}}
               </ng-template>
             </e-column>
-            <e-column field="policyName" headerText="Policy" textAlign='Center'>
+            <!-- <e-column field="policyName" headerText="Policy" textAlign='Center'>
               <ng-template #headerTemplate let-data>
                 {{"PolicyNew" | translate}}
               </ng-template>
@@ -53,7 +53,7 @@
               <ng-template #editTemplate let-data>
                 <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist>
               </ng-template>
-            </e-column>
+            </e-column> -->
             <e-column field="typeName" headerText="Type" textAlign='Center'>
               <ng-template #headerTemplate let-data>
                 {{"TypeNew" | translate}}
@@ -133,10 +133,10 @@
 
               </div>
               <div class="col-md-6">
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="">Policy</label>
                   <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                   <label for="">Type</label>

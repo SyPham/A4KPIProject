@@ -26,8 +26,18 @@
 
   <div class="row">
     <div class="col-12">
-      <ejs-grid #grid [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true' allowTextWrap='true'
-      gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [editSettings]='editSettings' [allowExcelExport]='true'>
+      <ejs-grid #grid
+      [dataSource]='actions'
+      [allowPaging]='true'
+      [allowResizing]='true'
+      [showColumnMenu]='true'
+      allowTextWrap='true'
+      gridLines='Both'
+      [toolbar]='toolbarOptions'
+      [pageSettings]='pageSettings'
+      (actionBegin)='actionBegin($event)'
+      [editSettings]='editSettings'
+      [allowExcelExport]='true'>
       <e-columns>
         <e-column field='#' headerText='#' [allowEditing]='false' textAlign='Center' width=80 type='number'>
           <ng-template #template let-data>
@@ -35,6 +45,9 @@
           </ng-template>
         </e-column>
         <e-column field='content' headerText='{{"Content" | translate}}' type='string'>
+          <ng-template #editTemplate let-data>
+            <textarea type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left"></textarea>
+          </ng-template>
         </e-column>
         <e-column field='target' headerText='{{"Target" | translate}}' type='string'>
         </e-column>

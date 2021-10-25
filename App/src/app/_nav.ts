@@ -47,33 +47,33 @@ export const navItems: INavData[] = [
         icon: 'icon-puzzle'
       },
 
-      {
-        name: '1.2 項目',
-        url: '/system/policy',
-        icon: 'icon-puzzle'
-      },
+      // {
+      //   name: '1.2 項目',
+      //   url: '/system/policy',
+      //   icon: 'icon-puzzle'
+      // },
       // {
       //   name: '1.3 建立KPI',
       //   url: '/system/kpi-create',
       //   icon: 'icon-puzzle'
       // },
       {
-        name: '1.3 建立一階KPI',
+        name: '1.2 建立一階KPI',
         url: '/system/kpi-create2',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 建立二階&三階KPI',
+        name: '1.3 建立二階&三階KPI',
         url: '/system/kpi-2nd3rd',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.5 查看所有KPI',
+        name: '1.4 查看所有KPI',
         url: '/system/view-kpi',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.6 設定更新月份',
+        name: '1.5 設定更新月份',
         url: '/system/setting-monthly',
         icon: 'icon-puzzle'
       },
@@ -336,33 +336,33 @@ export const navItemsEN: INavData[] = [
         icon: 'icon-puzzle'
       },
 
-      {
-        name: '1.2 Policy',
-        url: '/system/policy',
-        icon: 'icon-puzzle'
-      },
+      // {
+      //   name: '1.2 Policy',
+      //   url: '/system/policy',
+      //   icon: 'icon-puzzle'
+      // },
       // {
       //   name: '1.3 KPI Create',
       //   url: '/system/kpi-create',
       //   icon: 'icon-puzzle'
       // },
       {
-        name: '1.3 KPI Create',
+        name: '1.2 KPI Create',
         url: '/system/kpi-create2',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.4 KPI 2nd & 3rd Create',
+        name: '1.3 KPI 2nd & 3rd Create',
         url: '/system/kpi-2nd3rd',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.5 View KPI',
+        name: '1.4 View KPI',
         url: '/system/view-kpi',
         icon: 'icon-puzzle'
       },
       {
-        name: '1.6 Monthly Setting',
+        name: '1.5 Monthly Setting',
         url: '/system/setting-monthly',
         icon: 'icon-puzzle'
       },

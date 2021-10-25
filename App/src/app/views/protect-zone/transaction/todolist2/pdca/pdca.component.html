@@ -174,8 +174,14 @@
 
     <div class="row">
       <div class="col-12">
-        <ejs-grid #grid id='Grid' [dataSource]='actions' [allowPaging]='true' [allowResizing]='true' [editSettings]='editSettings'
-          gridLines='Both' (dataBound)="dataBound($event)" [toolbar]='toolbarOptions' [pageSettings]='pageSettings' >
+        <ejs-grid #grid id='Grid'
+        [dataSource]='actions'
+        [allowPaging]='true'
+        [allowResizing]='true'
+        [editSettings]='editSettings'
+        (actionBegin)='actionBegin($event)'
+          gridLines='Both'
+          (dataBound)="dataBound($event)" [toolbar]='toolbarOptions' [pageSettings]='pageSettings' >
           <e-columns>
             <e-column field='#' headerText='#' [allowEditing]='false' textAlign='Center' headerTextAlign='Center' width=30 type='number'>
               <ng-template #template let-data>

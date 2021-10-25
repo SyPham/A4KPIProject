@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (currentLang) {
         localStorage.setItem('lang', currentLang);
       } else {
-        localStorage.setItem('lang', 'zh');
+        localStorage.setItem('lang', 'en');
       }
 
       if (this.remember) {

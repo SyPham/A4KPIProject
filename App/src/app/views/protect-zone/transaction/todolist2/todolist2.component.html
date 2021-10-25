@@ -51,9 +51,9 @@
         </ng-template>
         <ng-template #template let-data>
           <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.type == 'Action'"
+            <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.type == 'Action' && data.level !== 1"
               (click)='openActionModalComponent(data)'>Action</button>
-            <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.type == 'UpdatePDCA'"
+            <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.type == 'UpdatePDCA' && data.level !== 1"
               (click)='openUpdatePdcaModalComponent(data)'>Update PDCA</button>
             <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="data.isDisplaySelfScore"
               (click)='openSelfScoreModalComponent(data)'>Self-score</button>
