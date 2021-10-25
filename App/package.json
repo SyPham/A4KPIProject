@@ -115,6 +115,7 @@
     "ngx-pretty-checkbox": "^1.2.1",
     "ngx-scrolltop": "^2.4.0",
     "ngx-spinner": "^10.0.1",
+    "ngx-textarea-autosize": "^2.0.3",
     "popper.js": "1.12.9",
     "pretty-checkbox": "^3.0.3",
     "rxjs": "^6.6.6",

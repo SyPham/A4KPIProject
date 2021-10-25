@@ -12,12 +12,14 @@ import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { forkJoin } from 'rxjs';
 import { isNumeric } from 'rxjs/util/isNumeric';
 declare var $: any;
+
 @Component({
   selector: 'app-plan',
   templateUrl: './plan.component.html',
   styleUrls: ['./plan.component.scss'],
   providers: [DatePipe]
 })
+
 export class PlanComponent implements OnInit, AfterViewInit {
   @Input() data: any;
   @ViewChild('grid') grid: GridComponent;
@@ -176,11 +178,11 @@ export class PlanComponent implements OnInit, AfterViewInit {
       }
 
       if (isNumeric(this.targetValue) === false){
-        this.alertify.warning('Next month target value is number');
+        this.alertify.warning('請填寫下個月目標 (不可含有符號)');
         return false;
       }
       if (isNumeric(this.targetYTDValue) === false){
-        this.alertify.warning('Target YTD value is number');
+        this.alertify.warning('請填寫目標YTD (不可含有符號)');
         return false;
       }
     }

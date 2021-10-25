@@ -61,6 +61,12 @@
           </ng-template>
         </e-column>
         <e-column field='content' headerText='{{"Content" | translate}}' type='string'>
+          <ng-template #template let-data>
+            <textarea autosize type="text" class="form-control" readonly [value]="data.content" name="content"  style="text-align:left;" ></textarea>
+          </ng-template>
+          <ng-template #editTemplate let-data>
+            <textarea autosize type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left;"></textarea>
+          </ng-template>
         </e-column>
         <e-column field='target' headerText='{{"Target" | translate}}' type='string'>
         </e-column>

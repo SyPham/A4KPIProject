@@ -2,7 +2,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridComponent, IEditCell } from '@syncfusion/ej2-angular-grids';
+import { GridComponent, IEditCell, TextWrapSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { Action } from 'src/app/_core/_model/action';
 import { Target } from 'src/app/_core/_model/target';
@@ -41,6 +41,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
   contentText: any;
   targetText: any;
   deadlineText: any;
+  public wrapSettings: TextWrapSettingsModel;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -56,6 +57,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.wrapSettings = { wrapMode: 'Content' };
     this.loadData();
     this.dpParams = { params: {
       value: new Date() ,

@@ -1,7 +1,6 @@
 import { Directive, AfterViewInit, ElementRef, OnDestroy, OnChanges, HostListener, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { IScanner } from 'src/app/_core/_model/IToDoList';
 
 @Directive({
   // tslint:disable-next-line:directive-selector

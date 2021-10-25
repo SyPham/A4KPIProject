@@ -1,3 +1,4 @@
+import { ContentHeightDirective } from './../../../_core/_directive/content-height.directive';
 import { PdcaStringTypeComponent } from './todolist2/pdcaStringType/pdcaStringType.component';
 import { PlanStringTypeComponent } from './todolist2/planStringType/planStringType.component';
 import { MeetingComponent } from './meeting/meeting.component';
@@ -44,8 +45,7 @@ import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-
-
+import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -101,9 +101,11 @@ loadCldr(
     PlanStringTypeComponent,
     PdcaComponent,
     PdcaStringTypeComponent,
+    ContentHeightDirective,
     UploadFileComponent
   ],
   imports: [
+    TextareaAutosizeModule,
     CommonModule,
     TooltipModule,
     FormsModule,

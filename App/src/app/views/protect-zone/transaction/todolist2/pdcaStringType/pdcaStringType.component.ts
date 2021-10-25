@@ -270,11 +270,11 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : "";
+      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : null;
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
-      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  "";
+      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  null;
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : ""
+      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : null
     });
   }
   loadStatusData() {
@@ -364,49 +364,32 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   post(submitted) {
 
     if (this.validate(submitted) == false) return;
-    if(this.typeText !== 'string') {
-      this.target = {
-        id: this.thisMonthTarget.id,
-        value: this.thisMonthTargetValue,
-        performance: this.performanceValue ?? 0,
-        kPIId: this.data.id,
-        targetTime: this.thisMonthYTD.targetTime,
-        createdTime: this.thisMonthYTD.createdTime,
-        modifiedTime: this.thisMonthYTD.modifiedTime,
-        yTD: this.thisMonthYTDValue ?? 0,
-        createdBy: this.thisMonthYTD.createdBy,
-        submitted: submitted
-      };
-    } else {
-      this.target = {
-        id: this.thisMonthTarget.id,
-        value: this.thisMonthTargetValue,
-        performance: 0,
-        kPIId: this.data.id,
-        targetTime: this.thisMonthYTD.targetTime,
-        createdTime: this.thisMonthYTD.createdTime,
-        modifiedTime: this.thisMonthYTD.modifiedTime,
-        yTD: 0,
-        createdBy: this.thisMonthYTD.createdBy,
-        submitted: submitted
-      };
+    this.target = {
+      id: this.thisMonthTarget.id,
+      value: this.thisMonthTargetValue,
+      performance: 0,
+      kPIId: this.data.id,
+      targetTime: this.thisMonthYTD.targetTime,
+      createdTime: this.thisMonthYTD.createdTime,
+      modifiedTime: this.thisMonthYTD.modifiedTime,
+      yTD: 0,
+      createdBy: this.thisMonthYTD.createdBy,
+      submitted: submitted
+    };
 
-      this.nextMonthTarget = {
-        id: 0,
-        value: 0,
-        performance: 0,
-        kPIId: this.data.id,
-        targetTime: new Date().toISOString(),
-        createdTime: new Date().toISOString(),
-        modifiedTime: null,
-        yTD: 0,
-        createdBy: +JSON.parse(localStorage.getItem('user')).id,
-        submitted: false
-      };
-
-    }
+    this.nextMonthTarget = {
+      id: 0,
+      value: 0,
+      performance: 0,
+      kPIId: this.data.id,
+      targetTime: new Date().toISOString(),
+      createdTime: new Date().toISOString(),
+      modifiedTime: null,
+      yTD: 0,
+      createdBy: +JSON.parse(localStorage.getItem('user')).id,
+      submitted: false
+    };
     const updatePDCA = this.gridData;
-    console.log('updatePDCA',updatePDCA);
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
       return {

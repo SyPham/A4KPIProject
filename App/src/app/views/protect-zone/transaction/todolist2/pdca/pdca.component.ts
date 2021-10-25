@@ -239,7 +239,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gridData = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
-      console.log(res);
       this.gridData = res.data;
       this.result = res.result;
       this.content = this.result?.content;
@@ -266,18 +265,18 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   loadTargetData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
-      console.log(res);
+      console.log('loadTargetData',res);
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
       this.thisMonthTarget = res.thisMonthTarget;
       this.targetYTD = res.targetYTD;
       this.nextMonthTarget = res.nextMonthTarget;
 
-      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : "";
+      this.performanceValue = this.thisMonthPerformance?.performance !== 0 ? this.thisMonthPerformance?.performance : null;
       this.thisMonthTargetValue = this.thisMonthTarget?.value;
-      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  "";
+      this.nextMonthTargetValue = this.nextMonthTarget?.value !== 0 ? this.nextMonthTarget?.value :  null;
       this.ytdValue = this.targetYTD?.value;
-      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : ""
+      this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : null
     });
   }
   loadStatusData() {
@@ -351,7 +350,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
   actionBegin(args) {
-    console.log(args);
     if(args.requestType === 'save') {
 
       for (let item in this.grid.dataSource) {
@@ -368,7 +366,8 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.validate(submitted) == false) return;
 
-    if(this.typeText !== 'string' && submitted === true) {
+    if(submitted === true)
+    {
       this.target = {
         id: this.thisMonthTarget.id,
         value: this.thisMonthTargetValue,
@@ -380,21 +379,24 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         yTD: this.thisMonthYTDValue ?? 0,
         createdBy: this.thisMonthYTD.createdBy,
         submitted: submitted
-      };
-    } else {
+      }
+    };
+
+    if(submitted === false && this.nextMonthTarget === null)
+    {
       this.target = {
         id: this.thisMonthTarget.id,
         value: this.thisMonthTargetValue,
-        performance: 0,
+        performance: this.performanceValue ?? 0,
         kPIId: this.data.id,
         targetTime: this.thisMonthYTD.targetTime,
         createdTime: this.thisMonthYTD.createdTime,
         modifiedTime: this.thisMonthYTD.modifiedTime,
-        yTD: 0,
+        yTD: this.thisMonthYTDValue ?? 0,
         createdBy: this.thisMonthYTD.createdBy,
         submitted: submitted
-      };
-      this.nextMonthTarget = {
+      }
+        this.nextMonthTarget = {
         id: 0,
         value: 0,
         performance: 0,
@@ -406,10 +408,23 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         createdBy: +JSON.parse(localStorage.getItem('user')).id,
         submitted: false
       };
-
+    } else {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: this.performanceValue ?? 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: this.thisMonthYTDValue ?? 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      }
     }
+    console.log(this.target);
+    console.log(this.nextMonthTarget);
     const updatePDCA = this.gridData;
-    console.log('updatePDCA',updatePDCA);
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {
       return {
@@ -424,7 +439,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         modifiedTime: null
       }
     })
-    console.log('actions',actions);
+
     const request = {
       target: this.target,
       targetYTD: this.targetYTD,
@@ -463,7 +478,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getDownloadFiles() {
     this.todolist2Service.getDownloadFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {
-      console.log('getDownloadFiles',res);
       this.files = [];
       const files = res as any || [];
       this.files = files.map(x=> {

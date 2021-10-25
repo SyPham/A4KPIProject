@@ -3,3 +3,11 @@
   padding-bottom: 15px;
   padding-top: 15px;
 }
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: white;
+  border: none;
+  color: #000;
+  background-color: transparent;
+  outline: none;
+  resize: none;
+}
