@@ -56,7 +56,7 @@ loadData() {
 beforeUpload(args) {
   console.log(args);
   if(args.response.statusCode == 400) {
-    args.statusText = "不允許的文件類型。允許的文件類型: Excel & Word";
+    args.statusText = "File already exists ! 此檔案已存在，請更改檔案名稱、重新上傳！";
   }else {
 
     args.statusText = args.response.statusText;

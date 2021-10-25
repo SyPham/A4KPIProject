@@ -532,7 +532,7 @@
             "dropFilesHint": "或將文件放在此處",
             "invalidMaxFileSize": "檔案太大",
             "invalidMinFileSize": "檔案太小",
-            "invalidFileType": "不允許的文件類型",
+            "invalidFileType": "不允許的文件類型。允許的文件類型: Excel & Word",
             "uploadFailedMessage": "文件上傳失敗",
             "uploadSuccessMessage": "文件上傳成功",
             "removedSuccessMessage": "文件已成功刪除",
