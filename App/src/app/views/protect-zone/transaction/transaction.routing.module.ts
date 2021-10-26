@@ -1,3 +1,4 @@
+import { ChangePasswordComponent } from './change-password/change-password.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
@@ -51,6 +52,16 @@ const routes: Routes = [
           title: 'Meeting',
           breadcrumb: 'Meeting',
           functionCode: 'meeting'
+        },
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'change-password',
+        component: ChangePasswordComponent,
+        data: {
+          title: 'Change Password',
+          breadcrumb: 'Change Password',
+          functionCode: 'ChangePassword'
         },
         // canActivate: [AuthGuard]
       },

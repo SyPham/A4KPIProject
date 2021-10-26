@@ -384,6 +384,11 @@ export const navItemsEN: INavData[] = [
         url: '/transaction/meeting',
         icon: 'icon-cursor'
       },
+      {
+        name: '2.3 Change Password',
+        url: '/transaction/change-password',
+        icon: 'icon-cursor'
+      },
     ]
   },
   {

@@ -19,6 +19,7 @@ namespace A4KPI.Services
     {
         Task<OperationResult> LockAsync(int id);
         Task<AccountDto> GetByUsername(string username);
+        Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request);
         Task<object> GetAccounts();
     }
     public class AccountService : ServiceBase<Account, AccountDto>, IAccountService
@@ -53,6 +54,33 @@ namespace A4KPI.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// 
+        public async Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            var item = await _repo.FindByIdAsync(request.Id);
+            if (item == null)
+            {
+                return new OperationResult { StatusCode = HttpStatusCode.NotFound, Message = "Không tìm thấy tài khoản này! Not found the account", Success = false };
+            }
+            item.Password = request.NewPassword.ToEncrypt();
+            try
+            {
+                _repo.Update(item);
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "Successfully 成功地!",
+                    Success = true,
+                    Data = item
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
         public override async Task<OperationResult> AddAsync(AccountDto model)
         {
             try

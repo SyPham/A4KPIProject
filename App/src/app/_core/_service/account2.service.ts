@@ -30,5 +30,9 @@ export class Account2Service extends CURDService<Account> {
   getAccounts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.env.apiUrl}Account/GetAccounts`);
   }
-
+  changePassword(request): Observable<OperationResult> {
+    return this.http.put<OperationResult>(`${this.env.apiUrl}Account/changePassword`, request).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

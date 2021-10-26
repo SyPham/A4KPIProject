@@ -1,3 +1,4 @@
+import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ContentHeightDirective } from './../../../_core/_directive/content-height.directive';
 import { PdcaStringTypeComponent } from './todolist2/pdcaStringType/pdcaStringType.component';
 import { PlanStringTypeComponent } from './todolist2/planStringType/planStringType.component';
@@ -102,6 +103,7 @@ loadCldr(
     PdcaComponent,
     PdcaStringTypeComponent,
     ContentHeightDirective,
+    ChangePasswordComponent,
     UploadFileComponent
   ],
   imports: [

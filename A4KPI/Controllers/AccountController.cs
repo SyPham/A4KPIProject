@@ -65,5 +65,11 @@ namespace A4KPI.Controllers
             return Ok(await _service.GetWithPaginationsAsync(paramater));
         }
 
+        [HttpPut]
+        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            return StatusCodeResult(await _service.ChangePasswordAsync(request));
+        }
+
     }
 }
