@@ -25,7 +25,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://10.4.5.174:58"
+      "applicationUrl": "http://10.4.5.132:58"
     },
     "API": {
       "commandName": "Executable"
