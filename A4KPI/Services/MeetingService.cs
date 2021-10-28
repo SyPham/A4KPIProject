@@ -91,9 +91,9 @@ namespace A4KPI.Services
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 Level = x.Level,
                 TypeText = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Description ?? "",
-                FactName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOC.FindById(x.FactId).Name : null)) : null,
-                CenterName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOC.FindById(x.CenterId).Name : null)) : null,
-                DeptName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOC.FindById(x.DeptId).Name : null)) : null
+                FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOC.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOC.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOC.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
 
             }).ToList();
             var model = data.Select(x => new KPINewDto
@@ -109,7 +109,7 @@ namespace A4KPI.Services
                 CenterName = x.CenterName,
                 DeptName = x.DeptName,
 
-            }).Where(x => x.Level != 1).ToList();
+            }).Where(x => x.Level != 1).OrderBy(x => x.Level).ToList();
             return model;
         }
         public async Task<ChartDto> GetChart(int kpiId)
