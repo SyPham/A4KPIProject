@@ -79,6 +79,7 @@ loadCldr(
     } else if (lang === 'zh'){
       defaultLang = 'zh';
     }
+
 @NgModule({
   declarations: [
     ObjectiveComponent,

@@ -198,7 +198,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     return true;
   }
   actionBegin(args) {
-    if(args.requestType === 'save') {
+    if(args.requestType === 'save' && args.action === 'edit') {
 
       for (let item in this.grid.dataSource) {
         if(this.grid.dataSource[item].id === args.data.id) {
@@ -208,9 +208,23 @@ export class PlanComponent implements OnInit, AfterViewInit {
         }
       }
     }
-
+    if (args.requestType === 'delete') {
+      this.delete(args.data[0].id);
+    }
   }
-
+  delete(id) {
+    this.todolist2Service.deleteAc(id).subscribe(
+      (res) => {
+        if (res === true) {
+          // this.alertify.success(MessageConstants.DELETED_OK_MSG);
+          this.loadData();
+        } else {
+           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+        }
+      },
+      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+    );
+  }
   post(callBack, isSubmit) {
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];

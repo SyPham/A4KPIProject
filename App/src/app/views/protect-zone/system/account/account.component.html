@@ -64,7 +64,7 @@
                 </ng-template>
               </ng-template>
               <ng-template #editTemplate let-data>
-                <ejs-dropdownlist [(ngModel)]='factId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Factory' [dataSource]='dataOclv3'></ejs-dropdownlist>
+                <ejs-dropdownlist popupWidth='150px'  (change)='filterFact($event)' [(ngModel)]='factId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Factory' [dataSource]='dataOclv3'></ejs-dropdownlist>
               </ng-template>
             </e-column>
             <e-column field="centerName" textAlign='Center' width="100" headerText="Center">
@@ -80,7 +80,7 @@
                 </ng-template>
               </ng-template>
               <ng-template #editTemplate let-data>
-                <ejs-dropdownlist [(ngModel)]='centerId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Center' [dataSource]='dataOclv4'></ejs-dropdownlist>
+                <ejs-dropdownlist popupWidth='150px'  (change)='filterCenter($event)' [(ngModel)]='centerId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Center' [dataSource]='dataOclv4'></ejs-dropdownlist>
               </ng-template>
             </e-column>
             <e-column field="deptName" textAlign='Center' width="100" headerText="Dept">
@@ -96,7 +96,7 @@
                 </ng-template>
               </ng-template>
               <ng-template #editTemplate let-data>
-                <ejs-dropdownlist [(ngModel)]='deptId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Dept.' [dataSource]='dataOclv5'></ejs-dropdownlist>
+                <ejs-dropdownlist popupWidth='150px' id='ddlelement'  [(ngModel)]='deptId' [allowFiltering]='true'  [fields]="ocFields" placeholder='Select a Dept.' [dataSource]='dataOclv5'></ejs-dropdownlist>
               </ng-template>
             </e-column>
 

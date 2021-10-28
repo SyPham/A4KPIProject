@@ -11,6 +11,7 @@ import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AccountGroupService } from 'src/app/_core/_service/account.group.service';
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { OcService } from 'src/app/_core/_service/oc.service';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'app-account',
@@ -30,6 +31,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
   passwordFake = `aRlG8BBHDYjrood3UqjzRl3FubHFI99nEPCahGtZl9jvkexwlJ`;
   pageSettings = { pageCount: 20, pageSizes: true, pageSize: 10 };
   @ViewChild('grid') public grid: GridComponent;
+
+  @ViewChild('ddlelement')
+  public dropDownListObject: DropDownListComponent;
   accountCreate: Account;
   accountUpdate: Account;
   setFocus: any;
@@ -47,6 +51,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   dataOclv3: any;
   dataOclv4: any;
   dataOclv5: any;
+  dataOc: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -63,29 +68,40 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.getAllOc();
     this.loadAccountGroupData();
   }
+  filterCenter(args) {
+    this.deptId = 0
+    this.dataOclv5 = this.dataOc.filter(x => x.parentId === args.value)
+    this.dataOclv5.unshift({ name: "N/A", id: 0 });
+  }
+  filterFact(args) {
+    console.log(args);
+    this.centerId = 0
+    this.deptId = 0
+    this.dataOclv4 = this.dataOc.filter(x => x.parentId === args.value)
+    this.dataOclv4.unshift({ name: "N/A", id: 0 });
+  }
   getAllOc(){
     this.ocService.getAll().subscribe((res: any) => {
+      this.dataOc = res
       //Oclv3
+
       this.dataOclv3 = res.filter(x => x.level === 3)
       this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
       //end Oclv3
 
-      //Oclv4
       this.dataOclv4 = res.filter(x => x.level === 4)
       this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
-      //end Oclv4
+      //end Oclv3
 
-      //Oclv5
       this.dataOclv5 = res.filter(x => x.level === 5)
       this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
+      //end Oclv3
 
-      //end Oclv5
 
     })
   }
   loadData() {
     this.service.getAll().subscribe(data => {
-      console.log(data);
       this.data = data;
     });
   }
@@ -135,6 +151,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   }
   updateModel(data) {
     this.accountGroupItem = data.accountGroupIds;
+    this.getAllOc();
     this.managerId = data.manager;
     this.leaderId = data.leader;
     this.factId = data.factId;

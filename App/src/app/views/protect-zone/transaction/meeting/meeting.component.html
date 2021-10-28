@@ -4,47 +4,7 @@
       <div class="card-body table-responsive p-0">
         <div class="row my-3">
           <div class="col-md-12">
-            <!-- <div class="row">
-              <div class="col-md-1">
-                <div class="font-weight-bold">{{'FILTER_LABEL' | translate}}:</div>
-              </div>
 
-              <span>Factory: </span>
-              <div class="col-md-2">
-                <ejs-dropdownlist [dataSource]='dataFact' [fields]='levelFields' [allowFiltering]='true'
-                   (change)='filterFact($event)'
-                   [(ngModel)]='factId'
-                  placeholder="Select a Factory">
-                </ejs-dropdownlist>
-              </div>
-
-              <span>Center: </span>
-              <div class="col-md-2">
-                <ejs-dropdownlist [dataSource]='dataCenter' [fields]='levelFields' [allowFiltering]='true'
-                   (change)='filterCenter($event)'
-                   [(ngModel)]='centerId'
-                  placeholder="Select a Center">
-                </ejs-dropdownlist>
-              </div>
-
-              <span>Dept.: </span>
-              <div class="col-md-2">
-                <ejs-dropdownlist [dataSource]='dataDept' [fields]='levelFields' [allowFiltering]='true'
-                   (change)='filterDept($event)'
-                   [(ngModel)]='deptId'
-                  placeholder="Select a Dept.">
-                </ejs-dropdownlist>
-              </div>
-
-              <span>Level: </span>
-              <div class="col-md-2">
-                <ejs-dropdownlist [dataSource]='dataLevel' [fields]='levelFields' [allowFiltering]='true'
-                   (change)='filterlevel($event)'
-                   [(ngModel)]='levelId'
-                  placeholder="Select a Level">
-                </ejs-dropdownlist>
-              </div>
-            </div> -->
             <div class="row mb-2">
               <div class="col-md-12 d-flex justify-content-center align-items-center">
                 <div class="font-weight-bold px-3">{{"Factory" | translate}} :</div>
@@ -60,7 +20,6 @@
                    [(ngModel)]='centerId'
                   placeholder="Select a Center">
                 </ejs-dropdownlist>
-
 
                 <div class="font-weight-bold pr-3">{{"Dept" | translate}}: </div>
                 <ejs-dropdownlist [dataSource]='dataDept' [fields]='levelFields' [allowFiltering]='true'
@@ -410,7 +369,8 @@
                 {{items.statusName | translate}}
               </td>
               <td style="font-size: 14px; " class="border align-top"  >
-                {{items.resultContent}}
+                <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
+                <!-- {{items.resultContent}} -->
               </td>
               <!-- <td
               style="font-size: 14px; word-wrap:break-word"

@@ -172,6 +172,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   loadDataL0() {
     this.gridData = [];
     this.todolist2Service.l0(this.currentTimeRequest).subscribe(data => {
+      console.log('loadDataL0', data);
       this.gridData = data;
     });
   }

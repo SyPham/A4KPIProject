@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211027025956_AddKPIAccountTableV1.1")]
+    partial class AddKPIAccountTableV11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -459,23 +461,10 @@ namespace A4KPI.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CenterId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DeptId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("FactId")
-                        .HasColumnType("int");
-
                     b.Property<int>("KpiId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("KpiId");
 
                     b.ToTable("KPIAccount");
                 });
@@ -499,6 +488,9 @@ namespace A4KPI.Migrations
                     b.Property<int?>("LevelOcCreateBy")
                         .HasColumnType("int");
 
+                    b.Property<int?>("LevelOcPolicy")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
 
@@ -509,6 +501,9 @@ namespace A4KPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("OcIdCreateBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OcIdPolicy")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentId")
@@ -1507,25 +1502,6 @@ namespace A4KPI.Migrations
                     b.Navigation("Action");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.KPIAccount", b =>
-                {
-                    b.HasOne("A4KPI.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("A4KPI.Models.KPINew", "KPINew")
-                        .WithMany("KPIAccounts")
-                        .HasForeignKey("KpiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("KPINew");
-                });
-
             modelBuilder.Entity("A4KPI.Models.KPIScore", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1790,8 +1766,6 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.KPINew", b =>
                 {
                     b.Navigation("Actions");
-
-                    b.Navigation("KPIAccounts");
 
                     b.Navigation("Targets");
                 });

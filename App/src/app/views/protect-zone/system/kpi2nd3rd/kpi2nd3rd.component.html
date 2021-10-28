@@ -80,7 +80,7 @@
                 {{data.entity.picName}}
               </ng-template>
               <ng-template #editTemplate let-data>
-                <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist>
+                <ejs-multiselect [(ngModel)]='picItem' [fields]="picFields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select PIC' [dataSource]='accountData'></ejs-multiselect>
               </ng-template>
             </e-column>
             <e-column field="" headerText="Mgmt. Arrange" textAlign='Center'>
@@ -88,9 +88,9 @@
                 {{"MGMT" | translate}}
               </ng-template>
               <ng-template #template let-data>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId === 0 && data.entity.deptId === 0"> {{data.entity.factName}}</span>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId === 0"> {{data.entity.centerName}}</span>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId > 0"> {{data.entity.deptName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName === '' && data.entity.deptName === ''"> {{data.entity.factName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName !== '' && data.entity.deptName === ''"> {{data.entity.centerName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName !== '' && data.entity.deptName !== ''"> {{data.entity.deptName}}</span>
               </ng-template>
 
               <ng-template #editTemplate let-data>
@@ -123,7 +123,7 @@
 
         <ng-template #content let-modal>
           <div class="modal-header">
-            <h4 class="modal-title">{{title}}</h4>
+            <h4 class="modal-title">{{title | translate}}</h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -146,20 +146,21 @@
                 </div> -->
 
                 <div class="form-group">
-                  <label for="">Type</label>
+                  <label for="">{{"TypeNew" | translate}}</label>
                   <ejs-dropdownlist [(ngModel)]='typeId' [allowFiltering]='true' [fields]="typeFields" placeholder='Select a Type' [dataSource]='typeData'></ejs-dropdownlist>
                 </div>
                 <div class="form-group">
-                  <label for="">PIC</label>
-                  <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist>
+                  <label for="">{{"PICNew" | translate}}</label>
+                  <ejs-multiselect [(ngModel)]='picItem' [fields]="picFields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select PIC' [dataSource]='accountData'></ejs-multiselect>
+                  <!-- <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist> -->
                 </div>
               </div>
             </div>
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
-            <button type="submit" (click)='createOC()' class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-light" (click)="modal.close('Close click')">{{"Close" | translate}}</button>
+            <button type="submit" (click)='createOC()' class="btn btn-primary">{{"Create" | translate}}</button>
           </div>
         </ng-template>
       </div>

@@ -142,7 +142,7 @@
 
 
             </e-column>
-            <e-column field='target'  headerText='Target'  textAlign='Center' width=80  type='string'>
+            <e-column field='target'  headerText='Target'  textAlign='Center' type='string'>
               <ng-template #headerTemplate let-data>
                 <span>
                     <tr>
@@ -159,7 +159,7 @@
                  </span>
               </ng-template>
             </e-column>
-            <e-column field='deadline' headerText='Deadline' type='date' format='MM/dd/yyyy' [edit]='dpParams' editType='datepickeredit' textAlign='Center'   >
+            <e-column field='deadline' width=100 headerText='Deadline' type='date' format='MM/dd/yyyy' [edit]='dpParams' editType='datepickeredit' textAlign='Center'   >
               <ng-template #headerTemplate let-data>
                 <span>
                     <tr>

@@ -77,7 +77,7 @@ namespace A4KPI.Services
         }
 
 
-        public async Task<object> GetAllKPIByPicAndLevel(int levelId, int picId)
+        public Task<object> GetAllKPIByPicAndLevel(int levelId, int picId)
         {
             throw new NotImplementedException();
         }
@@ -86,45 +86,37 @@ namespace A4KPI.Services
             var data = (await _repoKPINew.FindAll().ToListAsync()).Select(x => new {
                 x.Id,
                 x.Name,
-                PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
-                PicId = x.Pic,
+                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                 x.TypeId,
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 Level = x.Level,
                 TypeText = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Description ?? "",
-                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
-                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
-                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
+                FactName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOC.FindById(x.FactId).Name : null)) : null,
+                CenterName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOC.FindById(x.CenterId).Name : null)) : null,
+                DeptName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOC.FindById(x.DeptId).Name : null)) : null
 
             }).ToList();
             var model = data.Select(x => new KPINewDto
             {
                 Id = x.Id,
                 Name = x.Name,
-                FactId = x.FactId,
-                CenterId = x.CenterId,
-                DeptId = x.DeptId,
-                Pic = x.PicId,
                 PICName = x.PICName,
                 TypeId = x.TypeId,
                 Level = x.Level,
                 TypeName = x.TypeName,
                 TypeText = x.TypeText,
-                FactName = x.FactId == 0 ? "N/A" : _repoOC.FindById(x.FactId).Name,
-                CenterName = x.CenterId == 0 ? "N/A" : _repoOC.FindById(x.CenterId).Name,
-                DeptName = x.DeptId == 0 ? "N/A" : _repoOC.FindById(x.DeptId).Name,
+                FactName = x.FactName,
+                CenterName = x.CenterName,
+                DeptName = x.DeptName,
 
             }).Where(x => x.Level != 1).ToList();
             return model;
         }
-
-       
-
         public async Task<ChartDto> GetChart(int kpiId)
         {
             List<string> listLabels = new List<string>();
             var dataTable = new List<UpdatePDCADto>();
-            var data = _repoTarget.FindAll(x => x.KPIId == kpiId).ToList();
+            var data = await _repoTarget.FindAll(x => x.KPIId == kpiId).ToListAsync();
             var listLabel = data.OrderBy(x => x.TargetTime.Date.Month).Select(x => x.TargetTime.Date.Month).ToArray();
             foreach (var a in listLabel)
             {
@@ -212,7 +204,7 @@ namespace A4KPI.Services
             List<double> listTarget = new List<double>();
             List<double> listPerfomance = new List<double>();
             var dataTable = new List<DataTable>();
-            var data = _repoTarget.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult).ToList();
+            var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult).ToListAsync();
             for (int i = 1; i <= 12; i++)
             {
                 listLabel.Add(i);
@@ -283,10 +275,14 @@ namespace A4KPI.Services
                     listPerfomance.Add(0);
                 }
             }
-            
-            var YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
+            double YTD = 0;
+            var YTDs = _repoTargetYTD.FindAll().Where(x => x.KPIId == kpiId).ToList();
+            if (YTDs.Count > 0)
+            {
+                YTD = _repoTargetYTD.FindAll().FirstOrDefault(x => x.KPIId == kpiId).Value;
+            }
             double TargetYTD = 0;
-            var TargetYTDs = _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToList();
+            var TargetYTDs = await _repoTarget.FindAll().Where(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToListAsync();
             if (TargetYTDs.Count > 0)
             {
                 TargetYTD = _repoTarget.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).YTD;
@@ -295,7 +291,7 @@ namespace A4KPI.Services
             foreach (var item in listLabelData)
             {
                string content = null;
-                var contentExist = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToList();
+                var contentExist = await _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToListAsync();
                 if (contentExist.Count > 0)
                 {
                     content = _repoResult.FindAll().FirstOrDefault(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).Content.Trim();
@@ -384,7 +380,7 @@ namespace A4KPI.Services
                              }).ToList();
                 }
                 //var 
-                var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
+                var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
                             from sub in ab.DefaultIfEmpty()
                             select new UpdatePDCADto

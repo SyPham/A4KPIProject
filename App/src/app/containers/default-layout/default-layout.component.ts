@@ -121,8 +121,8 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     // });
 
     this.langsData = [, { id: 'zh', name: '中文' },
-    //  { id: 'en', name: 'EN' },
-    //  { id: 'vi', name: 'VI' }
+     { id: 'en', name: 'EN' },
+     { id: 'vi', name: 'VI' }
     ];
     this.navAdmin = new Nav().getNavAdmin();
     this.navClient = new Nav().getNavClient();
@@ -253,6 +253,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       this.avatar = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64, ' + img);
     }
   }
+
   imageBase64(img) {
     if (img === 'null') {
       return this.defaultImage();
@@ -260,6 +261,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64, ' + img);
     }
   }
+
   datetime(d) {
     return this.calendarsService.JSONDateWithTime(d);
   }

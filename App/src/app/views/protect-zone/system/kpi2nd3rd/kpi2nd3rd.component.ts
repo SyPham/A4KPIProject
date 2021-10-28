@@ -44,6 +44,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   policyData: Object;
   policyId: number = 0;
   picId: number = 0;
+  picItem: any;
   typeId: number = 0;
   parentId: null
   level: number = 1
@@ -67,9 +68,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.getListPic();
     if (localStorage.getItem('user') !== null) {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
-      console.log(this.userId);
     }
-    console.log(window.location.hostname);
     this.editing = { allowDeleting: true, allowEditing: true, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
@@ -80,7 +79,6 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
   getListPic() {
     this.kpiNewService.getListPic().subscribe((res: any) => {
-      console.log(res);
       this.accountData = res ;
     })
   }
@@ -112,7 +110,7 @@ export class Kpi2nd3rdComponent implements OnInit {
       this.alertify.error('Please select a Type! ');
       return false;
     }
-    if (this.picId === 0) {
+    if (this.picItem.length === 0) {
       this.alertify.error('Please select a PIC! ');
       return false;
     }
@@ -126,6 +124,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.policyId = 0
     this.picId = 0
     this.typeId = 0
+    this.picItem = []
   }
   createOC() {
     const model = {
@@ -134,7 +133,8 @@ export class Kpi2nd3rdComponent implements OnInit {
       TypeId: this.typeId,
       ParentId: this.parentId,
       Level: this.level,
-      Pic: this.picId
+      Pic: this.picId,
+      KpiIds: this.picItem
     }
     if (this.validation()) {
       this.kpiNewService.add(model).subscribe(res => {
@@ -195,12 +195,14 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    console.log(args);
-    if (this.currentLevel === 3) {
+    const lang = localStorage.getItem('lang')  ;
+    const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
+    if (this.currentLevel === 3 && args.item.id === 'treegrid_gridcontrol_新增下一階KPI') {
       args.cancel = true;
-      this.alertify.warning("Currently, you cannot create KPIs smaller than this level");
+      this.alertify.warning(message);
       return;
-    } else {
+    }
+    else {
       switch (args.item.id) {
         case "treegrid_gridcontrol_新增下一階KPI":
           args.cancel = true;
@@ -213,7 +215,6 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   contextMenuClick(args) {
-    console.log(args);
     switch (args.item.id) {
       case "DeleteOC":
         this.delete(args.rowInfo.rowData.entity);
@@ -247,10 +248,9 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.policyId = data.policyId
     this.typeId = data.typeId
     this.picId = data.pic
+    this.picItem = data.pics;
   }
   actionComplete(args) {
-    console.log(args);
-
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       if (args.rowData.entity.createBy !== this.userId) {
@@ -269,7 +269,8 @@ export class Kpi2nd3rdComponent implements OnInit {
         TypeId: this.typeId,
         Level: args.data.entity.level,
         ParentId: args.data.entity.parentId,
-        Pic: this.picId
+        Pic: this.picId,
+        KpiIds: this.picItem
       }
       this.update(model);
     }
@@ -290,18 +291,16 @@ export class Kpi2nd3rdComponent implements OnInit {
       args.cancel = true;
       return;
     }
-
+    const lang = localStorage.getItem('lang')  ;
+    const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
     if (this.currentLevel === 3) {
       args.cancel = true;
-      this.alertify.warning("Currently, you cannot create KPIs smaller than this level");
+      this.alertify.warning(message);
       return;
     }
 
-
-    console.log(args);
   }
   rowSelected(args) {
-    console.log(args);
     // if (args.data.entity.createBy === this.userId) {
     // }
     this.parentId = args.data.entity.id
@@ -313,15 +312,11 @@ export class Kpi2nd3rdComponent implements OnInit {
 
   getBuildingsAsTreeView() {
     this.kpiNewService.getTree2nd3rd().subscribe((res) => {
-      console.log('getBuildingsAsTreeView',res);
+      console.log('getBuildingsAsTreeView', res);
       this.data = res;
     });
   }
-  // dataBound(event){
-  //   console.log(event);
-  //   this.treeGridObj.getColumnByField("entity.level").textAlign = "Center";
 
-  // }
   clearFrom() {
     this.oc = {
       id: 0,

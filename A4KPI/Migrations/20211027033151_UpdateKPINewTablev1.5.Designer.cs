@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211027033151_UpdateKPINewTablev1.5")]
+    partial class UpdateKPINewTablev15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -487,16 +489,28 @@ namespace A4KPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CenterId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CreateBy")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DeptId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FactId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<int?>("LevelOcCreateBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LevelOcPolicy")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedTime")
@@ -509,6 +523,9 @@ namespace A4KPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("OcIdCreateBy")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OcIdPolicy")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentId")
@@ -631,6 +648,9 @@ namespace A4KPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("KPIAccountId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
@@ -641,6 +661,8 @@ namespace A4KPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KPIAccountId");
 
                     b.ToTable("OC");
                 });
@@ -1564,6 +1586,13 @@ namespace A4KPI.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.OC", b =>
+                {
+                    b.HasOne("A4KPI.Models.KPIAccount", null)
+                        .WithMany("OCs")
+                        .HasForeignKey("KPIAccountId");
+                });
+
             modelBuilder.Entity("A4KPI.Models.OCAccount", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1785,6 +1814,11 @@ namespace A4KPI.Migrations
                     b.Navigation("ActionStatus");
 
                     b.Navigation("Does");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.KPIAccount", b =>
+                {
+                    b.Navigation("OCs");
                 });
 
             modelBuilder.Entity("A4KPI.Models.KPINew", b =>

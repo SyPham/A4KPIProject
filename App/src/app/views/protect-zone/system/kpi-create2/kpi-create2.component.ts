@@ -51,6 +51,7 @@ export class KpiCreate2Component implements OnInit {
   accountData: Account[];
   modalReference: NgbModalRef
   kpiname: any
+  picItem: any;
   constructor(
     private ocService: OcService,
     private modalServices: NgbModal,
@@ -99,7 +100,7 @@ export class KpiCreate2Component implements OnInit {
       this.alertify.error('Please select a Type! ');
       return false;
     }
-    if (this.picId === 0) {
+    if (this.picItem.length === 0) {
       this.alertify.error('Please select a PIC! ');
       return false;
     }
@@ -109,6 +110,7 @@ export class KpiCreate2Component implements OnInit {
   refreshData() {
     this.kpiname = null
     this.parentId = null
+    this.picItem = []
     this.level  = 1
     this.policyId = 0
     this.picId = 0
@@ -121,8 +123,10 @@ export class KpiCreate2Component implements OnInit {
       TypeId: this.typeId,
       ParentId: this.parentId,
       Level: this.level,
-      Pic: this.picId
+      Pic: this.picId,
+      KpiIds: this.picItem
     }
+    console.log(model);
     if (this.validation()) {
       this.kpiNewService.add(model).subscribe(res => {
         if(res) {
@@ -226,6 +230,8 @@ export class KpiCreate2Component implements OnInit {
     this.policyId = data.policyId
     this.typeId = data.typeId
     this.picId = data.pic
+    this.picItem = data.pics;
+
   }
   actionComplete(args) {
     console.log(args);
@@ -241,7 +247,8 @@ export class KpiCreate2Component implements OnInit {
         TypeId: this.typeId,
         Level: args.data.entity.level,
         ParentId: args.data.entity.parentId,
-        Pic: this.picId
+        Pic: this.picId,
+        KpiIds: this.picItem
       }
       this.update(model);
     }

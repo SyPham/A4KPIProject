@@ -265,7 +265,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   loadTargetData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
-      console.log('loadTargetData',res);
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
       this.thisMonthTarget = res.thisMonthTarget;
@@ -350,8 +349,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
   actionBegin(args) {
-    if(args.requestType === 'save') {
-
+    if(args.requestType === 'save' && args.action === 'edit') {
       for (let item in this.grid.dataSource) {
         if(this.grid.dataSource[item].id === args.data.id) {
           this.grid.dataSource[item].content = args.data.content
@@ -360,6 +358,24 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }
+
+    if (args.requestType === 'delete') {
+      this.delete(args.data[0].id);
+    }
+
+  }
+  delete(id) {
+    this.todolist2Service.deleteAc(id).subscribe(
+      (res) => {
+        if (res === true) {
+          // this.alertify.success(MessageConstants.DELETED_OK_MSG);
+          this.loadActionData();
+        } else {
+           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+        }
+      },
+      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+    );
 
   }
   post(submitted) {
@@ -422,8 +438,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         submitted: submitted
       }
     }
-    console.log(this.target);
-    console.log(this.nextMonthTarget);
     const updatePDCA = this.gridData;
     const dataSource = this.grid.dataSource as Action[];
     const actions = dataSource.map(x => {

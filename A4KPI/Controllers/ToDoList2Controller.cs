@@ -23,6 +23,11 @@ namespace A4KPI.Controllers
             _service = service;
           
         }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteActionAsync(int id)
+        {
+            return Ok(await _service.Delete(id));
+        }
         [HttpPost]
         public async Task<ActionResult> SubmitUpdatePDCA(PDCARequestDto action)
         {

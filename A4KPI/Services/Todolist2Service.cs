@@ -22,7 +22,7 @@ namespace A4KPI.Services
         Task<object> GetStatus();
         Task<object> L0(DateTime currentTime);
         Task<object> GetActionsForL0(int kpiNewId);
-
+        Task<bool> Delete(int id);
 
         Task<object> GetPDCAForL0(int kpiNewId, DateTime currentTime);
         Task<object> GetTargetForUpdatePDCA(int kpiNewId, DateTime currentTime);
@@ -43,9 +43,11 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<TargetYTD> _repoTargetYTD;
         private readonly IRepositoryBase<Result> _repoResult;
         private readonly IRepositoryBase<Models.Types> _repoType;
+        private readonly IRepositoryBase<KPIAccount> _repoKPIAc;
         private readonly IRepositoryBase<ActionStatus> _repoActionStatus;
         private readonly IRepositoryBase<Target> _repoTarget;
         private readonly IRepositoryBase<Models.Status> _repoStatus;
+        private readonly IRepositoryBase<Account> _repoAc;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepositoryBase<Account> _repoAccount;
@@ -60,6 +62,8 @@ namespace A4KPI.Services
              IRepositoryBase<Do> repoDo,
              IRepositoryBase<Models.Types> repoType,
              IRepositoryBase<Policy> repoPolicy,
+             IRepositoryBase<KPIAccount> repoKPIAc,
+             IRepositoryBase<Account> repoAc,
              IRepositoryBase<KPINew> repoKPINew,
              IRepositoryBase<TargetYTD> repoTargetYTD,
              IRepositoryBase<Result> repoResult,
@@ -77,9 +81,11 @@ namespace A4KPI.Services
             _repoAction = repoAction;
             _repoDo = repoDo;
             _repoType = repoType;
+            _repoAc = repoAc;
             _repoPolicy = repoPolicy;
             _repoKPINew = repoKPINew;
             _repoTargetYTD = repoTargetYTD;
+            _repoKPIAc = repoKPIAc;
             _repoResult = repoResult;
             _repoActionStatus = repoActionStatus;
             _repoTarget = repoTarget;
@@ -139,15 +145,32 @@ namespace A4KPI.Services
             return operationResult;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            var item = _repoAction.FindById(id);
+            try
+            {
+                _repoAction.Remove(item);
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+            throw new NotImplementedException();
+        }
+
         public async Task<object> GetActionsForL0(int kpiNewId)
         {
 
             var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId).ProjectTo<ActionDto>(_configMapper).ToListAsync();
-            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
             //var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
             var typeText = _repoType.FindAll().FirstOrDefaultAsync(x => x.Id == kpiModel.TypeId).Result.Description;
-            var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
+            //var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
             var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == DateTime.Now.Year).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
@@ -157,7 +180,7 @@ namespace A4KPI.Services
                 Actions = actions,
                 Kpi = kpi,
                 Policy = policy,
-                Pic = pic.FullName,
+                Pic = kpiModel.KPIAccounts.Count > 0 ? String.Join(" , ", kpiModel.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                 Target = target,
                 typeText = typeText,
                 TargetYTD = targetYTD // Target YTD	
@@ -181,12 +204,10 @@ namespace A4KPI.Services
 
         public async Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime)
         {
-            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var type = _repoKPINew.FindAll().FirstOrDefault(x => x.Id == kpiNewId).TypeId;
             var typeText = _repoType.FindAll().FirstOrDefault(x => x.Id == type).Description;
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
-            //var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
-            var pic = await _repoAccount.FindAll(x => x.Id == kpiModel.Pic).ProjectTo<AccountDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
             var policy = parentKpi.Name;
 
@@ -196,7 +217,7 @@ namespace A4KPI.Services
                 Type = type,
                 Policy = policy,
                 typeText = typeText,
-                Pic = pic.FullName,
+                Pic = kpiModel.KPIAccounts.Count > 0 ? String.Join(" , ", kpiModel.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
             };
 
         }
@@ -290,23 +311,27 @@ namespace A4KPI.Services
             var date = currentTime;
             var month = date.Month;
             //  && x.Actions.Any() == false
-            var actions = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() == false && x.Submitted == false || (x.Actions.Any() && x.Submitted == false)).Select(x => new
+            List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
+            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || (x.Actions.Any() && x.Submitted == false)).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
                 Level = x.Level,
+                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                 TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "Action",
                 CurrentTarget = false,
             }).Where(x => x.Level != 1).ToListAsync();
+
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-            var updatePDCA = await _repoKPINew.FindAll(x => x.Pic == accountId && x.Actions.Any() && x.Submitted == true).Select(x => new
+            var updatePDCA = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() && x.Submitted == true).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
                 Level = x.Level,
+                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                 TypeText = _repoType.FindById(x.TypeId).Description,
                 Type = "UpdatePDCA",
                 CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false)),
@@ -398,6 +423,7 @@ namespace A4KPI.Services
 
         public async Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model)
         {
+
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
             var addActionList = model.Actions.Where(x => x.Id == 0).ToList();
             var updateActionForThisMonth = model.UpdatePDCA.ToList();
@@ -460,7 +486,7 @@ namespace A4KPI.Services
                     var updateTime = new DateTime(yearResult, monthResult, 1);
                     if (item.DoId == 0)
                     {
-                       var addDoItem = new Do(item.DoContent,item.ResultContent, item.Achievement, item.ActionId);
+                        var addDoItem = new Do(item.DoContent,item.ResultContent, item.Achievement, item.ActionId);
                         addDoItem.CreatedTime = updateTime;
                         addDoList.Add(addDoItem);
                     }

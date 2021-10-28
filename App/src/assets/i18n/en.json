@@ -356,7 +356,10 @@
     "PICPDCA": "PIC",
     "Download": "Download",
     "Upload file": "Upload file",
-    "Chose Status":"Chose Status"
+    "Chose Status":"Chose Status",
+
+    "Add KPI": "Add KPI",
+    "Create": "Create"
 
 
 }

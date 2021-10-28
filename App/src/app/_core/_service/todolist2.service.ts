@@ -30,6 +30,10 @@ export class Todolist2Service  {
   changeUploadMessage(message) {
     this.messageUploadSource.next(message);
   }
+
+  deleteAc(id) {
+    return this.http.delete(`${this.env.apiUrl}${this.entity}/deleteAction/${id}`);
+  }
   l0(currentTime): Observable<any[]> {
     return this.http
       .get<any[]>(`${this.env.apiUrl}${this.entity}/L0?currentTime=${currentTime}`, {})

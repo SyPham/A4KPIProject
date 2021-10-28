@@ -16,6 +16,7 @@ namespace A4KPI.DTO
         public int? OcId { get; set; }
         public int? PolicyId { get; set; }
         public int TypeId { get; set; }
+        public List<int> Pics { get; set; }
         public int Pic { get; set; }
         public bool Submitted { get; set; }
         public int? ParentId { get; set; }
@@ -40,6 +41,8 @@ namespace A4KPI.DTO
         public string FactName { get; set; }
         public string CenterName { get; set; }
         public string DeptName { get; set; }
+
+        public List<int> KpiIds { get; set; }
 
     }
 }

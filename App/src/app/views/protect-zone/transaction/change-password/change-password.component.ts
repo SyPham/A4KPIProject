@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageConstants } from 'src/app/_core/_constants/system';
 import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service';1
 
 @Component({
   selector: 'app-change-password',

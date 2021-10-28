@@ -16,6 +16,7 @@ namespace A4KPI.Data
         public DbSet<Policy> Policies { get; set; }
         public DbSet<OCPolicy> OCPolicies { get; set; }
         public DbSet<KPINew> KPINews { get; set; }
+        public DbSet<KPIAccount> KPIAccounts { get; set; }
         public DbSet<Types> Types { get; set; }
         public DbSet<OCNew> OCNews { get; set; }
         public DbSet<AccountType> AccountTypes { get; set; }

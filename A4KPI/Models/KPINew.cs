@@ -22,8 +22,6 @@ namespace A4KPI.Models
         public int TypeId { get; set; }
         public int CreateBy { get; set; }
         public int? LevelOcCreateBy { get; set; }
-        public int? LevelOcPolicy { get; set; }
-        public int? OcIdPolicy { get; set; }
         public int? OcIdCreateBy { get; set; }
         public int Pic { get; set; }
         public int? ParentId { get; set; }
@@ -39,6 +37,8 @@ namespace A4KPI.Models
 
         public virtual ICollection<Action> Actions{ get; set; }
         public virtual ICollection<Target> Targets{ get; set; }
+
+        public virtual ICollection<KPIAccount> KPIAccounts{ get; set; }
 
     }
 }
