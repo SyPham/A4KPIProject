@@ -159,6 +159,7 @@ export class KpiCreate2Component implements OnInit {
     this.toolbar = [
       "Search",
       "Add",
+      "Update",
       "Cancel",
       "ExpandAll",
       "CollapseAll",

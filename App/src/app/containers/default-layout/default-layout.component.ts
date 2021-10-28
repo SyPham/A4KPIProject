@@ -121,8 +121,8 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     // });
 
     this.langsData = [, { id: 'zh', name: '中文' },
-     { id: 'en', name: 'EN' },
-     { id: 'vi', name: 'VI' }
+    //  { id: 'en', name: 'EN' },
+    //  { id: 'vi', name: 'VI' }
     ];
     this.navAdmin = new Nav().getNavAdmin();
     this.navClient = new Nav().getNavClient();

@@ -168,6 +168,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.toolbar = [
       "Search",
       "新增下一階KPI",
+      "Update",
       "Cancel",
       "ExpandAll",
       "CollapseAll",
