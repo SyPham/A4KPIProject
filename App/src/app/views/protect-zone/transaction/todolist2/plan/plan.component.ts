@@ -94,6 +94,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
     }
   }
   submit(){
+    // console.log(this.grid.editModule.endEdit());
+    this.grid.editModule.endEdit()
+    // this.grid.editModule.addRecord()
     // console.log(Number(this.targetValue))
     if (this.validate(true) == false) return;
     this.spinner.show();
@@ -140,7 +143,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD ,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(request);
+    console.log('actions',request);
 
     const post = this.todolist2Service.submitAction(request)
     const submitKPINew = this.todolist2Service.submitKPINew(this.data.id);
@@ -226,6 +229,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     );
   }
   post(callBack, isSubmit) {
+    this.grid.editModule.endEdit()
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
     if(isSubmit === false && this.target === null) {
@@ -257,7 +261,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         target: x.target,
         content: x.content,
         deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
-        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
         createdTime: new Date().toISOString(),
@@ -270,7 +274,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(request);
+    console.log(actions);
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {
         if (res.success === true) {

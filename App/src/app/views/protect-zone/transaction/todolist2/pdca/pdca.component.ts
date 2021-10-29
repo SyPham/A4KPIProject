@@ -379,7 +379,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   post(submitted) {
-
+    this.grid.editModule.endEdit()
     if (this.validate(submitted) == false) return;
 
     if(submitted === true)
@@ -446,14 +446,14 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         target: x.target,
         content: x.content,
         deadline: this.datePipe.transform(x.deadline, 'MM/dd/yyyy'),
-        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
         createdTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
         modifiedTime: null
       }
     })
-
+    console.log(actions);
     const request = {
       target: this.target,
       targetYTD: this.targetYTD,

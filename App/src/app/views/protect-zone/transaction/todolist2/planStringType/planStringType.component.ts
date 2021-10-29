@@ -100,6 +100,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
   }
   submit(){
     // console.log(Number(this.targetValue))
+    this.grid.editModule.endEdit()
     if (this.validate(true) == false) return;
     this.spinner.show();
     if(this.typeText === 'string') {
@@ -132,7 +133,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
         target: x.target,
         content: x.content,
         deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
-        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
         createdTime: new Date().toISOString(),
@@ -232,6 +233,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
     );
   }
   post(callBack, isSubmit = true) {
+    this.grid.editModule.endEdit()
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
     console.log(dataSource);
@@ -265,7 +267,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
         target: x.target,
         content: x.content,
         deadline: typeof(x.deadline) != "string" ? (x.deadline as Date).toLocaleDateString(): x.deadline,
-        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
         createdTime: new Date().toISOString(),

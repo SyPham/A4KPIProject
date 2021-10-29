@@ -294,7 +294,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     }
     const lang = localStorage.getItem('lang')  ;
     const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
-    if (this.currentLevel === 3) {
+    if (this.currentLevel === 3 && args.rowInfo.rowData.entity.createBy !== this.userId) {
       args.cancel = true;
       this.alertify.warning(message);
       return;

@@ -360,7 +360,7 @@
               <td style="font-size: 14px; word-wrap: break-word;;" class="border text-center" >{{items.target}}</td>
               <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
               <td style="font-size: 14px; " class="border align-top"  >
-                {{items.doContent}}
+                <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="content" style="text-align:left;"></textarea>
               </td>
               <td style="font-size: 14px; " class="border text-center">
                 {{items.achievement}}
@@ -370,15 +370,8 @@
               </td>
               <td style="font-size: 14px; " class="border align-top"  >
                 <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
-                <!-- {{items.resultContent}} -->
               </td>
-              <!-- <td
-              style="font-size: 14px; word-wrap:break-word"
-              scope="row" [attr.rowspan]="data.currentMonthData.length"
-              *ngIf="i == 0"
-              class="border align-top">
-                {{items.resultContent}}
-              </td> -->
+
 
               <td style="font-size: 14px; "
               scope="row"
@@ -388,10 +381,16 @@
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
 
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 350px; overflow-y: scroll;">{{itemss.content}}</p>
+                    <p style="height: 10vh; overflow-y: scroll;">
+                      <!-- {{itemss.content}} -->
+                      <textarea autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea>
+                    </p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 350px; overflow-y: scroll;">{{itemss.content}}</p>
+                    <p style="height: 10vh; overflow-y: scroll;">
+                      <!-- {{itemss.content}} -->
+                      <textarea  autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea>
+                    </p>
                     <hr>
                   </ng-template>
                 </span>
@@ -401,14 +400,14 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border align-top text-center"
+              class="border  text-center"
               >
                 <span  *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 350px; padding-top: 175px; word-wrap: break-word;">{{itemss.target}}</p>
+                    <p style="height: 10vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 350px; padding-top: 175px; word-wrap: break-word;">{{itemss.target}}</p>
+                    <p style="height: 10vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
                     <hr>
                   </ng-template>
                 </span>
@@ -418,13 +417,13 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border text-center align-top">
+              class="border text-center ">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 350px; padding-top: 175px;">{{itemss.deadline}}</p>
+                    <p style="height: 10vh; padding-top: 5vh;">{{itemss.deadline}}</p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 350px; padding-top: 175px;">{{itemss.deadline}}</p>
+                    <p style="height: 10vh; padding-top: 5vh;">{{itemss.deadline}}</p>
                     <hr>
                   </ng-template>
                 </span>

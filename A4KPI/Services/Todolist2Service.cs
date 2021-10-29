@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using NetUtility;
+
 namespace A4KPI.Services
 {
     public interface IToDoList2Service
@@ -165,7 +167,10 @@ namespace A4KPI.Services
         public async Task<object> GetActionsForL0(int kpiNewId)
         {
 
-            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId).ProjectTo<ActionDto>(_configMapper).ToListAsync();
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
+
+            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId).ProjectTo<ActionDto>(_configMapper).ToListAsync();
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
             //var policyModel = await _repoPolicy.FindAll(x => x.Id == kpiModel.PolicyId).ProjectTo<PolicyDto>(_configMapper).FirstOrDefaultAsync();
@@ -191,9 +196,11 @@ namespace A4KPI.Services
 
         public async Task<object> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime)
         {
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
             var nextMonth = currentTime.Month;
             var nextYear = currentTime.Year;
-            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == nextYear && x.CreatedTime.Month == nextMonth).ProjectTo<ActionDto>(_configMapper).ToListAsync();
+            var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId && x.CreatedTime.Year == nextYear && x.CreatedTime.Month == nextMonth).ProjectTo<ActionDto>(_configMapper).ToListAsync();
             return new
             {
                 Actions = actions,
@@ -224,6 +231,9 @@ namespace A4KPI.Services
 
         public async Task<object> GetPDCAForL0(int kpiNewId, DateTime currentTime)
         {
+
+            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
             var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
             var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
 
@@ -232,7 +242,7 @@ namespace A4KPI.Services
             var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
                 .ProjectTo<ResultDto>(_configMapper)
                 .FirstOrDefaultAsync();
-            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < currentTime.Month  )
+            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < currentTime.Month  )
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
@@ -312,7 +322,7 @@ namespace A4KPI.Services
             var month = date.Month;
             //  && x.Actions.Any() == false
             List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || (x.Actions.Any() && x.Submitted == false)).Select(x => new
+            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || x.Actions.Any() && x.Submitted == false).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,
@@ -326,6 +336,7 @@ namespace A4KPI.Services
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+
             var updatePDCA = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() && x.Submitted == true).Select(x => new
             {
                 Id = x.Id,

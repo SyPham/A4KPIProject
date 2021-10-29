@@ -37,4 +37,33 @@ namespace A4KPI.DTO
         public object Archievement { get; set; }
         public object Status { get; set; }
     }
+    public class DataTable2
+    {
+        public string Month { get; set; }
+        public string Date { get; set; }
+        public int KpiId { get; set; }
+        public string Content { get; set; }
+        public List<UpdatePDCADto> CurrentMonthData { get; set; }
+        public List<UpdatePDCADto> NextMonthData { get; set; }
+        public object Targets { get; set; }
+        public object Deadline { get; set; }
+        public object Archievement { get; set; }
+        public object Status { get; set; }
+    }
+
+    public class ResultsDto
+    {
+        public string Month { get; set; }
+        public string Date { get; set; }
+        public int KpiId { get; set; }
+        public string Content { get; set; }
+        public string ContentA { get; set; }
+        public string TargetsA { get; set; }
+
+        public object Targets { get; set; }
+        public object Deadline { get; set; }
+        public string DeadlineA { get; set; }
+        public object Archievement { get; set; }
+        public object Status { get; set; }
+    }
 }

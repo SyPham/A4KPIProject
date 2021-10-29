@@ -378,7 +378,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
 
   }
   post(submitted) {
-
+    this.grid.editModule.endEdit()
     if (this.validate(submitted) == false) return;
     this.target = {
       id: this.thisMonthTarget.id,
@@ -413,7 +413,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
         target: x.target,
         content: x.content,
         deadline: this.datePipe.transform(x.deadline, 'MM/dd/yyyy'),
-        accountId: +JSON.parse(localStorage.getItem('user')).id,
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
         kPIId: this.data.id,
         statusId: x.statusId,
         createdTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
