@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'
 import { TreeGridComponent } from '@syncfusion/ej2-angular-treegrid'
+import { getValue, isNullOrUndefined } from '@syncfusion/ej2-base'
 import { ModalDirective } from 'ngx-bootstrap/modal'
 import { MessageConstants } from 'src/app/_core/_constants/system'
 import { Account2Service } from 'src/app/_core/_service/account2.service'
@@ -311,6 +312,15 @@ export class Kpi2nd3rdComponent implements OnInit {
       this.alertify.warning(message);
       return;
     }
+
+    if (this.currentLevel === 3 && args.rowInfo.rowData.entity.createBy === this.userId) {
+      document.querySelectorAll('li#Add-Sub-Item')[0].setAttribute('style', 'display: none;');
+      document.querySelectorAll('li#DeleteOC')[0].setAttribute('style', 'display: block;');
+    } else {
+      document.querySelectorAll('li#Add-Sub-Item')[0].setAttribute('style', 'display: block;');
+      document.querySelectorAll('li#DeleteOC')[0].setAttribute('style', 'display: block;');
+    }
+
 
 
   }

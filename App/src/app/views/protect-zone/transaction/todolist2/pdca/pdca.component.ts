@@ -360,7 +360,11 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (args.requestType === 'delete') {
-      this.delete(args.data[0].id);
+      if (args.data[0].id === undefined) {
+        this.alertify.success("成功刪除");
+      } else {
+        this.delete(args.data[0].id);
+      }
     }
 
   }
@@ -368,10 +372,10 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.todolist2Service.deleteAc(id).subscribe(
       (res) => {
         if (res === true) {
-          // this.alertify.success(MessageConstants.DELETED_OK_MSG);
+          this.alertify.success("成功刪除")
           this.loadActionData();
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
         }
       },
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
