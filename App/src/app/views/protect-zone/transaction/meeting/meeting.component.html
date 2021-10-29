@@ -381,15 +381,15 @@
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
 
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 10vh; overflow-y: scroll;">
-                      <!-- {{itemss.content}} -->
-                      <textarea autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea>
+                    <p style="height: 12vh; overflow-y: scroll;">
+                      {{itemss.content}}
+                      <!-- <textarea autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea> -->
                     </p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 10vh; overflow-y: scroll;">
-                      <!-- {{itemss.content}} -->
-                      <textarea  autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea>
+                    <p style="height: 12vh; overflow-y: scroll;">
+                      {{itemss.content}}
+                      <!-- <textarea  autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea> -->
                     </p>
                     <hr>
                   </ng-template>
@@ -404,10 +404,10 @@
               >
                 <span  *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 10vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
+                    <p style="height: 12vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 10vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
+                    <p style="height: 12vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
                     <hr>
                   </ng-template>
                 </span>
@@ -420,10 +420,10 @@
               class="border text-center ">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 10vh; padding-top: 5vh;">{{itemss.deadline}}</p>
+                    <p style="height: 12vh; padding-top: 5vh;">{{itemss.deadline}}</p>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 10vh; padding-top: 5vh;">{{itemss.deadline}}</p>
+                    <p style="height: 12vh; padding-top: 5vh;">{{itemss.deadline}}</p>
                     <hr>
                   </ng-template>
                 </span>

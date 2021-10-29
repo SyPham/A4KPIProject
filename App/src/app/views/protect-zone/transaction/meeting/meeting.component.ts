@@ -561,7 +561,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.perfomance = res.perfomances
       this.targets = res.targets
       this.labels = res.labels
-     // this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
+      this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
       console.log(res.dataTable);
       console.log(res);
       this.createChart(
