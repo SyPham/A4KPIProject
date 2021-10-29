@@ -75,9 +75,9 @@
                 {{"MGMT" | translate}}
               </ng-template>
               <ng-template #template let-data>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId === 0 && data.entity.deptId === 0"> {{data.entity.factName}}</span>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId === 0"> {{data.entity.centerName}}</span>
-                <span *ngIf="data.entity.factId > 0 && data.entity.centerId > 0 && data.entity.deptId > 0"> {{data.entity.deptName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName === '' && data.entity.deptName === ''"> {{data.entity.factName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName !== '' && data.entity.deptName === ''"> {{data.entity.centerName}}</span>
+                <span *ngIf="data.entity.factName !== '' && data.entity.centerName !== '' && data.entity.deptName !== ''"> {{data.entity.deptName}}</span>
               </ng-template>
 
               <ng-template #editTemplate let-data>

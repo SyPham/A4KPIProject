@@ -165,6 +165,7 @@ export class Kpi2nd3rdComponent implements OnInit {
         id: "DeleteOC",
       },
     ];
+    console.log(this.contextMenuItems);
     this.toolbar = [
       "Search",
       "新增下一階KPI",
@@ -216,15 +217,25 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   contextMenuClick(args) {
-    switch (args.item.id) {
-      case "DeleteOC":
-        this.delete(args.rowInfo.rowData.entity);
-        break;
-      case "Add-Sub-Item":
-        this.openSubModal();
-        break;
-      default:
-        break;
+    console.log(args.item.id);
+    const lang = localStorage.getItem('lang')  ;
+    const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
+    if( this.currentLevel === 3 && args.item.id === 'Add-Sub-Item') {
+      args.cancel = true;
+      this.alertify.warning(message);
+      return;
+    } else {
+
+      switch (args.item.id) {
+        case "DeleteOC":
+          this.delete(args.rowInfo.rowData.entity);
+          break;
+        case "Add-Sub-Item":
+          this.openSubModal();
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -252,6 +263,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.picItem = data.pics;
   }
   actionComplete(args) {
+    console.log(args);
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       if (args.rowData.entity.createBy !== this.userId) {
@@ -299,6 +311,7 @@ export class Kpi2nd3rdComponent implements OnInit {
       this.alertify.warning(message);
       return;
     }
+
 
   }
   rowSelected(args) {

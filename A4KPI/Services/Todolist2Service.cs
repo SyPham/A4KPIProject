@@ -211,12 +211,12 @@ namespace A4KPI.Services
 
         public async Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime)
         {
-            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var type = _repoKPINew.FindAll().FirstOrDefault(x => x.Id == kpiNewId).TypeId;
             var typeText = _repoType.FindAll().FirstOrDefault(x => x.Id == type).Description;
+            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
-            var kpi = kpiModel.Name;
             var policy = parentKpi.Name;
+            var kpi = kpiModel.Name;
 
             return new
             {

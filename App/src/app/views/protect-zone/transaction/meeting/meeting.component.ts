@@ -332,6 +332,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     if(this.levelId > 0 && this.factId > 0 && this.centerId > 0 && this.deptId === 0) {
       this.policyData = this.policyDataTamp.filter(x => x.factName.includes(this.factName) && x.centerName.includes(this.centerName) && x.level == this.levelId)
     }
+    if(this.levelId === 0 && this.factId > 0 && this.centerId > 0 && this.deptId === 0) {
+      this.policyData = this.policyDataTamp.filter(x => x.factName.includes(this.factName) && x.centerName.includes(this.centerName))
+    }
     if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
       this.policyData = this.policyDataTamp.filter(x => x.factName.includes(this.factName) && x.centerName.includes(this.centerName) && x.deptName.includes(this.deptName) && x.level == this.levelId)
     }
@@ -385,7 +388,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   openModal(data, model) {
     console.log(data);
     this.typeText = data.typeText
-    this.policyTitle = data.policyName
+
     this.kpiTitle = data.name
     this.levelTitle = data.level
     this.picTitle = data.picName
@@ -555,6 +558,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
  }
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
+      this.policyTitle = res.policy
       this.typeId = res.typeId,
       this.YTD = res.ytd
       this.targetYTD = res.targetYTD

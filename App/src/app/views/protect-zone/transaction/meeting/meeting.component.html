@@ -124,7 +124,7 @@
     <div class="row mb-2">
       <div class="col-md-6">
         <div class="row">
-          <div class="col-md-7">Policy: {{policyTitle}}</div>
+          <div class="col-md-7">上一階KPI: {{policyTitle}}</div>
           <div class="col-md-5">Level: {{levelTitle}}</div>
         </div>
         <hr>
@@ -354,6 +354,7 @@
 
 
           <ng-template #rowTemplate let-data>
+
             <tr  *ngFor="let items of data.currentMonthData; let i= index;">
               <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
               <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
@@ -383,18 +384,17 @@
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
                     <p style="height: 12vh; overflow-y: scroll;">
                       {{itemss.content}}
-                      <!-- <textarea autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea> -->
                     </p>
                   </ng-container>
                   <ng-template #elseTemplate>
                     <p style="height: 12vh; overflow-y: scroll;">
                       {{itemss.content}}
-                      <!-- <textarea  autosize type="text" readonly class="form-control" [value]="itemss.content" name="content" style="text-align:left;"></textarea> -->
                     </p>
                     <hr>
                   </ng-template>
                 </span>
               </td>
+
 
               <td style="font-size: 14px; "
               scope="row"
@@ -437,6 +437,69 @@
             </tr>
           </ng-template>
         </ejs-grid>
+
+        <!-- <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%">月份</th>
+              <th scope="col" class="text-center" style="width: 210px;">P</th>
+              <th scope="col" class="text-center" style="width: 50px;">Target</th>
+              <th scope="col" class="text-center" style="width: 50px;">Deadline</th>
+              <th scope="col" class="text-center" style="width: 210px">D</th>
+              <th scope="col" class="text-center" style="width: 50px">Achievement</th>
+              <th scope="col" class="text-center" style="width: 80px">Status</th>
+              <th scope="col" class="text-center" style="width: 210px">C</th>
+
+              <th rowspan="2" scope="col" class="text-center" style="width: 220px">A</th>
+              <th scope="col" class="text-center" style="width: 50px;">Target</th>
+              <th scope="col" class="text-center" style="width: 50px;">Deadline</th>
+
+              <th scope="col" class="text-center" style="width: 50px;">Option</th>
+            </tr>
+
+
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let data of dataTable; let i= index;">
+              <tr  *ngFor="let items of data.currentMonthData; let i= index;">
+                <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
+                <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
+                <td style="font-size: 14px; word-wrap: break-word;;" class="border text-center" >{{items.target}}</td>
+                <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
+                <td style="font-size: 14px; " class="border align-top"  >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="content" style="text-align:left;"></textarea>
+                </td>
+                <td style="font-size: 14px; " class="border text-center">
+                  {{items.achievement}}
+                </td>
+                <td style="font-size: 14px; " class="border text-center">
+                  {{items.statusName | translate}}
+                </td>
+                <td style="font-size: 14px; " class="border align-top"  >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
+                </td>
+
+                <td [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0" colspan="3">
+                  <table style="border: none;">
+                    <tr *ngFor="let itemss of data.nextMonthData; let i= index;">
+                      <td>{{itemss.content}}</td>
+                      <td>{{itemss.target}}</td>
+                      <td>{{itemss.deadline}}</td>
+                    </tr>
+                  </table>
+                </td>
+
+
+                <td style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
+                  <div style="text-align: center;">
+                    <button type="button" (click)='download(data.date, fileModal)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
+                  </div>
+                </td>
+
+              </tr>
+            </ng-container>
+          </tbody>
+        </table> -->
       </div>
     </div>
 

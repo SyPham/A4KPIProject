@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using NetUtility;
+using AutoMapper.QueryableExtensions;
 
 namespace A4KPI.Services
 {
@@ -205,6 +206,9 @@ namespace A4KPI.Services
             List<double> listTarget = new List<double>();
             List<double> listPerfomance = new List<double>();
             var dataTable = new List<DataTable>();
+            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiId).FirstOrDefaultAsync();
+            var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            var policy = parentKpi.Name;
             var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult).ToListAsync();
             for (int i = 1; i <= 12; i++)
             {
@@ -423,7 +427,8 @@ namespace A4KPI.Services
                 YTD = YTD,
                 TypeId = typeId,
                 TargetYTD = TargetYTD,
-                DataTable = dataTable
+                DataTable = dataTable,
+                Policy = policy
             };
         }
 
