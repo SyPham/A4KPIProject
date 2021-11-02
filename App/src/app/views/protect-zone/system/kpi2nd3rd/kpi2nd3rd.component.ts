@@ -166,7 +166,6 @@ export class Kpi2nd3rdComponent implements OnInit {
         id: "DeleteOC",
       },
     ];
-    console.log(this.contextMenuItems);
     this.toolbar = [
       "Search",
       "新增下一階KPI",
@@ -218,7 +217,6 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   contextMenuClick(args) {
-    console.log(args.item.id);
     const lang = localStorage.getItem('lang')  ;
     const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
     if( this.currentLevel === 3 && args.item.id === 'Add-Sub-Item') {
@@ -264,7 +262,6 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.picItem = data.pics;
   }
   actionComplete(args) {
-    console.log(args);
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       if (args.rowData.entity.createBy !== this.userId) {
@@ -336,7 +333,6 @@ export class Kpi2nd3rdComponent implements OnInit {
 
   getBuildingsAsTreeView() {
     this.kpiNewService.getTree2nd3rd().subscribe((res) => {
-      console.log('getBuildingsAsTreeView', res);
       this.data = res;
     });
   }

@@ -46,11 +46,20 @@
                 ************
               </ng-template>
             </e-column>
+            <e-column field="role" textAlign='Center' headerText="{{ 'Authority group'}}">
+              <ng-template #editTemplate let-data>
+                <ejs-dropdownlist #positionDropdownlist [dataSource]='roles' [value]="data.role"
+                  [fields]='fieldsRole' [allowFiltering]='true'
+                  (change)='onChangeRole($event,data)'>
+                </ejs-dropdownlist>
+              </ng-template>
+            </e-column>
             <e-column field="email" textAlign='Center' headerText="Email">
               <ng-template #headerTemplate let-data>
                 {{"Email" | translate}}
               </ng-template>
             </e-column>
+
             <e-column field="factName" textAlign='Center' width="100" headerText="Factory">
               <ng-template #headerTemplate let-data>
                 {{"FactoryA" | translate}}

@@ -62,7 +62,6 @@ export class ViewKPIComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(window.location.hostname);
     this.editing = { allowDeleting: false, allowEditing: false, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
@@ -215,7 +214,6 @@ export class ViewKPIComponent implements OnInit {
     this.picId = data.pic
   }
   actionComplete(args) {
-    console.log(args);
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       this.updateModel(item);
@@ -252,7 +250,6 @@ export class ViewKPIComponent implements OnInit {
 
   getBuildingsAsTreeView() {
     this.kpiNewService.getTree().subscribe((res) => {
-      console.log(res);
       this.data = res;
     });
   }

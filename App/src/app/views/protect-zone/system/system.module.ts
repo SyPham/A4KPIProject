@@ -64,19 +64,7 @@ loadCldr(
 @NgModule({
   declarations: [
     AccountComponent,
-    AccountGroupComponent,
-    ProgressComponent,
-    // PeriodComponent,
-    OcComponent,
-    OcUserComponent,
-    PeriodTypeComponent,
-    AccountGroupPeriodComponent,
-    PolicyComponent,
-    SettingMonthlyComponent,
-    KpiCreateComponent,
-    KpiCreate2Component,
-    Kpi2nd3rdComponent,
-    ViewKPIComponent
+    AccountGroupComponent
   ],
   imports: [
     CommonModule,

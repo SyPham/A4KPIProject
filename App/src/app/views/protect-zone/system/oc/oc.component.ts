@@ -80,6 +80,7 @@ export class OcComponent implements OnInit {
     this.toolbar = [
       "Search",
       "Add",
+      "新增下一階",
       "Cancel",
       "ExpandAll",
       "CollapseAll",
@@ -107,10 +108,18 @@ export class OcComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    switch (args.item.text) {
-      case "Add":
+    switch (args.item.id) {
+      case "treegrid_gridcontrol_add":
         args.cancel = true;
         this.openMainModal();
+        break;
+      case "treegrid_gridcontrol_新增下一階":
+        if(this.oc?.parentID !== undefined && this.oc?.parentID !== null) {
+          args.cancel = true;
+          this.openSubModal();
+        } else {
+          this.alertify.error("Please choose parent the OC!!!");
+        }
         break;
       default:
         break;
@@ -195,6 +204,9 @@ export class OcComponent implements OnInit {
     this.modalReference = this.modalServices.open(this.content, { size: "lg"});
     this.title = "Add Main OC";
     this.oc = this.oc;
+    this.modalReference.result.then((result) => {
+    }, (reason) => {
+    });
 
   }
   openSubModal() {
@@ -203,6 +215,10 @@ export class OcComponent implements OnInit {
     });
     this.title = "Add Sub OC";
     this.oc = this.oc;
+
+    this.modalReference.result.then((result) => {
+    }, (reason) => {
+    });
   }
 
 

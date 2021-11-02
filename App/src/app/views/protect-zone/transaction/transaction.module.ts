@@ -1,5 +1,5 @@
+import { FluidHeightDirective } from './../../../_core/_directive/fluid-height.directive';
 import { ChangePasswordComponent } from './change-password/change-password.component';
-import { ContentHeightDirective } from './../../../_core/_directive/content-height.directive';
 import { PdcaStringTypeComponent } from './todolist2/pdcaStringType/pdcaStringType.component';
 import { PlanStringTypeComponent } from './todolist2/planStringType/planStringType.component';
 import { MeetingComponent } from './meeting/meeting.component';
@@ -47,6 +47,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
+import { TargetHeightDirective } from 'src/app/_core/_directive/target-height.directive';
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -100,11 +101,11 @@ loadCldr(
     NgTemplateNameDirective,
     UploadKpiComponent,
     PlanComponent,
+    FluidHeightDirective,
+    TargetHeightDirective,
     PlanStringTypeComponent,
     PdcaComponent,
     PdcaStringTypeComponent,
-    ContentHeightDirective,
-    ChangePasswordComponent,
     UploadFileComponent
   ],
   imports: [

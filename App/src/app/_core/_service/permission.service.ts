@@ -173,7 +173,7 @@ export class PermissionService {
         const navs: INavData[] = [
           {
             name: 'Home',
-            url: '/',
+            url: '/transaction/todolist2',
             icon: 'icon-home',
             badge: {
               variant: 'info',
@@ -182,7 +182,7 @@ export class PermissionService {
           },
           {
             title: true,
-            name: 'Mixing Room'
+            name: 'KPI System'
           },
         ];
         for (const item of menus) {
@@ -198,14 +198,12 @@ export class PermissionService {
               name: child.name,
               url: child.url,
               icon: "far fa-circle"
-              // icon: item.icon || 'fa fa-circle'
             };
             children.push(itemChild);
           }
           node.children = children;
           navs.push(node);
         }
-        console.log(navs);
         localStorage.setItem('navs', JSON.stringify(navs));
         return navs;
       }));

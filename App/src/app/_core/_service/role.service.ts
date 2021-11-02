@@ -1,7 +1,7 @@
 import { EnvService } from './env.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -28,7 +28,7 @@ export class RoleService {
       .post(`${this.env.apiUrl}UserRole/MappingUserRole`, userRole);
   }
   mapUserRole(userID: number, roleID: number) {
-    return this.http.put(`${this.env.apiUrl}UserRole/MapUserRole/${userID}/${roleID}`, {} );
+    return this.http.put(`${this.env.apiUrl}Role/MapUserRole/${userID}/${roleID}`, {} );
   }
   lock(userRole: IUserRole) {
     return this.http.put(`${this.env.apiUrl}UserRole/Lock`, userRole);
@@ -37,10 +37,10 @@ export class RoleService {
     return this.http.put(`${this.env.apiUrl}UserRole/IsLock`, userRole);
   }
   getRoleByUserID(userid: number) {
-    return this.http.get<any>(`${this.env.apiUrl}UserRole/GetRoleByUserID/${userid}`);
+    return this.http.get<any>(`${this.env.apiUrl}Role/GetRoleByUserID/${userid}`);
   }
   create(model) {
-    return this.http.post(this.env.apiUrl + 'Role/Create', model);
+    return this.http.post(this.env.apiUrl + 'Role/Add', model);
   }
   update(model) {
     return this.http.put(this.env.apiUrl + 'Role/Update', model);

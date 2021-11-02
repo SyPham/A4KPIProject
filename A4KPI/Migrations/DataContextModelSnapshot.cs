@@ -434,6 +434,75 @@ namespace A4KPI.Migrations
                     b.ToTable("Do");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.FunctionSystem", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ModuleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ModuleID");
+
+                    b.HasIndex("ParentID");
+
+                    b.ToTable("FunctionSystem");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.FunctionTranslation", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FunctionSystemID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LanguageID")
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FunctionSystemID");
+
+                    b.HasIndex("LanguageID");
+
+                    b.ToTable("FunctionTranslations");
+                });
+
             modelBuilder.Entity("A4KPI.Models.KPI", b =>
                 {
                     b.Property<int>("Id")
@@ -580,6 +649,23 @@ namespace A4KPI.Migrations
                     b.ToTable("KPIScore");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Language", b =>
+                {
+                    b.Property<string>("ID")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Languages");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Mailing", b =>
                 {
                     b.Property<int>("Id")
@@ -622,6 +708,66 @@ namespace A4KPI.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Mailings");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Module", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Modules");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.ModuleTranslation", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LanguageID")
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("ModuleID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LanguageID");
+
+                    b.HasIndex("ModuleID");
+
+                    b.ToTable("ModuleTranslations");
                 });
 
             modelBuilder.Entity("A4KPI.Models.OC", b =>
@@ -752,6 +898,39 @@ namespace A4KPI.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("Objectives");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Option", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Options");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.OptionInFunctionSystem", b =>
+                {
+                    b.Property<int>("OptionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FunctionSystemID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OptionID", "FunctionSystemID");
+
+                    b.HasIndex("FunctionSystemID");
+
+                    b.ToTable("OptionInFunctionSystems");
                 });
 
             modelBuilder.Entity("A4KPI.Models.PIC", b =>
@@ -918,6 +1097,26 @@ namespace A4KPI.Migrations
                     b.ToTable("PeriodType");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.Permission", b =>
+                {
+                    b.Property<int>("OptionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FunctionSystemID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OptionID", "FunctionSystemID", "RoleID");
+
+                    b.HasIndex("FunctionSystemID");
+
+                    b.HasIndex("RoleID");
+
+                    b.ToTable("Permisions");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Plan", b =>
                 {
                     b.Property<int>("Id")
@@ -1049,6 +1248,25 @@ namespace A4KPI.Migrations
                     b.HasIndex("ObjectiveId");
 
                     b.ToTable("ResultOfMonth");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Role", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("A4KPI.Models.SettingMonthly", b =>
@@ -1340,6 +1558,29 @@ namespace A4KPI.Migrations
                     b.ToTable("UploadFile");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.UserRole", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsLock")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RoleID");
+
+                    b.ToTable("UserRoles");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Account", b =>
                 {
                     b.HasOne("A4KPI.Models.AccountType", "AccountType")
@@ -1507,6 +1748,38 @@ namespace A4KPI.Migrations
                     b.Navigation("Action");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.FunctionSystem", b =>
+                {
+                    b.HasOne("A4KPI.Models.Module", "Module")
+                        .WithMany("Functions")
+                        .HasForeignKey("ModuleID");
+
+                    b.HasOne("A4KPI.Models.FunctionSystem", "Function")
+                        .WithMany()
+                        .HasForeignKey("ParentID");
+
+                    b.Navigation("Function");
+
+                    b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.FunctionTranslation", b =>
+                {
+                    b.HasOne("A4KPI.Models.FunctionSystem", "FunctionSystem")
+                        .WithMany("FunctionTranslations")
+                        .HasForeignKey("FunctionSystemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Language", "Language")
+                        .WithMany("FunctionTranslations")
+                        .HasForeignKey("LanguageID");
+
+                    b.Navigation("FunctionSystem");
+
+                    b.Navigation("Language");
+                });
+
             modelBuilder.Entity("A4KPI.Models.KPIAccount", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1564,6 +1837,23 @@ namespace A4KPI.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.ModuleTranslation", b =>
+                {
+                    b.HasOne("A4KPI.Models.Language", "Language")
+                        .WithMany("ModuleTranslations")
+                        .HasForeignKey("LanguageID");
+
+                    b.HasOne("A4KPI.Models.Module", "Module")
+                        .WithMany("ModuleTranslations")
+                        .HasForeignKey("ModuleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("A4KPI.Models.OCAccount", b =>
                 {
                     b.HasOne("A4KPI.Models.Account", "Account")
@@ -1592,6 +1882,25 @@ namespace A4KPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.OptionInFunctionSystem", b =>
+                {
+                    b.HasOne("A4KPI.Models.FunctionSystem", "FunctionSystem")
+                        .WithMany()
+                        .HasForeignKey("FunctionSystemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Option", "Option")
+                        .WithMany()
+                        .HasForeignKey("OptionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FunctionSystem");
+
+                    b.Navigation("Option");
                 });
 
             modelBuilder.Entity("A4KPI.Models.PIC", b =>
@@ -1656,6 +1965,33 @@ namespace A4KPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Period");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Permission", b =>
+                {
+                    b.HasOne("A4KPI.Models.FunctionSystem", "Functions")
+                        .WithMany()
+                        .HasForeignKey("FunctionSystemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Option", "Option")
+                        .WithMany()
+                        .HasForeignKey("OptionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("A4KPI.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Functions");
+
+                    b.Navigation("Option");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("A4KPI.Models.Plan", b =>
@@ -1759,6 +2095,17 @@ namespace A4KPI.Migrations
                     b.Navigation("Objective");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.UserRole", b =>
+                {
+                    b.HasOne("A4KPI.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("A4KPI.Models.Account", b =>
                 {
                     b.Navigation("AccountGroupAccount");
@@ -1787,6 +2134,11 @@ namespace A4KPI.Migrations
                     b.Navigation("Does");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.FunctionSystem", b =>
+                {
+                    b.Navigation("FunctionTranslations");
+                });
+
             modelBuilder.Entity("A4KPI.Models.KPINew", b =>
                 {
                     b.Navigation("Actions");
@@ -1794,6 +2146,20 @@ namespace A4KPI.Migrations
                     b.Navigation("KPIAccounts");
 
                     b.Navigation("Targets");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Language", b =>
+                {
+                    b.Navigation("FunctionTranslations");
+
+                    b.Navigation("ModuleTranslations");
+                });
+
+            modelBuilder.Entity("A4KPI.Models.Module", b =>
+                {
+                    b.Navigation("Functions");
+
+                    b.Navigation("ModuleTranslations");
                 });
 
             modelBuilder.Entity("A4KPI.Models.OC", b =>

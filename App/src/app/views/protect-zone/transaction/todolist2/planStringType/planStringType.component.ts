@@ -99,7 +99,6 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
     }
   }
   submit(){
-    // console.log(Number(this.targetValue))
     this.grid.editModule.endEdit()
     if (this.validate(true) == false) return;
     this.spinner.show();
@@ -146,12 +145,10 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD ,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(request);
 
     const post = this.todolist2Service.submitAction(request)
     const submitKPINew = this.todolist2Service.submitKPINew(this.data.id);
     forkJoin([post, submitKPINew]).subscribe(response => {
-      console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);
       if (checker) {
@@ -204,7 +201,6 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
     return true;
   }
   actionBegin(args) {
-    console.log(args);
     if(args.requestType === 'save' && args.action === 'edit') {
 
       for (let item in this.grid.dataSource) {
@@ -240,7 +236,6 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
     this.grid.editModule.endEdit()
     if (this.validate(isSubmit) == false) return;
     const dataSource = this.grid.dataSource as Action[];
-    console.log(dataSource);
     if(this.typeText === 'string') {
       this.target = {
         id: 0,

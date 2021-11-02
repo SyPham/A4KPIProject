@@ -26,6 +26,8 @@ namespace A4KPI.Services
     {
         private readonly IRepositoryBase<Account> _repo;
         private readonly IRepositoryBase<OC> _repoOc;
+        private readonly IRepositoryBase<UserRole> _repoUserRole;
+        private readonly IRepositoryBase<Role> _repoRole;
         private readonly IRepositoryBase<AccountGroupAccount> _repoAccountGroupAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -35,6 +37,8 @@ namespace A4KPI.Services
         public AccountService(
             IRepositoryBase<Account> repo,
             IRepositoryBase<OC> repoOC,
+            IRepositoryBase<UserRole> repoUserRole,
+            IRepositoryBase<Role> repoRole,
             IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
@@ -44,6 +48,8 @@ namespace A4KPI.Services
         {
             _repo = repo;
             _repoOc = repoOC;
+            _repoUserRole = repoUserRole;
+            _repoRole = repoRole;
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -103,7 +109,7 @@ namespace A4KPI.Services
                     StatusCode = HttpStatusCode.OK,
                     Message = MessageReponse.AddSuccess,
                     Success = true,
-                    Data = model
+                    Data = item.Id
                 };
             }
             catch (Exception ex)
@@ -193,6 +199,8 @@ namespace A4KPI.Services
                             FactName = a.FactId != null ? _repoOc.FindById(a.FactId).Name : "N/A",
                             CenterName = a.CenterId != null ? _repoOc.FindById(a.CenterId).Name : "N/A",
                             DeptName = a.DeptId != null ? _repoOc.FindById(a.DeptId).Name : "N/A",
+                            Role = _repoRole.FindAll().FirstOrDefault(x => x.ID == _repoUserRole.FindAll().FirstOrDefault(y => y.UserID == a.Id).RoleID).Name ?? "N/A",
+                            RoleCode = _repoRole.FindAll().FirstOrDefault(x => x.ID == _repoUserRole.FindAll().FirstOrDefault(y => y.UserID == a.Id).RoleID).Code ?? "N/A"
 
                         };
             var data = await model.ToListAsync();

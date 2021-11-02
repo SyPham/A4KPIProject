@@ -1,3 +1,4 @@
+import { RoleService } from 'src/app/_core/_service/role.service';
 import { filter } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -12,6 +13,7 @@ import { AccountGroupService } from 'src/app/_core/_service/account.group.servic
 import { AccountGroup } from 'src/app/_core/_model/account.group';
 import { OcService } from 'src/app/_core/_service/oc.service';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { IRole } from 'src/app/_core/_model/role';
 
 @Component({
   selector: 'app-account',
@@ -52,8 +54,13 @@ export class AccountComponent extends BaseComponent implements OnInit {
   dataOclv4: any;
   dataOclv5: any;
   dataOc: any;
+  roles: IRole[];
+  userID: any;
+  roleID: any;
+  fieldsRole: object = { text: 'name', value: 'name' };
   constructor(
     private service: Account2Service,
+    private roleService: RoleService,
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
     private ocService: OcService,
@@ -67,19 +74,22 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.getAccounts();
     this.getAllOc();
     this.loadAccountGroupData();
+    this.getAllRoles();
   }
+
   filterCenter(args) {
     this.deptId = 0
     this.dataOclv5 = this.dataOc.filter(x => x.parentId === args.value)
     this.dataOclv5.unshift({ name: "N/A", id: 0 });
   }
+
   filterFact(args) {
-    console.log(args);
     this.centerId = 0
     this.deptId = 0
     this.dataOclv4 = this.dataOc.filter(x => x.parentId === args.value)
     this.dataOclv4.unshift({ name: "N/A", id: 0 });
   }
+
   getAllOc(){
     this.ocService.getAll().subscribe((res: any) => {
       this.dataOc = res
@@ -100,6 +110,18 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
     })
   }
+
+  onChangeRole(args, data) {
+    this.userID = data.id;
+    this.roleID = args.itemData.id;
+  }
+
+  getAllRoles() {
+    this.roleService.getAll().subscribe(res => {
+      this.roles = res
+    })
+  }
+
   loadData() {
     this.service.getAll().subscribe(data => {
       this.data = data;
@@ -157,6 +179,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.factId = data.factId;
     this.centerId = data.centerId;
     this.deptId = data.deptId;
+
   }
   actionBegin(args) {
     if (args.requestType === 'add') {
@@ -206,7 +229,14 @@ export class AccountComponent extends BaseComponent implements OnInit {
         args.cancel = true;
         return;
       }
-      this.create();
+      if (this.roleID > 0) {
+        this.create();
+      } else {
+        args.cancel = true;
+        this.alertify.error('Please select a role! <br>');
+        return;
+      }
+      // this.create();
     }
     if (args.requestType === 'save' && args.action === 'edit') {
       this.accountUpdate = {
@@ -300,10 +330,22 @@ export class AccountComponent extends BaseComponent implements OnInit {
     );
 
   }
+  mapUserRole(userID: number, roleID: number) {
+    this.roleService.mapUserRole(userID, roleID).subscribe((res: any) => {
+      if (res.status) {
+        this.alertify.success(MessageConstants.CREATED_OK_MSG);
+        this.loadData();
+        this.roleID = 0;
+      } else {
+        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+      }
+    });
+  }
   create() {
     this.service.add(this.accountCreate).subscribe(
       (res) => {
         if (res.success === true) {
+          this.mapUserRole(res.data, this.roleID)
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
           this.loadData();
           this.getAccounts();
@@ -323,6 +365,9 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.service.update(this.accountUpdate).subscribe(
       (res) => {
         if (res.success === true) {
+          if (this.userID > 0 && this.roleID > 0) {
+            this.mapUserRole(this.userID, this.roleID);
+          }
           this.alertify.success(MessageConstants.UPDATED_OK_MSG);
           this.loadData();
         } else {

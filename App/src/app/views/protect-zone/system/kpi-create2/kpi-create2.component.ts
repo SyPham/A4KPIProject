@@ -63,7 +63,6 @@ export class KpiCreate2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(window.location.hostname);
     this.editing = { allowDeleting: true, allowEditing: true, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
@@ -126,7 +125,6 @@ export class KpiCreate2Component implements OnInit {
       Pic: this.picId,
       KpiIds: this.picItem
     }
-    console.log(model);
     if (this.validation()) {
       this.kpiNewService.add(model).subscribe(res => {
         if(res) {
@@ -235,7 +233,6 @@ export class KpiCreate2Component implements OnInit {
 
   }
   actionComplete(args) {
-    console.log(args);
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       this.updateModel(item);
@@ -273,7 +270,6 @@ export class KpiCreate2Component implements OnInit {
 
   getBuildingsAsTreeView() {
     this.kpiNewService.getTree().subscribe((res) => {
-      console.log(res);
       this.data = res;
     });
   }

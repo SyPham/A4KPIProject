@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { filter } from 'rxjs/operators';
 import { OcPolicyService } from './../../../../_core/_service/OcPolicy.service';
 import { BaseComponent } from 'src/app/_core/_component/base.component';
@@ -20,6 +21,8 @@ import { DatePipe } from '@angular/common';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { Tooltip } from '@syncfusion/ej2-angular-popups';
 import { environment } from 'src/environments/environment';
+import { DataService } from 'src/app/_core/_service/data.service';
+import { Custom } from 'src/app/_core/_model/contribution';
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
@@ -173,6 +176,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   factName: any;
   centerName: any;
   deptName: any;
+  changeLocalHome = [];
+  dataHeight: any = [];
+  ytds: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -184,7 +190,11 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     private alertify: AlertifyService,
     public todolist2Service: Todolist2Service,
     private route: ActivatedRoute,
-  ) { super(); }
+    private dataService: DataService
+  ) { super();
+
+
+  }
 
   ngOnInit() {
     this.getAllOcLv3();
@@ -193,57 +203,20 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     this.currentTime = new Date();
 
   }
+  ngOnDestroy() {
+    this.changeLocalHome.forEach(item => item.unsubscribe());
+  }
   getAllOc(){
     this.ocService.getAll().subscribe((res: any) => {
       this.dataOc = res
-
       this.dataFact = res.filter(x => x.level === 3)
-      console.log(this.dataFact);
-
       this.dataFact.unshift({ name: "All", id: 0 });
-      //Oclv3
-      // this.dataOclv3 = res.filter(x => x.level === 3)
-      // this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
-      // //end Oclv3
-
-      // //Oclv4
-      // this.dataOclv4 = res.filter(x => x.level === 4)
-      // this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
-      // //end Oclv4
-
-      // //Oclv5
-      // this.dataOclv5 = res.filter(x => x.level === 5)
-      // this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
-
-      //end Oclv5
 
     })
   }
   ngAfterViewInit() {
 
   }
-  // filterFact(args) {
-  //   this.factId = args.value
-  //   console.log(this.factId);
-  //   this.dataCenter = this.dataOc.filter(x => x.parentId === this.factId)
-  //   this.dataCenter.unshift({ name: "All", id: 0 });
-  //   console.log(this.dataCenter);
-  //   if(this.factId === 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
-  //     this.policyData = this.policyDataTamp
-  //   }
-  //   if(this.factId > 0 && this.centerId === 0 && this.deptId === 0 && this.levelId === 0) {
-  //     this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId)
-  //   }
-  //   if(this.factId > 0 && this.centerId > 0 && this.deptId === 0 && this.levelId === 0) {
-  //     this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId)
-  //   }
-  //   if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId === 0) {
-  //     this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId)
-  //   }
-  //   if(this.factId > 0 && this.centerId > 0 && this.deptId > 0 && this.levelId > 0) {
-  //     this.policyData = this.policyDataTamp.filter(x => x.factId == this.factId && x.centerId == this.centerId && x.deptId == this.deptId && x.level == this.levelId)
-  //   }
-  // }
 
   filterFact(args) {
     this.factId = args.value
@@ -369,46 +342,38 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     }
   }
   public queryCellInfoEvent: EmitType<QueryCellInfoEventArgs> = (args: QueryCellInfoEventArgs) => {
-    // console.log(args);
-    // const data = args.data as any;
-    // const dataTable = this.dataTable.filter((thing, i, arr) => {
-    //   return arr.indexOf(arr.find(t => t.actionId === thing.actionId)) === i;
-    // });
-    // const fields = ['month', 'cContent'];
-    // if (fields.includes(args.column.field)) {
-    //   args.rowSpan = this.dataTable.filter(
-    //     item => item.month === data.month &&
-    //       item.cContent === data.cContent
-    //   ).length;
-    // }
+
   }
   scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
   openModal(data, model) {
-    console.log(data);
     this.typeText = data.typeText
-
     this.kpiTitle = data.name
     this.levelTitle = data.level
     this.picTitle = data.picName
     this.unitId = data.typeId
     this.unitName = data.typeName
     this.kpiId = data.id
-    this.loadDataModel2(data.id)
+    this.loadDataModel2(this.kpiId)
     this.modalRef = this.modalService.open(model, { size: 'lg', backdrop: 'static' });
     this.modalRef.result.then((result) => {
       this.perfomance = []
       this.targets = []
       this.labels = []
       this.dataTable = []
+      // this.changeLocalHome.unsubscribe();
+      this.dataHeight = []
     }, (reason) => {
       this.perfomance = []
       this.targets = []
       this.labels = []
       this.dataTable = []
+      // this.changeLocalHome.unsubscribe();
+      this.dataHeight = []
 
     });
+
   }
   createChart(chartId, labels, unit) {
     const ctx = document.getElementById(chartId) as HTMLCanvasElement;
@@ -558,6 +523,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
  }
   loadDataModel2(id) {
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
+      this.ytds = res.ytds
       this.policyTitle = res.policy
       this.typeId = res.typeId,
       this.YTD = res.ytd
@@ -565,21 +531,66 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.perfomance = res.perfomances
       this.targets = res.targets
       this.labels = res.labels
+
       this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
-      console.log(res.dataTable);
-      console.log(res);
+      const dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
+
       this.createChart(
         'planet-chart',
         this.labels,
         this.unitName
       )
+      this.changeLocalHome.push(this.dataService.currentMessage.subscribe((res: any)=>{
+        if(res === 0)
+          return
+        if(res.value > 0 || res.value !== undefined)
+          this.dataHeight = []
+          this.dataHeight.push(
+            {
+              value: res.value,
+              actionId: res.actionId,
+              month: res.month
+            }
+          )
+          for (let item of dataTable) {
+              for (let items in item.nextMonthData) {
+                let i = Number(items);
+                if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
+                  item.nextMonthData[i].heightA = res.value
+                  break;
+                }
+              }
+          }
+      }))
+      this.changeLocalHome.push(this.dataService.currentMessagesTarget.subscribe((res: any)=>{
+        if(res === 0)
+          return
+        if(res.value > 0 || res.value !== undefined)
+          this.dataHeight = []
+          this.dataHeight.push(
+            {
+              value: res.value,
+              actionId: res.actionId,
+              month: res.month
+            }
+          )
+          for (let item of dataTable) {
+              for (let items in item.nextMonthData) {
+                let i = Number(items);
+                if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
+                  item.nextMonthData[i].heightT = res.value
+                  break;
+                }
+              }
+          }
+      }))
+
 
     })
   }
 
   getAllKpi() {
     this.meetingService.getAllKpi().subscribe((res: any) => {
-      console.log(res);
       this.policyData = res
       this.policyDataTamp = res
       const level = res.map((item: any) => {

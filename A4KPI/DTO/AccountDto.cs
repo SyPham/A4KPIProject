@@ -20,6 +20,8 @@ namespace A4KPI.DTO
         public string FactName { get; set; }
         public string CenterName { get; set; }
         public string DeptName { get; set; }
+        public string Role { get; set; }
+        public string RoleCode { get; set; }
         public int? Manager { get; set; }
         public int? FactId { get; set; }
         public int? CenterId { get; set; }

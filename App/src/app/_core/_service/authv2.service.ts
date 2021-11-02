@@ -108,14 +108,12 @@ export class Authv2Service implements OnDestroy {
         map((x: any) => {
           const loginResult = x as ApplicationUser;
           const user = x.user;
-        //   localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('user', JSON.stringify(user));
         //  localStorage.setItem('token', x.token);
 
           this._user.next(loginResult as ApplicationUser);
-          // this.decodedToken = this.jwtHelper.decodeToken(loginResult.accessToken);
           this.currentUser = user;
-         // this.setLocalStorage(loginResult);
-          //this.startTokenTimer();
+          this.startTokenTimer();
           return loginResult;
         })
       );
@@ -202,7 +200,6 @@ export class Authv2Service implements OnDestroy {
     this.currentUser = null;
     this.functionsValue.next({} as FunctionSystem);
     this._user.next({} as ApplicationUser);
-    this.buildingValue.next([{} as IBuilding]);
     this.roleValue.next({} as IRole);
     // const uri = this.router.url;
     // this.router.navigate(['login'], { queryParams: { uri } });

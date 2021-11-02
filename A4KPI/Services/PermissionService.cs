@@ -1,0 +1,250 @@
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using A4KPI.Constants;
+using A4KPI.Data;
+using A4KPI.DTO;
+using A4KPI.Helpers;
+using A4KPI.Models;
+using A4KPI.Services.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using NetUtility;
+
+namespace A4KPI.Services
+{
+    public interface IPermissionService : IServiceBase<Permission, PermissionDto>
+    {
+        Task<object> GetScreenFunctionAndAction(ScreenFunctionAndActionRequest request);
+        Task<ResponseDetail<object>> PutPermissionByRoleId(int roleID, UpdatePermissionRequest request);
+        Task<object> GetMenuByLangID(int userId, string langID);
+        Task<object> GetActionInFunctionByRoleID(int roleID);
+    }
+    public class PermissionService : ServiceBase<Permission, PermissionDto>, IPermissionService
+    {
+        private readonly IRepositoryBase<Permission> _repo;
+        private readonly IRepositoryBase<UserRole> _repoUserRole;
+        private readonly IRepositoryBase<OptionInFunctionSystem> _repoOptionFunctionSystem;
+        private readonly IRepositoryBase<OC> _repoOc;
+        private readonly IRepositoryBase<Role> _repoRole;
+        private readonly IRepositoryBase<Option> _repoOption;
+        private readonly IRepositoryBase<FunctionTranslation> _repoFunctionTranslation;
+        private readonly IRepositoryBase<AccountGroupAccount> _repoAccountGroupAccount;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly MapperConfiguration _configMapper;
+        private OperationResult operationResult;
+        private readonly string[] Permissions = new string[] { "Action", "Action In Function", "Module", "Function" };
+        public PermissionService(
+            IRepositoryBase<Permission> repo,
+            IRepositoryBase<OC> repoOC,
+            IRepositoryBase<Role> repoRole,
+            IRepositoryBase<Option> repoOption,
+            IRepositoryBase<FunctionTranslation> repoFunctionTranslation,
+            IRepositoryBase<OptionInFunctionSystem> repoOptionFunctionSystem,
+            IRepositoryBase<UserRole> repoUserRole,
+            IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            MapperConfiguration configMapper
+            )
+            : base(repo, unitOfWork, mapper, configMapper)
+        {
+            _repo = repo;
+            _repoOc = repoOC;
+            _repoRole = repoRole;
+            _repoOption = repoOption;
+            _repoFunctionTranslation = repoFunctionTranslation;
+            _repoOptionFunctionSystem = repoOptionFunctionSystem;
+            _repoUserRole = repoUserRole;
+            _repoAccountGroupAccount = repoAccountGroupAccount;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _configMapper = configMapper;
+        }
+
+        /// <summary>
+        /// Add account sau do add AccountGroupAccount
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// 
+
+        public async Task<object> GetActionInFunctionByRoleID(int roleID)
+        {
+            var query = _repo.FindAll(x => x.RoleID == roleID)
+                .Include(x => x.Functions)
+                .Include(x => x.Option)
+                .Select(x => new
+                {
+                    x.Functions.Name,
+                    FunctionCode = x.Functions.Code,
+                    x.Functions.Url,
+                    x.Option.Code,
+                    x.OptionID
+                });
+            var data = (await query.ToListAsync()).GroupBy(x => new { x.Name, x.FunctionCode, x.Url })
+                    .Select(x => new
+                    {
+                        x.Key.Name,
+                        x.Key.FunctionCode,
+                        x.Key.Url,
+                        Childrens = x
+                    });
+            return data;
+        }
+
+        public async Task<object> GetMenuByLangID(int userId, string langID)
+        {
+            var roles = await _repoUserRole.FindAll(x => x.UserID == userId).Select(x => x.RoleID).ToArrayAsync();
+
+            var query = from p in _repo.FindAll()
+                        join f in _repoFunctionTranslation.FindAll(x => x.LanguageID.Equals(langID))
+                                .Include(x => x.FunctionSystem)
+                                .ThenInclude(x => x.Module)
+                                .ThenInclude(x => x.ModuleTranslations)
+                        on p.FunctionSystemID equals f.FunctionSystemID
+                        join r in _repoRole.FindAll() on p.RoleID equals r.ID
+                        join a in _repoOption.FindAll()
+                            on p.OptionID equals a.ID
+                        where roles.Contains(r.ID) && a.Code == "VIEW"
+                        select new
+                        {
+                            Id = f.ID,
+                            Name = f.Name,
+                            Code = f.FunctionSystem.Code,
+                            Url = f.FunctionSystem.Url,
+                            Icon = f.FunctionSystem.Icon,
+                            ParentId = f.FunctionSystem.ParentID,
+                            SortOrder = f.FunctionSystem.Sequence,
+                            Module = f.FunctionSystem.Module,
+                            ModuleId = f.FunctionSystem.ModuleID
+                        };
+            var data = await query
+                .OrderBy(x => x.SortOrder)
+                .ToListAsync();
+            return data.GroupBy(x => x.Module).Select(x => new
+            {
+                Module = x.Key.ModuleTranslations.Count > 0 ?
+                x.Key.ModuleTranslations.FirstOrDefault(x => x.LanguageID.Equals(langID)).Name
+                : x.Key.Name,
+                Icon = x.Key.Icon,
+                Url = x.Key.Url,
+                Sequence = x.Key.Sequence,
+                Children = x,
+                HasChildren = x.Any()
+            }).OrderBy(x => x.Sequence).ToList();
+        }
+
+        public async Task<object> GetScreenFunctionAndAction(ScreenFunctionAndActionRequest request)
+        {
+
+            var roleID = request.RoleIDs;
+            var permission = _repo.FindAll();
+            var query = _repoOptionFunctionSystem.FindAll()
+                .Include(x => x.Option)
+                .Include(x => x.FunctionSystem)
+                .ThenInclude(x => x.FunctionTranslations)
+                .Include(x => x.FunctionSystem)
+                .ThenInclude(x => x.Module)
+                .Select(x => new
+                {
+                    Id = x.FunctionSystem.ID,
+                    FunctionCode = x.FunctionSystem.Code,
+                    Name = x.FunctionSystem.Name == "" || x.FunctionSystem.Name == null ? x.FunctionSystem.FunctionTranslations.First(x => x.LanguageID == "en").Name : x.FunctionSystem.Name,
+                    ActionName = x.Option.Name,
+                    ActionID = x.Option.ID,
+                    SequenceFunction = x.FunctionSystem.Sequence,
+                    Module = x.FunctionSystem.Module,
+                    ModuleCode = x.FunctionSystem.Module.Code,
+                    ModuleNameID = x.FunctionSystem.Module.ID,
+                    Code = x.Option.Code,
+                }).Where(x => !Permissions.Contains(x.FunctionCode));
+            // Dieu kien nay de khong load nhung chuc nang he thong
+            var model = from t1 in query
+                        from t2 in permission.Where(x => roleID.Contains(x.RoleID) && t1.Id == x.FunctionSystemID && x.OptionID == t1.ActionID)
+                            .DefaultIfEmpty()
+                        select new
+                        {
+                            t1.Id,
+                            t1.Name,
+                            t1.ActionName,
+                            t1.ActionID,
+                            t1.Code,
+                            t1.Module,
+                            t1.SequenceFunction,
+                            Permission = t2
+                        };
+            var data = (await model.ToListAsync())
+                        .GroupBy(x => x.Module)
+                        .Select(x => new
+                        {
+                            ModuleName = x.Key.Name,
+                            Sequence = x.Key.Sequence,
+                            Fields = new
+                            {
+                                DataSource = x.GroupBy(s => new { s.Id, s.Name, s.SequenceFunction })
+                                .Select(g => new
+                                {
+                                    Id = g.Key.Id,
+                                    Name = g.Key.Name,
+                                    SequenceFunction = g.Key.SequenceFunction,
+                                    Childrens = g
+                                    .Select(a => new
+                                    {
+                                        ParentID = g.Key.Id,
+                                        ID = $"{a.ActionID}_{g.Key.Id}_{roleID.FirstOrDefault()}",
+                                        Name = a.ActionName,
+                                        a.ActionID,
+                                        FunctionID = g.Key.Id,
+                                        a.ActionName,
+                                        Status = a.Permission != null,
+                                        // Status = permission.Any(p => roleID.Contains(p.RoleID) && a.ActionID == p.ActionID && p.FunctionSystemID == g.Key.Id) 
+                                        // IsChecked = permission.Any(p => roleID.Contains(p.RoleID) && a.ActionID == p.ActionID && p.FunctionSystemID == g.Key.Id)
+
+                                    }).ToList()
+                                }).OrderBy(x => x.SequenceFunction).ToList(),
+                                Id = "id",
+                                Text = "name",
+                                Child = "childrens"
+                            }
+                        });
+            return data.OrderBy(x => x.Sequence).ToList();
+        }
+
+        public async Task<ResponseDetail<object>> PutPermissionByRoleId(int roleID, UpdatePermissionRequest request)
+        {
+
+            try
+            {
+                //create new permission list from user changed
+                var newPermissions = new List<Permission>();
+                foreach (var p in request.Permissions)
+                {
+                    newPermissions.Add(new Permission(roleID, p.ActionID, p.FunctionID));
+                }
+                var existingPermissions = _repo.FindAll().Where(x => x.RoleID == roleID).ToList();
+                if (existingPermissions.Count > 0)
+                {
+                    _repo.RemoveMultiple(existingPermissions);
+
+                }
+                _repo.AddRange(newPermissions.DistinctBy(x => new { x.RoleID, x.OptionID, x.FunctionSystemID }).ToList());
+
+                await _unitOfWork.SaveChangeAsync();
+                return new ResponseDetail<object> { Status = true };
+            }
+            catch (System.Exception ex)
+            {
+                // TODO
+                return new ResponseDetail<object> { Status = false, Message = ex.Message };
+            }
+
+            // tao role moi
+        }
+
+    }
+}

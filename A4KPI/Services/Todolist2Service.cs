@@ -322,7 +322,7 @@ namespace A4KPI.Services
             var month = date.Month;
             //  && x.Actions.Any() == false
             List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || x.Actions.Any() && x.Submitted == false).Select(x => new
+            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || kpiMyPic.Contains(x.Id) && x.Actions.Any() && x.Submitted == false).Select(x => new
             {
                 Id = x.Id,
                 Topic = x.Name,

@@ -6,6 +6,8 @@ import { ObjectiveComponent } from './objective/objective.component';
 import { TodolistComponent } from "./todolist/todolist.component";
 import { UploadKpiComponent } from "./todolist/upload-kpi/upload-kpi.component";
 import { Todolist2Component } from "./todolist2/todolist2.component";
+import { AuthGuard } from 'src/app/_core/_guards/auth.guard';
+import { P404Component } from '../../error/404.component';
 
 const routes: Routes = [
   {
@@ -15,6 +17,13 @@ const routes: Routes = [
       breadcrumb: ''
     },
     children: [
+      {
+        path: '404',
+        component: P404Component,
+        data: {
+          title: 'Page 404'
+        }
+      },
       {
         path: 'objective',
         component: ObjectiveComponent,
@@ -41,9 +50,9 @@ const routes: Routes = [
         data: {
           title: 'To Do List 2',
           breadcrumb: 'To Do List 2',
-          functionCode: 'todolist'
+          functionCode: 'To Do List'
         },
-        // canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'meeting',
@@ -51,20 +60,11 @@ const routes: Routes = [
         data: {
           title: 'Meeting',
           breadcrumb: 'Meeting',
-          functionCode: 'meeting'
+          functionCode: 'Meeting'
         },
-        // canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
-      {
-        path: 'change-password',
-        component: ChangePasswordComponent,
-        data: {
-          title: 'Change Password',
-          breadcrumb: 'Change Password',
-          functionCode: 'ChangePassword'
-        },
-        // canActivate: [AuthGuard]
-      },
+
       {
         path: 'upload-kpi-objective',
         component: UploadKpiComponent,

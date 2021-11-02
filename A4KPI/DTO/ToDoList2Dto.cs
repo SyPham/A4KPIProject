@@ -27,7 +27,9 @@ namespace A4KPI.DTO
         public string Achievement { get; set; }
         public string ATarget { get; set; }
         public string ADeadline { get; set; }
-         public DateTime CreatedTime { get; set; }
+        public string HeightA { get; set; }
+        public string HeightT { get; set; }
+        public DateTime CreatedTime { get; set; }
 
         public int KpiId { get; set; }
 

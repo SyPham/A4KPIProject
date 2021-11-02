@@ -119,7 +119,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body " style="padding: 5px;">
 
     <div class="row mb-2">
       <div class="col-md-6">
@@ -155,6 +155,7 @@
           <div class="table-responsive">
             <table class="table table-bordered" style="margin-bottom:20px;" id="tblDataChart">
               <tbody>
+
                 <tr>
                   <th  class="text-center" width="5%">{{"meetingMonth" | translate}}</th>
                   <th *ngFor="let item of labels; let i=index" class="text-center">
@@ -162,6 +163,7 @@
                   </th>
                   <th  class="text-center">YTD</th>
                 </tr>
+
                 <tr>
                   <th class="text-center" width="5%">{{"meetingTarget" | translate}} </th>
                   <td *ngFor="let item of targets; let i=index" class="text-center" >
@@ -183,9 +185,28 @@
                   </ng-template>
 
                 </tr>
+
                 <tr>
                   <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
                   <td *ngFor="let item of perfomance; let i=index" class="text-center" >
+                    <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      {{item}} %
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      {{item}}
+                    </ng-template>
+                  </td>
+                  <!-- <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      <td  class="text-center"  >{{targetYTD}} %</td>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <td  class="text-center"  >{{targetYTD}}</td>
+                  </ng-template> -->
+                </tr>
+
+                <tr>
+                  <th class="text-center" width="5%">YTD </th>
+                  <td *ngFor="let item of ytds; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       {{item}} %
 
@@ -194,15 +215,36 @@
                       {{item}}
                     </ng-template>
                   </td>
-                  <ng-container *ngIf="typeId === 1; else elseTemplate">
-                      <td  class="text-center"  >{{targetYTD}} %</td>
+                </tr>
 
+                <tr>
+                  <th class="text-center" width="8%">去年實績 </th>
+                  <td *ngFor="let item of ytds; let i=index" class="text-center" >
+                    <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      <!-- {{item}} % -->
+                      N/A
                     </ng-container>
                     <ng-template #elseTemplate>
-
-                      <td  class="text-center"  >{{targetYTD}}</td>
+                      <!-- {{item}} -->
+                      N/A
                     </ng-template>
+                  </td>
                 </tr>
+
+                <tr>
+                  <th class="text-center" width="8%">去年YTD </th>
+                  <td *ngFor="let item of ytds; let i=index" class="text-center" >
+                    <ng-container *ngIf="typeId === 1; else elseTemplate">
+                      <!-- {{item}} % -->
+                      N/A
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <!-- {{item}} -->
+                      N/A
+                    </ng-template>
+                  </td>
+                </tr>
+
               </tbody>
             </table>
           </div>
@@ -213,7 +255,7 @@
     <div class="row">
       <div class="col-md-12">
 
-        <ejs-grid  #gridDataTable
+        <!-- <ejs-grid  #gridDataTable
           id='grid'
           [dataSource]="dataTable"
           [allowResizing]='true'
@@ -249,7 +291,7 @@
 
 
             </e-column>
-            <e-column field="target" textAlign='Center' width='50px'  headerText="Target">
+            <e-column field="target" textAlign='Center' width='100px'  headerText="Target">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingTarget' | translate">
                   <span style="font-size: 14px; font-weight: bold;">
@@ -320,7 +362,7 @@
               </ng-template>
 
             </e-column>
-            <e-column field="aTarget" textAlign='Center' width='50px' headerText="Target">
+            <e-column field="aTarget" textAlign='Center' width='100px' headerText="Target">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingTarget' | translate">
                   <span style="font-size: 14px; font-weight: bold;">
@@ -358,7 +400,9 @@
             <tr  *ngFor="let items of data.currentMonthData; let i= index;">
               <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
               <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
-              <td style="font-size: 14px; word-wrap: break-word;;" class="border text-center" >{{items.target}}</td>
+              <td style="font-size: 14px;" class="border text-center" >
+                <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="content" style="text-align:left;"></textarea>
+              </td>
               <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
               <td style="font-size: 14px; " class="border align-top"  >
                 <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="content" style="text-align:left;"></textarea>
@@ -373,26 +417,24 @@
                 <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
               </td>
 
-
               <td style="font-size: 14px; "
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border align-top " >
-                <span *ngFor="let itemss of data.nextMonthData; let i= index;">
-
+              class="border align-top text-left" >
+                <div  *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 12vh; overflow-y: scroll;">
+                    <tr [fluidHeight]="itemss">
                       {{itemss.content}}
-                    </p>
+                    </tr>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 12vh; overflow-y: scroll;">
+                    <tr [fluidHeight]="itemss">
                       {{itemss.content}}
-                    </p>
+                    </tr>
                     <hr>
                   </ng-template>
-                </span>
+                </div>
               </td>
 
 
@@ -400,14 +442,14 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border  text-center"
+              class="border text-center"
               >
                 <span  *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 12vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
+                    <tr [style.height.px]="itemss.height"  class="align-middle">{{itemss.target}}</tr>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 12vh; padding-top: 5vh; word-wrap: break-word;">{{itemss.target}}</p>
+                    <tr [style.height.px]="itemss.height"  class="align-middle">{{itemss.target}}</tr>
                     <hr>
                   </ng-template>
                 </span>
@@ -417,13 +459,13 @@
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
-              class="border text-center ">
+              class="border  text-center ">
                 <span *ngFor="let itemss of data.nextMonthData; let i= index;">
                   <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                    <p style="height: 12vh; padding-top: 5vh;">{{itemss.deadline}}</p>
+                    <tr [style.height.px]="itemss.height" >{{itemss.deadline}}</tr>
                   </ng-container>
                   <ng-template #elseTemplate>
-                    <p style="height: 12vh; padding-top: 5vh;">{{itemss.deadline}}</p>
+                    <tr [style.height.px]="itemss.height" >{{itemss.deadline}}</tr>
                     <hr>
                   </ng-template>
                 </span>
@@ -436,26 +478,28 @@
               </td>
             </tr>
           </ng-template>
-        </ejs-grid>
+        </ejs-grid> -->
 
-        <!-- <table class="table table-bordered">
+        <table class="table2 table-bordered" id="tblDataMeeting" style="padding: 0;">
           <thead>
             <tr>
-              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%">月份</th>
-              <th scope="col" class="text-center" style="width: 210px;">P</th>
-              <th scope="col" class="text-center" style="width: 50px;">Target</th>
-              <th scope="col" class="text-center" style="width: 50px;">Deadline</th>
-              <th scope="col" class="text-center" style="width: 210px">D</th>
-              <th scope="col" class="text-center" style="width: 50px">Achievement</th>
-              <th scope="col" class="text-center" style="width: 80px">Status</th>
-              <th scope="col" class="text-center" style="width: 210px">C</th>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 30px">月份</th>
+              <th scope="col" class="text-center" style="width: 210px;">本期行動計劃</th>
+              <th scope="col" class="text-center" style="width: 100px;">目標</th>
+              <th scope="col" class="text-center" style="width: 50px;">期限</th>
+              <th scope="col" class="text-center" style="width: 210px">執行內容</th>
+              <th scope="col" class="text-center" style="width: 50px">實績</th>
+              <th scope="col" class="text-center" style="width: 80px">狀態</th>
+              <th scope="col" class="text-center" style="width: 210px">執行狀況檢討</th>
 
-              <th rowspan="2" scope="col" class="text-center" style="width: 220px">A</th>
-              <th scope="col" class="text-center" style="width: 50px;">Target</th>
-              <th scope="col" class="text-center" style="width: 50px;">Deadline</th>
+              <th scope="col" class="text-center" style="width: 210px">下期行動計劃</th>
+              <th scope="col" class="text-center" style="width: 100px;">目標</th>
+              <th scope="col" class="text-center" style="width: 50px;">期限</th>
 
-              <th scope="col" class="text-center" style="width: 50px;">Option</th>
+              <th scope="col" class="text-center" style="width: 50px;">附檔</th>
             </tr>
+
+
 
 
           </thead>
@@ -464,10 +508,12 @@
               <tr  *ngFor="let items of data.currentMonthData; let i= index;">
                 <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
                 <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
-                <td style="font-size: 14px; word-wrap: break-word;;" class="border text-center" >{{items.target}}</td>
+                <td style="font-size: 14px;" class="border text-center" >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="target" style="text-align:left;"></textarea>
+                </td>
                 <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
                 <td style="font-size: 14px; " class="border align-top"  >
-                  <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="content" style="text-align:left;"></textarea>
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="doContent" style="text-align:left;"></textarea>
                 </td>
                 <td style="font-size: 14px; " class="border text-center">
                   {{items.achievement}}
@@ -479,16 +525,80 @@
                   <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
                 </td>
 
-                <td [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0" colspan="3">
-                  <table style="border: none;">
-                    <tr *ngFor="let itemss of data.nextMonthData; let i= index;">
-                      <td>{{itemss.content}}</td>
-                      <td>{{itemss.target}}</td>
-                      <td>{{itemss.deadline}}</td>
-                    </tr>
-                  </table>
+                <td style="font-size: 14px; vertical-align: top; "
+                scope="row"
+                [attr.rowspan]="data.currentMonthData.length"
+                *ngIf="i == 0"
+                class="border" >
+                  <div  *ngFor="let itemss of data.nextMonthData; let i= index;">
+                    <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
+                      <tr [fluidHeight]="itemss" [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
+                        <td style="border: none;" >
+                          {{itemss.content}}
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <tr [fluidHeight]="itemss" [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
+                        <td style="border: none;" >
+                          {{itemss.content}}
+                        </td>
+                      </tr>
+                      <hr style="margin: 0;">
+                    </ng-template>
+                  </div>
                 </td>
 
+
+                <td style="font-size: 14px; vertical-align: top;"
+                scope="row"
+                [attr.rowspan]="data.currentMonthData.length"
+                *ngIf="i == 0"
+                class="border"
+                >
+                  <div  *ngFor="let itemss of data.nextMonthData; let i= index;">
+                    <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
+                      <tr [targetHeight]="itemss"  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
+                        <td style="border: none; vertical-align: middle;" >
+                          {{itemss.target}}
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <tr [targetHeight]="itemss"  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
+                        <td style="border: none;vertical-align: middle;">
+                          {{itemss.target}}
+                        </td>
+                      </tr>
+                      <hr style="margin: 0;">
+                    </ng-template>
+                  </div>
+                </td>
+
+                <td style="font-size: 14px; vertical-align: top;"
+                scope="row"
+                [attr.rowspan]="data.currentMonthData.length"
+                *ngIf="i == 0"
+                class="border ">
+                  <div *ngFor="let itemss of data.nextMonthData; let i= index;">
+                    <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
+                      <tr  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT" >
+                        <td style="border: none;vertical-align: middle;" >
+                          {{itemss.deadline}}
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <tr  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT" >
+                        <td style="border: none;vertical-align: middle;" >
+                          {{itemss.deadline}}
+                        </td>
+
+                      </tr>
+                      <hr style="margin: 0;">
+                    </ng-template>
+                  </div>
+                </td>
 
                 <td style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
                   <div style="text-align: center;">
@@ -499,7 +609,7 @@
               </tr>
             </ng-container>
           </tbody>
-        </table> -->
+        </table>
       </div>
     </div>
 

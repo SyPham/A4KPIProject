@@ -236,7 +236,6 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
     this.gridData = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
-      console.log(res);
       this.gridData = res.data;
       this.result = res.result;
       this.content = this.result?.content;
@@ -263,7 +262,6 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   loadTargetData() {
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
-      console.log(res);
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
       this.thisMonthTarget = res.thisMonthTarget;
@@ -348,7 +346,6 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
     return true;
   }
   actionBegin(args) {
-    console.log(args);
     if(args.requestType === 'save' && args.action === 'edit') {
 
       for (let item in this.grid.dataSource) {
@@ -424,7 +421,6 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
         modifiedTime: null
       }
     })
-    console.log('actions',actions);
     const request = {
       target: this.target,
       targetYTD: this.targetYTD,

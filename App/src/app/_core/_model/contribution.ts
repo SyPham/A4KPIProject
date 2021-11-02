@@ -10,3 +10,11 @@ export interface Contribution {
   createdTime: string;
   modifiedTime: string | null;
 }
+
+
+export class Custom
+{
+  value: number;
+  actionId: number;
+  month: string;
+}

@@ -38,7 +38,6 @@ export class UploadFileComponent implements OnInit {
 
     }
     this.dropElement = document.getElementsByClassName('control_wrapper')[0] as HTMLElement;
-    console.log(this.dropElement)
   }
   public onFileRemove(args: RemovingEventArgs): void {
     args.postRawFile = false;
@@ -54,7 +53,6 @@ loadData() {
   });
 }
 beforeUpload(args) {
-  console.log(args);
   if(args.response.statusCode == 400) {
     args.statusText = "File already exists ! 此檔案已存在，請更改檔案名稱、重新上傳！";
   }else {
@@ -76,7 +74,6 @@ public onSelected(args : SelectedEventArgs) : void {
       args.modifiedFilesData = args.filesData;
   }
   args.isModified = true;
-  console.log(args);
 
 }
 

@@ -31,9 +31,9 @@ const routes: Routes = [
         data: {
           title: 'Account',
           breadcrumb: 'Account',
-          functionCode: 'account'
+          functionCode: 'Account'
         },
-        // canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'account-group',
@@ -41,9 +41,9 @@ const routes: Routes = [
         data: {
           title: 'Account Group',
           breadcrumb: 'Account Group',
-          functionCode: 'account-group'
+          functionCode: 'Account Group'
         },
-        // canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'setting-monthly',

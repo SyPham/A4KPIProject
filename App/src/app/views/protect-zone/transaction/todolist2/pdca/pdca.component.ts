@@ -457,7 +457,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
         modifiedTime: null
       }
     })
-    console.log(actions);
     const request = {
       target: this.target,
       targetYTD: this.targetYTD,

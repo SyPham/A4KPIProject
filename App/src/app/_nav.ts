@@ -332,7 +332,7 @@ export const navItemsEN: INavData[] = [
     children: [
       {
         name: '1.1 OC',
-        url: '/system/oc',
+        url: '/maintain/oc',
         icon: 'icon-puzzle'
       },
 
@@ -348,22 +348,27 @@ export const navItemsEN: INavData[] = [
       // },
       {
         name: '1.2 KPI Create',
-        url: '/system/kpi-create2',
+        url: '/maintain/kpi-create2',
         icon: 'icon-puzzle'
       },
       {
         name: '1.3 KPI 2nd & 3rd Create',
-        url: '/system/kpi-2nd3rd',
+        url: '/maintain/kpi-2nd3rd',
         icon: 'icon-puzzle'
       },
       {
         name: '1.4 View KPI',
-        url: '/system/view-kpi',
+        url: '/maintain/view-kpi',
         icon: 'icon-puzzle'
       },
       {
         name: '1.5 Monthly Setting',
-        url: '/system/setting-monthly',
+        url: '/maintain/setting-monthly',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: '1.6 Role',
+        url: '/maintain/role',
         icon: 'icon-puzzle'
       },
     ]

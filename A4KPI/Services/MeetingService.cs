@@ -205,6 +205,7 @@ namespace A4KPI.Services
             List<int> listLabelData = new List<int>();
             List<double> listTarget = new List<double>();
             List<double> listPerfomance = new List<double>();
+            List<double> listYTD = new List<double>();
             var dataTable = new List<DataTable>();
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
@@ -279,6 +280,22 @@ namespace A4KPI.Services
                 {
                     listPerfomance.Add(0);
                 }
+            }
+
+            foreach (var item in listLabel)
+            {
+                var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
+                if (dataExist.Count > 0)
+                {
+                    double dataYTD = data.FirstOrDefault(x => x.TargetTime.Month == item).YTD;
+                    listYTD.Add(dataYTD);
+
+                }
+                else
+                {
+                    listYTD.Add(0);
+                }
+
             }
             double YTD = 0;
             var YTDs = _repoTargetYTD.FindAll().Where(x => x.KPIId == kpiId).ToList();
@@ -424,6 +441,7 @@ namespace A4KPI.Services
                 labels = listLabels.ToArray(),
                 perfomances = listPerfomance.ToArray(),
                 targets = listTarget.ToArray(),
+                ytds = listYTD.ToArray(),
                 YTD = YTD,
                 TypeId = typeId,
                 TargetYTD = TargetYTD,

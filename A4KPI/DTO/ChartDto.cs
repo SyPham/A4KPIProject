@@ -18,6 +18,7 @@ namespace A4KPI.DTO
         public string[] labels { get; set; }
         public double[] perfomances { get; set; }
         public double[] targets { get; set; }
+        public double[] ytds { get; set; }
         public double YTD { get; set; }
         public double TargetYTD { get; set; }
         public object DataTable { get; set; }

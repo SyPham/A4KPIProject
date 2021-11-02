@@ -1478,6 +1478,7 @@
             "FilterbarTitle": "\"s filter bar cell",
             "EmptyDataSourceError": "DataSource must not be empty at initial load since columns are generated from dataSource in AutoGenerate Column Grid",
             "Add": "Add",
+            "AddSub": "新增下一階",
             "Edit": "Edit",
             "Cancel": "Cancel",
             "Update": "Update",

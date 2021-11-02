@@ -13,6 +13,9 @@ namespace A4KPI.Helpers.AutoMapper
     {
         public DtoToEFMappingProfile()
         {
+            CreateMap<FunctionDto, FunctionSystem>();
+            CreateMap<ModuleDto, Module>();
+            CreateMap<RoleDto, Role>();
             CreateMap<AccountDto, Account>()
                 .ForMember(d => d.AccountType, o => o.Ignore());
             CreateMap<AccountTypeDto, AccountType>()

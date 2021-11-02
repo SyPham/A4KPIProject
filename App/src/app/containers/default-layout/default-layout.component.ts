@@ -121,12 +121,10 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     // });
 
     this.langsData = [, { id: 'zh', name: '中文' },
-    //  { id: 'en', name: 'EN' },
+    //  { id: 'en', name: 'EN' }
     //  { id: 'vi', name: 'VI' }
     ];
-    this.navAdmin = new Nav().getNavAdmin();
-    this.navClient = new Nav().getNavClient();
-    this.navEc = new Nav().getNavEc();
+
 
     // this.getAvatar();
     this.currentUser = JSON.parse(localStorage.getItem('user')).fullName;
@@ -134,7 +132,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.pageSize = 10;
 
     this.userid = JSON.parse(localStorage.getItem('user')).id;
-    // this.getMenu();
+    this.getMenu();
     this.onService();
     this.currentTime = moment().format('hh:mm:ss A');
     setInterval(() => this.updateCurrentTime(), 1 * 1000);
@@ -147,7 +145,6 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     const navs = JSON.parse(localStorage.getItem('navs'));
     if (navs === null) {
       this.spinner.show();
-      console.log('Header ------- Begin getMenuByUserPermission');
       const langID = localStorage.getItem('lang');
       this.permissionService.getMenuByLangID(this.userid, langID).subscribe((navsData: []) => {
         this.navItems = navsData;
@@ -157,9 +154,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       }, (err) => {
         this.spinner.hide();
       });
-      console.log('Header ------- end getMenuByUserPermission');
     } else {
-      console.log('Header ------- Begin getlocalstore menu');
       this.navItems = navs;
     }
   }
@@ -172,22 +167,23 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     // localStorage.removeItem('lang');
     // localStorage.setItem('lang', lang);
     // this.dataService.setValueLocale(lang);
-    // this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
-    //   this.navItems = navs;
-    //   localStorage.setItem('navs', JSON.stringify(navs));
-    //   this.spinner.hide();
-    //   window.location.reload();
 
-    // }, (err) => {
-    //   this.spinner.hide();
-    // });
     this.spinner.show();
     const lang = args.itemData.id;
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
     this.dataService.setValueLocale(lang);
     this.translate.use(lang);
-     window.location.reload();
+    this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
+      this.navItems = navs;
+      localStorage.setItem('navs', JSON.stringify(navs));
+      this.spinner.hide();
+      window.location.reload();
+
+    }, (err) => {
+      this.spinner.hide();
+    });
+    // window.location.reload();
 
   }
   getBuilding() {

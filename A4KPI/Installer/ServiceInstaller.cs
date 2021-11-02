@@ -52,6 +52,8 @@ namespace A4KPI.Installer
             services.AddScoped<ITargetYTDService, TargetYTDService>();
             services.AddScoped<IMeetingService, MeetingService>();
             services.AddScoped<ISettingMonthService, SettingMonthService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IPermissionService, PermissionService>();
         }
     }
 }

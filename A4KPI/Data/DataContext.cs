@@ -12,6 +12,20 @@ namespace A4KPI.Data
 {
     public class DataContext : DbContext
     {
+        public DbSet<Models.Permission> Permisions { get; set; }
+        public DbSet<Models.Option> Options { get; set; }
+        public DbSet<Models.Module> Modules { get; set; }
+        public DbSet<ModuleTranslation> ModuleTranslations { get; set; }
+        public DbSet<FunctionTranslation> FunctionTranslations { get; set; }
+        public DbSet<Language> Languages { get; set; }
+
+        public DbSet<OptionInFunctionSystem> OptionInFunctionSystems { get; set; }
+
+        public DbSet<FunctionSystem> FunctionSystem { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Policy> Policies { get; set; }
         public DbSet<OCPolicy> OCPolicies { get; set; }
@@ -66,6 +80,13 @@ namespace A4KPI.Data
                 .HasForeignKey(u => u.UploadBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Permission>()
+            .HasKey(a => new { a.OptionID, a.FunctionSystemID, a.RoleID });
+
+            modelBuilder.Entity<OptionInFunctionSystem>()
+            .HasKey(a => new { a.OptionID, a.FunctionSystemID });
+            // modelBuilder.Entity<OptionInFunctionSystem>()
+            //.HasKey(a => new { a.ActionID, a.FunctionSystemID });
             modelBuilder.Entity<Performance>()
                .HasOne(s => s.Objective)
                .WithMany(ta => ta.Performances)

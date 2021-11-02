@@ -1480,6 +1480,7 @@
             "EmptyDataSourceError": "初始加載時，DataSource不能為空，因為列是從AutoGenerate Column Grid中的dataSource生成的",
             "Add": "新增",
             "Add Sub": "新增下一階KPI",
+            "Add2": "新增下一階",
             "Edit": "編輯",
             "Cancel": "取消",
             "Update": "更新資料",

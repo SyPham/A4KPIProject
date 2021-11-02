@@ -94,10 +94,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
     }
   }
   submit(){
-    // console.log(this.grid.editModule.endEdit());
     this.grid.editModule.endEdit()
-    // this.grid.editModule.addRecord()
-    // console.log(Number(this.targetValue))
     if (this.validate(true) == false) return;
     this.spinner.show();
     if(this.typeText === 'string') {
@@ -143,12 +140,10 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD ,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log('actions',request);
 
     const post = this.todolist2Service.submitAction(request)
     const submitKPINew = this.todolist2Service.submitKPINew(this.data.id);
     forkJoin([post, submitKPINew]).subscribe(response => {
-      console.log(response)
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);
       if (checker) {
@@ -278,7 +273,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(actions);
     this.todolist2Service.submitAction(request).subscribe(
       (res) => {
         if (res.success === true) {
@@ -305,7 +299,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
   loadData() {
     this.gridData = [];
     this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {
-      console.log(res);
       this.typeText = res.typeText;
       this.actions = res.actions as Action[] || [];
       this.pic = res.pic;

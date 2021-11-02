@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { FunctionSystem } from 'src/app/_core/_model/application-user';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Authv2Service } from 'src/app/_core/_service/authv2.service';
+import { MessageConstants } from 'src/app/_core/_constants/system';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -85,17 +86,20 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.busy = true;
     try {
       const data = await this.authentication();
-      // console.log('End authenication');
+      const userId = JSON.parse(localStorage.getItem('user')).id;
 
-      // this.role = JSON.parse(localStorage.getItem('user')).user.role;
-      // const userId = JSON.parse(localStorage.getItem('user')).user.id;
+      const roleUser = await this.roleService.getRoleByUserID(userId).toPromise();
+      if(roleUser === null)
+        this.alertifyService.warning("User role empty! Please using System Admin account add role for user");
+      localStorage.setItem('level', JSON.stringify(roleUser));
+      this.authService.setRoleValue(roleUser as IRole);
 
-      // console.log('end getRoleByUserID');
+      const menus = await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
 
-      // console.log('Begin getMenu', userId);
-
-      // const menus = await this.permissionService.getMenuByLangID(userId, 'vi').toPromise();
-      // console.log('end nav', menus);
+      const functions = await this.permisisonService.getActionInFunctionByRoleID(roleUser.id).toPromise();
+      this.functions = functions as FunctionSystem[];
+      localStorage.setItem("functions", JSON.stringify(functions));
+      this.authService.setFunctions(functions as any);
 
       const currentLang = localStorage.getItem('lang');
       if (currentLang) {
@@ -115,21 +119,19 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.cookieService.set('password', '');
         this.cookieService.set('systemCode', '');
       }
-      // setTimeout(() => {
-      //   const check = this.checkRole();
-      //   if (check) {
-      //     const uri = decodeURI(this.uri);
-      //     this.router.navigate([uri]);
-      //   } else {
-      //     this.router.navigate(['/system/account']);
-      //   }
+      setTimeout(() => {
+        const check = this.checkRole();
+        if (check) {
+          const uri = decodeURI(this.uri);
+          this.router.navigate([uri]);
+        } else {
+          this.router.navigate([this.functions[0].url]);
+        }
 
-      // });
+      });
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
-      this.router.navigate(['/transaction/todolist2']);
 
-      // console.log('end getActionInFunctionByRoleID');
       this.alertifyService.success('Login Success!!');
       this.busy = false;
       this.spinner.hide();
