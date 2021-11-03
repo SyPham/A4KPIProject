@@ -10,6 +10,9 @@ namespace A4KPI.DTO
     {
         public HttpStatusCode StatusCode { set; get; }
         public string Message { set; get; }
+        public string Email { set; get; }
+        public string Password { set; get; }
+        public string FullName { set; get; }
         public bool Success { set; get; }
         public object Data { set; get; }
     }

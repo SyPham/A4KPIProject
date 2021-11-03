@@ -7,16 +7,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Collections;
+using System.Threading;
 
 namespace A4KPI.Controllers
 {
     public class AccountController : ApiControllerBase
     {
         private readonly IAccountService _service;
-
-        public AccountController(IAccountService service)
+        private readonly IConfiguration _configuration;
+        private readonly IMailHelper _mailHelper;
+        public AccountController(IAccountService service, IMailHelper mailHelper, IConfiguration configuration)
         {
             _service = service;
+            _mailHelper = mailHelper;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -69,6 +75,7 @@ namespace A4KPI.Controllers
         public async Task<ActionResult> ChangePasswordAsync(ChangePasswordRequest request)
         {
             return StatusCodeResult(await _service.ChangePasswordAsync(request));
+            //return Ok(await _service.ChangePasswordAsync(request));
         }
 
     }

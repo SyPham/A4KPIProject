@@ -32,7 +32,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                     // this.router.navigate(['login'], {
                     //     queryParams: { returnUrl: this.router.routerState.snapshot.url },
                     // });
-                    alert(error.error || 'Unauthorized');
+                    // alert( 'Unauthorized');
                     break;
                 case 400:
                     console.error(error.error);

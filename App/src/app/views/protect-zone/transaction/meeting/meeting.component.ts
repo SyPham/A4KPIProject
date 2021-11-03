@@ -23,6 +23,7 @@ import { Tooltip } from '@syncfusion/ej2-angular-popups';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/_core/_service/data.service';
 import { Custom } from 'src/app/_core/_model/contribution';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
@@ -179,6 +180,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   changeLocalHome = [];
   dataHeight: any = [];
   ytds: any;
+  roleUser: any;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -190,6 +192,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     private alertify: AlertifyService,
     public todolist2Service: Todolist2Service,
     private route: ActivatedRoute,
+    private spinner: NgxSpinnerService,
     private dataService: DataService
   ) { super();
 
@@ -200,6 +203,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     this.getAllOcLv3();
     this.getAllKpi();
     this.getAllOc();
+    this.roleUser = JSON.parse(localStorage.getItem('level')).code;
     this.currentTime = new Date();
 
   }
@@ -522,6 +526,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     }
  }
   loadDataModel2(id) {
+    this.spinner.show()
     this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
       this.ytds = res.ytds
       this.policyTitle = res.policy
@@ -584,7 +589,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
               }
           }
       }))
-
+      this.spinner.hide()
 
     })
   }

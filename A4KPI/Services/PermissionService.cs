@@ -202,8 +202,6 @@ namespace A4KPI.Services
                                         FunctionID = g.Key.Id,
                                         a.ActionName,
                                         Status = a.Permission != null,
-                                        // Status = permission.Any(p => roleID.Contains(p.RoleID) && a.ActionID == p.ActionID && p.FunctionSystemID == g.Key.Id) 
-                                        // IsChecked = permission.Any(p => roleID.Contains(p.RoleID) && a.ActionID == p.ActionID && p.FunctionSystemID == g.Key.Id)
 
                                     }).ToList()
                                 }).OrderBy(x => x.SequenceFunction).ToList(),

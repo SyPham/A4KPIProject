@@ -1,3 +1,7 @@
+<ngx-spinner [fullScreen]="true" type="square-jelly-box" size="medium">
+  <p class="loading">Loading data...</p>
+</ngx-spinner>
+
 <div class="row">
   <div class="col-md-12">
     <div class="card">
@@ -42,13 +46,14 @@
           </div>
         </div>
 
-        <div class="col-md-3 d-flex justify-content-center">
+        <div *ngIf="roleUser === 'SYSTEMADMIN'" class="col-md-3 d-flex justify-content-center">
           <div class="form-group">
             <label for="exampleInputEmail1">Change System Date</label>
             <kendo-datepicker style="width: 100%;" [(ngModel)]="currentTime" >
             </kendo-datepicker>
           </div>
         </div>
+
         <ejs-grid #grid
           id='grid'
           [dataSource]="policyData"
@@ -161,7 +166,7 @@
                   <th *ngFor="let item of labels; let i=index" class="text-center">
                     {{item}}
                   </th>
-                  <th  class="text-center">YTD</th>
+                  <!-- <th  class="text-center">YTD</th> -->
                 </tr>
 
                 <tr>
@@ -176,13 +181,13 @@
                     </ng-template>
 
                   </td>
-                  <ng-container *ngIf="typeId === 1; else elseTemplate">
+                  <!-- <ng-container *ngIf="typeId === 1; else elseTemplate">
                     <td  class="text-center"  >{{YTD}} %</td>
                   </ng-container>
                   <ng-template #elseTemplate>
 
                     <td  class="text-center"  >{{YTD}}</td>
-                  </ng-template>
+                  </ng-template> -->
 
                 </tr>
 

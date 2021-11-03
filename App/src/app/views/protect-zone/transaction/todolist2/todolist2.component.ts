@@ -51,6 +51,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   public sheetName = 'Upload Details';
   isAuthorize = false;
   content: string;
+  roleUser: any;
   constructor(
     private service: ObjectiveService,
     private router: Router,
@@ -72,6 +73,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentTime = new Date();
     this.content = '';
+    this.roleUser = JSON.parse(localStorage.getItem('level')).code;
     this.loadAccountGroupData();
     this.subscription.push(this.todolist2Service.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
   }

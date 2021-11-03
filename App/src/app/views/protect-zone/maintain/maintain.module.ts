@@ -29,6 +29,7 @@ import { ProgressComponent } from '../system/progress/progress.component';
 import { AccountGroupComponent } from '../system/account-group/account-group.component';
 import { AccountComponent } from '../system/account/account.component';
 import { TreeViewAllModule, TreeViewModule } from '@syncfusion/ej2-angular-navigations';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 // import { PeriodComponent } from './period/period.component';
@@ -85,6 +86,7 @@ loadCldr(
   imports: [
     CommonModule,
     FormsModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     TreeGridAllModule,
     MultiSelectModule,

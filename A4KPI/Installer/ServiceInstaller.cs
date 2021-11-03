@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using A4KPI.Services;
+using A4KPI.Helpers;
 
 namespace A4KPI.Installer
 {
@@ -8,6 +9,8 @@ namespace A4KPI.Installer
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IMailExtension, MailExtension>();
+            services.AddScoped<IMailHelper, MailHelper>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAccountTypeService, AccountTypeService>();
 

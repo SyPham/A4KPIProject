@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Threading;
+using NetUtility;
+using Microsoft.Extensions.Configuration;
 
 namespace A4KPI.Services
 {
@@ -20,6 +23,7 @@ namespace A4KPI.Services
         Task<OperationResult> LockAsync(int id);
         Task<AccountDto> GetByUsername(string username);
         Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request);
+        Task<object> ChangePasswordAsync2(ChangePasswordRequest request);
         Task<object> GetAccounts();
     }
     public class AccountService : ServiceBase<Account, AccountDto>, IAccountService
@@ -31,7 +35,9 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<AccountGroupAccount> _repoAccountGroupAccount;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMailExtension _mailHelper;
         private readonly MapperConfiguration _configMapper;
+        private readonly IConfiguration _configuration;
         private OperationResult operationResult;
 
         public AccountService(
@@ -42,6 +48,8 @@ namespace A4KPI.Services
             IRepositoryBase<AccountGroupAccount> repoAccountGroupAccount,
             IUnitOfWork unitOfWork,
             IMapper mapper,
+            IMailExtension mailExtension,
+            IConfiguration configuration,
             MapperConfiguration configMapper
             )
             : base(repo, unitOfWork, mapper, configMapper)
@@ -53,6 +61,8 @@ namespace A4KPI.Services
             _repoAccountGroupAccount = repoAccountGroupAccount;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _mailHelper = mailExtension;
+            _configuration = configuration;
             _configMapper = configMapper;
         }
         /// <summary>
@@ -61,17 +71,72 @@ namespace A4KPI.Services
         /// <param name="model"></param>
         /// <returns></returns>
         /// 
-        public async Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request)
+        public async Task<object> ChangePasswordAsync2(ChangePasswordRequest request)
         {
+            var listEmail = new List<string>();
             var item = await _repo.FindByIdAsync(request.Id);
             if (item == null)
             {
                 return new OperationResult { StatusCode = HttpStatusCode.NotFound, Message = "Không tìm thấy tài khoản này! Not found the account", Success = false };
             }
             item.Password = request.NewPassword.ToEncrypt();
+            listEmail.Add(item.Email);
             try
             {
                 _repo.Update(item);
+                
+                if (listEmail.Count > 0)
+                {
+                    var model = listEmail.DistinctBy(x => x);
+                    string content = @"<p><b>*PLEASE DO NOT REPLY* this email was automatically sent from the KPI system.</b></p> 
+                                       <p>Your Password has been change success.</p>" +
+                                   "<p>Username: <b>" + item.Username + "</b> </p>" +
+                                   "<p>Password: <b>" + item.Password + "</b> </p>" +
+                                   "<p>Please : <a href='" + _configuration["Appsettings:URL"] + "'>Click here to login</a></p>";
+                    Thread thread = new Thread(async () =>
+                    {
+                        await _mailHelper.SendEmailRange(model.Select(x => x).ToList(), "[KPI System] Change Password(密碼重設)", content);
+                    });
+                    thread.Start();
+                }
+                await _unitOfWork.SaveChangeAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                //operationResult = ex.GetMessageError();
+            }
+            //return operationResult;
+        }
+        public async Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            var listEmail = new List<string>();
+            var item = await _repo.FindByIdAsync(request.Id);
+            if (item == null)
+            {
+                return new OperationResult { StatusCode = HttpStatusCode.NotFound, Message = "Không tìm thấy tài khoản này! Not found the account", Success = false };
+            }
+            item.Password = request.NewPassword.ToEncrypt();
+            listEmail.Add(item.Email);
+            try
+            {
+                _repo.Update(item);
+
+                if (listEmail.Count > 0)
+                {
+                    var model = listEmail.DistinctBy(x => x);
+                    string content = @"<p><b>*PLEASE DO NOT REPLY* this email was automatically sent from the KPI system.</b></p> 
+                                       <p>Your Password has been change success.</p>" +
+                                   "<p>Username: <b>" + item.Username + "</b> </p>" +
+                                   "<p>Password: <b>" + item.Password + "</b> </p>" +
+                                   "<p>Please : <a href='" + _configuration["Appsettings:URL"] + "'>Click here to login</a></p>";
+                    Thread thread = new Thread(async () =>
+                    {
+                        await _mailHelper.SendEmailRangeAsync(model.Select(x => x).ToList(), "[KPI System] Change Password(密碼重設)", content);
+                    });
+                    thread.Start();
+                }
                 await _unitOfWork.SaveChangeAsync();
                 operationResult = new OperationResult
                 {
