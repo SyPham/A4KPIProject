@@ -129,13 +129,13 @@
     <div class="row mb-2">
       <div class="col-md-6">
         <div class="row">
-          <div class="col-md-7">上一階KPI: {{policyTitle}}</div>
-          <div class="col-md-5">Level: {{levelTitle}}</div>
+          <div class="col-md-7" style="font-size: 20px;">上一階KPI: {{policyTitle}}</div>
+          <div class="col-md-5" style="font-size: 20px;">Level: {{levelTitle}}</div>
         </div>
         <hr>
         <div class="row">
-          <div class="col-md-7">KPI: {{kpiTitle}}</div>
-          <div class="col-md-5">PIC: {{picTitle}}</div>
+          <div class="col-md-7" style="font-size: 20px;">KPI: {{kpiTitle}}</div>
+          <div class="col-md-5" style="font-size: 20px;">PIC: {{picTitle}}</div>
         </div>
       </div>
       <div class="col-md-6">
@@ -194,12 +194,19 @@
                 <tr>
                   <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
                   <td *ngFor="let item of perfomance; let i=index" class="text-center" >
-                    <ng-container *ngIf="typeId === 1; else elseTemplate">
-                      {{item}} %
+                    <ng-container *ngIf="item === 0; else elseTemplate">
+
                     </ng-container>
                     <ng-template #elseTemplate>
-                      {{item}}
+                      <ng-container *ngIf="typeId === 1; else elseTemplate">
+                        {{item}} %
+                      </ng-container>
+                      <ng-template #elseTemplate>
+                        {{item}}
+                      </ng-template>
                     </ng-template>
+
+
                   </td>
                   <!-- <ng-container *ngIf="typeId === 1; else elseTemplate">
                       <td  class="text-center"  >{{targetYTD}} %</td>
@@ -212,13 +219,21 @@
                 <tr>
                   <th class="text-center" width="5%">YTD </th>
                   <td *ngFor="let item of ytds; let i=index" class="text-center" >
-                    <ng-container *ngIf="typeId === 1; else elseTemplate">
-                      {{item}} %
+
+                    <ng-container *ngIf="item === 0; else elseTemplate">
 
                     </ng-container>
                     <ng-template #elseTemplate>
-                      {{item}}
+
+                      <ng-container *ngIf="typeId === 1; else elseTemplate">
+                        {{item}} %
+
+                      </ng-container>
+                      <ng-template #elseTemplate>
+                        {{item}}
+                      </ng-template>
                     </ng-template>
+
                   </td>
                 </tr>
 
@@ -227,11 +242,11 @@
                   <td *ngFor="let item of ytds; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       <!-- {{item}} % -->
-                      N/A
+                      <!-- N/A -->
                     </ng-container>
                     <ng-template #elseTemplate>
                       <!-- {{item}} -->
-                      N/A
+                      <!-- N/A -->
                     </ng-template>
                   </td>
                 </tr>
@@ -241,11 +256,11 @@
                   <td *ngFor="let item of ytds; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       <!-- {{item}} % -->
-                      N/A
+                      <!-- N/A -->
                     </ng-container>
                     <ng-template #elseTemplate>
                       <!-- {{item}} -->
-                      N/A
+                      <!-- N/A -->
                     </ng-template>
                   </td>
                 </tr>
@@ -278,7 +293,7 @@
 
               <ng-template #headerTemplate>
                 <ejs-tooltip [content]="'meetingMonth' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingMonth" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -288,7 +303,7 @@
             <e-column field=''  textAlign='Center' width='210px'  headerText='P'>
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingP' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingP" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -299,7 +314,7 @@
             <e-column field="target" textAlign='Center' width='100px'  headerText="Target">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingTarget' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingTarget" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -309,7 +324,7 @@
             <e-column field="deadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingDeadline' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingDeadline" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -319,7 +334,7 @@
             <e-column field="doContent"  textAlign='Center' width='210px'  headerText="D">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingD' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingD" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -329,7 +344,7 @@
             <e-column field="achievement" textAlign='Center' width='50px' headerText="Achievement">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingAtri' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingAtri" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -339,7 +354,7 @@
             <e-column field="statusName" textAlign='Center' width='80px' headerText="Status">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingStatus' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingStatus" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -349,7 +364,7 @@
             <e-column field="content" textAlign='Center' width='210px' headerText="C">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingC' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingC" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -360,7 +375,7 @@
             <e-column field="aContent" textAlign='Center' width='210px' headerText="A">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingA' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingA" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -370,7 +385,7 @@
             <e-column field="aTarget" textAlign='Center' width='100px' headerText="Target">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingTarget' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingTarget" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -380,7 +395,7 @@
             <e-column field="aDeadline" textAlign='Center' width='50px' headerText="Deadline">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingDeadline' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingDeadline" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -390,7 +405,7 @@
             <e-column field="" textAlign='Center' width='50px' headerText="Attatchment">
               <ng-template #headerTemplate let-data>
                 <ejs-tooltip [content]="'meetingAt' | translate">
-                  <span style="font-size: 14px; font-weight: bold;">
+                  <span style="font-size: 20px; font-weight: bold;">
                     {{"meetingAt" | translate}}
                   </span>
                 </ejs-tooltip>
@@ -403,26 +418,26 @@
           <ng-template #rowTemplate let-data>
 
             <tr  *ngFor="let items of data.currentMonthData; let i= index;">
-              <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
-              <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
-              <td style="font-size: 14px;" class="border text-center" >
+              <th style="font-size: 20px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
+              <td style="font-size: 20px; " class="border align-top" >{{items.content}}</td>
+              <td style="font-size: 20px;" class="border text-center" >
                 <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="content" style="text-align:left;"></textarea>
               </td>
-              <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
-              <td style="font-size: 14px; " class="border align-top"  >
+              <td style="font-size: 20px; " class="border text-center"  >{{items.deadline}}</td>
+              <td style="font-size: 20px; " class="border align-top"  >
                 <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="content" style="text-align:left;"></textarea>
               </td>
-              <td style="font-size: 14px; " class="border text-center">
+              <td style="font-size: 20px; " class="border text-center">
                 {{items.achievement}}
               </td>
-              <td style="font-size: 14px; " class="border text-center">
+              <td style="font-size: 20px; " class="border text-center">
                 {{items.statusName | translate}}
               </td>
-              <td style="font-size: 14px; " class="border align-top"  >
+              <td style="font-size: 20px; " class="border align-top"  >
                 <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
               </td>
 
-              <td style="font-size: 14px; "
+              <td style="font-size: 20px; "
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
@@ -443,7 +458,7 @@
               </td>
 
 
-              <td style="font-size: 14px; "
+              <td style="font-size: 20px; "
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
@@ -460,7 +475,7 @@
                 </span>
               </td>
 
-              <td style="font-size: 14px; "
+              <td style="font-size: 20px; "
               scope="row"
               [attr.rowspan]="data.currentMonthData.length"
               *ngIf="i == 0"
@@ -476,7 +491,7 @@
                 </span>
               </td>
 
-              <td style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
+              <td style="font-size: 20px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
                 <div style="text-align: center;">
                   <button type="button" (click)='download(data.date, fileModal)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
                 </div>
@@ -485,7 +500,7 @@
           </ng-template>
         </ejs-grid> -->
 
-        <table class="table2 table-bordered" id="tblDataMeeting" style="padding: 0;">
+        <table class="table table-bordered" id="tblDataMeeting">
           <thead>
             <tr>
               <th scope="col" rowspan="2" class="text-center align-middle" style="width: 30px">月份</th>
@@ -511,26 +526,26 @@
           <tbody>
             <ng-container *ngFor="let data of dataTable; let i= index;">
               <tr  *ngFor="let items of data.currentMonthData; let i= index;">
-                <th style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
-                <td style="font-size: 14px; " class="border align-top" >{{items.content}}</td>
-                <td style="font-size: 14px;" class="border text-center" >
-                  <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="target" style="text-align:left;"></textarea>
+                <th style="font-size: 18px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
+                <td style="font-size: 18px; " class="border align-top" >{{items.content}}</td>
+                <td style="font-size: 18px;" class="border text-center" >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="target" style="text-align:left;font-size: 18px;"></textarea>
                 </td>
-                <td style="font-size: 14px; " class="border text-center"  >{{items.deadline}}</td>
-                <td style="font-size: 14px; " class="border align-top"  >
-                  <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="doContent" style="text-align:left;"></textarea>
+                <td style="font-size: 18px; " class="border text-center"  >{{items.deadline}}</td>
+                <td style="font-size: 18px; " class="border align-top"  >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.doContent" name="doContent" style="text-align:left; font-size: 18px;"></textarea>
                 </td>
-                <td style="font-size: 14px; " class="border text-center">
+                <td style="font-size: 18px; " class="border text-center">
                   {{items.achievement}}
                 </td>
-                <td style="font-size: 14px; " class="border text-center">
+                <td style="font-size: 18px; " class="border text-center">
                   {{items.statusName | translate}}
                 </td>
-                <td style="font-size: 14px; " class="border align-top"  >
-                  <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;"></textarea>
+                <td style="font-size: 18px; " class="border align-top"  >
+                  <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;font-size: 18px;"></textarea>
                 </td>
 
-                <td style="font-size: 14px; vertical-align: top; "
+                <td style="font-size: 18px; vertical-align: top; "
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"
@@ -555,7 +570,7 @@
                 </td>
 
 
-                <td style="font-size: 14px; vertical-align: top;"
+                <td style="font-size: 18px; vertical-align: top;"
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"
@@ -580,7 +595,7 @@
                   </div>
                 </td>
 
-                <td style="font-size: 14px; vertical-align: top;"
+                <td style="font-size: 18px; vertical-align: top;"
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"
@@ -605,7 +620,7 @@
                   </div>
                 </td>
 
-                <td style="font-size: 14px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
+                <td style="font-size: 18px; " scope="row" [attr.rowspan]="data.currentMonthData.length"  *ngIf="i == 0" class="border text-center align-middle">
                   <div style="text-align: center;">
                     <button type="button" (click)='download(data.date, fileModal)' class="btn btn-xs btn-primary"><i class="fa fa-download"></i></button>
                   </div>
