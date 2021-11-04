@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using NetUtility;
+using System.Globalization;
 
 namespace A4KPI.Services
 {
@@ -239,10 +240,11 @@ namespace A4KPI.Services
 
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-            var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
-                .ProjectTo<ResultDto>(_configMapper)
-                .FirstOrDefaultAsync();
-            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < currentTime.Month  )
+            //var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
+            //    .ProjectTo<ResultDto>(_configMapper)
+            //    .FirstOrDefaultAsync();
+            var month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(thisMonthResult);
+            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult  )
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
@@ -273,7 +275,8 @@ namespace A4KPI.Services
             return new
             {
                 Data = data,
-                Result = result
+                Month = month
+                //Result = result
             };
 
         }

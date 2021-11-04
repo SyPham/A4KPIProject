@@ -78,7 +78,7 @@
   </div>
 </div>
 
-<div class="modal-footer d-flex justify-content-end">
+<!-- <div class="modal-footer d-flex justify-content-end">
   <button type="button"
   class="btn btn-secondary mr-2"
 
@@ -88,6 +88,13 @@
   class="btn btn-success"
 
   (click)="submit()">{{'Submit' }}</button>
+</div> -->
+<div class="modal-footer">
+  <div class="w-100">
+    <span style="color: red;font-size: 18px;">建議 Suggestion : 內容不超過250字 (Type the content within 250 words)</span>
+    <button type="button" (click)="submit()" class="btn btn-success float-right">{{'Submit' }}</button>
+    <button type="button" (click)="back()" class="btn btn-secondary mr-2 float-right">{{'Save' }}</button>
+  </div>
 </div>
 <!--
 data-toggle="tooltip"

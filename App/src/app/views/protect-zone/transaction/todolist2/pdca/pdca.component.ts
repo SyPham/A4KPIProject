@@ -239,6 +239,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.gridData = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
+      this.month = res.month
       this.gridData = res.data;
       this.result = res.result;
       this.content = this.result?.content;

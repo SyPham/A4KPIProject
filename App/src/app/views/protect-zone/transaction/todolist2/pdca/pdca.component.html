@@ -255,16 +255,27 @@
 
 
 </div>
-<div class="modal-footer d-flex justify-content-end">
+
+<div class="modal-footer">
+  <div class="w-100">
+    <span style="color: red;font-size: 18px;">建議 Suggestion : 內容不超過250字 (Type the content within 250 words)</span>
+    <button type="button" (click)="submit()" class="btn btn-success float-right">{{'Submit' }}</button>
+    <button type="button" (click)="back()" class="btn btn-secondary mr-2 float-right">{{'Save' }}</button>
+  </div>
+</div>
+<!-- <div class="modal-footer">
+
+
   <button type="button"
   class="btn btn-secondary mr-2"
   (click)="back()">{{'Save' }}
-</button>
+  </button>
+
   <button type="button"
   class="btn btn-success"
 
   (click)="submit()">{{'Submit' }}</button>
-</div>
+</div> -->
 <!-- data-toggle="tooltip"
 data-placement="top"
 title="Save data & Submit then close the window. In L0 tab hide this row."
