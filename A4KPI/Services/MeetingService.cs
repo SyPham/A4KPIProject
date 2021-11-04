@@ -90,9 +90,9 @@ namespace A4KPI.Services
                 x.Name,
                 PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                 x.TypeId,
-                TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
+                TypeName = x.TypeId == 0 ? "N/A" : _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name,
                 Level = x.Level,
-                TypeText = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Description ?? "",
+                TypeText = x.TypeId == 0 ? "" : _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Description,
                 FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOC.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
                 CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOC.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
                 DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOC.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOC.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
