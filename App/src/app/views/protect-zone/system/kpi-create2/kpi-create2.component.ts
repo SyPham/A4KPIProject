@@ -95,10 +95,10 @@ export class KpiCreate2Component implements OnInit {
     //   this.alertify.error('Please select Policy !');
     //   return false;
     // }
-    if (this.typeId === 0) {
-      this.alertify.error('Please select a Type! ');
-      return false;
-    }
+    // if (this.typeId === 0) {
+    //   this.alertify.error('Please select a Type! ');
+    //   return false;
+    // }
     if (this.picItem.length === 0) {
       this.alertify.error('Please select a PIC! ');
       return false;
@@ -270,6 +270,7 @@ export class KpiCreate2Component implements OnInit {
 
   getBuildingsAsTreeView() {
     this.kpiNewService.getTree().subscribe((res) => {
+      console.log(res);
       this.data = res;
     });
   }
