@@ -15,14 +15,14 @@ import { Custom } from '../_model/contribution';
 
 
 @Directive({
-  selector: '[targetHeight]',
+  selector: '[tdHeight]',
   outputs: [
-		"targetHeight",
+		"tdHeight",
 	]
 })
-export class TargetHeightDirective implements AfterViewInit, OnDestroy , OnInit {
+export class TDHeightDirective implements AfterViewInit, OnDestroy , OnInit {
   @Input()
-  targetHeight: string;
+  tdHeight: string;
   data: Array<Custom> = [];
   subscription: Subscription[] = [];
   subject = new Subject<string>();
@@ -39,7 +39,7 @@ export class TargetHeightDirective implements AfterViewInit, OnDestroy , OnInit 
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.contentHeight(this.elementRef.nativeElement, this.targetHeight);
+      this.contentHeight(this.elementRef.nativeElement, this.tdHeight);
     }, 500);
   }
 
@@ -51,12 +51,10 @@ export class TargetHeightDirective implements AfterViewInit, OnDestroy , OnInit 
   contentHeight(parent: HTMLElement, className) {
     var height = parent.offsetHeight;
     var month = className;
-    // var actionId = className.actionId;
     var data = new Custom();
     data.value = height;
     data.month = month;
-    // data.actionId = actionId;
-    this.dataService.changeMessageTarget(data)
+    this.dataService.changeMessageTD(data)
 
   }
 

@@ -24,12 +24,16 @@ namespace A4KPI.Models
         public int? FactId { get; set; }
         public int? CenterId { get; set; }
         public int? DeptId { get; set; }
-
+        public bool IsActionSubmit { get; set; }
+        public bool IsPDCASubmit { get; set; }
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }
+
         [ForeignKey(nameof(KpiId))]
         public virtual KPINew KPINew { get; set; }
 
+
+        //public virtual ICollection<Action> Actions { get; set; }
         //public virtual OC OCs { get; set; }
     }
 }

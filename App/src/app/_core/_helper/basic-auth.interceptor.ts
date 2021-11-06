@@ -15,12 +15,13 @@ export class BasicAuthInterceptor implements HttpInterceptor {
         private router: Router
     ) { }
     private handleError(error: HttpErrorResponse) {
+      console.log('error',error);
         if (error.status === 0) {
             // A client-side or network error occurred. Handle it accordingly.
             // alert(`Hệ thống không hoạt động vì lỗi mạng. Vui lòng nhấn F5 để thử lại.
             //          The system does not work due to network error. Please press F5 to try again!
             //   `);
-            console.error('An error occurred: status = 0');
+            // console.error('An error occurred: status = 0');
 
             return throwError(
               'Something bad happened; please try again later.');

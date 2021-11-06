@@ -291,7 +291,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   back() {
     //this.post(false);
-    this.post(false);
+    this.save(false);
     // this.activeModal.close();
 
   }
@@ -383,6 +383,102 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
   }
+  save(submitted) {
+    this.grid.editModule.endEdit()
+    if (this.validate(submitted) == false) return;
+
+    if(submitted === true)
+    {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: this.performanceValue ?? 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: this.thisMonthYTDValue ?? 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      }
+    };
+
+    if(submitted === false && this.nextMonthTarget === null)
+    {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: this.performanceValue ?? 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: this.thisMonthYTDValue ?? 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      }
+        this.nextMonthTarget = {
+        id: 0,
+        value: 0,
+        performance: 0,
+        kPIId: this.data.id,
+        targetTime: new Date().toISOString(),
+        createdTime: new Date().toISOString(),
+        modifiedTime: null,
+        yTD: 0,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        submitted: false
+      };
+    } else {
+      this.target = {
+        id: this.thisMonthTarget.id,
+        value: this.thisMonthTargetValue,
+        performance: this.performanceValue ?? 0,
+        kPIId: this.data.id,
+        targetTime: this.thisMonthYTD.targetTime,
+        createdTime: this.thisMonthYTD.createdTime,
+        modifiedTime: this.thisMonthYTD.modifiedTime,
+        yTD: this.thisMonthYTDValue ?? 0,
+        createdBy: this.thisMonthYTD.createdBy,
+        submitted: submitted
+      }
+    }
+    const updatePDCA = this.gridData;
+    const dataSource = this.grid.dataSource as Action[];
+    const actions = dataSource.map(x => {
+      return {
+        id: x.id,
+        target: x.target,
+        content: x.content,
+        deadline: this.datePipe.transform(x.deadline, 'MM/dd/yyyy'),
+        accountId: x.accountId ? x.accountId : +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id,
+        statusId: x.statusId,
+        createdTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
+        modifiedTime: null
+      }
+    })
+    const request = {
+      target: this.target,
+      targetYTD: this.targetYTD,
+      nextMonthTarget: this.nextMonthTarget,
+      actions: actions,
+      updatePDCA: updatePDCA,
+      result: this.result,
+      currentTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
+    }
+    this.todolist2Service.saveUpdatePDCA(request).subscribe(
+      (res) => {
+        if (res.success === true) {
+          this.todolist2Service.changeMessage(true);
+          this.activeModal.close();
+        } else {
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+        }
+      },
+      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+    );
+  }
   post(submitted) {
     this.grid.editModule.endEdit()
     if (this.validate(submitted) == false) return;
@@ -467,6 +563,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       result: this.result,
       currentTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
     }
+    console.log(request);
     this.todolist2Service.submitUpdatePDCA(request).subscribe(
       (res) => {
         if (res.success === true) {
@@ -479,6 +576,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );
   }
+
   addOrUpdateStatus(data, callBack) {
     const request = {
       actionId: data.actionId,

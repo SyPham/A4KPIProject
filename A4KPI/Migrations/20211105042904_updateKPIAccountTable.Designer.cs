@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211105042904_updateKPIAccountTable")]
+    partial class updateKPIAccountTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,6 +200,9 @@ namespace A4KPI.Migrations
                     b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("KPIAccountId")
+                        .HasColumnType("int");
+
                     b.Property<int>("KPIId")
                         .HasColumnType("int");
 
@@ -213,6 +218,8 @@ namespace A4KPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("KPIAccountId");
 
                     b.HasIndex("KPIId");
 
@@ -537,10 +544,7 @@ namespace A4KPI.Migrations
                     b.Property<int?>("FactId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActionSubmit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPDCASubmit")
+                    b.Property<bool>("IsSubmit")
                         .HasColumnType("bit");
 
                     b.Property<int>("KpiId")
@@ -1437,29 +1441,6 @@ namespace A4KPI.Migrations
                     b.ToTable("Targets");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.TargetPIC", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsSubmit")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("targetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("targetId");
-
-                    b.ToTable("TargetPIC");
-                });
-
             modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
                 {
                     b.Property<int>("Id")
@@ -1664,6 +1645,10 @@ namespace A4KPI.Migrations
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("A4KPI.Models.KPIAccount", null)
+                        .WithMany("Actions")
+                        .HasForeignKey("KPIAccountId");
 
                     b.HasOne("A4KPI.Models.KPINew", "KPINew")
                         .WithMany("Actions")
@@ -2102,17 +2087,6 @@ namespace A4KPI.Migrations
                     b.Navigation("KPINew");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.TargetPIC", b =>
-                {
-                    b.HasOne("A4KPI.Models.Target", "Target")
-                        .WithMany("TargetPICs")
-                        .HasForeignKey("targetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Target");
-                });
-
             modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
                 {
                     b.HasOne("A4KPI.Models.KPINew", "KPINew")
@@ -2179,6 +2153,11 @@ namespace A4KPI.Migrations
                     b.Navigation("FunctionTranslations");
                 });
 
+            modelBuilder.Entity("A4KPI.Models.KPIAccount", b =>
+                {
+                    b.Navigation("Actions");
+                });
+
             modelBuilder.Entity("A4KPI.Models.KPINew", b =>
                 {
                     b.Navigation("Actions");
@@ -2221,11 +2200,6 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.PeriodType", b =>
                 {
                     b.Navigation("Periods");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.Target", b =>
-                {
-                    b.Navigation("TargetPICs");
                 });
 #pragma warning restore 612, 618
         }

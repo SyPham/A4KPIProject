@@ -42,8 +42,15 @@ export class Todolist2Service  {
   submitUpdatePDCA(model): Observable<OperationResult> {
     return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/SubmitUpdatePDCA`, model);
   }
+  saveUpdatePDCA(model): Observable<OperationResult> {
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/SaveUpdatePDCA`, model);
+  }
   submitAction(model): Observable<OperationResult> {
     return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/submitAction`, model);
+  }
+
+  saveAction(model): Observable<OperationResult> {
+    return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/saveAction`, model);
   }
   submitKPINew(kpiId): Observable<OperationResult> {
     return this.http.post<OperationResult>(`${this.env.apiUrl}${this.entity}/SubmitKPINew?kpiId=${kpiId}`, {});

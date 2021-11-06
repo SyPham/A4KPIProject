@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211106004449_AddNewTableTargetPICV1.1")]
+    partial class AddNewTableTargetPICV11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2105,7 +2107,7 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.TargetPIC", b =>
                 {
                     b.HasOne("A4KPI.Models.Target", "Target")
-                        .WithMany("TargetPICs")
+                        .WithMany()
                         .HasForeignKey("targetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2221,11 +2223,6 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.PeriodType", b =>
                 {
                     b.Navigation("Periods");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.Target", b =>
-                {
-                    b.Navigation("TargetPICs");
                 });
 #pragma warning restore 612, 618
         }

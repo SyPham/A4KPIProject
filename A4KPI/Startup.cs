@@ -8,6 +8,8 @@ using A4KPI.Helpers;
 using A4KPI.Installer;
 using System.IO;
 using System;
+using A4KPI.DTO;
+using A4KPI.Services;
 
 namespace A4KPI
 {
@@ -36,7 +38,7 @@ namespace A4KPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddHttpContextAccessor();
             services.AddControllers()
              .AddNewtonsoftJson(options =>

@@ -23,8 +23,11 @@ namespace A4KPI.Models
 
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
+
         [ForeignKey(nameof(KPIId))]
         public virtual KPINew KPINew { get; set; }
+
+        public virtual ICollection<TargetPIC> TargetPICs { get; set; }
 
 
     }

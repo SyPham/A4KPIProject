@@ -21,7 +21,9 @@ namespace A4KPI.Services
     public interface IToDoList2Service
     {
         Task<OperationResult> SubmitAction(ActionRequestDto model);
+        Task<OperationResult> SaveAction(ActionRequestDto model);
         Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model);
+        Task<OperationResult> SaveUpdatePDCA(PDCARequestDto model);
         Task<object> GetStatus();
         Task<object> L0(DateTime currentTime);
         Task<object> GetActionsForL0(int kpiNewId);
@@ -51,6 +53,7 @@ namespace A4KPI.Services
         private readonly IRepositoryBase<Target> _repoTarget;
         private readonly IRepositoryBase<Models.Status> _repoStatus;
         private readonly IRepositoryBase<Account> _repoAc;
+        private readonly IRepositoryBase<TargetPIC> _repoTargetPIC;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRepositoryBase<Account> _repoAccount;
@@ -60,11 +63,13 @@ namespace A4KPI.Services
         private readonly MapperConfiguration _configMapper;
         private OperationResult operationResult;
 
+
         public ToDoList2Service(
              IRepositoryBase<Models.Action> repoAction,
              IRepositoryBase<Do> repoDo,
              IRepositoryBase<Models.Types> repoType,
              IRepositoryBase<Policy> repoPolicy,
+             IRepositoryBase<TargetPIC> repoTargetPIC,
              IRepositoryBase<KPIAccount> repoKPIAc,
              IRepositoryBase<Account> repoAc,
              IRepositoryBase<KPINew> repoKPINew,
@@ -82,6 +87,7 @@ namespace A4KPI.Services
             )
         {
             _repoAction = repoAction;
+            _repoTargetPIC = repoTargetPIC;
             _repoDo = repoDo;
             _repoType = repoType;
             _repoAc = repoAc;
@@ -240,15 +246,13 @@ namespace A4KPI.Services
 
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-            //var result = await _repoResult.FindAll(x => x.KPIId == kpiNewId && x.UpdateTime.Year == thisYearResult && x.UpdateTime.Month == thisMonthResult)
-            //    .ProjectTo<ResultDto>(_configMapper)
-            //    .FirstOrDefaultAsync();
             var month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(thisMonthResult);
-            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&   x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult  )
+
+            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&  x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult  )
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
-                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult && !c.Submitted) != null)
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year <= thisYearResult && x.CreatedTime.Month <= thisMonthResult && !c.Submitted) != null)
                         || x.ActionStatus.Count == 0
                         )
 
@@ -297,7 +301,7 @@ namespace A4KPI.Services
             var thisMonth = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYear = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId && x.TargetTime.Year == thisYear && x.TargetTime.Month == thisMonth).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
-            var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == thisYear).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
+            var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
 
             return new
             {
@@ -325,33 +329,34 @@ namespace A4KPI.Services
             var month = date.Month;
             //  && x.Actions.Any() == false
             List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-            var actions = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() == false && x.Submitted == false || kpiMyPic.Contains(x.Id) && x.Actions.Any() && x.Submitted == false).Select(x => new
+            var actions = await _repoKPIAc.FindAll(x => x.AccountId == accountId && x.IsActionSubmit == false ).Select(x => new
             {
-                Id = x.Id,
-                Topic = x.Name,
-                Level = x.Level,
-                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
-                TypeText = _repoType.FindById(x.TypeId).Description,
+                Id = x.KpiId,
+                Topic = x.KPINew.Name,
+                Level = x.KPINew.Level,
+                PICName = x.KPINew.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPINew.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                TypeText = _repoType.FindById(x.KPINew.TypeId).Description,
                 Type = "Action",
                 CurrentTarget = false,
             }).Where(x => x.Level != 1).ToListAsync();
+         
 
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
 
-            var updatePDCA = await _repoKPINew.FindAll(x => kpiMyPic.Contains(x.Id) && x.Actions.Any() && x.Submitted == true).Select(x => new
+            var updatePDCA = await _repoKPIAc.FindAll(x => x.AccountId == accountId && x.IsActionSubmit).Select(x => new
             {
-                Id = x.Id,
-                Topic = x.Name,
-                Level = x.Level,
-                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
-                TypeText = _repoType.FindById(x.TypeId).Description,
+                Id = x.KpiId,
+                Topic = x.KPINew.Name,
+                Level = x.KPINew.Level,
+                PICName = x.KPINew.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPINew.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                TypeText = _repoType.FindById(x.KPINew.TypeId).Description,
                 Type = "UpdatePDCA",
-                CurrentTarget = x.Targets.Any(a => a.TargetTime.Year == year && a.TargetTime.Month == month2 && ( a.Submitted == false)),
-            }).Where(x => x.CurrentTarget && x.Level != 1).ToListAsync();
+                CurrentTarget = _repoTargetPIC.FindAll().Any(y => y.targetId == x.KPINew.Targets.FirstOrDefault(a => a.TargetTime.Year == currentTime.Year && a.TargetTime.Month == currentTime.Month).Id && y.AccountId == accountId && y.IsSubmit) ? false : true,
+            }).Where(x => x.CurrentTarget && x.Level != 1)
+            .ToListAsync();
 
-            // 
             var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
             if (setting != null)
                 return actions.Concat(updatePDCA);
@@ -360,6 +365,79 @@ namespace A4KPI.Services
 
 
         public async Task<OperationResult> SubmitAction(ActionRequestDto model)
+        {
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
+            var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
+            var addActionList = model.Actions.Where(x => x.Id == 0).ToList();
+            try
+            {
+                var targetYTD = _mapper.Map<TargetYTD>(model.TargetYTD);
+                var target = _mapper.Map<Target>(model.Target);
+                var currentTime = model.CurrentTime;
+                var kpiId = target.KPIId;
+                if (kpiId > 0)
+                {
+                   var update =  _repoKPIAc.FindAll().FirstOrDefault(x => x.AccountId == accountId && x.KpiId == kpiId);
+                    update.IsActionSubmit = true;
+                    _repoKPIAc.Update(update);
+                    await _unitOfWork.SaveChangeAsync();
+
+                }
+                
+                if (target != null)
+                {
+                    target.TargetTime = currentTime;
+
+                }
+
+                var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
+                var addActions = _mapper.Map<List<Models.Action>>(addActionList);
+                if (target.Id > 0)
+                    _repoTarget.Update(target);
+                else
+                {
+                    target.Submitted = false;
+                    _repoTarget.Add(target);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+                var targetPic = new TargetPIC()
+                {
+                    targetId = target.Id,
+                    AccountId = accountId,
+                    IsSubmit = true
+                };
+
+                if (targetPic != null)
+                {
+                    _repoTargetPIC.Add(targetPic);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+                if (targetYTD.Id > 0)
+                    _repoTargetYTD.Update(targetYTD);
+
+                else
+                    _repoTargetYTD.Add(targetYTD);
+                _repoAction.AddRange(addActions);
+                _repoAction.UpdateRange(updateActions);
+
+                await _unitOfWork.SaveChangeAsync();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.AddSuccess,
+                    Success = true,
+                    Data = model
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
+
+        public async Task<OperationResult> SaveAction(ActionRequestDto model)
         {
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
             var addActionList = model.Actions.Where(x => x.Id == 0).ToList();
@@ -437,11 +515,151 @@ namespace A4KPI.Services
 
         public async Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model)
         {
-
+            var accessToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
+            int accountId = JWTExtensions.GetDecodeTokenById(accessToken);
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
             var addActionList = model.Actions.Where(x => x.Id == 0).ToList();
             var updateActionForThisMonth = model.UpdatePDCA.ToList();
             var updateActionStatus = model.UpdatePDCA.Where(x => x.ActionStatusId.Value > 0).Select(x=> x.ActionStatusId).ToList();
+            try
+            {
+                var currentTime = model.CurrentTime;
+
+                var targetYTD = _mapper.Map<TargetYTD>(model.TargetYTD);
+                var target = _mapper.Map<Target>(model.Target);
+                var nextMonthTarget = _mapper.Map<Target>(model.NextMonthTarget);
+                var kpiId = target.KPIId;
+                if (kpiId > 0)
+                {
+                    var updated = _repoKPIAc.FindAll().FirstOrDefault(x => x.AccountId == accountId && x.KpiId == kpiId);
+                    updated.IsPDCASubmit = true;
+                    _repoKPIAc.Update(updated);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+                //var result = _mapper.Map<Result>(model.Result);
+
+                var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
+                var addActions = _mapper.Map<List<Models.Action>>(addActionList);
+                _repoTarget.Update(target);
+
+
+                //if (result.Id > 0)
+                //    _repoResult.Update(result);
+                //else
+                //{
+                //    var yearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+                //    var monthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+                //    var updateTime = new DateTime(yearResult, monthResult, 1);
+                //    result.UpdateTime = updateTime;
+                //    result.CreatedTime = model.CurrentTime;
+                //    _repoResult.Add(result);
+                //}
+
+                if (nextMonthTarget.Id > 0)
+                    _repoTarget.Update(nextMonthTarget);
+                else
+                {
+                    nextMonthTarget.Submitted = false;
+                    nextMonthTarget.TargetTime = new DateTime(currentTime.Year, currentTime.Month, 1);
+                    _repoTarget.Add(nextMonthTarget);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+                var targetPic = new TargetPIC()
+                {
+                    targetId = nextMonthTarget.Id,
+                    AccountId = accountId,
+                    IsSubmit = true
+                };
+
+                if (targetPic != null)
+                {
+                    _repoTargetPIC.Add(targetPic);
+                    await _unitOfWork.SaveChangeAsync();
+                }
+
+                //var targetYTDs = await _repoTargetYTD.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == currentTime.Year).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
+                //if (targetYTDs == null)
+                //{
+                //    var dataAddTargetYTDs = await _repoTargetYTD.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year < currentTime.Year).ProjectTo<TargetYTD>(_configMapper).FirstOrDefaultAsync();
+                //    dataAddTargetYTDs.CreatedTime = currentTime;
+                //    dataAddTargetYTDs.ModifiedTime = currentTime;
+                //    _repoTargetYTD.Add(dataAddTargetYTDs);
+                //    await _unitOfWork.SaveChangeAsync();
+                //}
+                
+                _repoTargetYTD.Update(targetYTD);
+                // dynamic currentime
+                addActions.ForEach(item =>
+                {
+                    item.CreatedTime = model.CurrentTime;
+                });
+
+                _repoAction.AddRange(addActions);
+                _repoAction.UpdateRange(updateActions);
+                var updatethisMonthAction = new List<Models.Action>();
+                var addDoList = new List<Do>();
+                var updatedoList = new List<Do>();
+                foreach (var item in updateActionForThisMonth)
+                {
+                    var action = await _repoAction.FindAll(x => x.Id == item.ActionId).FirstOrDefaultAsync();
+                    action.StatusId = item.StatusId;
+                    updatethisMonthAction.Add(action);
+                    var yearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+                    var monthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+                    var updateTime = new DateTime(yearResult, monthResult, 1);
+                    if (item.DoId == 0)
+                    {
+                        var addDoItem = new Do(item.DoContent,item.ResultContent, item.Achievement, item.ActionId);
+                        addDoItem.CreatedTime = updateTime;
+                        addDoList.Add(addDoItem);
+                    }
+                    else
+                    {
+                        var doItem = await _repoDo.FindAll(x => x.Id == item.DoId).FirstOrDefaultAsync();
+                        doItem.Content = item.DoContent;
+                        doItem.Achievement = item.Achievement;
+                        doItem.ReusltContent = item.ResultContent;
+                        updatedoList.Add(doItem);
+                    }
+
+                }
+                var update = await _repoActionStatus.FindAll(x => updateActionStatus.Contains(x.Id)).ToListAsync();
+                update.ForEach(item =>
+                {
+                    item.Submitted = model.Target.Submitted;
+                });
+                _repoActionStatus.UpdateRange(update);
+
+                _repoAction.AddRange(addActions);
+                _repoAction.UpdateRange(updatethisMonthAction);
+                _repoDo.AddRange(addDoList);
+                _repoDo.UpdateRange(updatedoList);
+
+                await _unitOfWork.SaveChangeAsync();
+
+
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.AddSuccess,
+                    Success = true,
+                    Data = model
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
+        }
+
+        public async Task<OperationResult> SaveUpdatePDCA(PDCARequestDto model)
+        {
+
+            var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
+            var addActionList = model.Actions.Where(x => x.Id == 0).ToList();
+            var updateActionForThisMonth = model.UpdatePDCA.ToList();
+            var updateActionStatus = model.UpdatePDCA.Where(x => x.ActionStatusId.Value > 0).Select(x => x.ActionStatusId).ToList();
             try
             {
                 var currentTime = model.CurrentTime;
@@ -500,7 +718,7 @@ namespace A4KPI.Services
                     var updateTime = new DateTime(yearResult, monthResult, 1);
                     if (item.DoId == 0)
                     {
-                        var addDoItem = new Do(item.DoContent,item.ResultContent, item.Achievement, item.ActionId);
+                        var addDoItem = new Do(item.DoContent, item.ResultContent, item.Achievement, item.ActionId);
                         addDoItem.CreatedTime = updateTime;
                         addDoList.Add(addDoItem);
                     }

@@ -34,12 +34,25 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.SubmitUpdatePDCA(action));
         }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveUpdatePDCA(PDCARequestDto action)
+        {
+
+            return Ok(await _service.SaveUpdatePDCA(action));
+        }
         [HttpPost]
         public async Task<ActionResult> SubmitAction(ActionRequestDto action)
         {
             return Ok(await _service.SubmitAction(action));
         }
-         [HttpPost]
+
+        [HttpPost]
+        public async Task<ActionResult> SaveAction(ActionRequestDto action)
+        {
+            return Ok(await _service.SaveAction(action));
+        }
+        [HttpPost]
         public async Task<ActionResult> SubmitKPINew(int kpiId)
         {
 

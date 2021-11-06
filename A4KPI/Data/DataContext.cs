@@ -18,6 +18,7 @@ namespace A4KPI.Data
         public DbSet<ModuleTranslation> ModuleTranslations { get; set; }
         public DbSet<FunctionTranslation> FunctionTranslations { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<TargetPIC> TargetPICs { get; set; }
 
         public DbSet<OptionInFunctionSystem> OptionInFunctionSystems { get; set; }
 

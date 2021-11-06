@@ -545,28 +545,28 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
         this.labels,
         this.unitName
       )
-      this.changeLocalHome.push(this.dataService.currentMessage.subscribe((res: any)=>{
-        if(res === 0)
-          return
-        if(res.value > 0 || res.value !== undefined)
-          this.dataHeight = []
-          this.dataHeight.push(
-            {
-              value: res.value,
-              actionId: res.actionId,
-              month: res.month
-            }
-          )
-          for (let item of dataTable) {
-              for (let items in item.nextMonthData) {
-                let i = Number(items);
-                if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
-                  item.nextMonthData[i].heightA = res.value
-                  break;
-                }
-              }
-          }
-      }))
+      // this.changeLocalHome.push(this.dataService.currentMessage.subscribe((res: any)=>{
+      //   if(res === 0)
+      //     return
+      //   if(res.value > 0 || res.value !== undefined)
+      //     this.dataHeight = []
+      //     this.dataHeight.push(
+      //       {
+      //         value: res.value,
+      //         actionId: res.actionId,
+      //         month: res.month
+      //       }
+      //     )
+      //     for (let item of dataTable) {
+      //         for (let items in item.nextMonthData) {
+      //           let i = Number(items);
+      //           if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
+      //             item.nextMonthData[i].heightA = res.value
+      //             break;
+      //           }
+      //         }
+      //     }
+      // }))
       this.changeLocalHome.push(this.dataService.currentMessagesTarget.subscribe((res: any)=>{
         if(res === 0)
           return
@@ -582,15 +582,39 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
           for (let item of dataTable) {
               for (let items in item.nextMonthData) {
                 let i = Number(items);
-                if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
-                  item.nextMonthData[i].heightT = res.value
+                if(item.nextMonthData[i].month === res.month) {
+                  item.nextMonthData[i].heightT = res.value / 2
                   break;
                 }
               }
           }
       }))
-      this.spinner.hide()
 
+      this.changeLocalHome.push(this.dataService.currentMessagesTD.subscribe((res: any)=>{
+        if(res === 0)
+          return
+        if(res.value > 0 || res.value !== undefined)
+        console.log('currentMessagesTD',res);
+          // this.dataHeight = []
+          // this.dataHeight.push(
+          //   {
+          //     value: res.value,
+          //     actionId: res.actionId,
+          //     month: res.month
+          //   }
+          // )
+          for (let item of dataTable) {
+              for (let items in item.nextMonthData) {
+                let i = Number(items);
+                if(item.nextMonthData[i].month === res.month) {
+                  item.nextMonthData[i].heightA = res.value / 2
+                  break;
+                }
+              }
+          }
+      }))
+      console.log(this.dataTable);
+      this.spinner.hide()
     })
   }
 

@@ -273,7 +273,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    this.todolist2Service.submitAction(request).subscribe(
+    console.log(request);
+    this.todolist2Service.saveAction(request).subscribe(
       (res) => {
         if (res.success === true) {
           callBack();

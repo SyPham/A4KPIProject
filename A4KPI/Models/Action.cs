@@ -22,6 +22,7 @@ namespace A4KPI.Models
         public int? StatusId { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
+
         [ForeignKey(nameof(StatusId))]
         public virtual Status Status { get; set; }
 

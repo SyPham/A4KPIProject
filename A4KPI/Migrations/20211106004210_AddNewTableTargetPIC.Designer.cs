@@ -4,14 +4,16 @@ using A4KPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A4KPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211106004210_AddNewTableTargetPIC")]
+    partial class AddNewTableTargetPIC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1437,29 +1439,6 @@ namespace A4KPI.Migrations
                     b.ToTable("Targets");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.TargetPIC", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsSubmit")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("targetId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("targetId");
-
-                    b.ToTable("TargetPIC");
-                });
-
             modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
                 {
                     b.Property<int>("Id")
@@ -2102,17 +2081,6 @@ namespace A4KPI.Migrations
                     b.Navigation("KPINew");
                 });
 
-            modelBuilder.Entity("A4KPI.Models.TargetPIC", b =>
-                {
-                    b.HasOne("A4KPI.Models.Target", "Target")
-                        .WithMany("TargetPICs")
-                        .HasForeignKey("targetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Target");
-                });
-
             modelBuilder.Entity("A4KPI.Models.TargetYTD", b =>
                 {
                     b.HasOne("A4KPI.Models.KPINew", "KPINew")
@@ -2221,11 +2189,6 @@ namespace A4KPI.Migrations
             modelBuilder.Entity("A4KPI.Models.PeriodType", b =>
                 {
                     b.Navigation("Periods");
-                });
-
-            modelBuilder.Entity("A4KPI.Models.Target", b =>
-                {
-                    b.Navigation("TargetPICs");
                 });
 #pragma warning restore 612, 618
         }

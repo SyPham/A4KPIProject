@@ -11,9 +11,11 @@ export class DataService {
 
   messageSources = new BehaviorSubject<number>(0);
   messageSourcesTarget = new BehaviorSubject<number>(0);
+  messageSourcesTD = new BehaviorSubject<number>(0);
 
   currentMessages = this.messageSources.asObservable();
   currentMessagesTarget = this.messageSourcesTarget.asObservable();
+  currentMessagesTD = this.messageSourcesTD.asObservable();
 
   public info = new BehaviorSubject<boolean>(false);
   locale = new BehaviorSubject<string>(null);
@@ -27,6 +29,10 @@ export class DataService {
 
   changeMessageTarget(message) {
     this.messageSourcesTarget.next(message);
+  }
+
+  changeMessageTD(message) {
+    this.messageSourcesTD.next(message);
   }
 
   changeMessages(message) {

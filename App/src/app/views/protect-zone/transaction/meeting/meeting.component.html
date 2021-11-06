@@ -529,7 +529,11 @@
                 <th style="font-size: 18px; " scope="row" [attr.rowspan]="data.currentMonthData.length" *ngIf="i == 0"  class="border text-center align-middle">{{data.month}}</th>
                 <td style="font-size: 18px; " class="border align-top" >{{items.content}}</td>
                 <td style="font-size: 18px;" class="border text-center" >
-                  <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="target" style="text-align:left;font-size: 18px;"></textarea>
+                  <p style="text-align: left;">
+
+                    {{items.target}}
+                  </p>
+                  <!-- <textarea autosize type="text" readonly class="form-control" [value]="items.target" name="target" style="text-align:left;font-size: 18px;"></textarea> -->
                 </td>
                 <td style="font-size: 18px; " class="border text-center"  >{{items.deadline}}</td>
                 <td style="font-size: 18px; " class="border align-top"  >
@@ -545,21 +549,21 @@
                   <textarea autosize type="text" readonly class="form-control" [value]="items.resultContent" name="content" style="text-align:left;font-size: 18px;"></textarea>
                 </td>
 
-                <td style="font-size: 18px; vertical-align: top; "
+                <td [tdHeight]='data.month' style="font-size: 18px; vertical-align: top; padding: 0px; "
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"
                 class="border" >
                   <div  *ngFor="let itemss of data.nextMonthData; let i= index;">
                     <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                      <tr [fluidHeight]="itemss" [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
+                      <tr  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
                         <td style="border: none;" >
                           {{itemss.content}}
                         </td>
                       </tr>
                     </ng-container>
                     <ng-template #elseTemplate>
-                      <tr [fluidHeight]="itemss" [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
+                      <tr  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT">
                         <td style="border: none;" >
                           {{itemss.content}}
                         </td>
@@ -570,7 +574,7 @@
                 </td>
 
 
-                <td style="font-size: 18px; vertical-align: top;"
+                <td [targetHeight]='data.month' style="font-size: 18px; vertical-align: top; padding: 0px;"
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"
@@ -578,14 +582,14 @@
                 >
                   <div  *ngFor="let itemss of data.nextMonthData; let i= index;">
                     <ng-container *ngIf="data.nextMonthData.lastIndex === i; else elseTemplate">
-                      <tr [targetHeight]="itemss"  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
+                      <tr   [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
                         <td style="border: none; vertical-align: middle;" >
                           {{itemss.target}}
                         </td>
                       </tr>
                     </ng-container>
                     <ng-template #elseTemplate>
-                      <tr [targetHeight]="itemss"  [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
+                      <tr   [style.height.px]="itemss.heightA > itemss.heightT ? itemss.heightA : itemss.heightT"  >
                         <td style="border: none;vertical-align: middle;">
                           {{itemss.target}}
                         </td>
@@ -595,7 +599,7 @@
                   </div>
                 </td>
 
-                <td style="font-size: 18px; vertical-align: top;"
+                <td style="font-size: 18px; vertical-align: top; padding: 0px;"
                 scope="row"
                 [attr.rowspan]="data.currentMonthData.length"
                 *ngIf="i == 0"

@@ -38,6 +38,7 @@ namespace A4KPI.Services
         private readonly IMailExtension _mailHelper;
         private readonly MapperConfiguration _configMapper;
         private readonly IConfiguration _configuration;
+        private readonly IMailService _mailService;
         private OperationResult operationResult;
 
         public AccountService(
@@ -49,6 +50,7 @@ namespace A4KPI.Services
             IUnitOfWork unitOfWork,
             IMapper mapper,
             IMailExtension mailExtension,
+            IMailService mailService,
             IConfiguration configuration,
             MapperConfiguration configMapper
             )
@@ -64,6 +66,7 @@ namespace A4KPI.Services
             _mailHelper = mailExtension;
             _configuration = configuration;
             _configMapper = configMapper;
+            _mailService = mailService;
         }
         /// <summary>
         /// Add account sau do add AccountGroupAccount
@@ -118,25 +121,24 @@ namespace A4KPI.Services
                 return new OperationResult { StatusCode = HttpStatusCode.NotFound, Message = "Không tìm thấy tài khoản này! Not found the account", Success = false };
             }
             item.Password = request.NewPassword.ToEncrypt();
-            listEmail.Add(item.Email);
             try
             {
                 _repo.Update(item);
-
-                if (listEmail.Count > 0)
-                {
-                    var model = listEmail.DistinctBy(x => x);
-                    string content = @"<p><b>*PLEASE DO NOT REPLY* this email was automatically sent from the KPI system.</b></p> 
-                                       <p>Your Password has been change success.</p>" +
-                                   "<p>Username: <b>" + item.Username + "</b> </p>" +
-                                   "<p>Password: <b>" + item.Password + "</b> </p>" +
-                                   "<p>Please : <a href='" + _configuration["Appsettings:URL"] + "'>Click here to login</a></p>";
-                    Thread thread = new Thread(async () =>
-                    {
-                        await _mailHelper.SendEmailRangeAsync(model.Select(x => x).ToList(), "[KPI System] Change Password(密碼重設)", content);
-                    });
-                    thread.Start();
-                }
+                //string content = @"<p><b>*PLEASE DO NOT REPLY* this email was automatically sent from the KPI system.</b></p> 
+                //                       <p>Your Password has been change success.</p>" +
+                //               "<p>Username: <b>" + item.Username + "</b> </p>" +
+                //               "<p>Password: <b>" + request.NewPassword + "</b> </p>" +
+                //               "<p>Please : <a href='" + _configuration["Appsettings:URL"] + "'>Click here to login</a></p>";
+                //var mailRequest = new MailRequest()
+                //{
+                //    Body = content,
+                //    Subject = "KPI SYSTEM",
+                //    ToEmail = item.Email,
+                //};
+                //if (item.Email != null)
+                //{
+                //  await  _mailService.SendEmailAsync(mailRequest);
+                //}
                 await _unitOfWork.SaveChangeAsync();
                 operationResult = new OperationResult
                 {

@@ -210,7 +210,7 @@ namespace A4KPI.Services
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
             var policy = parentKpi.Name;
-            var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult).ToListAsync();
+            var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Year == thisYearResult).ToListAsync();
             for (int i = 1; i <= 12; i++)
             {
                 listLabel.Add(i);

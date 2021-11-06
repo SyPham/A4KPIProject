@@ -48,6 +48,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
 import { TargetHeightDirective } from 'src/app/_core/_directive/target-height.directive';
+import { TDHeightDirective } from 'src/app/_core/_directive/td-height.directive';
 declare var require: any;
 let defaultLang: string;
 const lang = localStorage.getItem('lang');
@@ -103,6 +104,7 @@ loadCldr(
     PlanComponent,
     FluidHeightDirective,
     TargetHeightDirective,
+    TDHeightDirective,
     PlanStringTypeComponent,
     PdcaComponent,
     PdcaStringTypeComponent,

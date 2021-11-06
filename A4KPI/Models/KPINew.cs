@@ -34,7 +34,6 @@ namespace A4KPI.Models
 
         //[ForeignKey(nameof(PolicyId))]
         //public virtual Policy  Policy{ get; set; }
-
         public virtual ICollection<Action> Actions{ get; set; }
         public virtual ICollection<Target> Targets{ get; set; }
 

@@ -64,7 +64,9 @@ loadCldr(
 @NgModule({
   declarations: [
     AccountComponent,
-    AccountGroupComponent
+    AccountGroupComponent,
+    AccountGroupPeriodComponent,
+    ProgressComponent
   ],
   imports: [
     CommonModule,

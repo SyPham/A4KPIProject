@@ -21,6 +21,7 @@ import { MessageConstants } from 'src/app/_core/_constants/system';
 import { NgTemplateNameDirective } from '../ng-template-name.directive';
 import { Router } from '@angular/router';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-todolist2',
   templateUrl: './todolist2.component.html',
@@ -61,6 +62,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     private accountGroupService: AccountGroupService,
     public modalService: NgbModal,
     private datePipe: DatePipe,
+    private spinner: NgxSpinnerService,
     private performanceService: PerformanceService
   ) {
   }
@@ -68,6 +70,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.subscription.forEach(item => item.unsubscribe());
   }
   onChangeReportTime(value: Date): void {
+    this.spinner.show()
     this.loadData();
   }
   ngOnInit(): void {
@@ -75,7 +78,11 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.content = '';
     this.roleUser = JSON.parse(localStorage.getItem('level')).code;
     this.loadAccountGroupData();
-    this.subscription.push(this.todolist2Service.currentMessage.subscribe(message => { if (message) { this.loadData(); } }));
+    this.subscription.push(this.todolist2Service.currentMessage.subscribe(message => { if (message)
+    {
+      this.spinner.show()
+      this.loadData();
+    } }));
   }
   isAllowAccess(position: number) {
     const positions = JSON.parse(localStorage.getItem('user')).accountGroupPositions as number[] || [];
@@ -175,6 +182,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.gridData = [];
     this.todolist2Service.l0(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
+      this.spinner.hide()
     });
   }
 
