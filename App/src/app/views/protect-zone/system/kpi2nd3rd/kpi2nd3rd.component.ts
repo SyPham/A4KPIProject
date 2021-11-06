@@ -205,14 +205,19 @@ export class Kpi2nd3rdComponent implements OnInit {
       return;
     }
     else {
-      switch (args.item.id) {
-        case "treegrid_gridcontrol_新增下一階KPI":
-          args.cancel = true;
-          this.openMainModal();
-          break;
-        default:
-          break;
+      if(this.level > 1) {
+        switch (args.item.id) {
+          case "treegrid_gridcontrol_新增下一階KPI":
+            args.cancel = true;
+            this.openMainModal();
+            break;
+          default:
+            break;
+        }
+      } else {
+        this.alertify.error("Please choose the KPI!!!");
       }
+
     }
   }
 
@@ -224,7 +229,6 @@ export class Kpi2nd3rdComponent implements OnInit {
       this.alertify.warning(message);
       return;
     } else {
-
       switch (args.item.id) {
         case "DeleteOC":
           this.delete(args.rowInfo.rowData.entity);
@@ -235,6 +239,7 @@ export class Kpi2nd3rdComponent implements OnInit {
         default:
           break;
       }
+
     }
   }
 

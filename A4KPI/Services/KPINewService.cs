@@ -127,7 +127,7 @@ namespace A4KPI.Services
                 CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
                 DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
 
-            }).ToList().OrderBy(x => x.PolicyId).ToList();
+            }).ToList().OrderBy(x => x.Level).ToList();
             var data = lists.Select(x => new KPINewDto
             {
                 Id = x.Id,
@@ -182,7 +182,7 @@ namespace A4KPI.Services
                 DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
 
 
-            }).ToList().OrderBy(x => x.PolicyId).ToList();
+            }).ToList().OrderBy(x => x.Level).ToList();
             if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
             {
                 list = new List<KPINewDto>();
