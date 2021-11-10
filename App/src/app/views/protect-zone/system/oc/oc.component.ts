@@ -32,7 +32,7 @@ export class OcComponent implements OnInit {
   constructor(
     private ocService: OcService,
     private modalServices: NgbModal,
-    private alertify: AlertifyService,
+    private alertify: AlertifyService
 
   ) {}
 
@@ -220,6 +220,5 @@ export class OcComponent implements OnInit {
     }, (reason) => {
     });
   }
-
 
 }

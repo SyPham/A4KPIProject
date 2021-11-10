@@ -26,7 +26,6 @@ namespace A4KPI.Models
         public string Achievement { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? ModifiedTime { get; set; }
-
         public int ActionId { get; set; }
         [ForeignKey(nameof(ActionId))]
         public virtual Action Action { get; set; }

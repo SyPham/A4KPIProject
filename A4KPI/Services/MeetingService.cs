@@ -11,6 +11,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using NetUtility;
 using AutoMapper.QueryableExtensions;
+using A4KPI.Constants;
 
 namespace A4KPI.Services
 {
@@ -111,7 +112,7 @@ namespace A4KPI.Services
                 CenterName = x.CenterName,
                 DeptName = x.DeptName,
 
-            }).Where(x => x.Level != 1).OrderBy(x => x.Level).ToList();
+            }).Where(x => x.Level != Level.Level_1).OrderBy(x => x.Level).ToList();
             return model;
         }
         public async Task<ChartDto> GetChart(int kpiId)
@@ -211,6 +212,7 @@ namespace A4KPI.Services
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
             var policy = parentKpi.Name;
             var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Year == thisYearResult).ToListAsync();
+
             for (int i = 1; i <= 12; i++)
             {
                 listLabel.Add(i);
@@ -253,6 +255,7 @@ namespace A4KPI.Services
                         listLabels.Add("Dec"); break;
                 }
             }
+
             foreach (var item in listLabel)
             {
                 var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
@@ -267,6 +270,7 @@ namespace A4KPI.Services
                 }
 
             }
+
             foreach (var item in listLabel)
             {
                 var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
@@ -322,6 +326,7 @@ namespace A4KPI.Services
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var model = new List<UpdatePDCADto>();
                 var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
+
                 //start tim lai list cong viec cua thang truoc chua lam xong
                 var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
                         .Where(x =>
@@ -340,6 +345,7 @@ namespace A4KPI.Services
                             a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
                         }).ToList();
                 //end tim lai list cong viec cua thang truoc chua lam xong
+
                 if (acs.Count > 0)
                 {
                     model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
@@ -361,6 +367,7 @@ namespace A4KPI.Services
                                  Target = a.Target,
                              }).ToList();
                     //add them list cong viec chua lam xong cua thang truoc vao thang hien tai
+
                     foreach (var itemAcs in acs)
                     {
                         model.Add(new UpdatePDCADto

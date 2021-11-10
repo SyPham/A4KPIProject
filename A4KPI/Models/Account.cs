@@ -35,6 +35,9 @@ namespace A4KPI.Models
 
         [ForeignKey(nameof(AccountTypeId))]
         public virtual AccountType AccountType { get; set; }
+
+
+
         public virtual ICollection<Objective> Objectives { get; set; }
         public virtual ICollection<AccountGroupAccount> AccountGroupAccount { get; set; }
 

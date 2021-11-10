@@ -159,9 +159,9 @@
         <div class="box-body">
           <div class="table-responsive">
             <table class="table table-bordered" style="margin-bottom:20px;" id="tblDataChart">
-              <tbody>
+              <tbody style="box-shadow:  0 0 7px;">
 
-                <tr>
+                <tr style="background-color: #f0f3f5;">
                   <th  class="text-center" width="5%">{{"meetingMonth" | translate}}</th>
                   <th *ngFor="let item of labels; let i=index" class="text-center">
                     {{item}}
@@ -500,8 +500,8 @@
           </ng-template>
         </ejs-grid> -->
 
-        <table class="table table-bordered" id="tblDataMeeting">
-          <thead>
+        <table class="table table-bordered" id="tblDataMeeting" style="box-shadow:  0 0 6px;">
+          <thead style="background-color: #f0f3f5;">
             <tr>
               <th scope="col" rowspan="2" class="text-center align-middle" style="width: 30px">月份</th>
               <th scope="col" class="text-center" style="width: 210px;">本期行動計劃</th>

@@ -338,7 +338,7 @@ namespace A4KPI.Services
                 TypeText = _repoType.FindById(x.KPINew.TypeId).Description,
                 Type = "Action",
                 CurrentTarget = false,
-            }).Where(x => x.Level != 1).ToListAsync();
+            }).Where(x => x.Level != Level.Level_1).ToListAsync();
          
 
             var latestMonth = ct.Month - 1;
@@ -354,7 +354,7 @@ namespace A4KPI.Services
                 TypeText = _repoType.FindById(x.KPINew.TypeId).Description,
                 Type = "UpdatePDCA",
                 CurrentTarget = _repoTargetPIC.FindAll().Any(y => y.targetId == x.KPINew.Targets.FirstOrDefault(a => a.TargetTime.Year == currentTime.Year && a.TargetTime.Month == currentTime.Month).Id && y.AccountId == accountId && y.IsSubmit) ? false : true,
-            }).Where(x => x.CurrentTarget && x.Level != 1)
+            }).Where(x => x.CurrentTarget && x.Level != Level.Level_1)
             .ToListAsync();
 
             var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();

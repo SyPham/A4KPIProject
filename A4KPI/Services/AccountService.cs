@@ -74,6 +74,7 @@ namespace A4KPI.Services
         /// <param name="model"></param>
         /// <returns></returns>
         /// 
+
         public async Task<object> ChangePasswordAsync2(ChangePasswordRequest request)
         {
             var listEmail = new List<string>();
@@ -112,6 +113,7 @@ namespace A4KPI.Services
             }
             //return operationResult;
         }
+
         public async Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request)
         {
             var listEmail = new List<string>();
@@ -154,6 +156,7 @@ namespace A4KPI.Services
             }
             return operationResult;
         }
+
         public override async Task<OperationResult> AddAsync(AccountDto model)
         {
             try
@@ -185,6 +188,7 @@ namespace A4KPI.Services
             }
             return operationResult;
         }
+
         /// <summary>
         /// Add account sau do add AccountGroupAccount
         /// </summary>
@@ -233,6 +237,7 @@ namespace A4KPI.Services
             }
             return operationResult;
         }
+
         public override async Task<List<AccountDto>> GetAllAsync()
         {
             var query = _repo.FindAll(x => x.AccountType.Code != "SYSTEM");

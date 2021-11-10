@@ -26,6 +26,7 @@ namespace A4KPI.Models
         public int? DeptId { get; set; }
         public bool IsActionSubmit { get; set; }
         public bool IsPDCASubmit { get; set; }
+
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }
 

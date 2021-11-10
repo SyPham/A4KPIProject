@@ -34,7 +34,6 @@ namespace A4KPI.Models
         public string Name { get; set; }
         public int Position { get; set; }
         public int DisplayBefore { get; set; }
-
         public virtual ICollection<Period> Periods { get; set; }
     }
 }

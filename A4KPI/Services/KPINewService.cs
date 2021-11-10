@@ -140,9 +140,6 @@ namespace A4KPI.Services
                 TypeName = x.TypeName,
                 PICName = x.PICName,
                 UpdateName = x.UpdateName,
-                //FactId = x.FactId,
-                //CenterId = x.CenterId,
-                //DeptId = x.DeptId,
                 UpdateDate = x.UpdateDate,
                 FactName = x.FactName,
                 CenterName = x.CenterName,
@@ -166,7 +163,6 @@ namespace A4KPI.Services
                 ParentId = x.ParentId,
                 Name = x.Name,
                 UpdateBy = x.UpdateBy,
-                //Pic = x.Pic,
                 Pics = x.KPIAccounts.Count > 0 ? x.KPIAccounts.Where(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
                 CreateBy = x.CreateBy,
                 LevelOcCreateBy = x.LevelOcCreateBy,
@@ -194,7 +190,7 @@ namespace A4KPI.Services
                 var picOver = _repoAc.FindAll().FirstOrDefault(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).Id;
                 List<int> kpiPicOver = _repoKPIAc.FindAll(x => x.AccountId == picOver).Select(x => x.KpiId).ToList();
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-                var th1 = lists.Where(x => x.LevelOcCreateBy == 1 || x.LevelOcCreateBy == 2 || x.LevelOcCreateBy == 3).ToList();
+                var th1 = lists.Where(x => x.LevelOcCreateBy == Level.Level_1 || x.LevelOcCreateBy == Level.Level_2 || x.LevelOcCreateBy == Level.Level_3).ToList();
                 list = th1.Where(x => x.CreateBy == accountId || kpiPicOver.Contains(x.Id) || kpiMyPic.Contains(x.Id) || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
             }
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
@@ -211,7 +207,7 @@ namespace A4KPI.Services
 
                 foreach (var item in list)
                 {
-                    if (item.Level == 2)
+                    if (item.Level == Level.Level_2)
                     {
                         item.ParentId = null;
                     }
@@ -224,7 +220,6 @@ namespace A4KPI.Services
                 ParentId = x.ParentId,
                 Name = x.Name,
                 UpdateBy = x.UpdateBy,
-                //Pic = x.Pic,
                 Pics = x.Pics,
                 TypeId = x.TypeId,
                 CreateBy = x.CreateBy,
@@ -262,7 +257,6 @@ namespace A4KPI.Services
                 x.PolicyId,
                 x.UpdateBy,
                 x.TypeId,
-
                 PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
                 TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
                 PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
@@ -276,7 +270,6 @@ namespace A4KPI.Services
                 FactName =  _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
                 CenterName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
                 DeptName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
-                //Mgmt = _re
             }).ToList();
             return data;
         }
@@ -292,16 +285,16 @@ namespace A4KPI.Services
                 var levelCreateBy = 0;
                 if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
                 {
-                    levelCreateBy = 1;
+                    levelCreateBy = Level.Level_1;
                 }
                 if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
                 {
-                    levelCreateBy = 2;
+                    levelCreateBy = Level.Level_2;
 
                 }
                 if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
                 {
-                    levelCreateBy = 3;
+                    levelCreateBy = Level.Level_3;
 
                 }
 
@@ -372,7 +365,6 @@ namespace A4KPI.Services
                 item.Name = model.Name;
                 item.PolicyId = model.PolicyId;
                 item.TypeId = model.TypeId;
-                //item.Pic = model.Pic;
                 item.UpdateBy = accountId;
                 item.UpdateDate = DateTime.Now;
                 _repo.Update(item);
@@ -416,7 +408,7 @@ namespace A4KPI.Services
         {
             var levelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).Level;
             var parentofLevelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).ParentId;
-            if (levelOc == 3)
+            if (levelOc == Level.Level_3)
             {
                 return _repoOcPolicy.FindAll(x => x.OcId == ocID).Select(x => new {
                     x.Id,

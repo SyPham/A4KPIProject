@@ -322,16 +322,13 @@ export class Kpi2nd3rdComponent implements OnInit {
       document.querySelectorAll('li#Add-Sub-Item')[0].setAttribute('style', 'display: block;');
       document.querySelectorAll('li#DeleteOC')[0].setAttribute('style', 'display: block;');
     }
-
-
-
   }
   rowSelected(args) {
     // if (args.data.entity.createBy === this.userId) {
     // }
+
     this.parentId = args.data.entity.id
     this.level = args.data.entity.level + 1
-
     this.currentLevel = args.data.entity.level
 
   }
