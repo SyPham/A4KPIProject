@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div class="row mb-3">
       <div class="col-6">
-        <table style="box-shadow:  0 0 6px black;" class="table table-bordered">
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
           <tbody>
             <tr>
               <td>
@@ -35,7 +35,7 @@
         <div class="d-flex align-items-start">
           <div class="col-md-6">
 
-            <div style="box-shadow: 0px 0px 6px black;" class="input-group mb-3">
+            <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
                 <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
                   當月實績
@@ -47,9 +47,9 @@
               </div>
             </div>
 
-            <div style="box-shadow: 0px 0px 6px black;" class="input-group mb-3">
+            <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
+                <span style="width: 90px; background-color: #605f5f; opacity: 0.75; color: white;" class="input-group-text">
                   當月目標
                 </span>
               </div>
@@ -58,7 +58,7 @@
                 <span class="input-group-text">%</span>
               </div>
             </div>
-            <div style="box-shadow: 0px 0px 6px black;" class="input-group mb-3">
+            <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
                 <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
                   下個月目標
@@ -74,7 +74,7 @@
 
           <div class="col-md-6">
 
-            <div style="box-shadow: 0px 0px 6px black;" class="input-group mb-3">
+            <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
                 <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
                   當月YTD
@@ -86,9 +86,9 @@
               </div>
             </div>
 
-            <div style="box-shadow: 0px 0px 6px black;" class="input-group mb-3">
+            <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
+                <span style="width: 90px; background-color:#605f5f; opacity: 0.75; color: white;" class="input-group-text">
                   目標YTD
                 </span>
               </div>
@@ -176,10 +176,10 @@
       </div>
 
       <div class="col-6">
-        <button type="button" style="color: floralwhite; box-shadow: 0 0 2px black;" class="btn btn-success ml-2" (click)='download()'>
+        <button type="button" style="color: floralwhite; box-shadow: 1px 1px 2px black;" class="btn btn-success ml-2" (click)='download()'>
           <i class="fa fa-download" aria-hidden="true"></i>
           {{'Download' | translate}}</button>
-        <button type="button" style="color: floralwhite; box-shadow: 0 0 2px black;" class="btn btn-success" (click)='openUploadModalComponent()' >
+        <button type="button" style="color: floralwhite; box-shadow: 1px 1px 2px black;" class="btn btn-success" (click)='openUploadModalComponent()' >
           <i class="fa fa-upload" aria-hidden="true"></i>
           {{'Upload file' | translate}}</button>
 
@@ -203,7 +203,7 @@
 
     <div class="row">
       <div class="col-12">
-        <table class="table table-bordered" style="box-shadow:  0 0 6px;">
+        <table class="table table-bordered " style="box-shadow:  0 0 20px; border-radius: 5px; overflow: hidden;">
           <thead>
             <tr>
               <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%; background-color: #f0f3f5;">月份</th>
@@ -237,10 +237,12 @@
               <td>{{item.target}}</td>
               <td>{{item.deadline}}</td>
               <td >
-                <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'></textarea>
+                <textarea autosize type="text" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'  class="form-control" name="content" style="text-align:left;"></textarea>
+                <!-- <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeContent($event, i)" [(ngModel)]='item.doContent'></textarea> -->
               </td>
               <td>
-                <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement'></textarea>
+                <textarea autosize type="text" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement' class="form-control" name="content" style="text-align:left;"></textarea>
+                <!-- <textarea type="text" cols="30" rows="3" class="form-control" (ngModelChange)="onChangeArchivement($event, i)" [(ngModel)]='item.achievement'></textarea> -->
               </td>
               <td>
                 <select class="custom-select" [(ngModel)]="item.statusId"  (ngModelChange)="onChangeStatus($event, i, item)">
@@ -249,7 +251,8 @@
                 </select>
               </td>
             <td >
-              <textarea [(ngModel)]="item.resultContent"  (ngModelChange)="onChangeResult($event,i)" cols="30" rows="10" class="form-control"></textarea>
+              <textarea autosize type="text" [(ngModel)]="item.resultContent"  (ngModelChange)="onChangeResult($event,i)"  class="form-control" name="content" style="text-align:left;"></textarea>
+              <!-- <textarea [(ngModel)]="item.resultContent"  (ngModelChange)="onChangeResult($event,i)" cols="30" rows="10" class="form-control"></textarea> -->
             </td>
             </tr>
           </ng-container>

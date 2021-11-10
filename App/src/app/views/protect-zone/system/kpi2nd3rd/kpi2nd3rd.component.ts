@@ -45,7 +45,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   policyData: Object;
   policyId: number = 0;
   picId: number = 0;
-  picItem: any;
+  picItem: any = [];
   typeId: number = 0;
   parentId: null
   level: number = 1

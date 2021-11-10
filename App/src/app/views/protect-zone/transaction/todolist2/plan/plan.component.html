@@ -10,7 +10,29 @@
 <div class="modal-body">
   <div class="row">
     <div class="col-12">
-      <p>
+      <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{'PICPDCA' | translate}}: </label> <span>{{pic}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <p>
         <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
       </p>
       <p>
@@ -18,18 +40,18 @@
       </p>
       <p>
         <label class="font-weight-bold">{{"PICPDCA" | translate}}: </label> <span>{{pic}}</span>
-      </p>
+      </p> -->
     </div>
 
     <div class="col-12 d-flex align-items-start">
-      <div class="input-group mb-3" style="width:300px">
+      <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;width:300px" class="input-group mb-3" >
         <div class="input-group-prepend">
           <span class="input-group-text font-weight-bold" id="target">{{"Next month Target" | translate}}</span>
         </div>
         <input type="text" style="border: 3px solid orange;" class="form-control" (ngModelChange)="onChangeTarget($event)" [(ngModel)]="targetValue" id="next-month-target" aria-describedby="target">
       </div>
 
-      <div class="input-group mb-3 ml-5" style="width:300px">
+      <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;width:300px" class="input-group mb-3 ml-5" >
         <div class="input-group-prepend">
           <span class="input-group-text font-weight-bold" id="ytd">{{"Target YTD" | translate}}</span>
         </div>

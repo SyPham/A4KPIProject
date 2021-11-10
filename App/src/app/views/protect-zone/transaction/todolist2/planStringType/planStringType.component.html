@@ -10,15 +10,27 @@
 <div class="modal-body">
   <div class="row">
     <div class="col-12">
-      <p>
-        <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
-      </p>
-      <p>
-        <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
-      </p>
-      <p>
-        <label class="font-weight-bold">{{"PICPDCA" | translate}}: </label> <span>{{pic}}</span>
-      </p>
+      <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="font-weight-bold">{{'PICPDCA' | translate}}: </label> <span>{{pic}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
 
