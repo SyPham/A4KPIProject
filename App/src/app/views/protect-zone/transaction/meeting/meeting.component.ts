@@ -107,7 +107,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
             padding: 10,
             fontSize: 12,
             stepSize: 10,
-            min: -5
+            min: -2
           },
           scaleLabel: {
             display: true,
@@ -412,7 +412,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
               padding: 10,
               fontSize: 12,
               stepSize: 10,
-              min: -5
+              min: -2
             },
             scaleLabel: {
               display: true,

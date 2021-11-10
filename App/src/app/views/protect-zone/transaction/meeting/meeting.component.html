@@ -5,7 +5,7 @@
 <div class="row">
   <div class="col-md-12">
     <div class="card">
-      <div class="card-body table-responsive p-0">
+      <div class="card-body table-responsive">
         <div class="row my-3">
           <div class="col-md-12">
 
@@ -54,61 +54,65 @@
           </div>
         </div>
 
-        <ejs-grid #grid
-          id='grid'
-          [dataSource]="policyData"
-          [allowPaging]='true'
-          [allowResizing]='true'
-          [showColumnMenu]='true'
-          gridLines='Both'
-          [locale]='locale'
-          (actionBegin)="actionBegin($event)"
-          (actionComplete)="actionComplete($event)"
-          [pageSettings]='pageSettings'
-          [allowExcelExport]='true'
-          (recordDoubleClick)='onDoubleClick($event)'
-        >
-          <e-columns>
-            <e-column field="level" textAlign='Center' width="80" isPrimaryKey="true" headerText="Level">
-              <ng-template #headerTemplate let-data>
-                {{"Level" | translate}}
-              </ng-template>
+        <div class="row">
+          <div class="col-12">
+            <ejs-grid #grid
+              id='grid'
+              [dataSource]="policyData"
+              [allowPaging]='true'
+              [allowResizing]='true'
+              [showColumnMenu]='true'
+              gridLines='Both'
+              [locale]='locale'
+              (actionBegin)="actionBegin($event)"
+              (actionComplete)="actionComplete($event)"
+              [pageSettings]='pageSettings'
+              [allowExcelExport]='true'
+              (recordDoubleClick)='onDoubleClick($event)'
+            >
+              <e-columns>
+                <e-column field="level" textAlign='Center' width="80" isPrimaryKey="true" headerText="Level">
+                  <ng-template #headerTemplate let-data>
+                    {{"Level" | translate}}
+                  </ng-template>
 
-            </e-column>
-            <e-column field="name" textAlign='Center' headerText="KPI Name">
-              <ng-template #headerTemplate let-data>
-                {{"KPI Name" | translate}}
-              </ng-template>
-            </e-column>
-            <e-column field="centerName" textAlign='Center' headerText="Center">
-              <ng-template #headerTemplate let-data>
-                {{"Center" | translate}}
-              </ng-template>
-            </e-column>
-            <e-column field="deptName" textAlign='Center' headerText="Dept.">
-              <ng-template #headerTemplate let-data>
-                {{"Dept" | translate}}
-              </ng-template>
-            </e-column>
-            <e-column field='picName' headerText="PIC" width='200' textAlign='Center'>
-              <ng-template #headerTemplate let-data>
-                {{"PIC" | translate}}
-              </ng-template>
-            </e-column>
+                </e-column>
+                <e-column field="name" textAlign='Center' headerText="KPI Name">
+                  <ng-template #headerTemplate let-data>
+                    {{"KPI Name" | translate}}
+                  </ng-template>
+                </e-column>
+                <e-column field="centerName" textAlign='Center' headerText="Center">
+                  <ng-template #headerTemplate let-data>
+                    {{"Center" | translate}}
+                  </ng-template>
+                </e-column>
+                <e-column field="deptName" textAlign='Center' headerText="Dept.">
+                  <ng-template #headerTemplate let-data>
+                    {{"Dept" | translate}}
+                  </ng-template>
+                </e-column>
+                <e-column field='picName' headerText="PIC" width='200' textAlign='Center'>
+                  <ng-template #headerTemplate let-data>
+                    {{"PIC" | translate}}
+                  </ng-template>
+                </e-column>
 
-            <e-column field="option" width="100" textAlign='Center' headerText="PDCA">
-              <ng-template #template let-data>
-                <div class="btn-group">
-                  <button type="button" (click)='openModal(data,detailModal)' class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
-                </div>
-              </ng-template>
-              <ng-template #editTemplate let-data>
-               N/A
-              </ng-template>
-            </e-column>
+                <e-column field="option" width="100" textAlign='Center' headerText="PDCA">
+                  <ng-template #template let-data>
+                    <div class="btn-group">
+                      <button style="color: floralwhite; box-shadow: 1px 1px 2px black;" type="button" (click)='openModal(data,detailModal)' class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></button>
+                    </div>
+                  </ng-template>
+                  <ng-template #editTemplate let-data>
+                  N/A
+                  </ng-template>
+                </e-column>
 
-          </e-columns>
-        </ejs-grid>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -118,7 +122,8 @@
   <a #top></a>
   <div class="modal-header">
     <h4 class="modal-title">
-      <i class="fas fa-plus"></i> Monthly Review Meeting
+      <!-- <i class="fa fa-star" ></i> Monthly Review Meeting -->
+      <img src="/assets/img/star.jpg" alt="" style="width: 20px; height: 20px;"> Monthly Review Meeting
     </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -128,7 +133,30 @@
 
     <div class="row mb-2">
       <div class="col-md-6">
-        <div class="row">
+        <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                <label class="font-weight-bold">上一階KPI: </label> <span>{{policyTitle}}</span>
+              </td>
+              <td>
+                <label class="font-weight-bold">Level: </label> <span>{{levelTitle}}</span>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="font-weight-bold">KPI: </label> <span>{{kpiTitle}}</span>
+              </td>
+              <td>
+                <label class="font-weight-bold">PIC: </label> <span>{{picTitle}}</span>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <!-- <div class="row">
           <div class="col-md-7" style="font-size: 20px;">上一階KPI: {{policyTitle}}</div>
           <div class="col-md-5" style="font-size: 20px;">Level: {{levelTitle}}</div>
         </div>
@@ -136,7 +164,7 @@
         <div class="row">
           <div class="col-md-7" style="font-size: 20px;">KPI: {{kpiTitle}}</div>
           <div class="col-md-5" style="font-size: 20px;">PIC: {{picTitle}}</div>
-        </div>
+        </div> -->
       </div>
       <div class="col-md-6">
 
@@ -147,7 +175,7 @@
 
     </div>
     <div *ngIf="typeText !== 'string'" class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" style="box-shadow: 0 0 20px; margin-bottom: 25px;">
         <div class="chart">
           <canvas  id="planet-chart" ></canvas>
         </div>
