@@ -46,7 +46,7 @@ export class ChangePasswordComponent implements OnInit {
         const lang = localStorage.getItem('lang')  ;
         const message = lang == 'vi' ? 'Chỉnh sửa thành công!' : lang === 'en' ? 'Revised Successfully' : '修改成功';
         const close = lang == 'vi' ? 'Đóng' : lang === 'en' ? 'Close' : '關閉';
-        const viewProductList = lang == 'vi' ? 'Đăng nhập lại ngay bây giờ' : lang === 'en' ? 'Login again' : '现在重新登录';
+        const viewProductList = lang == 'vi' ? 'Đăng nhập lại ngay bây giờ' : lang === 'en' ? 'Login again' : '重新登入';
         this.spinner.hide()
         this.alertify.confirm3('',message, close, viewProductList, () => {
           // this.router.navigate(['login']);
