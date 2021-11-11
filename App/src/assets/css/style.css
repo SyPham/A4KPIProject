@@ -1,22 +1,22 @@
 ﻿* {
 
 }
-button#Grid_add {
+button#gridAc_add {
   background-color: #3ea662;
   color: white;
 }
 
-button#Grid_delete {
+button#gridAc_delete {
   background-color: red;
   color: white;
 }
 
-button#grid_add {
+button#gridPDCA_add {
   background-color: #3ea662;
   color: white;
 }
 
-button#grid_delete {
+button#gridPDCA_delete {
   background-color: red;
   color: white;
 }
