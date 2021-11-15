@@ -137,7 +137,7 @@
           <tbody>
             <tr>
               <td>
-                <label class="font-weight-bold">上一階KPI: </label> <span>{{policyTitle}}</span>
+                <label class="font-weight-bold">{{"Upper level KPI" | translate}}: </label> <span>{{policyTitle}}</span>
               </td>
               <td>
                 <label class="font-weight-bold">Level: </label> <span>{{levelTitle}}</span>
@@ -266,7 +266,13 @@
                 </tr>
 
                 <tr>
-                  <th class="text-center" width="8%">去年實績 </th>
+                  <th class="text-center" width="8%">
+                    <ng-container>
+                      <span class="d-inline-block" data-toggle="tooltip" title="{{'LY PCMC tooltip' | translate}}" >{{"LY PCMC" | translate}}  </span>
+                    </ng-container>
+
+
+                  </th>
                   <td *ngFor="let item of ytds; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       <!-- {{item}} % -->
@@ -280,7 +286,13 @@
                 </tr>
 
                 <tr>
-                  <th class="text-center" width="8%">去年YTD </th>
+                  <th class="text-center" width="8%">
+                    <ng-container>
+                      <span class="d-inline-block" data-toggle="tooltip" title="{{'LY YTD tooltip' | translate}}" >{{"LY YTD" | translate}} </span>
+                    </ng-container>
+
+
+                  </th>
                   <td *ngFor="let item of ytds; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       <!-- {{item}} % -->
@@ -531,20 +543,28 @@
         <table class="table table-bordered" id="tblDataMeeting" style="box-shadow:  0 0 6px;">
           <thead style="background-color: #f0f3f5;">
             <tr>
-              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 30px">月份</th>
-              <th scope="col" class="text-center" style="width: 210px;">本期行動計劃</th>
-              <th scope="col" class="text-center" style="width: 100px;">目標</th>
-              <th scope="col" class="text-center" style="width: 50px;">期限</th>
-              <th scope="col" class="text-center" style="width: 210px">執行內容</th>
-              <th scope="col" class="text-center" style="width: 50px">實績</th>
-              <th scope="col" class="text-center" style="width: 80px">狀態</th>
-              <th scope="col" class="text-center" style="width: 210px">執行狀況檢討</th>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 30px">{{"meetingMonth" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 210px;">{{"meetingPlan" | translate}} </th>
+              <th scope="col" class="text-center" style="width: 100px;">{{"meetingTarget" | translate}} </th>
+              <th scope="col" class="text-center" style="width: 50px;">{{"meetingDeadline" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 210px">{{"meetingDo" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 50px">{{"meetingPcmc" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 80px">{{"meetingStatus" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 210px">{{"meetingCheck" | translate}}</th>
 
-              <th scope="col" class="text-center" style="width: 210px">下期行動計劃</th>
-              <th scope="col" class="text-center" style="width: 100px;">目標</th>
-              <th scope="col" class="text-center" style="width: 50px;">期限</th>
+              <th scope="col" class="text-center" style="width: 210px">{{"meetingAction" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 100px;"> {{"meetingTarget" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 50px;"> {{"meetingDeadline" | translate}}</th>
 
-              <th scope="col" class="text-center" style="width: 50px;">附檔</th>
+              <th scope="col" class="text-center" style="width: 50px;">
+                <ng-container>
+                  <span  data-toggle="tooltip" title="{{'meetingAtts' | translate}}">{{"meetingAtt" | translate}}</span>
+
+                </ng-container>
+
+
+
+              </th>
             </tr>
 
 

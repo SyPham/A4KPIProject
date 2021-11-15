@@ -300,16 +300,19 @@
   "Target YTD": "目標YTD",
 
   "meetingMonth": "月份",
-  "meetingP": "月份計劃",
+  "meetingPlan": "月份計劃",
   "meetingTarget": "目標",
   "meetingDeadline": "期限",
-  "meetingD": "執行內容",
-  "meetingAtri": "實績",
+  "meetingDo": "執行內容",
+  "meetingPcmc": "實績",
   "meetingStatus": "狀態",
-  "meetingC": "執行狀況檢討",
-  "meetingA": "計畫執行",
+  "meetingCheck": "執行狀況檢討",
+  "meetingAction": "計畫執行",
+  "meetingAtt": "附檔",
+  "meetingAtts": "附檔",
+
+
   "meetingPer": "實績",
-  "meetingAt": "附檔",
   "Content": "本期行動計劃",
 
   "Target": "目標值",
@@ -356,6 +359,13 @@
   "Upload file": "上傳附檔",
   "Chose Status":"選擇狀態",
   "Add KPI": "建立KPI",
-  "Create": "建立"
+  "Create": "建立",
+
+  "Upper level KPI":"上一階KPI",
+  "LY PCMC":"去年實績",
+  "LY YTD":"去年YTD",
+
+  "LY PCMC tooltip":"去年實績",
+  "LY YTD tooltip":"去年YTD"
 
 }

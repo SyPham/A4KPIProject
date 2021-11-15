@@ -168,6 +168,7 @@ export class PermissionService {
 
   getMenuByLangID(userID, langID) {
     return this.http.get<[]>(`${this.env.apiUrl}Permission/GetMenuByLangID?userID=${userID}&langID=${langID}` , {})
+    // return this.http.get<[]>(`${this.env.apiUrl}Permission/GetMenuByLangID/${userID}/${langID}` , {})
       .pipe(map(response => {
         const menus = response as any[];
         const navs: INavData[] = [

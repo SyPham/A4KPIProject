@@ -147,6 +147,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       this.spinner.show();
       const langID = localStorage.getItem('lang');
       this.permissionService.getMenuByLangID(this.userid, langID).subscribe((navsData: []) => {
+
         this.navItems = navsData;
         localStorage.setItem('navs', JSON.stringify(navsData));
         this.spinner.hide();

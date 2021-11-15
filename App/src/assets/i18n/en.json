@@ -299,21 +299,22 @@
     "Target YTD": "Target YTD",
 
     "meetingMonth": "Month",
-    "meetingP": "P",
+    "meetingPlan": "Plan",
     "meetingTarget": "Target",
     "meetingDeadline": "Deadline",
-    "meetingD": "D",
-    "meetingAtri": "Achievement",
+    "meetingDo": "Do",
+    "meetingPcmc": "Pcmc",
     "meetingStatus": "Status",
-    "meetingC": "C",
-    "meetingA": "A",
-    "meetingPer": "Perfomance",
-    "meetingAt": "Attatchment",
+    "meetingCheck": "Check",
+    "meetingAction": "Action",
+    "meetingAtt": "Att",
+    "meetingAtts": "Attachment",
     "Content": "Content",
     "Target": "Target",
     "Deadline": "Deadline",
-    "Content2": "Content",
 
+    "Content2": "Content",
+    "meetingPer": "Perfomance",
     "Processing": "Processing",
     "Not yet start": "Not yet start",
     "Postpone": "Postpone",
@@ -357,6 +358,16 @@
     "Download": "Download",
     "Upload file": "Upload file",
     "Chose Status":"Chose Status",
+
+    "Upper level KPI":"Upper level KPI",
+    "LY PCMC":"LY PCMC",
+    "LY YTD":"LY PCMC",
+    "LY PCMC tooltip":"Last Year Performance",
+    "LY YTD tooltip":"Last year YTD",
+
+
+
+
 
     "Add KPI": "Add KPI",
     "Create": "Create"
