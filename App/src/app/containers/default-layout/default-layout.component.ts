@@ -132,7 +132,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     this.pageSize = 10;
 
     this.userid = JSON.parse(localStorage.getItem('user')).id;
-    this.getMenu();
+    // this.getMenu();
     this.onService();
     this.currentTime = moment().format('hh:mm:ss A');
     setInterval(() => this.updateCurrentTime(), 1 * 1000);
@@ -171,15 +171,16 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
 
     this.spinner.show();
     const lang = args.itemData.id;
+    localStorage.removeItem('lang');
+    localStorage.setItem('lang', lang);
+    this.dataService.setValueLocale(lang);
+    // const lang = args.itemData.id;
     this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
-      window.location.reload();
-      localStorage.removeItem('lang');
-      localStorage.setItem('lang', lang);
-      this.dataService.setValueLocale(lang);
-      this.translate.use(lang);
+      // this.translate.use(lang);
       this.navItems = navs;
       localStorage.setItem('navs', JSON.stringify(navs));
       this.spinner.hide();
+      window.location.reload();
 
     }, (err) => {
       this.spinner.hide();
