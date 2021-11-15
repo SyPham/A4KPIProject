@@ -291,6 +291,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
     // this.activeModal.close();
 
   }
+
   validate(submitted) {
     if (this.typeText !== 'string') {
 
@@ -345,6 +346,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
 
     return true;
   }
+
   actionBegin(args) {
     if(args.requestType === 'save' && args.action === 'edit') {
 

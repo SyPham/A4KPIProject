@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using A4KPI.DTO;
 using A4KPI.Helpers;
-using A4KPI.Services;
+using A4KPI._Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace A4KPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
             return Ok(await _service.GetAllAsync());
         }

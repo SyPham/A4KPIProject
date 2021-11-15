@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using A4KPI.DTO;
 using A4KPI.Helpers;
-using A4KPI.Services;
+using A4KPI._Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +27,7 @@ namespace A4KPI.Controllers
             var data = await _service.DeletePolicy(id);
             return data;
         }
-        [HttpGet]
-        public async Task<ActionResult> GetAllAsync()
-        {
-            return Ok(await _service.GetAllAsync());
-        }
+       
 
         [HttpGet]
         public async Task<ActionResult> GetAllPolicy()
@@ -90,24 +86,6 @@ namespace A4KPI.Controllers
         }
 
         
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
-        {
-            return StatusCodeResult(await _service.DeleteAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetByIdAsync(int id)
-        {
-            return Ok(await _service.GetByIdAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)
-        {
-            return Ok(await _service.GetWithPaginationsAsync(paramater));
-        }
 
         
 

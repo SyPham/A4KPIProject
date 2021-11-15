@@ -100,11 +100,11 @@ namespace A4KPI.Data
             .HasForeignKey(u => u.AccountId)
             .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<OCAccount>()
-               .HasOne(s => s.OC)
-               .WithMany(ta => ta.OCAccounts)
-               .HasForeignKey(u => u.OCId)
-               .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<OCAccount>()
+            //   .HasOne(s => s.OC)
+            //   .WithMany(ta => ta.OCAccounts)
+            //   .HasForeignKey(u => u.OCId)
+            //   .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Do>()
            .HasOne(s => s.Action)

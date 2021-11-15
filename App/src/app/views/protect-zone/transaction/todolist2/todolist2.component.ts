@@ -73,6 +73,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.spinner.show()
     this.loadData();
   }
+
   ngOnInit(): void {
     this.currentTime = new Date();
     this.content = '';
@@ -84,10 +85,12 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.loadData();
     } }));
   }
+
   isAllowAccess(position: number) {
     const positions = JSON.parse(localStorage.getItem('user')).accountGroupPositions as number[] || [];
     return positions.includes(position);
   }
+
   loadData() {
     this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
     let systemRole = 1;
@@ -174,10 +177,12 @@ export class Todolist2Component implements OnInit, OnDestroy {
         break;
     }
   }
+
   getGridTemplate(name): TemplateRef<any> {
     const dir = this.Gridtemplates.find(dir => dir.name === name + '');
   return dir ? dir.template : null
   }
+
   loadDataL0() {
     this.gridData = [];
     this.todolist2Service.l0(this.currentTimeRequest).subscribe(data => {
@@ -194,6 +199,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
     this.gridData = [];
 
   }
+
   loadDataUpdater() {
     this.gridData = [];
     this.todolistService.updater(this.currentTimeRequest).subscribe(data => {
@@ -212,30 +218,35 @@ export class Todolist2Component implements OnInit, OnDestroy {
       this.gridData = data;
     });
   }
+
   loadDataFHO() {
     this.gridData = [];
     this.todolistService.fho(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
+
   loadDataGHR() {
     this.gridData = [];
     this.todolistService.ghr(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
+
   loadDataGM() {
     this.gridData = [];
     this.todolistService.gm(this.currentTimeRequest).subscribe(data => {
       this.gridData = data;
     });
   }
+
   loadAccountGroupData() {
     this.accountGroupService.getAccountGroupForTodolistByAccountId().subscribe(data => {
       this.accountGroupData = data.filter(x => x.position === 1);
       this.loadData();
     });
   }
+
   gotoUpdate() {
     return this.router.navigateByUrl('/transaction/upload-kpi-objective');
   }
@@ -259,6 +270,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
       });
     }
   }
+
   openUpdatePdcaModalComponent(data) {
     if(data.typeText !== 'string') {
       const modalRef = this.modalService.open(PdcaComponent, { size: 'xxl', backdrop: 'static', keyboard: false });

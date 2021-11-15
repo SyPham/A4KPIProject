@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using A4KPI.DTO;
 using A4KPI.Helpers;
-using A4KPI.Services;
+using A4KPI._Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +16,10 @@ namespace A4KPI.Controllers
     public class AccountController : ApiControllerBase
     {
         private readonly IAccountService _service;
-        private readonly IConfiguration _configuration;
-        private readonly IMailHelper _mailHelper;
-        public AccountController(IAccountService service, IMailHelper mailHelper, IConfiguration configuration)
+
+        public AccountController(IAccountService service)
         {
             _service = service;
-            _mailHelper = mailHelper;
-            _configuration = configuration;
         }
 
         [HttpGet]

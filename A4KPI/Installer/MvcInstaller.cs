@@ -8,6 +8,7 @@ using A4KPI.Data;
 using A4KPI.Helpers.AutoMapper;
 using System;
 using System.Collections.Generic;
+using A4KPI._Repositories.Interface;
 
 namespace A4KPI.Installer
 {
@@ -28,7 +29,7 @@ namespace A4KPI.Installer
 
             services.AddScoped<DbFactory>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(IRepositoryBase<>));
             //var sp = services.BuildServiceProvider();
             //var context = (DataContext)sp.GetService(typeof(DataContext));
             //Helpers.DBInitializer.Seed(context);

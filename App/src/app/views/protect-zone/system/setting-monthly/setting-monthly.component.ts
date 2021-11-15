@@ -126,7 +126,7 @@ export class SettingMonthlyComponent extends BaseComponent implements OnInit {
       this.update(model);
     }
     if (args.requestType === 'delete') {
-      this.delete(args.data[0].id);
+      this.deleteOption(args.data[0].id);
     }
   }
  deleteOption(id) {
