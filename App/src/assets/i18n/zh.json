@@ -293,6 +293,7 @@
   "Create Report Time": "Create Report Time",
   "Policy": "項目",
   "KPI": "KPI",
+
   "This month Performance": "當月實績",
   "This month Target": "當月目標",
   "Next month Target": "下個月目標",
@@ -313,6 +314,7 @@
 
 
   "meetingPer": "實績",
+  "meetingPertooltip": "實績",
   "Content": "本期行動計劃",
 
   "Target": "目標值",

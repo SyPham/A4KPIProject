@@ -34,10 +34,10 @@ namespace A4KPI.Controllers
             var result = await _service.GetPolicyByOcID(ocID);
             return Ok(result);
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllType()
+        [HttpGet("{lang}")]
+        public async Task<IActionResult> GetAllType(string lang)
         {
-            return Ok((await _service.GetAllType()));
+            return Ok((await _service.GetAllType(lang)));
         }
         [HttpGet]
         public async Task<ActionResult> GetAllAsync()

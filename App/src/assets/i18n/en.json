@@ -303,7 +303,7 @@
     "meetingTarget": "Target",
     "meetingDeadline": "Deadline",
     "meetingDo": "Do",
-    "meetingPcmc": "Pcmc",
+    "meetingPcmc": "Perf",
     "meetingStatus": "Status",
     "meetingCheck": "Check",
     "meetingAction": "Action",
@@ -314,7 +314,8 @@
     "Deadline": "Deadline",
 
     "Content2": "Content",
-    "meetingPer": "Perfomance",
+    "meetingPer": "PERF",
+    "meetingPertooltip": "Performance",
     "Processing": "Processing",
     "Not yet start": "Not yet start",
     "Postpone": "Postpone",
@@ -360,11 +361,12 @@
     "Chose Status":"Chose Status",
 
     "Upper level KPI":"Upper level KPI",
-    "LY PCMC":"LY PCMC",
-    "LY YTD":"LY PCMC",
+    "LY PCMC":"LY Perf",
+    "LY YTD":"LY YTD",
     "LY PCMC tooltip":"Last Year Performance",
     "LY YTD tooltip":"Last year YTD",
 
+    "This Month PERF": "This Month PERF",
 
 
 

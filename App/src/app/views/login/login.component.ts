@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.spinner.show();
     this.busy = true;
     try {
-      const data = await this.authentication();
+      await this.authentication();
       const userId = JSON.parse(localStorage.getItem('user')).id;
 
       const roleUser = await this.roleService.getRoleByUserID(userId).toPromise();
@@ -94,12 +94,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       localStorage.setItem('level', JSON.stringify(roleUser));
       this.authService.setRoleValue(roleUser as IRole);
 
-      await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
+      // await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
 
       const functions = await this.permisisonService.getActionInFunctionByRoleID(roleUser.id).toPromise();
       this.functions = functions as FunctionSystem[];
       localStorage.setItem("functions", JSON.stringify(functions));
       this.authService.setFunctions(functions as any);
+
 
       const currentLang = localStorage.getItem('lang');
       if (currentLang) {
@@ -129,8 +130,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
 
       });
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
+      // localStorage.setItem('user', JSON.stringify(data.user));
+      // localStorage.setItem('token', data.token);
 
       this.alertifyService.success('Login Success!!');
       this.busy = false;

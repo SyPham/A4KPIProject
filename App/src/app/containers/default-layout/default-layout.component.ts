@@ -79,6 +79,16 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     public translate: TranslateService
 
   ) {
+    // this.vi = require('../../../assets/ej2-lang/vi.json');
+    // this.en = require('../../../assets/ej2-lang/en.json');
+    // this.role = JSON.parse(localStorage.getItem('level'));
+    // this.value = localStorage.getItem('lang');
+    // const user = JSON.parse(localStorage.getItem("user"));
+    // this.userName = user?.fullName;
+    // this.userID = user?.id;
+    // const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
+    // this.navItems = navs
+
     this.vi = require('../../../assets/ej2-lang/vi.json');
     this.en = require('../../../assets/ej2-lang/en.json');
     this.role = JSON.parse(localStorage.getItem('level'));
@@ -86,8 +96,6 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     const user = JSON.parse(localStorage.getItem("user"));
     this.userName = user?.fullName;
     this.userID = user?.id;
-    const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
-    this.navItems = navs
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
@@ -147,8 +155,8 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       this.spinner.show();
       const langID = localStorage.getItem('lang');
       this.permissionService.getMenuByLangID(this.userid, langID).subscribe((navsData: []) => {
-        // this.navItems = navsData;
         // localStorage.setItem('navs', JSON.stringify(navsData));
+        this.navItems = navsData;
         this.spinner.hide();
 
       }, (err) => {
@@ -162,30 +170,20 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     return '/ec/execution/todolist2';
   }
   onChange(args) {
-    // this.spinner.show();
-    // const lang = args.itemData.id;
-    // localStorage.removeItem('lang');
-    // localStorage.setItem('lang', lang);
-    // this.dataService.setValueLocale(lang);
-
     this.spinner.show();
     const lang = args.itemData.id;
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
-    // this.dataService.setValueLocale(lang);
-    // const lang = args.itemData.id;
+    this.dataService.setValueLocale(lang);
     this.permissionService.getMenuByLangID(this.userid, lang).subscribe((navs: []) => {
-      // this.translate.use(lang);
-      // this.navItems = navs;
       // localStorage.setItem('navs', JSON.stringify(navs));
+      this.navItems = navs;
       this.spinner.hide();
       window.location.reload();
 
     }, (err) => {
       this.spinner.hide();
     });
-    // window.location.reload();
-
   }
   getBuilding() {
     const userID = JSON.parse(localStorage.getItem('user')).user.id;

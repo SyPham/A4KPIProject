@@ -84,7 +84,8 @@ export class KpiCreateComponent extends BaseComponent implements OnInit {
     })
   }
   getAllType() {
-    this.kpiNewService.getAllType().subscribe(res => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getAllType(lang).subscribe(res => {
       this.typeData = res
     })
   }

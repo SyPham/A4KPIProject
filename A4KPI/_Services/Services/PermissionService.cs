@@ -114,7 +114,7 @@ namespace A4KPI._Services.Services
                             Module = f.FunctionSystem.Module,
                             ModuleId = f.FunctionSystem.ModuleID
                         }).ToList();
-            var data =query.Distinct()
+            var data = query.Distinct()
                 .OrderBy(x => x.ParentId)
                 .ThenBy(x => x.SortOrder)
                 .ToList();

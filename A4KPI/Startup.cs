@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using A4KPI.Helpers;
-using A4KPI.Installer;
 using System.IO;
 using System;
 using A4KPI.DTO;
@@ -54,8 +53,8 @@ namespace A4KPI
 
             services.AddScoped<Func<DataContext>>((provider) => () => provider.GetService<DataContext>());
 
-            services.AddScoped<DbFactory>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<DbFactory>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services
                 .AddAutoMapper(typeof(Startup))

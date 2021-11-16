@@ -230,9 +230,27 @@ namespace A4KPI._Services.Services
             return data;
         }
 
-        public async Task<object> GetAllType()
+
+        public async Task<object> GetAllType(string lang)
         {
-            var data = await _repoType.FindAll().ToListAsync();
+            var data = new List<TypeDto>();
+            if (lang == "en")
+            {
+                data = await _repoType.FindAll().Select(x => new TypeDto { 
+                    Id= x.Id,
+                    Name = x.NameEn,
+                    Description = x.Description
+                }).ToListAsync();
+            } else
+            {
+                data = await _repoType.FindAll().Select(x => new TypeDto
+                {
+                    Id = x.Id,
+                    Name = x.NameZh,
+                    Description = x.Description
+                }).ToListAsync();
+            }
+            //var data = await _repoType.FindAll().ToListAsync();
             return data;
         }
 

@@ -43,8 +43,8 @@ export class KpinewService {
     return this.http.get(`${this.env.apiUrl}KPINew/GetPolicyByOcID/${ocID}`, {});
   }
 
-  getAllType() {
-    return this.http.get(`${this.env.apiUrl}KPINew/getAllType`, {});
+  getAllType(lang) {
+    return this.http.get(`${this.env.apiUrl}KPINew/getAllType/${lang}`, {});
   }
   getListPic() {
     return this.http.get(`${this.env.apiUrl}KPINew/GetListPic`, {});

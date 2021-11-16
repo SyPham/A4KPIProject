@@ -37,8 +37,8 @@
 
             <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
-                  當月實績
+                <span style=" background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
+                  {{"This month Performance" | translate}}
                 </span>
               </div>
               <input (ngModelChange)="onChangeThisMonthPerformance($event)" [(ngModel)]="performanceValue"  type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -49,8 +49,8 @@
 
             <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #605f5f; opacity: 0.75; color: white;" class="input-group-text">
-                  當月目標
+                <span style=" background-color: #605f5f; opacity: 0.75; color: white;" class="input-group-text">
+                  {{"This month Target" | translate}}
                 </span>
               </div>
               <input style="pointer-events: none;" (ngModelChange)="onChangeThisMonthTarget($event)" [(ngModel)]="thisMonthTargetValue" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -60,8 +60,8 @@
             </div>
             <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
-                  下個月目標
+                <span style=" background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
+                  {{"Next month Target" | translate}}
                 </span>
               </div>
               <input (ngModelChange)="onChangeNextMonthTarget($event)" [(ngModel)]="nextMonthTargetValue"  type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -76,8 +76,8 @@
 
             <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
-                  當月YTD
+                <span style=" background-color: #0069d9; opacity: 0.75; color: white;" class="input-group-text">
+                  {{"This month YTD" | translate}}
                 </span>
               </div>
               <input (ngModelChange)="onChangeThisMonthYTD($event)" [(ngModel)]="thisMonthYTDValue"  type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -88,8 +88,8 @@
 
             <div style="box-shadow: 2px 2px 3px black; border-radius: 4px; overflow: hidden;" class="input-group mb-3">
               <div class="input-group-prepend">
-                <span style="width: 90px; background-color:#605f5f; opacity: 0.75; color: white;" class="input-group-text">
-                  目標YTD
+                <span style=" background-color:#605f5f; opacity: 0.75; color: white;" class="input-group-text">
+                  {{"Target YTD" | translate}}
                 </span>
               </div>
               <input style="pointer-events: none;" (ngModelChange)="onChangeTargetYTD($event)" [(ngModel)]="ytdValue" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -203,7 +203,7 @@
         <table class="table table-bordered " style="box-shadow:  0 0 20px; border-radius: 5px; overflow: hidden;">
           <thead>
             <tr>
-              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%; background-color: #f0f3f5;">月份</th>
+              <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5%; background-color: #f0f3f5;">{{"meetingMonth" | translate}}</th>
               <th scope="col" rowspan="2" class="text-center align-middle" style="width: 5% ; background-color: #f0f3f5;">#</th>
               <th scope="col" class="text-center" style=" background-color: #f0f3f5;">P</th>
               <th scope="col" class="text-center" style=" background-color: #f0f3f5;">Target</th>

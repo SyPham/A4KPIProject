@@ -84,7 +84,8 @@ export class Kpi2nd3rdComponent implements OnInit {
     })
   }
   getAllType() {
-    this.kpiNewService.getAllType().subscribe(res => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getAllType(lang).subscribe(res => {
       this.typeData = res
     })
   }
@@ -166,14 +167,74 @@ export class Kpi2nd3rdComponent implements OnInit {
         id: "DeleteOC",
       },
     ];
-    this.toolbar = [
-      "Search",
-      "新增下一階KPI",
-      "Update",
-      "Cancel",
-      "ExpandAll",
-      "CollapseAll",
-    ];
+    const lang = localStorage.getItem('lang') ;
+    if(lang === 'en') {
+      this.toolbar = [
+        {
+          text: 'Search',
+          tooltipText: 'Search',
+          id: 'Search',
+        },
+        {
+          text: 'Add LL KPI',
+          tooltipText: 'Add lower level KPI',
+          id: '_gridcontrol_add',
+        },
+        {
+          text: 'Update',
+          id: '_gridcontrol_update',
+        },
+        {
+          text: 'Cancel',
+          id: '_gridcontrol_cancel',
+        },
+        {
+          text: 'ExpandAll',
+          id: '_gridcontrol_expandall',
+        },
+        {
+          text: 'CollapseAll',
+          id: '_gridcontrol_collapseall',
+        }
+      ];
+    }else {
+      // this.toolbar = [
+      //   "Search",
+      //   "新增下一階KPI",
+      //   "Update",
+      //   "Cancel",
+      //   "ExpandAll",
+      //   "CollapseAll",
+      // ];
+      this.toolbar = [
+        {
+          text: 'Search',
+          tooltipText: 'Search',
+          id: 'Search',
+        },
+        {
+          text: '新增下一階KPI',
+          tooltipText: '新增下一階KPI',
+          id: '_gridcontrol_add',
+        },
+        {
+          text: 'Update',
+          id: '_gridcontrol_update',
+        },
+        {
+          text: 'Cancel',
+          id: '_gridcontrol_cancel',
+        },
+        {
+          text: 'ExpandAll',
+          id: '_gridcontrol_expandall',
+        },
+        {
+          text: 'CollapseAll',
+          id: '_gridcontrol_collapseall',
+        }
+      ];
+    }
     this.editing = {
       allowEditing: true,
       allowAdding: true,
@@ -199,15 +260,16 @@ export class Kpi2nd3rdComponent implements OnInit {
   toolbarClick(args) {
     const lang = localStorage.getItem('lang')  ;
     const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
-    if (this.currentLevel === 3 && args.item.id === 'treegrid_gridcontrol_新增下一階KPI') {
+    if (this.currentLevel === 3 && args.item.id === '_gridcontrol_add') {
       args.cancel = true;
       this.alertify.warning(message);
       return;
     }
     else {
       if(this.level > 1) {
+        console.log(args.item.id);
         switch (args.item.id) {
-          case "treegrid_gridcontrol_新增下一階KPI":
+          case "_gridcontrol_add":
             args.cancel = true;
             this.openMainModal();
             break;
@@ -215,6 +277,7 @@ export class Kpi2nd3rdComponent implements OnInit {
             break;
         }
       } else {
+        args.cancel = true;
         this.alertify.error("Please choose the KPI!!!");
       }
 

@@ -23,7 +23,7 @@ namespace A4KPI._Services.Services
         Task<object> GetKPIByOcID(int ocID);
         Task<object> GetListPic();
         Task<object> GetPolicyByOcID(int ocID);
-        Task<object> GetAllType();
+        Task<object> GetAllType(string lang);
         Task<bool> Delete(int id);
         Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView();
         Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd();

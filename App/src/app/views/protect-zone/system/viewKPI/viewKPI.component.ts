@@ -71,7 +71,8 @@ export class ViewKPIComponent implements OnInit {
     this.getAllType()
   }
   getAllType() {
-    this.kpiNewService.getAllType().subscribe(res => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getAllType(lang).subscribe(res => {
       this.typeData = res
     })
   }

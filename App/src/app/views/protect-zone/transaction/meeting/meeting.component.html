@@ -198,7 +198,9 @@
                 </tr>
 
                 <tr>
-                  <th class="text-center" width="5%">{{"meetingTarget" | translate}} </th>
+                  <th class="text-center" width="5%">
+                    {{"meetingTarget" | translate}}
+                  </th>
                   <td *ngFor="let item of targets; let i=index" class="text-center" >
                     <ng-container *ngIf="typeId === 1; else elseTemplate">
                       {{item}} %
@@ -220,7 +222,13 @@
                 </tr>
 
                 <tr>
-                  <th class="text-center" width="5%">{{"meetingPer" | translate}} </th>
+                  <th class="text-center" width="5%">
+                    <ng-container>
+                      <span  data-toggle="tooltip" title="{{'meetingPertooltip' | translate}}">{{"meetingPer" | translate}}</span>
+
+                    </ng-container>
+
+                  </th>
                   <td *ngFor="let item of perfomance; let i=index" class="text-center" >
                     <ng-container *ngIf="item === 0; else elseTemplate">
 

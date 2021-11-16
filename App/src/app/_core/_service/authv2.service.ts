@@ -109,8 +109,7 @@ export class Authv2Service implements OnDestroy {
           const loginResult = x as ApplicationUser;
           const user = x.user;
           localStorage.setItem('user', JSON.stringify(user));
-        //  localStorage.setItem('token', x.token);
-
+         localStorage.setItem('token', x.token);
           this._user.next(loginResult as ApplicationUser);
           this.currentUser = user;
           this.startTokenTimer();
