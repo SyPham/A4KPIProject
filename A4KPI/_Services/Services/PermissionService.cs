@@ -92,7 +92,7 @@ namespace A4KPI._Services.Services
         {
             var roles = await _repoUserRole.FindAll(x => x.UserID == userId).Select(x => x.RoleID).ToArrayAsync();
 
-            var query = from p in _repo.FindAll()
+            var query = (from p in _repo.FindAll()
                         join f in _repoFunctionTranslation.FindAll(x => x.LanguageID.Equals(langID))
                                 .Include(x => x.FunctionSystem)
                                 .ThenInclude(x => x.Module)
@@ -113,10 +113,11 @@ namespace A4KPI._Services.Services
                             SortOrder = f.FunctionSystem.Sequence,
                             Module = f.FunctionSystem.Module,
                             ModuleId = f.FunctionSystem.ModuleID
-                        };
-            var data = await query
-                .OrderBy(x => x.SortOrder)
-                .ToListAsync();
+                        }).ToList();
+            var data =query.Distinct()
+                .OrderBy(x => x.ParentId)
+                .ThenBy(x => x.SortOrder)
+                .ToList();
             return data.GroupBy(x => x.Module).Select(x => new
             {
                 Module = x.Key.ModuleTranslations.Count > 0 ?
