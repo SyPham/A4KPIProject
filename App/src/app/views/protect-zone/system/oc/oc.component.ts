@@ -77,14 +77,69 @@ export class OcComponent implements OnInit {
         id: "DeleteOC",
       },
     ];
-    this.toolbar = [
-      "Search",
-      "Add",
-      "新增下一階",
-      "Cancel",
-      "ExpandAll",
-      "CollapseAll",
-    ];
+    const lang = localStorage.getItem('lang') ;
+    if(lang === 'en') {
+      this.toolbar = [
+
+        {
+          text: 'Add',
+          tooltipText: 'Add',
+          id: '_gridcontrol_add',
+        },
+        {
+          text: 'Add lower level',
+          tooltipText: 'Add lower level',
+          id: '_gridcontrol_addsub',
+        },
+        {
+          text: 'Cancel',
+          id: '_gridcontrol_cancel',
+        },
+        {
+          text: 'ExpandAll',
+          id: '_gridcontrol_expandall',
+        },
+        {
+          text: 'CollapseAll',
+          id: '_gridcontrol_collapseall',
+        }
+      ];
+    }else {
+
+      this.toolbar = [
+        {
+          text: 'Add',
+          tooltipText: 'Add ',
+          id: '_gridcontrol_add',
+        },
+        {
+          text: '新增下一階',
+          tooltipText: '新增下一階',
+          id: '_gridcontrol_add',
+        },
+
+        {
+          text: 'Cancel',
+          id: '_gridcontrol_cancel',
+        },
+        {
+          text: 'ExpandAll',
+          id: '_gridcontrol_expandall',
+        },
+        {
+          text: 'CollapseAll',
+          id: '_gridcontrol_collapseall',
+        }
+      ];
+    }
+    // this.toolbar = [
+    //   "Search",
+    //   "Add",
+    //   "新增下一階",
+    //   "Cancel",
+    //   "ExpandAll",
+    //   "CollapseAll",
+    // ];
     this.editing = {
       allowEditing: true,
       allowAdding: true,
@@ -108,12 +163,13 @@ export class OcComponent implements OnInit {
   }
 
   toolbarClick(args) {
+    console.log(args.item.id);
     switch (args.item.id) {
-      case "treegrid_gridcontrol_add":
+      case "_gridcontrol_add":
         args.cancel = true;
         this.openMainModal();
         break;
-      case "treegrid_gridcontrol_新增下一階":
+      case "_gridcontrol_addsub":
         if(this.oc?.parentID !== undefined && this.oc?.parentID !== null) {
           args.cancel = true;
           this.openSubModal();

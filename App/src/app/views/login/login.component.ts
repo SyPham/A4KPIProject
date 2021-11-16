@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       localStorage.setItem('level', JSON.stringify(roleUser));
       this.authService.setRoleValue(roleUser as IRole);
 
-      // await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
+      await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
 
       const functions = await this.permisisonService.getActionInFunctionByRoleID(roleUser.id).toPromise();
       this.functions = functions as FunctionSystem[];

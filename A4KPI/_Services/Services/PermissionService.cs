@@ -102,7 +102,7 @@ namespace A4KPI._Services.Services
                         join a in _repoOption.FindAll()
                             on p.OptionID equals a.ID
                         where roles.Contains(r.ID) && a.Code == "VIEW"
-                        select new
+                        select new 
                         {
                             Id = f.ID,
                             Name = f.Name,
@@ -114,11 +114,10 @@ namespace A4KPI._Services.Services
                             Module = f.FunctionSystem.Module,
                             ModuleId = f.FunctionSystem.ModuleID
                         }).ToList();
-            var data = query.Distinct()
-                .OrderBy(x => x.ParentId)
-                .ThenBy(x => x.SortOrder)
+            var data = query
+                .OrderBy(x => x.SortOrder)
                 .ToList();
-            return data.GroupBy(x => x.Module).Select(x => new
+            return query.GroupBy(x => x.Module).Select(x => new
             {
                 Module = x.Key.ModuleTranslations.Count > 0 ?
                 x.Key.ModuleTranslations.FirstOrDefault(x => x.LanguageID.Equals(langID)).Name

@@ -198,14 +198,7 @@ export class Kpi2nd3rdComponent implements OnInit {
         }
       ];
     }else {
-      // this.toolbar = [
-      //   "Search",
-      //   "新增下一階KPI",
-      //   "Update",
-      //   "Cancel",
-      //   "ExpandAll",
-      //   "CollapseAll",
-      // ];
+
       this.toolbar = [
         {
           text: 'Search',
