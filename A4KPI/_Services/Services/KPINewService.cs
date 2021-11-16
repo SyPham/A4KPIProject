@@ -254,31 +254,6 @@ namespace A4KPI._Services.Services
             return data;
         }
 
-        public async Task<object> GetKPIByOcID(int ocID)
-        {
-            var data = _repo.FindAll(x => x.OcId == ocID).Select(x => new { 
-                x.Id,
-                x.Name,
-                x.Pic,
-                x.PolicyId,
-                x.UpdateBy,
-                x.TypeId,
-                PolicyName = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? "",
-                TypeName = _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name ?? "",
-                PICName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FullName ?? "",
-                UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
-                UpdateDate = x.UpdateDate.ToString("MM-dd-yyyy"),
-
-                FactId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId ?? 0,
-                CenterId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId ?? 0,
-                DeptId = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId ?? 0,
-
-                FactName =  _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).FactId).Name ?? "N/A",
-                CenterName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).CenterId).Name ?? "N/A",
-                DeptName = _repoOc.FindAll().FirstOrDefault(y => y.Id == _repoAc.FindAll().FirstOrDefault(y => y.Id == x.Pic).DeptId).Name ?? "N/A",
-            }).ToList();
-            return data;
-        }
         public  async Task<OperationResult> AddAsync(KPINewDto model)
         {
             try
@@ -410,27 +385,6 @@ namespace A4KPI._Services.Services
             }
             return operationResult;
         }
-        public async Task<object> GetPolicyByOcID(int ocID)
-        {
-            var levelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).Level;
-            var parentofLevelOc = _repoOc.FindAll().FirstOrDefault(x => x.Id == ocID).ParentId;
-            if (levelOc == Level.Level_3)
-            {
-                return _repoOcPolicy.FindAll(x => x.OcId == ocID).Select(x => new {
-                    x.Id,
-                    x.PolicyId,
-                    Name = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? ""
-                }).ToList();
-            } else
-            {
-                return _repoOcPolicy.FindAll(x => x.OcId == parentofLevelOc).Select(x => new { 
-                    x.Id,
-                    x.PolicyId,
-                    Name = _repoPolicy.FindAll().FirstOrDefault(y => y.Id == x.PolicyId).Name ?? ""
-                }).ToList();
-            }
-            //return data;
-        }
 
         public async Task<bool> Delete(int id)
         {
@@ -491,6 +445,16 @@ namespace A4KPI._Services.Services
         }
 
         public Task<KPINewDto> GetByIdAsync(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<object> GetKPIByOcID(int ocID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<object> GetPolicyByOcID(int ocID)
         {
             throw new NotImplementedException();
         }

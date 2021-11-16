@@ -40,10 +40,8 @@ namespace A4KPI
              {
                  options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
                  options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                 //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
              });
             var connetionString = Configuration.GetConnectionString("DefaultConnection");
-            // Configure DbContext with Scoped lifetime   
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(connetionString,
@@ -51,13 +49,7 @@ namespace A4KPI
                 options.UseLazyLoadingProxies();
             });
 
-            services.AddScoped<Func<DataContext>>((provider) => () => provider.GetService<DataContext>());
-
-            //services.AddScoped<DbFactory>();
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services
-                .AddAutoMapper(typeof(Startup))
+            services.AddAutoMapper(typeof(Startup))
                 .AddScoped<IMapper>(sp =>
                 {
                     return new Mapper(AutoMapperConfig.RegisterMappings());
@@ -100,13 +92,8 @@ namespace A4KPI
                 });
             });
 
-            //services.InstallServicesInAssembly(Configuration);
             services.AddCors();
 
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = @"wwwroot/ClientApp";
-            //});
 
             //Repository
             services.AddScoped<IAccountGroupPeriodRepository, AccountGroupPeriodRepository>();
@@ -186,10 +173,6 @@ namespace A4KPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "KPI System");
-            //});
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -208,16 +191,7 @@ namespace A4KPI
             {
                 endpoints.MapControllers();
             });
-            //app.UseSpaStaticFiles();
-            //app.UseSpa(spa =>
-            //{
-            //    spa.Options.SourcePath = @"wwwroot/ClientApp";
-            //    //if (env.IsDevelopment())
-            //    //{
-            //    //    spa.Options.SourcePath = @"../dmr-app";
-            //    //    spa.UseAngularCliServer(npmScript: "start");
-            //    //}
-            //});
+           
         }
     }
 }
