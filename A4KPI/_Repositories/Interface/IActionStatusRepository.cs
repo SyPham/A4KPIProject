@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ESS_API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using A4KPI.Constants;
 using A4KPI.Data;

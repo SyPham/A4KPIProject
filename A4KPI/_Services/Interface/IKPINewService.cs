@@ -11,7 +11,6 @@ using System.Net;
 using A4KPI.Helpers;
 using A4KPI.Constants;
 using Microsoft.AspNetCore.Http;
-using NetUtility;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using A4KPI._Repositories.Interface;

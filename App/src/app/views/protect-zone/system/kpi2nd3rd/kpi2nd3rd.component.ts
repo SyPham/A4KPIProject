@@ -295,7 +295,6 @@ export class Kpi2nd3rdComponent implements OnInit {
         default:
           break;
       }
-
     }
   }
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Service.Helpers
+namespace A4KPI.Helpers
 {
     public static class CodeUtility
     {

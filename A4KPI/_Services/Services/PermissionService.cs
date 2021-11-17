@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using NetUtility;
 using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ESS_API.Helpers
+namespace A4KPI.Helpers
 {
 
     /// <summary>
