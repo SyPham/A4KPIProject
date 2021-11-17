@@ -113,7 +113,8 @@ export class PrivilegeComponent implements OnInit {
   }
 
   getScreenFunctionAndAction() {
-    this.roleService.getScreenFunctionAndAction(this.roleIDs === [] ? [0] : this.roleIDs).subscribe((data: any) => {
+    const lang = localStorage.getItem('lang')  ;
+    this.roleService.getScreenFunctionAndAction(this.roleIDs === [] ? [0] : this.roleIDs, lang).subscribe((data: any) => {
       this.modules = data;
     });
   }

@@ -14,5 +14,6 @@ namespace A4KPI.DTO
     public class ScreenFunctionAndActionRequest
     {
         public List<int> RoleIDs { get; set; }
+        public string lang { get; set; }
     }
 }

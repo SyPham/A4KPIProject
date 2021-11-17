@@ -48,9 +48,10 @@ export class RoleService {
   delete(id: number) {
     return this.http.delete(this.env.apiUrl + 'Role/Delete/' + id);
   }
-  getScreenFunctionAndAction(roleIDs: any) {
+  getScreenFunctionAndAction(roleIDs: any, lang) {
     return this.http.post(`${this.env.apiUrl}Permission/GetScreenFunctionAndAction`, {
-      roleIDs
+      roleIDs,
+      lang
     }).pipe(map((data: any[]) => {
       const data2 = data;
       for (const item of data2) {

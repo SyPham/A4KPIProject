@@ -547,7 +547,9 @@ namespace A4KPI._Services.Services
                     nextMonthTarget.TargetTime = new DateTime(currentTime.Year, currentTime.Month, 1);
                     _repoTarget.Add(nextMonthTarget);
                 }
+
                 await _repoTarget.SaveAll();
+
                 var targetPic = new TargetPIC()
                 {
                     targetId = nextMonthTarget.Id,

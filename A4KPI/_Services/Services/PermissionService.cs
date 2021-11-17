@@ -91,7 +91,7 @@ namespace A4KPI._Services.Services
         {
             var roles = await _repoUserRole.FindAll(x => x.UserID == userId).Select(x => x.RoleID).ToArrayAsync();
 
-            var query = (from p in _repo.FindAll()
+            var query = from p in _repo.FindAll()
                         join f in _repoFunctionTranslation.FindAll(x => x.LanguageID.Equals(langID))
                                 .Include(x => x.FunctionSystem)
                                 .ThenInclude(x => x.Module)
@@ -112,8 +112,8 @@ namespace A4KPI._Services.Services
                             SortOrder = f.FunctionSystem.Sequence,
                             Module = f.FunctionSystem.Module,
                             ModuleId = f.FunctionSystem.ModuleID
-                        }).ToList();
-            var data = query.Distinct()
+                        };
+            var data = query.ToList().Distinct()
                 .OrderBy(x => x.SortOrder)
                 .ToList();
             return data.GroupBy(x => x.Module).Select(x => new
@@ -133,6 +133,7 @@ namespace A4KPI._Services.Services
         {
 
             var roleID = request.RoleIDs;
+            var lang = request.lang;
             var permission = _repo.FindAll();
             var query = _repoOptionFunctionSystem.FindAll()
                 .Include(x => x.Option)
@@ -144,11 +145,12 @@ namespace A4KPI._Services.Services
                 {
                     Id = x.FunctionSystem.ID,
                     FunctionCode = x.FunctionSystem.Code,
-                    Name = x.FunctionSystem.Name == "" || x.FunctionSystem.Name == null ? x.FunctionSystem.FunctionTranslations.First(x => x.LanguageID == "en").Name : x.FunctionSystem.Name,
+                    Name = x.FunctionSystem.FunctionTranslations.First(x => x.LanguageID.Equals(lang)).Name,
                     ActionName = x.Option.Name,
                     ActionID = x.Option.ID,
                     SequenceFunction = x.FunctionSystem.Sequence,
                     Module = x.FunctionSystem.Module,
+                    ModuleName = x.FunctionSystem.Module.ModuleTranslations.First(x => x.LanguageID.Equals(lang)).Name,
                     ModuleCode = x.FunctionSystem.Module.Code,
                     ModuleNameID = x.FunctionSystem.Module.ID,
                     Code = x.Option.Code,
@@ -163,6 +165,7 @@ namespace A4KPI._Services.Services
                             t1.Name,
                             t1.ActionName,
                             t1.ActionID,
+                            t1.ModuleName,
                             t1.Code,
                             t1.Module,
                             t1.SequenceFunction,
@@ -172,7 +175,7 @@ namespace A4KPI._Services.Services
                         .GroupBy(x => x.Module)
                         .Select(x => new
                         {
-                            ModuleName = x.Key.Name,
+                            ModuleName = x.Key.ModuleTranslations.First(x => x.LanguageID.Equals(lang)).Name,
                             Sequence = x.Key.Sequence,
                             Fields = new
                             {

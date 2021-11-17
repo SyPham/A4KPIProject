@@ -260,7 +260,6 @@ export class Kpi2nd3rdComponent implements OnInit {
     }
     else {
       if(this.level > 1) {
-        console.log(args.item.id);
         switch (args.item.id) {
           case "_gridcontrol_add":
             args.cancel = true;
