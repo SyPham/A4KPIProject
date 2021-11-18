@@ -53,6 +53,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   isAuthorize = false;
   content: string;
   roleUser: any;
+  userId: number
   constructor(
     private service: ObjectiveService,
     private router: Router,
@@ -76,6 +77,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentTime = new Date();
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.content = '';
     this.roleUser = JSON.parse(localStorage.getItem('level')).code;
     this.loadAccountGroupData();
@@ -185,7 +187,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
 
   loadDataL0() {
     this.gridData = [];
-    this.todolist2Service.l0(this.currentTimeRequest).subscribe(data => {
+    this.todolist2Service.l0(this.currentTimeRequest, this.userId).subscribe(data => {
       this.gridData = data;
       this.spinner.hide()
     });

@@ -63,6 +63,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   public dpParams: IEditCell;
   typeText: any;
   target: { id: any; value: any; performance: any; kPIId: any; targetTime: any; createdTime: any; modifiedTime: any; yTD: any; createdBy: any; submitted: any; };
+  userId: number;
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -80,7 +81,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
 
   }
   ngOnInit() {
-
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.dpParams = { params: {
       value: new Date() ,
       min: new Date()
@@ -235,7 +236,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   loadPDCAAndResultData() {
     this.gridData = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
-    this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime).subscribe(res => {
+    this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime, this.userId).subscribe(res => {
       this.gridData = res.data;
       this.result = res.result;
       this.content = this.result?.content;
@@ -244,7 +245,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   loadActionData() {
     this.actions = [];
     const currentTime = (this.currentTime as Date).toLocaleDateString();
-    this.todolist2Service.getActionsForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
+    this.todolist2Service.getActionsForUpdatePDCA(this.data.id || 0, currentTime, this.userId ).subscribe(res => {
       this.actions = res.actions as Action[] || [];
     });
   }
@@ -430,6 +431,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
       actions: actions,
       updatePDCA: updatePDCA,
       result: this.result,
+      userId: this.userId,
       currentTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
     }
     this.todolist2Service.submitUpdatePDCA(request).subscribe(

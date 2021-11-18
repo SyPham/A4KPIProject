@@ -21,34 +21,17 @@ namespace A4KPI.Controllers
 
 
 
-        [HttpGet]
-        public async Task<ActionResult> GetAllKPI()
+        [HttpGet("{userId}")]
+        public async Task<ActionResult> GetAllKPI(int userId)
         {
-            return Ok(await _service.GetAllKPI());
+            return Ok(await _service.GetAllKPI(userId));
         }
 
-        [HttpGet("{levelId}/{picId}")]
-        public async Task<ActionResult> GetAllKPIByPicAndLevel(int levelId , int picId)
-        {
-            return Ok(await _service.GetAllKPIByPicAndLevel(levelId, picId));
-        }
-
-        [HttpGet("{kpiId}")]
-        public async Task<ActionResult> GetChart(int kpiId)
-        {
-            return Ok(await _service.GetChart(kpiId));
-        }
 
         [HttpGet("{kpiId}/{currentTime}")]
         public async Task<ActionResult> GetChartWithDateTime(int kpiId, DateTime currentTime)
         {
             return Ok(await _service.GetChartWithDateTime(kpiId,currentTime));
-        }
-
-        [HttpGet("{kpiId}")]
-        public async Task<ActionResult> GetDataTable(int kpiId)
-        {
-            return Ok(await _service.GetDataTable(kpiId));
         }
 
         

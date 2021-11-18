@@ -34,9 +34,9 @@ export class Todolist2Service  {
   deleteAc(id) {
     return this.http.delete(`${this.env.apiUrl}${this.entity}/deleteAction/${id}`);
   }
-  l0(currentTime): Observable<any[]> {
+  l0(currentTime, userId): Observable<any[]> {
     return this.http
-      .get<any[]>(`${this.env.apiUrl}${this.entity}/L0?currentTime=${currentTime}`, {})
+      .get<any[]>(`${this.env.apiUrl}${this.entity}/L0/${currentTime}/${userId}`, {})
       .pipe(catchError(this.handleError));
   }
   submitUpdatePDCA(model): Observable<OperationResult> {
@@ -63,14 +63,14 @@ export class Todolist2Service  {
       .get<any[]>(`${this.env.apiUrl}${this.entity}/getStatus`, {})
       .pipe(catchError(this.handleError));
   }
-  getActionsForL0(kpiNewId): Observable<any> {
+  getActionsForL0(kpiNewId, userId): Observable<any> {
     return this.http
-      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForL0?kpiNewId=${kpiNewId}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForL0/${kpiNewId}/${userId}`, {})
       .pipe(catchError(this.handleError));
   }
-  getPDCAForL0(kpiNewId,currentTime ): Observable<any> {
+  getPDCAForL0(kpiNewId,currentTime, userId ): Observable<any> {
     return this.http
-      .get<any>(`${this.env.apiUrl}${this.entity}/GetPDCAForL0?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetPDCAForL0/${kpiNewId}/${currentTime}/${userId}`, {})
       .pipe(catchError(this.handleError));
   }
 
@@ -86,9 +86,9 @@ export class Todolist2Service  {
       .pipe(catchError(this.handleError));
   }
 
-  getActionsForUpdatePDCA(kpiNewId,currentTime ): Observable<any> {
+  getActionsForUpdatePDCA(kpiNewId,currentTime, userid ): Observable<any> {
     return this.http
-      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForUpdatePDCA?kpiNewId=${kpiNewId}&currentTime=${currentTime}`, {})
+      .get<any>(`${this.env.apiUrl}${this.entity}/GetActionsForUpdatePDCA/${kpiNewId}/${currentTime}/${userid}`, {})
       .pipe(catchError(this.handleError));
   }
   download(kpiId,uploadTime ) {

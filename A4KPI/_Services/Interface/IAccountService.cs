@@ -19,9 +19,13 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IAccountService : IServiceBase<Account, AccountDto>
+    public interface IAccountService
     {
+        Task<OperationResult> AddAsync(AccountDto model);
+        Task<OperationResult> UpdateAsync(AccountDto model);
         Task<OperationResult> LockAsync(int id);
+        Task<List<AccountDto>> GetAllAsync();
+        Task<OperationResult> DeleteAsync(int id);
         Task<AccountDto> GetByUsername(string username);
         Task<OperationResult> ChangePasswordAsync(ChangePasswordRequest request);
         Task<object> ChangePasswordAsync2(ChangePasswordRequest request);

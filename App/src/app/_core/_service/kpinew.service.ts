@@ -33,11 +33,11 @@ export class KpinewService {
   getKPIByOcID(ocID) {
     return this.http.get(`${this.env.apiUrl}KPINew/GetKPIByOcID/${ocID}`, {});
   }
-  getTree(){
-    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView`, {});
+  getTree(lang){
+    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView/${lang}`, {});
   }
-  getTree2nd3rd(){
-    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView2nd3rd`, {});
+  getTree2nd3rd(lang, userId){
+    return this.http.get(`${this.env.apiUrl}KPINew/GetAllAsTreeView2nd3rd/${lang}/${userId}`, {});
   }
   getPolicyByOcID(ocID) {
     return this.http.get(`${this.env.apiUrl}KPINew/GetPolicyByOcID/${ocID}`, {});

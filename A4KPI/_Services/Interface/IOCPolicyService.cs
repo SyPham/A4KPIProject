@@ -19,8 +19,6 @@ namespace A4KPI._Services.Services
 {
     public interface IOCPolicyService 
     {
-        // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
-        // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
         Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
         Task<List<OCAccountDto>> GetUserByOcID(int ocID);
         Task<object> MappingPolicyOC(OCPolicyDto Dto);

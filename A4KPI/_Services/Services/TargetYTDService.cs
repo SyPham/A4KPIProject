@@ -29,54 +29,6 @@ namespace A4KPI._Services.Services
             _configMapper = configMapper;
         }
 
-        public Task<OperationResult> AddAsync(TargetYTDDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<TargetYTDDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<TargetYTDDto>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TargetYTDDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TargetYTDDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<TargetYTDDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<TargetYTDDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(TargetYTDDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<TargetYTDDto> model)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

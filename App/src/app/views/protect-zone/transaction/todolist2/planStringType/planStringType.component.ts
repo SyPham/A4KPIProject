@@ -37,10 +37,11 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
   targetYTD: TargetYTD;
   targetValue = null;
   targetYTDValue = null;
-  typeText: any;
-  contentText: any;
-  targetText: any;
-  deadlineText: any;
+  typeText: string;
+  contentText: string;
+  targetText: string;
+  deadlineText: string;
+  userId: number
   public wrapSettings: TextWrapSettingsModel;
   constructor(
     public activeModal: NgbActiveModal,
@@ -58,6 +59,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.wrapSettings = { wrapMode: 'Content' };
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.loadData();
     this.dpParams = { params: {
       value: new Date() ,
@@ -143,6 +145,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
       actions: actions,
       target: this.target,
       targetYTD: this.targetYTD ,
+      userId: this.userId,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
 
@@ -305,7 +308,7 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
 
   loadData() {
     this.gridData = [];
-    this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {
+    this.todolist2Service.getActionsForL0(this.data.id || 0, this.userId).subscribe(res => {
       this.typeText = res.typeText;
       this.actions = res.actions as Action[] || [];
       this.pic = res.pic;

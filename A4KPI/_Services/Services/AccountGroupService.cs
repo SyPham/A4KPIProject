@@ -39,20 +39,7 @@ namespace A4KPI._Services.Services
             _configMapper = configMapper;
         }
 
-        public Task<OperationResult> AddAsync(AccountGroupDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<AccountGroupDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<List<AccountGroupDto>> GetAccountGroupForTodolistByAccountId()
         {
@@ -73,34 +60,6 @@ namespace A4KPI._Services.Services
                 .OrderByDescending(x => x.Id).ToListAsync();
         }
 
-        public AccountGroupDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccountGroupDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<AccountGroupDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<AccountGroupDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(AccountGroupDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<AccountGroupDto> model)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

@@ -175,7 +175,9 @@ namespace A4KPI._Services.Services
                         .GroupBy(x => x.Module)
                         .Select(x => new
                         {
-                            ModuleName = x.Key.ModuleTranslations.First(x => x.LanguageID.Equals(lang)).Name,
+
+                            //ModuleName = x.Key.ModuleTranslations.First(x => x.LanguageID.Equals(lang)).Name,
+                            ModuleName = x.First().ModuleName,
                             Sequence = x.Key.Sequence,
                             Fields = new
                             {
@@ -237,54 +239,6 @@ namespace A4KPI._Services.Services
             // tao role moi
         }
 
-        public Task<OperationResult> AddAsync(PermissionDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<PermissionDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(PermissionDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<PermissionDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<PermissionDto>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PermissionDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PermissionDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PermissionDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PermissionDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

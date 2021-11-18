@@ -12,6 +12,7 @@ namespace A4KPI.Models
         public TargetDto Target { get; set; }
         public TargetYTDDto TargetYTD { get; set; }
         public DateTime CurrentTime { get; set; }
+        public int UserId { get; set; }
     }
     public class PDCARequestDto
     {
@@ -21,6 +22,7 @@ namespace A4KPI.Models
         public TargetYTDDto TargetYTD { get; set; }
         public List<ActionDto> Actions { get; set; }
         public List<UpdatePDCADto> UpdatePDCA { get; set; }
+        public int UserId { get; set; }
         public DateTime CurrentTime { get; set; }
 
     }

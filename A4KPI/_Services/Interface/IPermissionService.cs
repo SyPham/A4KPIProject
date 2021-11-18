@@ -17,7 +17,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IPermissionService : IServiceBase<Permission, PermissionDto>
+    public interface IPermissionService
     {
         Task<object> GetScreenFunctionAndAction(ScreenFunctionAndActionRequest request);
         Task<ResponseDetail<object>> PutPermissionByRoleId(int roleID, UpdatePermissionRequest request);

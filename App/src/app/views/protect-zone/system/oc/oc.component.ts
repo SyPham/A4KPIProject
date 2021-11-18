@@ -84,23 +84,28 @@ export class OcComponent implements OnInit {
         {
           text: 'Add',
           tooltipText: 'Add',
+          prefixIcon: 'e-add',
           id: '_gridcontrol_add',
         },
         {
           text: 'Add lower level',
+          prefixIcon: 'e-add',
           tooltipText: 'Add lower level',
           id: '_gridcontrol_addsub',
         },
         {
           text: 'Cancel',
+          prefixIcon: 'e-cancel',
           id: '_gridcontrol_cancel',
         },
         {
           text: 'ExpandAll',
           id: '_gridcontrol_expandall',
+          prefixIcon: 'e-expand'
         },
         {
           text: 'CollapseAll',
+          prefixIcon: 'e-collapse',
           id: '_gridcontrol_collapseall',
         }
       ];
@@ -108,26 +113,31 @@ export class OcComponent implements OnInit {
 
       this.toolbar = [
         {
-          text: 'Add',
-          tooltipText: 'Add ',
+          text: '新增',
+          tooltipText: '新增',
+          prefixIcon: 'e-add',
           id: '_gridcontrol_add',
         },
         {
           text: '新增下一階',
           tooltipText: '新增下一階',
+          prefixIcon: 'e-add',
           id: '_gridcontrol_add',
         },
 
         {
-          text: 'Cancel',
+          text: '取消',
+          prefixIcon: 'e-cancel',
           id: '_gridcontrol_cancel',
         },
         {
-          text: 'ExpandAll',
+          text: '展開全部',
+          prefixIcon: 'e-expand',
           id: '_gridcontrol_expandall',
         },
         {
-          text: 'CollapseAll',
+          text: '全部收縮',
+          prefixIcon: 'e-collapse',
           id: '_gridcontrol_collapseall',
         }
       ];

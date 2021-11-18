@@ -18,11 +18,8 @@ namespace A4KPI._Services.Services
 {
     public interface IMeetingService 
     {
-        Task<object> GetAllKPI();
-        Task<object> GetAllKPIByPicAndLevel(int levelId , int PicId);
-        Task<ChartDto> GetChart(int kpiId);
+        Task<object> GetAllKPI(int userId);
         Task<ChartDtoDateTime> GetChartWithDateTime(int kpiId, DateTime time);
-        Task<ChartDto> GetDataTable(int kpiId);
     }
     
 }

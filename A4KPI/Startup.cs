@@ -44,9 +44,7 @@ namespace A4KPI
             var connetionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer(connetionString,
-                o => o.MigrationsAssembly("A4KPI"));
-                options.UseLazyLoadingProxies();
+                options.UseSqlServer(connetionString);
             });
 
             services.AddAutoMapper(typeof(Startup))

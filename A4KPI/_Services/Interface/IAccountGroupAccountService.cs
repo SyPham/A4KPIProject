@@ -13,7 +13,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IAccountGroupAccountService: IServiceBase<AccountGroupAccount, AccountGroupAccountDto>
+    public interface IAccountGroupAccountService
     {
     }
     

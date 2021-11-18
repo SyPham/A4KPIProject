@@ -52,6 +52,7 @@ export class KpiCreate2Component implements OnInit {
   modalReference: NgbModalRef
   kpiname: any
   picItem: any;
+  userId: number
   constructor(
     private ocService: OcService,
     private modalServices: NgbModal,
@@ -63,11 +64,12 @@ export class KpiCreate2Component implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.editing = { allowDeleting: true, allowEditing: true, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
     this.onService();
-    this.getAllPolicy()
+    // this.getAllPolicy()
     this.getAllUsers();
     this.getAllType()
   }
@@ -123,6 +125,7 @@ export class KpiCreate2Component implements OnInit {
       TypeId: this.typeId,
       ParentId: this.parentId,
       Level: this.level,
+      UpdateBy: this.userId,
       Pic: this.picId,
       KpiIds: this.picItem
     }
@@ -234,6 +237,7 @@ export class KpiCreate2Component implements OnInit {
 
   }
   actionComplete(args) {
+    const userId = JSON.parse(localStorage.getItem('user')).id;
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       this.updateModel(item);
@@ -247,6 +251,7 @@ export class KpiCreate2Component implements OnInit {
         Level: args.data.entity.level,
         ParentId: args.data.entity.parentId,
         Pic: this.picId,
+        UpdateBy: this.userId,
         KpiIds: this.picItem
       }
       this.update(model);
@@ -270,7 +275,8 @@ export class KpiCreate2Component implements OnInit {
   }
 
   getBuildingsAsTreeView() {
-    this.kpiNewService.getTree().subscribe((res) => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getTree(lang).subscribe((res) => {
       console.log(res);
       this.data = res;
     });

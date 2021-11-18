@@ -129,6 +129,7 @@ namespace A4KPI._Services.Services
                 {
                     list.Add(new AccountGroupAccount(accountGroupId, item.Id));
                 }
+
                 _repoAccountGroupAccount.AddRange(list);
                 await _repo.SaveAll();
 
@@ -172,7 +173,6 @@ namespace A4KPI._Services.Services
 
                 var removingList = await _repoAccountGroupAccount.FindAll(x => x.AccountId == item.Id).ToListAsync();
                 _repoAccountGroupAccount.RemoveMultiple(removingList);
-                await _repoAccountGroupAccount.SaveAll();
 
                 var list = new List<AccountGroupAccount>();
                 foreach (var accountGroupId in model.AccountGroupIds)
@@ -284,15 +284,6 @@ namespace A4KPI._Services.Services
             return query;
         }
 
-        public Task<OperationResult> AddRangeAsync(List<AccountDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<AccountDto> model)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<OperationResult> DeleteAsync(int id)
         {
@@ -317,24 +308,6 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
-        public Task<PagedList<AccountDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<AccountDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AccountDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccountDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
+    
     }
 }

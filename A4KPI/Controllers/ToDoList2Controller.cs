@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using A4KPI.Models;
+using System.Security.Claims;
 
 namespace A4KPI.Controllers
 {
@@ -58,11 +59,11 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.SubmitKPINew(kpiId));
         }
-        [HttpGet]
-        public async Task<ActionResult> L0(DateTime currentTime)
+        [HttpGet("{currentTime}/{userId}")]
+        public async Task<ActionResult> L0(DateTime currentTime, int userId)
         {
          
-            return Ok(await _service.L0(currentTime));
+            return Ok(await _service.L0(currentTime , userId));
         }
         [HttpGet]
         public async Task<ActionResult> GetStatus()
@@ -70,17 +71,16 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.GetStatus());
         }
-        [HttpGet]
-        public async Task<ActionResult> GetActionsForL0(int kpiNewId)
+        [HttpGet("{kpiNewId}/{userId}")]
+        public async Task<ActionResult> GetActionsForL0(int kpiNewId, int userId)
         {
-
-            return Ok(await _service.GetActionsForL0(kpiNewId));
+            return Ok(await _service.GetActionsForL0(kpiNewId, userId));
         }
-        [HttpGet]
-        public async Task<ActionResult> GetPDCAForL0(int kpiNewId, DateTime currentTime)
+        [HttpGet("{kpiNewId}/{currentTime}/{userId}")]
+        public async Task<ActionResult> GetPDCAForL0(int kpiNewId, DateTime currentTime, int userId)
         {
 
-            return Ok(await _service.GetPDCAForL0(kpiNewId, currentTime));
+            return Ok(await _service.GetPDCAForL0(kpiNewId, currentTime, userId));
         }
 
         [HttpGet]
@@ -97,11 +97,11 @@ namespace A4KPI.Controllers
             return Ok(await _service.GetTargetForUpdatePDCA(kpiNewId, currentTime));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime)
+        [HttpGet("{kpiNewId}/{currentTime}/{userId}")]
+        public async Task<ActionResult> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime , int userId)
         {
 
-            return Ok(await _service.GetActionsForUpdatePDCA(kpiNewId, currentTime));
+            return Ok(await _service.GetActionsForUpdatePDCA(kpiNewId, currentTime, userId));
         }
 
         [HttpPost]

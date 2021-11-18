@@ -31,20 +31,7 @@ namespace A4KPI._Services.Services
             _configMapper = configMapper;
         }
 
-        public Task<OperationResult> AddAsync(PeriodDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<PeriodDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public  async Task<List<PeriodDto>> GetAllAsync()
         {
@@ -57,34 +44,6 @@ namespace A4KPI._Services.Services
 
         }
 
-        public PeriodDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PeriodDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PeriodDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PeriodDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(PeriodDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<PeriodDto> model)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

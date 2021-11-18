@@ -136,6 +136,7 @@ export class Kpi2nd3rdComponent implements OnInit {
       ParentId: this.parentId,
       Level: this.level,
       Pic: this.picId,
+      UpdateBy: this.userId,
       KpiIds: this.picItem
     }
     if (this.validation()) {
@@ -177,23 +178,28 @@ export class Kpi2nd3rdComponent implements OnInit {
         },
         {
           text: 'Add LL KPI',
+          prefixIcon: 'e-add',
           tooltipText: 'Add lower level KPI',
           id: '_gridcontrol_add',
         },
         {
           text: 'Update',
+          prefixIcon: 'e-update',
           id: '_gridcontrol_update',
         },
         {
           text: 'Cancel',
+          prefixIcon: 'e-cancel',
           id: '_gridcontrol_cancel',
         },
         {
           text: 'ExpandAll',
+          prefixIcon: 'e-expand',
           id: '_gridcontrol_expandall',
         },
         {
           text: 'CollapseAll',
+          prefixIcon: 'e-collapse',
           id: '_gridcontrol_collapseall',
         }
       ];
@@ -207,23 +213,28 @@ export class Kpi2nd3rdComponent implements OnInit {
         },
         {
           text: '新增下一階KPI',
+          prefixIcon: 'e-add',
           tooltipText: '新增下一階KPI',
           id: '_gridcontrol_add',
         },
         {
-          text: 'Update',
+          text: '更新資料',
+          prefixIcon: 'e-update',
           id: '_gridcontrol_update',
         },
         {
-          text: 'Cancel',
+          text: '取消',
+          prefixIcon: 'e-cancel',
           id: '_gridcontrol_cancel',
         },
         {
-          text: 'ExpandAll',
+          text: '展開全部',
+          prefixIcon: 'e-expand',
           id: '_gridcontrol_expandall',
         },
         {
-          text: 'CollapseAll',
+          text: '全部收縮',
+          prefixIcon: 'e-collapse',
           id: '_gridcontrol_collapseall',
         }
       ];
@@ -251,7 +262,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    const lang = localStorage.getItem('lang')  ;
+    const lang = localStorage.getItem('lang');
     const message = lang == 'vi' ? 'Hiện tại không thể tạo KPIs nhỏ hơn cấp độ 3!' : lang === 'en' ? 'Currently, you cannot create KPIs smaller than this level' : '目前無法建立小於這階的KPI';
     if (this.currentLevel === 3 && args.item.id === '_gridcontrol_add') {
       args.cancel = true;
@@ -388,7 +399,8 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
 
   getBuildingsAsTreeView() {
-    this.kpiNewService.getTree2nd3rd().subscribe((res) => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getTree2nd3rd(lang, this.userId).subscribe((res) => {
       this.data = res;
     });
   }

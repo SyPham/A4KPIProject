@@ -34,9 +34,9 @@ namespace A4KPI.DTO
 
         public string UpdateDate { get; set; }
 
-        public int FactId { get; set; }
-        public int CenterId { get; set; }
-        public int DeptId { get; set; }
+        public int? FactId { get; set; }
+        public int? CenterId { get; set; }
+        public int? DeptId { get; set; }
 
         public string FactName { get; set; }
         public string CenterName { get; set; }

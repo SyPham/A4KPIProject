@@ -16,11 +16,13 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IRoleService : IServiceBase<Role, RoleDto>
+    public interface IRoleService
     {
-        Task<OperationResult> LockAsync(int id);
-        Task<AccountDto> GetByUsername(string username);
-        Task<object> GetAccounts();
+        Task<List<RoleDto>> GetAllAsync();
+        Task<OperationResult> AddAsync(RoleDto model);
+        Task<OperationResult> UpdateAsync(RoleDto model);
+        Task<OperationResult> Delete(int id);
+
         Task<object> MapUserRole(int userID, int roleID);
         Task<object> GetRoleByUserID(int userid);
     }

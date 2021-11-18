@@ -38,6 +38,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   targetValue = null;
   targetYTDValue = null;
   typeText: any;
+  userId: number
   constructor(
     public activeModal: NgbActiveModal,
     public todolist2Service: Todolist2Service,
@@ -53,6 +54,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.loadData();
     this.dpParams = { params: {
       value: new Date() ,
@@ -138,6 +140,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
       actions: actions,
       target: this.target,
       targetYTD: this.targetYTD ,
+      userId: this.userId,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
 
@@ -299,7 +302,8 @@ export class PlanComponent implements OnInit, AfterViewInit {
 
   loadData() {
     this.gridData = [];
-    this.todolist2Service.getActionsForL0(this.data.id || 0).subscribe(res => {
+    console.log( this.userId);
+    this.todolist2Service.getActionsForL0(this.data.id || 0, this.userId).subscribe(res => {
       this.typeText = res.typeText;
       this.actions = res.actions as Action[] || [];
       this.pic = res.pic;

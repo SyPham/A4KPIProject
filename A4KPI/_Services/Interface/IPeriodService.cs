@@ -13,7 +13,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IPeriodService: IServiceBase<Period, PeriodDto>
+    public interface IPeriodService
     {
         Task<List<PeriodDto>> GetAllByPeriodTypeIdAsync(int periodTypeId);
     }

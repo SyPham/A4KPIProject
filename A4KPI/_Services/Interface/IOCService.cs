@@ -17,17 +17,20 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IOCService: IServiceBase<OC, OCDto>
+    public interface IOCService
     {
-        // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
-        // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
         Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView();
         Task<List<OCAccountDto>> GetUserByOcID(int ocID);
         Task<object> MappingUserOC(OCAccountDto OCAccountDto);
         Task<object> MappingRangeUserOC(OCAccountDto model);
         Task<object> GetAllLevel3();
         Task<object> RemoveUserOC(OCAccountDto OCAccountDto);
-      
+        Task<OperationResult> AddAsync(OCDto model);
+        Task<OperationResult> UpdateAsync(OCDto model);
+        Task<OperationResult> DeleteAsync(int id);
+        Task<List<OCDto>> GetAllAsync();
+
+
     }
     
 }

@@ -11,7 +11,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IPeriodReportTimeService: IServiceBase<PeriodReportTime, PeriodReportTimeDto>
+    public interface IPeriodReportTimeService
     {
     }
     

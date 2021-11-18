@@ -26,8 +26,8 @@ export class MeetingService {
   getOCs() {
     return this.http.get(`${this.env.apiUrl}Ocs/GetListTree`);
   }
-  getAllKpi() {
-    return this.http.get(`${this.env.apiUrl}Meeting/GetAllKPI`);
+  getAllKpi(userId) {
+    return this.http.get(`${this.env.apiUrl}Meeting/GetAllKPI/${userId}`);
   }
   getChart(kpiId) {
     return this.http.get(`${this.env.apiUrl}Meeting/GetChart/${kpiId}`);

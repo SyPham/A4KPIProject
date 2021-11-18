@@ -250,7 +250,8 @@ export class ViewKPIComponent implements OnInit {
   }
 
   getBuildingsAsTreeView() {
-    this.kpiNewService.getTree().subscribe((res) => {
+    const lang = localStorage.getItem('lang');
+    this.kpiNewService.getTree(lang).subscribe((res) => {
       this.data = res;
     });
   }

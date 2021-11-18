@@ -31,65 +31,14 @@ namespace A4KPI._Services.Services
             _configMapper = configMapper;
         }
 
-        public Task<OperationResult> AddAsync(AccountGroupPeriodDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<AccountGroupPeriodDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<List<AccountGroupPeriodDto>> GetAllAsync()
         {
             return await _repo.FindAll().Include(x => x.Period).Include(x => x.AccountGroup).ProjectTo<AccountGroupPeriodDto>(_configMapper).ToListAsync();
-            throw new NotImplementedException();
 
         }
 
-        //public override async Task<List<AccountGroupPeriodDto>> GetAllAsync()
-        //{
-        //    return await _repo.FindAll()
-        //        .Include(x=> x.Period)
-        //        .Include(x=> x.AccountGroup)
-        //        .ProjectTo<AccountGroupPeriodDto>(_configMapper).ToListAsync();
-
-        //}
-
-        public AccountGroupPeriodDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccountGroupPeriodDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<AccountGroupPeriodDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<AccountGroupPeriodDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(AccountGroupPeriodDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<AccountGroupPeriodDto> model)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

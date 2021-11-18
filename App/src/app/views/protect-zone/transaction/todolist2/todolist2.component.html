@@ -28,7 +28,7 @@
 
 <!-- L0 -->
 <ng-template #GridtemplateRef name='1'>
-  <div *ngIf="isAllowAccess(1)">
+  <div >
 
   <ejs-grid #grid [dataSource]='gridData' [allowPaging]='true' [allowResizing]='true' [showColumnMenu]='true'
     gridLines='Both' [toolbar]='toolbarOptions' [pageSettings]='pageSettings' [allowExcelExport]='true'>
@@ -67,11 +67,11 @@
   </ejs-grid>
 </div>
 
-  <div *ngIf="!isAllowAccess(1)">
+  <!-- <div *ngIf="!isAllowAccess(1)">
     <p style="text-align: center; color: red; font-size: xx-large;">
       No authority to view.
     </p>
-  </div>
+  </div> -->
 </ng-template>
 <!-- L1 -->
 <ng-template #GridtemplateRef name='2'>

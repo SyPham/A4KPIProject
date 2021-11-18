@@ -57,15 +57,8 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
-        public async Task<OperationResult> AddCustom(SettingMonthlyDto model)
-        {
-            throw new NotImplementedException();
-        }
+       
 
-        public Task<OperationResult> AddRangeAsync(List<SettingMonthlyDto> model)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<OperationResult> DeleteAsync(int id)
         {
@@ -96,25 +89,7 @@ namespace A4KPI._Services.Services
                 .OrderByDescending(x => x.Id).ToListAsync();
         }
 
-        public SettingMonthlyDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<SettingMonthlyDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<SettingMonthlyDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<SettingMonthlyDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<OperationResult> UpdateAsync(SettingMonthlyDto model)
         {
@@ -139,9 +114,5 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
-        public Task<OperationResult> UpdateRangeAsync(List<SettingMonthlyDto> model)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

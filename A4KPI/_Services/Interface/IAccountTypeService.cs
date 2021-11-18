@@ -7,7 +7,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IAccountTypeService: IServiceBase<AccountType, AccountTypeDto>
+    public interface IAccountTypeService
     {
     }
     

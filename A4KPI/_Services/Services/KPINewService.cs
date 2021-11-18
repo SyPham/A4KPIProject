@@ -92,29 +92,55 @@ namespace A4KPI._Services.Services
                 FullName = x.FullName
             }).ToList();
             return data;
-            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView()
+        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView(string lang)
         {
-            var lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+            var lists = new List<KPINewDto>();
+            if (lang == "en")
             {
-                Id = x.Id,
-                ParentId = x.ParentId,
-                Name = x.Name,
-                UpdateBy = x.UpdateBy,
-                Pics = x.KPIAccounts.Count > 0 ? x.KPIAccounts.Where(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
-                TypeId = x.TypeId,
-                Level = x.Level,
-                TypeName = x.TypeId == 0 ? "" : _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name,
-                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
-                UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
-                UpdateDate = x.UpdateDate.ToString(),
-                FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
-                CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
-                DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
+                lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+                {
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    Name = x.Name,
+                    UpdateBy = x.UpdateBy,
+                    Pics = _repoKPIAc.FindAll(y => y.KpiId == x.Id).ToList().Count > 0 ? _repoKPIAc.FindAll(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
+                    TypeId = x.TypeId,
+                    Level = x.Level,
+                    TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameEn,
+                    PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                    UpdateName = _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault() != null ? _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault().FullName : "",
+                    UpdateDate = x.UpdateDate.ToString(),
+                    FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
 
-            }).ToList().OrderBy(x => x.Level).ToList();
+                }).OrderBy(x => x.Level).ToList();
+            }
+            else
+            {
+               lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+                {
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    Name = x.Name,
+                    UpdateBy = x.UpdateBy,
+                    Pics = _repoKPIAc.FindAll(y => y.KpiId == x.Id).ToList().Count > 0 ? _repoKPIAc.FindAll(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
+                    TypeId = x.TypeId,
+                    Level = x.Level,
+                    TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameZh,
+                    PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                    UpdateName = _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault() != null ? _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault().FullName : "",
+                    UpdateDate = x.UpdateDate.ToString(),
+                    FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x)))
+
+               }).OrderBy(x => x.Level).ToList();
+
+            }
+            
             var data = lists.Select(x => new KPINewDto
             {
                 Id = x.Id,
@@ -136,36 +162,64 @@ namespace A4KPI._Services.Services
             return data;
         }
 
-        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd()
+        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd(string lang , int userId)
         {
 
-            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
-
+            var accountId = userId;
             var dataAc = _repoAc.FindById(accountId);
             var list = new List<KPINewDto>();
-            var lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+            var lists = new List<KPINewDto>();
+            if (lang == "en")
             {
-                Id = x.Id,
-                ParentId = x.ParentId,
-                Name = x.Name,
-                UpdateBy = x.UpdateBy,
-                Pics = x.KPIAccounts.Count > 0 ? x.KPIAccounts.Where(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
-                CreateBy = x.CreateBy,
-                LevelOcCreateBy = x.LevelOcCreateBy,
-                OcIdCreateBy = x.OcIdCreateBy,
-                TypeId = x.TypeId,
-                Level = x.Level,
-                TypeName = x.TypeId == 0 ? "" : _repoType.FindAll().FirstOrDefault(y => y.Id == x.TypeId).Name,
-                PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
-                UpdateDate = x.UpdateDate.ToString(),
-                UpdateName = _repoAc.FindAll().FirstOrDefault(y => y.Id == x.UpdateBy).FullName ?? "",
-                FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
-                CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
-                DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+                {
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    Name = x.Name,
+                    UpdateBy = x.UpdateBy,
+                    Pics = _repoKPIAc.FindAll(y => y.KpiId == x.Id).ToList().Count > 0 ? _repoKPIAc.FindAll(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
+                    CreateBy = x.CreateBy,
+                    LevelOcCreateBy = x.LevelOcCreateBy,
+                    OcIdCreateBy = x.OcIdCreateBy,
+                    TypeId = x.TypeId,
+                    Level = x.Level,
+                    TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameEn,
+                    PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                    UpdateDate = x.UpdateDate.ToString(),
+                    UpdateName = _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault() != null ? _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault().FullName : "",
+                    FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
 
 
-            }).ToList().OrderBy(x => x.Level).ToList();
+                }).OrderBy(x => x.Level).ToList();
+            }
+            else
+            {
+                lists = (await _repo.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+                {
+                    Id = x.Id,
+                    ParentId = x.ParentId,
+                    Name = x.Name,
+                    UpdateBy = x.UpdateBy,
+                    Pics = _repoKPIAc.FindAll(y => y.KpiId == x.Id).ToList().Count > 0 ? _repoKPIAc.FindAll(y => y.KpiId == x.Id).Select(x => x.AccountId).ToList() : new List<int> { },
+                    CreateBy = x.CreateBy,
+                    LevelOcCreateBy = x.LevelOcCreateBy,
+                    OcIdCreateBy = x.OcIdCreateBy,
+                    TypeId = x.TypeId,
+                    Level = x.Level,
+                    TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameZh,
+                    PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
+                    UpdateDate = x.UpdateDate.ToString(),
+                    UpdateName = _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault() != null ? _repoAc.FindAll(y => y.Id == x.UpdateBy).FirstOrDefault().FullName : "",
+                    FactName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.FactId).ToList().Count > 0 ? _repoOc.FindById(x.FactId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    CenterName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.CenterId).ToList().Count > 0 ? _repoOc.FindById(x.CenterId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+                    DeptName = String.Join(" , ", x.KPIAccounts.Select(x => _repoOc.FindAll(y => y.Id == x.DeptId).ToList().Count > 0 ? _repoOc.FindById(x.DeptId).Name : null).Where(x => !String.IsNullOrEmpty(x))),
+
+
+                }).OrderBy(x => x.Level).ToList();
+            }
+            
             if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
             {
                 list = new List<KPINewDto>();
@@ -173,8 +227,8 @@ namespace A4KPI._Services.Services
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId == 0)
             {
                 List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.CenterId).Select(x => x.Id).ToList();
-                var OcIdOver = _repoOc.FindAll().FirstOrDefault(x => x.Id == dataAc.CenterId).ParentId;
-                var picOver = _repoAc.FindAll().FirstOrDefault(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).Id;
+                var OcIdOver = _repoOc.FindAll(x => x.Id == dataAc.CenterId).FirstOrDefault().ParentId;
+                var picOver = _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).FirstOrDefault().Id;
                 List<int> kpiPicOver = _repoKPIAc.FindAll(x => x.AccountId == picOver).Select(x => x.KpiId).ToList();
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
                 var th1 = lists.Where(x => x.LevelOcCreateBy == Level.Level_1 || x.LevelOcCreateBy == Level.Level_2 || x.LevelOcCreateBy == Level.Level_3).ToList();
@@ -257,9 +311,7 @@ namespace A4KPI._Services.Services
         {
             try
             {
-                string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-                var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
-                var dataAc = _repoAc.FindById(accountId);
+                var dataAc = _repoAc.FindById(model.UpdateBy);
                 //var dataAcPo = _repoAc.FindById(model.Pic);
 
                 var levelCreateBy = 0;
@@ -296,8 +348,8 @@ namespace A4KPI._Services.Services
                 
                 model.OcIdCreateBy = ocIdCreate;
                 model.LevelOcCreateBy = levelCreateBy;
-                model.CreateBy = accountId;
-                model.UpdateBy = accountId;
+                model.CreateBy = model.UpdateBy;
+                model.UpdateBy = model.UpdateBy;
                 var item = _mapper.Map<KPINew>(model);
                 item.UpdateDate = DateTime.Now;
                 _repo.Add(item);
@@ -310,9 +362,12 @@ namespace A4KPI._Services.Services
                     {
                         AccountId = acId,
                         KpiId = item.Id,
-                        DeptId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).DeptId ?? 0,
-                        CenterId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).CenterId ?? 0,
-                        FactId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).FactId ?? 0
+                        DeptId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().DeptId : 0,
+                        CenterId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ? 
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().CenterId : 0,
+                        FactId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().FactId : 0
 
                     };
                     list.Add(dataAdd);
@@ -337,22 +392,18 @@ namespace A4KPI._Services.Services
 
         public  async Task<OperationResult> UpdateAsync(KPINewDto model)
         {
-            string token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"];
-            var accountId = JWTExtensions.GetDecodeTokenById(token).ToInt();
             try
             {
                 var item = await _repo.FindByIdAsync(model.Id);
                 item.Name = model.Name;
                 item.PolicyId = model.PolicyId;
                 item.TypeId = model.TypeId;
-                item.UpdateBy = accountId;
+                item.UpdateBy = model.UpdateBy;
                 item.UpdateDate = DateTime.Now;
                 _repo.Update(item);
-                await _repo.SaveAll();
 
                 var removingList = await _repoKPIAc.FindAll(x => x.KpiId == model.Id).ToListAsync();
                 _repoKPIAc.RemoveMultiple(removingList);
-                await _repoKPIAc.SaveAll();
 
                 var list = new List<KPIAccount>();
                 foreach (var acId in model.KpiIds)
@@ -361,9 +412,12 @@ namespace A4KPI._Services.Services
                     {
                         AccountId = acId,
                         KpiId = item.Id,
-                        DeptId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).DeptId ?? 0,
-                        CenterId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).CenterId ?? 0,
-                        FactId = _repoAc.FindAll().FirstOrDefault(x => x.Id == acId).FactId ?? 0
+                        DeptId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().DeptId : 0,
+                        CenterId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().CenterId : 0,
+                        FactId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
+                        _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().FactId : 0
 
                     };
                     list.Add(dataAdd);
@@ -388,11 +442,10 @@ namespace A4KPI._Services.Services
         public async Task<bool> Delete(int id)
         {
             var item = _repo.FindById(id);
-            var itemChild = _repo.FindAll().Where(x => x.ParentId == id).ToList();
+            var itemChild = _repo.FindAll(x => x.ParentId == id).ToList();
             if (itemChild != null)
             {
                 _repo.RemoveMultiple(itemChild);
-               await _repo.SaveAll();
             }
             try
             {
@@ -408,54 +461,5 @@ namespace A4KPI._Services.Services
            
         }
 
-        public Task<OperationResult> AddRangeAsync(List<KPINewDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<KPINewDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<KPINewDto>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<KPINewDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<KPINewDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public KPINewDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<KPINewDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<object> GetKPIByOcID(int ocID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<object> GetPolicyByOcID(int ocID)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

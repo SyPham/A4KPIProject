@@ -11,9 +11,12 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface ISettingMonthService : IServiceBase<SettingMonthly, SettingMonthlyDto>
+    public interface ISettingMonthService 
     {
-        Task<OperationResult> AddCustom(SettingMonthlyDto model);
+        Task<OperationResult> UpdateAsync(SettingMonthlyDto model);
+        Task<List<SettingMonthlyDto>> GetAllAsync();
+        Task<OperationResult> DeleteAsync(int id);
+        Task<OperationResult> AddAsync(SettingMonthlyDto model);
     }
     
 }

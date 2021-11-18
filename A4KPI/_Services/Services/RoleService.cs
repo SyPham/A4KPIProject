@@ -118,20 +118,7 @@ namespace A4KPI._Services.Services
             //throw new NotImplementedException();
         }
 
-        public Task<OperationResult> LockAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AccountDto> GetByUsername(string username)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<object> GetAccounts()
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public async Task<object> MapUserRole(int userID, int roleID)
         {
@@ -194,39 +181,28 @@ namespace A4KPI._Services.Services
             throw new NotImplementedException();
         }
 
-        public Task<OperationResult> AddRangeAsync(List<RoleDto> model)
+        public async Task<OperationResult> Delete(int id)
         {
-            throw new NotImplementedException();
-        }
+           
 
-        public Task<OperationResult> UpdateRangeAsync(List<RoleDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<RoleDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<RoleDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public RoleDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<RoleDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var model = _repo.FindById(id);
+                _repo.Remove(model);
+                await _repo.SaveAll();
+                operationResult = new OperationResult
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = MessageReponse.AddSuccess,
+                    Success = true,
+                    Data = model
+                };
+            }
+            catch (Exception ex)
+            {
+                operationResult = ex.GetMessageError();
+            }
+            return operationResult;
         }
     }
 }

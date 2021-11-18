@@ -181,6 +181,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   dataHeight: any = [];
   ytds: any;
   roleUser: any;
+  userId: number;
   constructor(
     private service: Account2Service,
     private accountGroupService: AccountGroupService,
@@ -200,6 +201,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   }
 
   ngOnInit() {
+    this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.getAllOcLv3();
     this.getAllKpi();
     this.getAllOc();
@@ -366,6 +368,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.targets = []
       this.labels = []
       this.dataTable = []
+      this.changeLocalHome.forEach(item => item.unsubscribe());
       // this.changeLocalHome.unsubscribe();
       this.dataHeight = []
     }, (reason) => {
@@ -373,6 +376,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.targets = []
       this.labels = []
       this.dataTable = []
+      this.changeLocalHome.forEach(item => item.unsubscribe());
       // this.changeLocalHome.unsubscribe();
       this.dataHeight = []
 
@@ -594,7 +598,6 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
         if(res === 0)
           return
         if(res.value > 0 || res.value !== undefined)
-        console.log('currentMessagesTD',res);
           // this.dataHeight = []
           // this.dataHeight.push(
           //   {
@@ -613,13 +616,12 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
               }
           }
       }))
-      console.log(this.dataTable);
       this.spinner.hide()
     })
   }
 
   getAllKpi() {
-    this.meetingService.getAllKpi().subscribe((res: any) => {
+    this.meetingService.getAllKpi(this.userId).subscribe((res: any) => {
       this.policyData = res
       this.policyDataTamp = res
       const level = res.map((item: any) => {

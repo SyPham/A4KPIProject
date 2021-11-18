@@ -25,13 +25,13 @@ namespace A4KPI._Services.Services
         Task<OperationResult> SubmitUpdatePDCA(PDCARequestDto model);
         Task<OperationResult> SaveUpdatePDCA(PDCARequestDto model);
         Task<object> GetStatus();
-        Task<object> L0(DateTime currentTime);
-        Task<object> GetActionsForL0(int kpiNewId);
+        Task<object> L0(DateTime currentTime, int userId);
+        Task<object> GetActionsForL0(int kpiNewId, int userId);
         Task<bool> Delete(int id);
 
-        Task<object> GetPDCAForL0(int kpiNewId, DateTime currentTime);
+        Task<object> GetPDCAForL0(int kpiNewId, DateTime currentTime, int userId);
         Task<object> GetTargetForUpdatePDCA(int kpiNewId, DateTime currentTime);
-        Task<object> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime);
+        Task<object> GetActionsForUpdatePDCA(int kpiNewId, DateTime currentTime , int userId);
         Task<object> GetKPIForUpdatePDC(int kpiNewId, DateTime currentTime);
         Task<OperationResult> SubmitKPINew(int kpiNewId);
 

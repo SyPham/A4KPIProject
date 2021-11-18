@@ -25,54 +25,6 @@ namespace A4KPI._Services.Services
             _repo = repo;
         }
 
-        public Task<OperationResult> AddAsync(PeriodReportTimeDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<PeriodReportTimeDto> model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<PeriodReportTimeDto>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public PeriodReportTimeDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PeriodReportTimeDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PeriodReportTimeDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<PeriodReportTimeDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(PeriodReportTimeDto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<PeriodReportTimeDto> model)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

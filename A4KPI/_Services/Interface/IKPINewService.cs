@@ -17,15 +17,15 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IKPINewService: IServiceBase<KPINew, KPINewDto>
+    public interface IKPINewService
     {
-        Task<object> GetKPIByOcID(int ocID);
         Task<object> GetListPic();
-        Task<object> GetPolicyByOcID(int ocID);
         Task<object> GetAllType(string lang);
         Task<bool> Delete(int id);
-        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView();
-        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd();
+        Task<OperationResult> AddAsync(KPINewDto model);
+        Task<OperationResult> UpdateAsync(KPINewDto model);
+        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView(string lang);
+        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd(string lang, int userId);
     }
     
 }

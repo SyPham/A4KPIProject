@@ -28,54 +28,6 @@ namespace A4KPI._Services.Services
             _configMapper = configMapper;
         }
 
-        public Task<OperationResult> AddAsync(AccountTypeDto model)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<OperationResult> AddRangeAsync(List<AccountTypeDto> model)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<OperationResult> DeleteAsync(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<List<AccountTypeDto>> GetAllAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public AccountTypeDto GetById(object id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<AccountTypeDto> GetByIdAsync(object id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<PagedList<AccountTypeDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<PagedList<AccountTypeDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateAsync(AccountTypeDto model)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<OperationResult> UpdateRangeAsync(List<AccountTypeDto> model)
-        {
-            throw new System.NotImplementedException();
-        }
+      
     }
 }

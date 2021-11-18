@@ -17,16 +17,9 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IOCNewService: IServiceBase<OCNew, OCNewDto>
+    public interface IOCNewService
     {
-        // Task<List<OCDto>> GetAllByObjectiveId(int objectiveId);
-        // Task<OCDto> GetFisrtByObjectiveId(int objectiveId, int createdBy);
-        Task<IEnumerable<HierarchyNode<OCNewDto>>> GetAllAsTreeView();
-        Task<List<OCAccountDto>> GetUserByOcID(int ocID);
-        Task<object> MappingUserOC(OCAccountDto OCAccountDto);
-        Task<object> MappingRangeUserOC(OCAccountDto model);
-        Task<object> GetAllLevel3();
-        Task<object> RemoveUserOC(OCAccountDto OCAccountDto);
+       
       
     }
     

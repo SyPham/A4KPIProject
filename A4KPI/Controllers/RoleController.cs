@@ -35,11 +35,6 @@ namespace A4KPI.Controllers
         {
             return Ok(await _service.GetAllAsync());
         }
-        [HttpGet]
-        public async Task<ActionResult> GetAccounts()
-        {
-            return Ok(await _service.GetAccounts());
-        }
 
         [HttpPost]
         public async Task<ActionResult> AddAsync(RoleDto model)
@@ -52,31 +47,14 @@ namespace A4KPI.Controllers
         {
             return StatusCodeResult(await _service.UpdateAsync(model));
         }
-        [HttpPut]
-        public async Task<ActionResult> LockAsync(int id)
-        {
-            return StatusCodeResult(await _service.LockAsync(id));
-        }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return StatusCodeResult(await _service.DeleteAsync(id));
+            return StatusCodeResult(await _service.Delete(id));
+           
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetByIdAsync(int id)
-        {
-            return Ok(await _service.GetByIdAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)
-        {
-            return Ok(await _service.GetWithPaginationsAsync(paramater));
-        }
-
-       
 
     }
 }

@@ -15,8 +15,9 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-    public interface IAccountGroupService: IServiceBase<AccountGroup, AccountGroupDto>
+    public interface IAccountGroupService
     {
+        Task<List<AccountGroupDto>> GetAllAsync();
         Task<List<AccountGroupDto>> GetAccountGroupForTodolistByAccountId();
 
     }

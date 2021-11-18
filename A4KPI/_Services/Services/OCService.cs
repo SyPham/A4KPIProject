@@ -62,7 +62,7 @@ namespace A4KPI._Services.Services
 
         public async Task<object> MappingUserOC(OCAccountDto OCAccountDto)
         {
-            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
+            var item = await _repoOCAccount.FindAll(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId).FirstOrDefaultAsync();
             if (item == null)
             {
                 _repoOCAccount.Add(new OCAccount {
@@ -99,7 +99,7 @@ namespace A4KPI._Services.Services
 
         public async Task<object> RemoveUserOC(OCAccountDto OCAccountDto)
         {
-            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
+            var item = await _repoOCAccount.FindAll(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId).FirstOrDefaultAsync();
             if (item != null)
             {
                 _repoOCAccount.Remove(item);
@@ -139,8 +139,8 @@ namespace A4KPI._Services.Services
             {
                 foreach (var item in model.AccountIdList)
                 {
-                    var items = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == item && x.OCId == model.OCId);
-                    var item_username = _repoAccount.FindAll().FirstOrDefault(x => x.Id == item).FullName;
+                    var items = await _repoOCAccount.FindAll(x => x.AccountId == item && x.OCId == model.OCId).FirstOrDefaultAsync();
+                    var item_username = _repoAccount.FindAll(x => x.Id == item).FirstOrDefault().FullName;
                     if (items == null)
                     {
                         _repoOCAccount.Add(new OCAccount { 
@@ -173,7 +173,7 @@ namespace A4KPI._Services.Services
 
         public async Task<List<OCAccountDto>> GetUserByOcID(int ocID)
         {
-            return await _repoOCAccount.FindAll().Where(x=>x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
+            return await _repoOCAccount.FindAll(x => x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
         }
 
         public async Task<OperationResult> AddAsync(OCDto model)
@@ -199,10 +199,7 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
-        public Task<OperationResult> AddRangeAsync(List<OCDto> model)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<OperationResult> UpdateAsync(OCDto model)
         {
@@ -229,10 +226,7 @@ namespace A4KPI._Services.Services
             
         }
 
-        public Task<OperationResult> UpdateRangeAsync(List<OCDto> model)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public async Task<OperationResult> DeleteAsync(int id)
         {
@@ -259,24 +253,6 @@ namespace A4KPI._Services.Services
 
         
 
-        public Task<PagedList<OCDto>> GetWithPaginationsAsync(PaginationParams param)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedList<OCDto>> SearchAsync(PaginationParams param, object text)
-        {
-            throw new NotImplementedException();
-        }
-
-        public OCDto GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OCDto> GetByIdAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

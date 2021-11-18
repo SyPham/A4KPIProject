@@ -15,12 +15,7 @@ namespace A4KPI.Controllers
         {
             _service = service;
         }
-        [HttpGet("{ocID}")]
-        public async Task<IActionResult> GetKPIByOcID(int ocID)
-        {
-            var result = await _service.GetKPIByOcID(ocID);
-            return Ok(result);
-        }
+     
 
         [HttpGet]
         public async Task<IActionResult> GetListPic()
@@ -28,33 +23,24 @@ namespace A4KPI.Controllers
             var result = await _service.GetListPic();
             return Ok(result);
         }
-        [HttpGet("{ocID}")]
-        public async Task<IActionResult> GetPolicyByOcID(int ocID)
-        {
-            var result = await _service.GetPolicyByOcID(ocID);
-            return Ok(result);
-        }
+     
         [HttpGet("{lang}")]
         public async Task<IActionResult> GetAllType(string lang)
         {
             return Ok((await _service.GetAllType(lang)));
         }
-        [HttpGet]
-        public async Task<ActionResult> GetAllAsync()
+      
+        [HttpGet("{lang}")]
+        public async Task<IActionResult> GetAllAsTreeView(string lang)
         {
-            return Ok((await _service.GetAllAsync()));
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsTreeView()
-        {
-            var ocs = await _service.GetAllAsTreeView();
+            var ocs = await _service.GetAllAsTreeView(lang);
             return Ok(ocs);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsTreeView2nd3rd()
+        [HttpGet("{lang}/{userId}")]
+        public async Task<IActionResult> GetAllAsTreeView2nd3rd(string lang, int userId)
         {
-            var ocs = await _service.GetAllAsTreeView2nd3rd();
+            var ocs = await _service.GetAllAsTreeView2nd3rd(lang, userId);
             return Ok(ocs);
         }
         [HttpPost]
@@ -76,17 +62,7 @@ namespace A4KPI.Controllers
             return Ok(await _service.Delete(id));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetByIdAsync(int id)
-        {
-            return Ok(await _service.GetByIdAsync(id));
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetWithPaginationsAsync(PaginationParams paramater)
-        {
-            return Ok(await _service.GetWithPaginationsAsync(paramater));
-        }
+      
 
     }
 }

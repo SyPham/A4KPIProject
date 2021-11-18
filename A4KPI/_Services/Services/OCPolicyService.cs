@@ -65,7 +65,7 @@ namespace A4KPI._Services.Services
                     {
                         OcId = items,
                         PolicyId = Dto.ID,
-                        OcName = _repoOc.FindAll().FirstOrDefault(x => x.Id == items).Name
+                        OcName = _repoOc.FindAll(x => x.Id == items).FirstOrDefault().Name
                     });
                 }
                 try
@@ -114,7 +114,7 @@ namespace A4KPI._Services.Services
 
         public async Task<object> MappingPolicyOC(OCPolicyDto Dto)
         {
-            var item = await _repoPolicy.FindAll().FirstOrDefaultAsync(x => x.Name.ToUpper().Equals(Dto.Name.ToUpper()));
+            var item = await _repoPolicy.FindAll(x => x.Name.ToUpper().Equals(Dto.Name.ToUpper())).FirstOrDefaultAsync();
             if (item == null)
             {
                 var dataAdd = new Policy
@@ -125,14 +125,14 @@ namespace A4KPI._Services.Services
                 await _repoPolicy.SaveAll();
                 foreach (var items in Dto.OcIdList)
                 {
-                    var itemOc = await _repo.FindAll().FirstOrDefaultAsync(x => x.OcId == items && x.PolicyId == dataAdd.Id);
+                    var itemOc = await _repo.FindAll(x => x.OcId == items && x.PolicyId == dataAdd.Id).FirstOrDefaultAsync();
                     if (itemOc == null)
                     {
                         _repo.Add(new OCPolicy
                         {
                             OcId = items,
                             PolicyId = dataAdd.Id,
-                            OcName = _repoOc.FindAll().FirstOrDefault(x => x.Id == items).Name
+                            OcName = _repoOc.FindAll(x => x.Id == items).FirstOrDefault().Name
                         });
                     }
                 }
@@ -166,7 +166,7 @@ namespace A4KPI._Services.Services
 
         public async Task<object> RemoveUserOC(OCAccountDto OCAccountDto)
         {
-            var item = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId);
+            var item = await _repoOCAccount.FindAll(x => x.AccountId == OCAccountDto.AccountId && x.OCId == OCAccountDto.OCId).FirstOrDefaultAsync();
             if (item != null)
             {
                 _repoOCAccount.Remove(item);
@@ -206,8 +206,8 @@ namespace A4KPI._Services.Services
             {
                 foreach (var item in model.AccountIdList)
                 {
-                    var items = await _repoOCAccount.FindAll().FirstOrDefaultAsync(x => x.AccountId == item && x.OCId == model.OCId);
-                    var item_username = _repoAccount.FindAll().FirstOrDefault(x => x.Id == item).FullName;
+                    var items = await _repoOCAccount.FindAll(x => x.AccountId == item && x.OCId == model.OCId).FirstOrDefaultAsync();
+                    var item_username = _repoAccount.FindAll(x => x.Id == item).FirstOrDefault().FullName;
                     if (items == null)
                     {
                         _repoOCAccount.Add(new OCAccount { 
@@ -240,7 +240,7 @@ namespace A4KPI._Services.Services
 
         public async Task<List<OCAccountDto>> GetUserByOcID(int ocID)
         {
-            return await _repoOCAccount.FindAll().Where(x=>x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
+            return await _repoOCAccount.FindAll(x => x.OCId == ocID).ProjectTo<OCAccountDto>(_configMapper).ToListAsync();
         }
 
         public async Task<bool> DeletePolicy(int id)
