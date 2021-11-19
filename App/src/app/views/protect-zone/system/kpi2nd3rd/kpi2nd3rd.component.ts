@@ -74,7 +74,6 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
     this.onService();
-    this.getAllPolicy()
     // this.getAllUsers();
     this.getAllType()
   }
@@ -93,11 +92,6 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.accountService.getAll().subscribe((res: any) => {
       this.accountData = res ;
     });
-  }
-  getAllPolicy() {
-    this.ocPolicyService.getAllPolicy().subscribe(res => {
-      this.policyData = res
-    })
   }
   validation() {
     if (this.kpiname === null) {
@@ -351,6 +345,7 @@ export class Kpi2nd3rdComponent implements OnInit {
         Level: args.data.entity.level,
         ParentId: args.data.entity.parentId,
         Pic: this.picId,
+        UpdateBy: this.userId,
         KpiIds: this.picItem
       }
       this.update(model);

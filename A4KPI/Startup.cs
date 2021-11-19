@@ -104,7 +104,6 @@ namespace A4KPI
             services.AddScoped<IKPINewRepository, KPINewRepository>();
             services.AddScoped<IOCAccountRepository, OCAccountRepository>();
             services.AddScoped<IOCNewRepository, OCNewRepository>();
-            services.AddScoped<IOCPolicyRepository, OCPolicyRepository>();
             services.AddScoped<IOptionFunctionSystemRepository, OptionFunctionSystemRepository>();
             services.AddScoped<IOptionRepository, OptionRepository>();
             services.AddScoped<IPICRepository, PICRepository>();
@@ -120,16 +119,10 @@ namespace A4KPI
             services.AddScoped<ITypeRepository, TypeRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IAccountTypeRepository, AccountTypeRepository>();
-            services.AddScoped<IKPINewRepository, KPINewRepository>();
-            services.AddScoped<IOCNewRepository, OCNewRepository>();
-            services.AddScoped<IOCPolicyRepository, OCPolicyRepository>();
             services.AddScoped<IOCRepository, OCRepository>();
             services.AddScoped<IPeriodReportTimeRepository, PeriodReportTimeRepository>();
             services.AddScoped<IPeriodRepository, PeriodRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<ISettingMonthRepository, SettingMonthRepository>();
-            services.AddScoped<ITargetYTDRepository, TargetYTDRepository>();
             services.AddScoped<ITodolist2Repository, Todolist2Repository>();
             services.AddScoped<IActionStatusRepository, ActionStatusRepository>();
             services.AddScoped<IActionRepository, ActionRepository>();
@@ -149,7 +142,6 @@ namespace A4KPI
             services.AddScoped<IOCService, OCService>();
             services.AddScoped<IPeriodTypeService, PeriodTypeService>();
             services.AddScoped<IAccountGroupAccountService, AccountGroupAccountService>();
-            services.AddScoped<IOCPolicyService, OCPolicyService>();
             services.AddScoped<IOCNewService, OCNewService>();
             services.AddScoped<ITargetYTDService, TargetYTDService>();
             services.AddScoped<IMeetingService, MeetingService>();

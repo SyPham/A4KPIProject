@@ -597,11 +597,8 @@ namespace A4KPI.Helpers
         {
             if (value == null || value.ToString() == string.Empty)
                 return 0;
-
             ushort result = 0;
-
             ushort.TryParse(value.ToString(), out result);
-
             return result;
         }
 
@@ -615,11 +612,8 @@ namespace A4KPI.Helpers
         {
             if (value == null || value.ToString() == string.Empty)
                 return 0;
-
             ushort result = 0;
-
             ushort.TryParse(value.ToString(), out result);
-
             return result;
         }
 

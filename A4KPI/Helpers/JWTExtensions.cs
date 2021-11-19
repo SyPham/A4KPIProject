@@ -44,7 +44,6 @@ namespace A4KPI.Helpers
             authHeader = authHeader.Replace("Bearer ", "");
             var jsonToken = handler.ReadToken(authHeader);
             var tokenS = handler.ReadToken(authHeader) as JwtSecurityToken;
-
             return tokenS.Claims.First(x => x.Type.Equals(propertyType)).Value;
         }
 

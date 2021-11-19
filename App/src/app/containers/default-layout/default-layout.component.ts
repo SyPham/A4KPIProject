@@ -133,7 +133,6 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     //  { id: 'vi', name: 'VI' }
     ];
 
-
     // this.getAvatar();
     this.currentUser = JSON.parse(localStorage.getItem('user')).fullName;
     this.page = 1;
@@ -240,6 +239,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
       qPglhzROL+Xye4tmT4WvRcQ2/m81p+/rdguOi8Hc5L/8Qk4vhZzy08DduGt9eVQyP
       2qoTM1zi0/uf4hvBWf5c77e69Gf798y08L7j0RERERERERERH9P99ZpSVRivB/rgAAAABJRU5ErkJggg==`);
   }
+
   getAvatar() {
     const img = localStorage.getItem('avatar');
     if (img === 'null') {

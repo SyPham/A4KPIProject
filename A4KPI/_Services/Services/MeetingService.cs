@@ -241,11 +241,11 @@ namespace A4KPI._Services.Services
                 }
                 //var thisMonthResults = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
-                var model = new List<UpdatePDCADto>();
+                var currentMonthData = new List<UpdatePDCADto>();
                 var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
 
                 //start tim lai list cong viec cua thang truoc chua lam xong
-                var acs = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
+                var undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
                         .Where(x =>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
@@ -262,9 +262,9 @@ namespace A4KPI._Services.Services
                            }).ToList();
                 //end tim lai list cong viec cua thang truoc chua lam xong
 
-                if (acs.Count > 0)
+                if (undoneList.Count > 0)
                 {
-                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
+                    currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
                              select new UpdatePDCADto
@@ -284,9 +284,9 @@ namespace A4KPI._Services.Services
                              }).ToList();
                     //add them list cong viec chua lam xong cua thang truoc vao thang hien tai
 
-                    foreach (var itemAcs in acs)
+                    foreach (var itemAcs in undoneList)
                     {
-                        model.Add(new UpdatePDCADto
+                        currentMonthData.Add(new UpdatePDCADto
                         {
                             Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
                             ActionId = itemAcs.ActionId,
@@ -304,7 +304,7 @@ namespace A4KPI._Services.Services
                 }
                 else
                 {
-                    model = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
+                    currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                              join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
@@ -325,7 +325,7 @@ namespace A4KPI._Services.Services
                              }).ToList();
                 }
                 //var 
-                var model2 = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
+                var nextMonthData = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
                              select new UpdatePDCADto
@@ -347,11 +347,11 @@ namespace A4KPI._Services.Services
                 var dataAdd = new DataTable()
                 {
                     Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                    CurrentMonthData = model.OrderBy(x => x.CreatedTime),
+                    CurrentMonthData = currentMonthData.OrderBy(x => x.CreatedTime),
                     Content = content,
                     Date = $"{thisYearResult}/{item}/01",
                     KpiId = kpiId,
-                    NextMonthData = model2
+                    NextMonthData = nextMonthData
                 };
                 dataTable.Add(dataAdd);
             }

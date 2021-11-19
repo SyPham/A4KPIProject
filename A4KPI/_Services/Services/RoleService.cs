@@ -49,12 +49,12 @@ namespace A4KPI._Services.Services
         /// <param name="model"></param>
         /// <returns></returns>
         /// 
+
         public async Task<object> GetRoleByUserID(int userid)
         {
             try
             {
                 var model = await _repoUserRole.FindAll().Include(x => x.Role).FirstOrDefaultAsync(x => x.UserID == userid);
-
                 return model.Role;
             }
             catch (Exception)
@@ -91,7 +91,6 @@ namespace A4KPI._Services.Services
         /// <returns></returns>
         public  async Task<OperationResult> UpdateAsync(RoleDto model)
         {
-
             try
             {
                 var artRole = _mapper.Map<Role>(model);
@@ -115,7 +114,6 @@ namespace A4KPI._Services.Services
         public  async Task<List<RoleDto>> GetAllAsync()
         {
             return await _repo.FindAll(x => x.Code != "SUPPER_ADMIN").ProjectTo<RoleDto>(_configMapper).OrderBy(x => x.ID).ToListAsync();
-            //throw new NotImplementedException();
         }
 
      
@@ -153,15 +151,12 @@ namespace A4KPI._Services.Services
 
                 try
                 {
-                    _repoUserRole.RemoveMultiple(item);
-                    await _repoUserRole.SaveAll();
-
+                    await RemoveRole(item);
                     _repoUserRole.Add(new UserRole
                     {
                         UserID = userID,
                         RoleID = roleID,
                     });
-
 
                     return new
                     {
@@ -180,11 +175,15 @@ namespace A4KPI._Services.Services
             }
             throw new NotImplementedException();
         }
-
+        public async Task<bool> RemoveRole(List<UserRole> item)
+        {
+            _repoUserRole.RemoveMultiple(item);
+            await _repoUserRole.SaveAll();
+            return true;
+        }
         public async Task<OperationResult> Delete(int id)
         {
            
-
             try
             {
                 var model = _repo.FindById(id);

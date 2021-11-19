@@ -22,7 +22,6 @@ namespace A4KPI._Services.Services
     {
         private readonly IKPINewRepository _repo;
         private readonly IPolicyRepository _repoPolicy;
-        private readonly IOCPolicyRepository _repoOcPolicy;
         private readonly IOCRepository _repoOc;
         private readonly ITypeRepository _repoType;
         private readonly IKPIAccountRepository _repoKPIAc;
@@ -37,7 +36,6 @@ namespace A4KPI._Services.Services
             ITypeRepository repoType,
             IAccountRepository repoAc,
             IKPIAccountRepository repoKPIAc,
-            IOCPolicyRepository repoOcPolicy,
             IOCRepository repoOc,
             IHttpContextAccessor httpContextAccessor,
             IMapper mapper, 
@@ -46,7 +44,6 @@ namespace A4KPI._Services.Services
         {
             _repo = repo;
             _repoPolicy = repoPolicy;
-            _repoOcPolicy = repoOcPolicy;
             _repoOc = repoOc;
             _repoKPIAc = repoKPIAc;
             _repoType = repoType;
@@ -231,8 +228,8 @@ namespace A4KPI._Services.Services
                 var picOver = _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).FirstOrDefault().Id;
                 List<int> kpiPicOver = _repoKPIAc.FindAll(x => x.AccountId == picOver).Select(x => x.KpiId).ToList();
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-                var th1 = lists.Where(x => x.LevelOcCreateBy == Level.Level_1 || x.LevelOcCreateBy == Level.Level_2 || x.LevelOcCreateBy == Level.Level_3).ToList();
-                list = th1.Where(x => x.CreateBy == accountId || kpiPicOver.Contains(x.Id) || kpiMyPic.Contains(x.Id) || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
+                var tamp = lists.Where(x => x.LevelOcCreateBy == Level.Level_1 || x.LevelOcCreateBy == Level.Level_2 || x.LevelOcCreateBy == Level.Level_3).ToList();
+                list = tamp.Where(x => x.CreateBy == accountId || kpiPicOver.Contains(x.Id) || kpiMyPic.Contains(x.Id) || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
             }
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
             {
@@ -312,7 +309,6 @@ namespace A4KPI._Services.Services
             try
             {
                 var dataAc = _repoAc.FindById(model.UpdateBy);
-                //var dataAcPo = _repoAc.FindById(model.Pic);
 
                 var levelCreateBy = 0;
                 if (dataAc.FactId > 0 && dataAc.CenterId == 0 && dataAc.DeptId == 0)
@@ -352,8 +348,8 @@ namespace A4KPI._Services.Services
                 model.UpdateBy = model.UpdateBy;
                 var item = _mapper.Map<KPINew>(model);
                 item.UpdateDate = DateTime.Now;
-                _repo.Add(item);
-                await _repo.SaveAll();
+
+                int id =  await AddKPINew(item);
 
                 var list = new List<KPIAccount>();
                 foreach (var acId in model.KpiIds)
@@ -361,7 +357,7 @@ namespace A4KPI._Services.Services
                     var dataAdd = new KPIAccount
                     {
                         AccountId = acId,
-                        KpiId = item.Id,
+                        KpiId = id,
                         DeptId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ?
                         _repoAc.FindAll(x => x.Id == acId).FirstOrDefault().DeptId : 0,
                         CenterId = _repoAc.FindAll(x => x.Id == acId).FirstOrDefault() != null ? 
@@ -373,7 +369,8 @@ namespace A4KPI._Services.Services
                     list.Add(dataAdd);
                 }
                 _repoKPIAc.AddRange(list);
-                await _repoKPIAc.SaveAll();
+
+                await _repo.SaveAll();
 
                 operationResult = new OperationResult
                 {
@@ -439,6 +436,13 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
+        public async Task<int> AddKPINew(KPINew item)
+        {
+            _repo.Add(item);
+            await _repo.SaveAll();
+            return item.Id;
+
+        }
         public async Task<bool> Delete(int id)
         {
             var item = _repo.FindById(id);

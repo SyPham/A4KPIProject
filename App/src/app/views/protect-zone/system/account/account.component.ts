@@ -132,13 +132,16 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.managers = this.accounts;
     this.managers = this.managers.filter(x=> x.id !== data.id);
   }
+
   createdLeader($event, data) {
     this.leaders = this.accounts.filter(x=> x.isLeader);
     this.leaders = this.leaders.filter(x=> x.id !== data.id);
   }
+
   onDoubleClick(args: any): void {
     this.setFocus = args.column; // Get the column from Double click event
   }
+
   initialModel() {
     this.accountGroupItem = [];
     this.leaderId = 0;
@@ -171,6 +174,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     };
 
   }
+
   updateModel(data) {
     this.accountGroupItem = data.accountGroupIds;
     this.getAllOc();

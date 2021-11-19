@@ -113,9 +113,7 @@ namespace A4KPI._Services.Services
                             Module = f.FunctionSystem.Module,
                             ModuleId = f.FunctionSystem.ModuleID
                         };
-            var data = query.ToList().Distinct()
-                .OrderBy(x => x.SortOrder)
-                .ToList();
+            var data = query.ToList().Distinct().OrderBy(x => x.SortOrder).ToList();
             return data.GroupBy(x => x.Module).Select(x => new
             {
                 Module = x.Key.ModuleTranslations.Count > 0 ?

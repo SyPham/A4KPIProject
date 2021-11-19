@@ -18,7 +18,7 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-   
+
     public class AccountService : IAccountService
     {
         private readonly IAccountRepository _repo;
@@ -74,7 +74,7 @@ namespace A4KPI._Services.Services
             try
             {
                 _repo.Update(item);
-                
+
                 await _repo.SaveAll();
                 return true;
             }
@@ -122,12 +122,11 @@ namespace A4KPI._Services.Services
                 var item = _mapper.Map<Account>(model);
                 item.Password = item.Password.ToEncrypt();
                 _repo.Add(item);
-
-                await _repo.SaveAll();
+                int id = await AddAccount(item);
                 var list = new List<AccountGroupAccount>();
                 foreach (var accountGroupId in model.AccountGroupIds)
                 {
-                    list.Add(new AccountGroupAccount(accountGroupId, item.Id));
+                    list.Add(new AccountGroupAccount(accountGroupId, id));
                 }
 
                 _repoAccountGroupAccount.AddRange(list);
@@ -138,7 +137,7 @@ namespace A4KPI._Services.Services
                     StatusCode = HttpStatusCode.OK,
                     Message = MessageReponse.AddSuccess,
                     Success = true,
-                    Data = item.Id
+                    Data = id
                 };
             }
             catch (Exception ex)
@@ -147,7 +146,12 @@ namespace A4KPI._Services.Services
             }
             return operationResult;
         }
-
+        public async Task<int> AddAccount(Account item)
+        {
+            _repo.Add(item);
+            await _repo.SaveAll();
+            return item.Id;
+        }
         /// <summary>
         /// Add account sau do add AccountGroupAccount
         /// </summary>
@@ -159,7 +163,7 @@ namespace A4KPI._Services.Services
             {
                 var item = await _repo.FindByIdAsync(model.Id);
                 if (model.Password.IsBase64() == false)
-                        item.Password = model.Password.ToEncrypt();
+                    item.Password = model.Password.ToEncrypt();
                 item.Username = model.Username;
                 item.FullName = model.FullName;
                 item.Email = model.Email;
@@ -169,7 +173,6 @@ namespace A4KPI._Services.Services
                 item.DeptId = model.DeptId;
                 item.Manager = model.Manager;
                 _repo.Update(item);
-                await _repo.SaveAll();
 
                 var removingList = await _repoAccountGroupAccount.FindAll(x => x.AccountId == item.Id).ToListAsync();
                 _repoAccountGroupAccount.RemoveMultiple(removingList);
@@ -180,6 +183,7 @@ namespace A4KPI._Services.Services
                     list.Add(new AccountGroupAccount(accountGroupId, item.Id));
                 }
                 _repoAccountGroupAccount.AddRange(list);
+
                 await _repoAccountGroupAccount.SaveAll();
 
                 operationResult = new OperationResult
@@ -205,14 +209,15 @@ namespace A4KPI._Services.Services
                         from ab1 in ab.DefaultIfEmpty()
                         join c in query on a.Manager equals c.Id into ac
                         from ac1 in ac.DefaultIfEmpty()
+                        join d in _repoUserRole.FindAll() on a.Id equals d.UserID
                         select new AccountDto
                         {
                             Id = a.Id,
                             Username = a.Username,
                             Password = a.Password,
-                            FactId = a.FactId != null  ? a.FactId : 0,
-                            CenterId = a.CenterId != null  ? a.CenterId : 0,
-                            DeptId = a.DeptId != null  ? a.DeptId : 0,
+                            FactId = a.FactId != null ? a.FactId : 0,
+                            CenterId = a.CenterId != null ? a.CenterId : 0,
+                            DeptId = a.DeptId != null ? a.DeptId : 0,
                             CreatedBy = a.CreatedBy,
                             CreatedTime = a.CreatedTime,
                             ModifiedBy = a.ModifiedBy,
@@ -227,11 +232,11 @@ namespace A4KPI._Services.Services
                             Manager = a.Manager != null ? a.Manager : 0,
                             Leader = a.Leader != null ? a.Leader : 0,
                             ManagerName = ac1 != null ? ac1.FullName : "N/A",
-                            FactName = a.FactId != null ? _repoOc.FindById(a.FactId).Name : "N/A",
-                            CenterName = a.CenterId != null ? _repoOc.FindById(a.CenterId).Name : "N/A",
-                            DeptName = a.DeptId != null ? _repoOc.FindById(a.DeptId).Name : "N/A",
-                            Role = _repoRole.FindAll().FirstOrDefault(x => x.ID == _repoUserRole.FindAll().FirstOrDefault(y => y.UserID == a.Id).RoleID).Name ?? "N/A",
-                            RoleCode = _repoRole.FindAll().FirstOrDefault(x => x.ID == _repoUserRole.FindAll().FirstOrDefault(y => y.UserID == a.Id).RoleID).Code ?? "N/A"
+                            FactName = a.FactId != null || a.FactId != 0 ? _repoOc.FindById(a.FactId).Name : "N/A",
+                            CenterName = a.CenterId != null || a.CenterId != 0 ? _repoOc.FindById(a.CenterId).Name : "N/A",
+                            DeptName = a.DeptId != null || a.DeptId != 0 ? _repoOc.FindById(a.DeptId).Name : "N/A",
+                            Role = _repoRole.FindById(d.RoleID) != null ? _repoRole.FindById(d.RoleID).Name : "N/A",
+                            RoleCode = _repoRole.FindById(d.RoleID) != null ? _repoRole.FindById(d.RoleID).Code : "N/A",
 
                         };
             var data = await model.ToListAsync();
@@ -273,13 +278,14 @@ namespace A4KPI._Services.Services
             return result;
         }
 
-       public async Task<object> GetAccounts()
+        public async Task<object> GetAccounts()
         {
-            var query = await _repo.FindAll(x => x.AccountType.Code != "SYSTEM").Select(x=> new { 
-            x.Username,
-            x.Id,
-            x.FullName,
-            IsLeader = x.AccountGroupAccount.Any(a => a.AccountGroup.Position  == SystemRole.FunctionalLeader)
+            var query = await _repo.FindAll(x => x.AccountType.Code != "SYSTEM").Select(x => new
+            {
+                x.Username,
+                x.Id,
+                x.FullName,
+                IsLeader = x.AccountGroupAccount.Any(a => a.AccountGroup.Position == SystemRole.FunctionalLeader)
             }).ToListAsync();
             return query;
         }
@@ -308,6 +314,6 @@ namespace A4KPI._Services.Services
             return operationResult;
         }
 
-    
+
     }
 }

@@ -50,7 +50,7 @@ namespace A4KPI._Services.Services
         }
         public async Task<object> GetAllLevel3()
         {
-            var lists = (await _repo.FindAll(x => x.Level == 3).ToListAsync());
+            var lists = (await _repo.FindAll(x => x.Level == Level.Level_3).ToListAsync());
             return lists;
         }
         public async Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView()

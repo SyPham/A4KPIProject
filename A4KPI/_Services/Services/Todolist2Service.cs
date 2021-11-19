@@ -360,20 +360,22 @@ namespace A4KPI._Services.Services
 
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
+
+                //var targetId = _repoTarget.FindAll().Max(x => x.Id);
+                int id = 0;
                 if (target.Id > 0)
                 {
                     _repoTarget.Update(target);
+                    id = target.Id;
                 }
                 else
                 {
                     target.Submitted = false;
-                    _repoTarget.Add(target);
+                    id =  await AddTarget(target);
                 }
-                await _repoTarget.SaveAll();
-
                 var targetPic = new TargetPIC()
                 {
-                    targetId = target.Id,
+                    targetId = id,
                     AccountId = accountId,
                     IsSubmit = true
                 };
@@ -407,7 +409,12 @@ namespace A4KPI._Services.Services
             }
             return operationResult;
         }
-
+        public async Task<int> AddTarget(Target item)
+        {
+            _repoTarget.Add(item);
+            await _repoTarget.SaveAll();
+            return item.Id;
+        }
         public async Task<OperationResult> SaveAction(ActionRequestDto model)
         {
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();
@@ -502,31 +509,30 @@ namespace A4KPI._Services.Services
                     var updated = _repoKPIAc.FindAll().FirstOrDefault(x => x.AccountId == accountId && x.KpiId == kpiId);
                     updated.IsPDCASubmit = true;
                     _repoKPIAc.Update(updated);
-                    await _repoKPIAc.SaveAll();
                 }
 
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
                 _repoTarget.Update(target);
 
-            
+                int id = 0;
 
                 if (nextMonthTarget.Id > 0)
                 {
                     _repoTarget.Update(nextMonthTarget);
+                    id = nextMonthTarget.Id;
                 }
                 else
                 {
                     nextMonthTarget.Submitted = false;
                     nextMonthTarget.TargetTime = new DateTime(currentTime.Year, currentTime.Month, 1);
-                    _repoTarget.Add(nextMonthTarget);
+                    id = await AddTarget(nextMonthTarget);
                 }
-
-                await _repoTarget.SaveAll();
+                 
 
                 var targetPic = new TargetPIC()
                 {
-                    targetId = nextMonthTarget.Id,
+                    targetId = id,
                     AccountId = accountId,
                     IsSubmit = true
                 };
@@ -620,11 +626,9 @@ namespace A4KPI._Services.Services
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
                 _repoTarget.Update(target);
                
-
                 if (nextMonthTarget.Id > 0)
                 {
                     _repoTarget.Update(nextMonthTarget);
-
                 }
                 else
                 {
@@ -634,7 +638,6 @@ namespace A4KPI._Services.Services
                 }
 
                 _repoTargetYTD.Update(targetYTD);
-                // dynamic currentime
                 addActions.ForEach(item =>
                 {
                     item.CreatedTime = model.CurrentTime;
