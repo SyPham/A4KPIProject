@@ -93,8 +93,15 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.alertifyService.warning("User role empty! Please using System Admin account add role for user");
       localStorage.setItem('level', JSON.stringify(roleUser));
       this.authService.setRoleValue(roleUser as IRole);
+      const currentLang = localStorage.getItem('lang');
+      if (currentLang) {
+        localStorage.setItem('lang', currentLang);
+        await this.permissionService.getMenuByLangID(userId, currentLang).toPromise();
+      } else {
+        localStorage.setItem('lang', 'zh');
+        await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
 
-      await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
+      }
 
       const functions = await this.permisisonService.getActionInFunctionByRoleID(roleUser.id).toPromise();
       this.functions = functions as FunctionSystem[];
@@ -102,12 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.authService.setFunctions(functions as any);
 
 
-      const currentLang = localStorage.getItem('lang');
-      if (currentLang) {
-        localStorage.setItem('lang', currentLang);
-      } else {
-        localStorage.setItem('lang', 'zh');
-      }
+
 
       if (this.remember) {
         this.cookieService.set('remember', 'Yes');

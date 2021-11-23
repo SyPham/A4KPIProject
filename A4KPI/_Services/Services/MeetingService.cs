@@ -239,12 +239,11 @@ namespace A4KPI._Services.Services
                 {
                     content = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).FirstOrDefault().Content.Trim();
                 }
-                //var thisMonthResults = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var currentMonthData = new List<UpdatePDCADto>();
                 var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
 
-                //start tim lai list cong viec cua thang truoc chua lam xong
+                //start => tìm lại list công việc của tháng trước chưa hoàn thành
                 var undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
                         .Where(x =>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
@@ -260,10 +259,11 @@ namespace A4KPI._Services.Services
                                ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
                                a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
                            }).ToList();
-                //end tim lai list cong viec cua thang truoc chua lam xong
+                //end
 
                 if (undoneList.Count > 0)
                 {
+                    //star công việc tháng hiện tại
                     currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()
@@ -282,8 +282,9 @@ namespace A4KPI._Services.Services
                                  StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
                                  Target = a.Target,
                              }).ToList();
-                    //add them list cong viec chua lam xong cua thang truoc vao thang hien tai
+                    //end
 
+                    //start => thêm list công việc chưa làm xong của tháng trước vào tháng hiện tại
                     foreach (var itemAcs in undoneList)
                     {
                         currentMonthData.Add(new UpdatePDCADto
@@ -304,6 +305,7 @@ namespace A4KPI._Services.Services
                 }
                 else
                 {
+                    //start => công việc tháng hiện tại
                     currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
                              join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
@@ -323,8 +325,9 @@ namespace A4KPI._Services.Services
                                  Target = a.Target,
 
                              }).ToList();
+                    //end
                 }
-                //var 
+
                 var nextMonthData = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
                              join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
                              from sub in ab.DefaultIfEmpty()

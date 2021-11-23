@@ -217,7 +217,7 @@ namespace A4KPI._Services.Services
                 {
                     newPermissions.Add(new Permission(roleID, p.ActionID, p.FunctionID));
                 }
-                var existingPermissions = _repo.FindAll().Where(x => x.RoleID == roleID).ToList();
+                var existingPermissions = _repo.FindAll(x => x.RoleID == roleID).ToList();
                 if (existingPermissions.Count > 0)
                 {
                     _repo.RemoveMultiple(existingPermissions);

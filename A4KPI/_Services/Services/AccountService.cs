@@ -146,6 +146,7 @@ namespace A4KPI._Services.Services
             }
             return operationResult;
         }
+
         public async Task<int> AddAccount(Account item)
         {
             _repo.Add(item);
@@ -203,7 +204,7 @@ namespace A4KPI._Services.Services
 
         public async Task<List<AccountDto>> GetAllAsync()
         {
-            var query = _repo.FindAll(x => x.AccountType.Code != "SYSTEM");
+            var query = _repo.FindAll(x => x.AccountType.Code != Systems.Administrator);
             var model = from a in query
                         join b in query on a.Leader equals b.Id into ab
                         from ab1 in ab.DefaultIfEmpty()
@@ -289,7 +290,6 @@ namespace A4KPI._Services.Services
             }).ToListAsync();
             return query;
         }
-
 
         public async Task<OperationResult> DeleteAsync(int id)
         {

@@ -116,8 +116,6 @@ namespace A4KPI._Services.Services
             return await _repo.FindAll(x => x.Code != "SUPPER_ADMIN").ProjectTo<RoleDto>(_configMapper).OrderBy(x => x.ID).ToListAsync();
         }
 
-     
-
         public async Task<object> MapUserRole(int userID, int roleID)
         {
             var item = await _repoUserRole.FindAll().Where(x => x.UserID == userID).ToListAsync();
@@ -175,6 +173,7 @@ namespace A4KPI._Services.Services
             }
             throw new NotImplementedException();
         }
+
         public async Task<bool> RemoveRole(List<UserRole> item)
         {
             _repoUserRole.RemoveMultiple(item);

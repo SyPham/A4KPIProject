@@ -99,12 +99,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
       this.dataOclv3.unshift({ id: 0, name: 'N/A'  });
       //end Oclv3
 
-      this.dataOclv4 = res.filter(x => x.level === 4)
-      this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
-      //end Oclv3
+      // this.dataOclv4 = res.filter(x => x.level === 4)
+      // this.dataOclv4.unshift({ id: 0, name: 'N/A'  });
+      // //end Oclv3
 
-      this.dataOclv5 = res.filter(x => x.level === 5)
-      this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
+      // this.dataOclv5 = res.filter(x => x.level === 5)
+      // this.dataOclv5.unshift({ id: 0, name: 'N/A'  });
       //end Oclv3
 
 
@@ -184,6 +184,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     this.centerId = data.centerId;
     this.deptId = data.deptId;
 
+
   }
   actionBegin(args) {
     if (args.requestType === 'add') {
@@ -192,6 +193,19 @@ export class AccountComponent extends BaseComponent implements OnInit {
     if (args.requestType === 'beginEdit') {
       const item = args.rowData;
       this.updateModel(item);
+      if(this.factId > 0 && this.centerId === 0) {
+        this.dataOclv4 = this.dataOc.filter(x => x.parentId === this.factId)
+        this.dataOclv4.unshift({ name: "N/A", id: 0 });
+      }
+
+      if(this.factId > 0 && this.centerId > 0) {
+
+        this.dataOclv4 = this.dataOc.filter(x => x.parentId === this.factId)
+        this.dataOclv4.unshift({ name: "N/A", id: 0 });
+
+        this.dataOclv5 = this.dataOc.filter(x => x.parentId === this.centerId)
+        this.dataOclv5.unshift({ name: "N/A", id: 0 });
+      }
     }
     if (args.requestType === 'save' && args.action === 'add') {
       this.accountCreate = {
@@ -286,6 +300,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
     if (args.requestType === 'add') {
       args.form.elements.namedItem('username').focus(); // Set focus to the Target element
     }
+
   }
 
   // end life cycle ejs-grid

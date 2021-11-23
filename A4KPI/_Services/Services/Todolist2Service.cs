@@ -310,7 +310,6 @@ namespace A4KPI._Services.Services
                 CurrentTarget = false,
             }).Where(x => x.Level != Level.Level_1).ToListAsync();
          
-
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
@@ -361,7 +360,6 @@ namespace A4KPI._Services.Services
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
 
-                //var targetId = _repoTarget.FindAll().Max(x => x.Id);
                 int id = 0;
                 if (target.Id > 0)
                 {

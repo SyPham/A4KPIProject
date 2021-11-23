@@ -565,7 +565,6 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       userId: this.userId,
       currentTime: this.datePipe.transform(this.currentTime, 'MM/dd/yyyy'),
     }
-    console.log(request);
     this.todolist2Service.submitUpdatePDCA(request).subscribe(
       (res) => {
         if (res.success === true) {
