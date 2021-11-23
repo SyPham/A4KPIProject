@@ -9,8 +9,8 @@
 </div>
 <div class="modal-body">
   <div class="row">
-    <div class="col-12">
-      <table style="box-shadow:  -2px 1px 3px black; border-radius: 10px; overflow: hidden;" class="table table-bordered">
+    <div class="col-6">
+      <table class="table table-borderless">
         <tbody>
           <tr>
             <td>
@@ -21,7 +21,6 @@
           <tr>
             <td>
               <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
-
             </td>
           </tr>
           <tr>
@@ -32,15 +31,6 @@
         </tbody>
       </table>
 
-      <!-- <p>
-        <label class="font-weight-bold">{{"Policy" | translate}}: </label> <span>{{policy}}</span>
-      </p>
-      <p>
-        <label class="font-weight-bold">{{"KPI" | translate}}: </label> <span>{{kpi}}</span>
-      </p>
-      <p>
-        <label class="font-weight-bold">{{"PICPDCA" | translate}}: </label> <span>{{pic}}</span>
-      </p> -->
     </div>
 
     <div class="col-12 d-flex align-items-start">
@@ -86,10 +76,10 @@
         </e-column>
         <e-column field='content' headerText='{{"Content" | translate}}' type='string'>
           <ng-template #template let-data>
-            <textarea autosize type="text" class="form-control" readonly [value]="data.content" name="content"  style="text-align:left;" ></textarea>
+            <textarea autosize  type="text" class="form-control" readonly [value]="data.content" name="content"  style="text-align:left;" ></textarea>
           </ng-template>
           <ng-template #editTemplate let-data>
-            <textarea autosize type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left;"></textarea>
+            <textarea autosize  type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left;min-height: 60px;"></textarea>
           </ng-template>
         </e-column>
         <e-column field='target' headerText='{{"Target" | translate}}' type='string'>

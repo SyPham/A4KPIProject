@@ -153,7 +153,7 @@
                 <textarea autosize type="text" class="form-control" readonly [value]="data.content" name="content"  style="text-align:left;" ></textarea>
               </ng-template>
               <ng-template #editTemplate let-data>
-                <textarea autosize type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left;"></textarea>
+                <textarea autosize type="text" [(ngModel)]="data.content" class="form-control" [value]="data.content" name="content" style="text-align:left;min-height: 60px;"></textarea>
               </ng-template>
 
 

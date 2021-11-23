@@ -7,7 +7,7 @@ namespace A4KPI.Constants
 {
     public class Systems
     {
-        public static string Administrator = "System";
+        public static string Administrator = "SYSTEM";
 
     }
    
