@@ -66,7 +66,7 @@ export class ViewKPIComponent implements OnInit {
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
     this.onService();
-    this.getAllPolicy()
+    // this.getAllPolicy()
     this.getAllUsers();
     this.getAllType()
   }
