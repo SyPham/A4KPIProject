@@ -154,7 +154,7 @@ namespace A4KPI._Services.Services
             var actions = await _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId).ProjectTo<ActionDto>(_configMapper).ToListAsync();
             var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiNewId).FirstOrDefaultAsync();
             var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
-            var typeText = _repoType.FindAll(x => x.Id == kpiModel.TypeId).FirstOrDefault().Description;
+            var typeText = _repoType.FindAll(x => x.Id == kpiModel.TypeId).FirstOrDefault() != null ? _repoType.FindAll(x => x.Id == kpiModel.TypeId).FirstOrDefault().Description : null;
             var target = await _repoTarget.FindAll(x => x.KPIId == kpiNewId).ProjectTo<TargetDto>(_configMapper).FirstOrDefaultAsync();
             var targetYTD = await _repoTargetYTD.FindAll(x => x.KPIId == kpiNewId && x.CreatedTime.Year == DateTime.Now.Year).ProjectTo<TargetYTDDto>(_configMapper).FirstOrDefaultAsync();
             var kpi = kpiModel.Name;
@@ -326,6 +326,7 @@ namespace A4KPI._Services.Services
             }).Where(x => x.CurrentTarget && x.Level != Level.Level_1).ToListAsync();
 
             var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
+
             if (setting != null)
                 return actions.Concat(updatePDCA);
             return actions;
@@ -345,7 +346,7 @@ namespace A4KPI._Services.Services
                 var kpiId = target.KPIId;
                 if (kpiId > 0)
                 {
-                   var update =  _repoKPIAc.FindAll().FirstOrDefault(x => x.AccountId == accountId && x.KpiId == kpiId);
+                   var update =  _repoKPIAc.FindAll(x => x.AccountId == accountId && x.KpiId == kpiId).FirstOrDefault();
                     update.IsActionSubmit = true;
                     _repoKPIAc.Update(update);
 
@@ -428,8 +429,8 @@ namespace A4KPI._Services.Services
                     target.TargetTime = currentTime;
 
                 }
-
                 var updateActions = _mapper.Map<List<Models.Action>>(updateActionList);
+
                 var addActions = _mapper.Map<List<Models.Action>>(addActionList);
                 if (target.Id > 0)
                     _repoTarget.Update(target);
@@ -504,7 +505,7 @@ namespace A4KPI._Services.Services
                 var kpiId = target.KPIId;
                 if (kpiId > 0)
                 {
-                    var updated = _repoKPIAc.FindAll().FirstOrDefault(x => x.AccountId == accountId && x.KpiId == kpiId);
+                    var updated = _repoKPIAc.FindAll(x => x.AccountId == accountId && x.KpiId == kpiId).FirstOrDefault();
                     updated.IsPDCASubmit = true;
                     _repoKPIAc.Update(updated);
                 }

@@ -144,7 +144,7 @@ export class ViewKPIComponent implements OnInit {
     this.toolbar = [
       "Search",
       "ExpandAll",
-      "CollapseAll",
+      "CollapseAll"
     ];
     this.editing = {
       allowEditing: true,
@@ -209,12 +209,14 @@ export class ViewKPIComponent implements OnInit {
       }
     );
   }
+
   updateModel(data) {
     this.policyId = data.policyId
     this.typeId = data.typeId
     this.picId = data.pic
   }
   actionComplete(args) {
+
     if (args.requestType === 'beginEdit') {
       const item = args.rowData.entity;
       this.updateModel(item);
@@ -231,8 +233,10 @@ export class ViewKPIComponent implements OnInit {
       }
       this.update(model);
     }
+
   }
   update(model) {
+
     this.kpiNewService.update(model).subscribe(res => {
       if(res) {
         this.alertify.success(MessageConstants.CREATED_OK_MSG);
@@ -242,18 +246,22 @@ export class ViewKPIComponent implements OnInit {
         this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
       }
     })
+
   }
   rowSelected(args) {
+
     this.parentId = args.data.entity.id
     this.level = args.data.entity.level + 1
 
   }
 
   getBuildingsAsTreeView() {
+
     const lang = localStorage.getItem('lang');
     this.kpiNewService.getTree(lang).subscribe((res) => {
       this.data = res;
     });
+
   }
 
   clearFrom() {

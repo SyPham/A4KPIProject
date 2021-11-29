@@ -52,7 +52,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   typeData: Object;
   accountData: Account[];
   modalReference: NgbModalRef
-  kpiname: any
+  kpiname: any = null
   userId: number
   currentLevel: any
   constructor(
@@ -95,7 +95,7 @@ export class Kpi2nd3rdComponent implements OnInit {
   }
   validation() {
     if (this.kpiname === null) {
-      this.alertify.error('Please key in kpi name! <br> Vui lòng nhập KPI!');
+      this.alertify.error('Please key in kpi name!');
       return false;
     }
     // if (this.policyId === 0) {

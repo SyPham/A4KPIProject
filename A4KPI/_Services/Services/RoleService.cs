@@ -63,6 +63,7 @@ namespace A4KPI._Services.Services
                 throw;
             }
         }
+
         public  async Task<OperationResult> AddAsync(RoleDto model)
         {
             try
@@ -118,7 +119,7 @@ namespace A4KPI._Services.Services
 
         public async Task<object> MapUserRole(int userID, int roleID)
         {
-            var item = await _repoUserRole.FindAll().Where(x => x.UserID == userID).ToListAsync();
+            var item = await _repoUserRole.FindAll(x => x.UserID == userID).ToListAsync();
             if (item.Count == 0)
             {
                 try

@@ -50,8 +50,8 @@ export class KpiCreate2Component implements OnInit {
   typeData: Object;
   accountData: Account[];
   modalReference: NgbModalRef
-  kpiname: any
-  picItem: any;
+  kpiname: any = null
+  picItem: any = [];
   userId: number
   constructor(
     private ocService: OcService,
@@ -91,7 +91,7 @@ export class KpiCreate2Component implements OnInit {
   }
   validation() {
     if (this.kpiname === null) {
-      this.alertify.error('Please key in kpi name! <br> Vui lòng nhập KPI!');
+      this.alertify.error('Please key in kpi name!');
       return false;
     }
     // if (this.policyId === 0) {

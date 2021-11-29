@@ -95,9 +95,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
       };
     }
   }
-  submit(){
+  submits(){
     this.grid.editModule.endEdit()
-    if (this.validate(true) == false) return;
+    if (this.validate(true) === false) return;
     this.spinner.show();
     if(this.typeText === 'string') {
       this.target = {
@@ -143,12 +143,12 @@ export class PlanComponent implements OnInit, AfterViewInit {
       userId: this.userId,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-
     const post = this.todolist2Service.submitAction(request)
     const submitKPINew = this.todolist2Service.submitKPINew(this.data.id);
     forkJoin([post, submitKPINew]).subscribe(response => {
       const arr = response.map(x=> x.success);
       const checker = arr => arr.every(Boolean);
+      console.log('checker', checker);
       if (checker) {
         this.todolist2Service.changeMessage(true);
         this.activeModal.close();
@@ -177,25 +177,23 @@ export class PlanComponent implements OnInit, AfterViewInit {
         this.alertify.warning('Please input target YTD');
         return false;
       }
-
-      if (isNumeric(this.targetValue) === false){
+      if (!isNaN(this.targetValue) === false){
         this.alertify.warning('請填寫下個月目標 (不可含有符號)');
         return false;
       }
-      if (isNumeric(this.targetYTDValue) === false){
+      if (!isNaN(this.targetYTDValue) === false){
         this.alertify.warning('請填寫目標YTD (不可含有符號)');
         return false;
       }
     }
+    // const dataSource = (this.grid.dataSource as Action[]) || [];
     const dataSource = (this.grid.dataSource as Action[]) || [];
     if (isSubmit) {
-      if (dataSource.length == 0) {
+      if (dataSource.length === 0) {
         this.alertify.warning('Please create actions');
         return false;
       }
     }
-
-
     return true;
   }
   actionBegin(args) {
@@ -232,8 +230,9 @@ export class PlanComponent implements OnInit, AfterViewInit {
   }
   post(callBack, isSubmit) {
     this.grid.editModule.endEdit()
-    if (this.validate(isSubmit) == false) return;
+    if (this.validate(isSubmit) === false) return;
     const dataSource = this.grid.dataSource as Action[];
+
     if(isSubmit === false && this.target === null) {
       this.target = {
         id: 0,

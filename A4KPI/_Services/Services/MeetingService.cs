@@ -293,7 +293,7 @@ namespace A4KPI._Services.Services
                             ActionId = itemAcs.ActionId,
                             Content = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Content,
                             CreatedTime = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().CreatedTime,
-                            DoContent = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Content,
+                            DoContent = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Content,
                             ResultContent = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().ReusltContent,
                             Achievement = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Achievement,
                             Deadline = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Deadline.Value.ToString("MM/dd"),

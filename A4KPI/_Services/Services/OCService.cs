@@ -48,11 +48,13 @@ namespace A4KPI._Services.Services
             return await _repo.FindAll().ProjectTo<OCDto>(_configMapper)
                 .OrderByDescending(x => x.Id).ToListAsync();
         }
+
         public async Task<object> GetAllLevel3()
         {
             var lists = (await _repo.FindAll(x => x.Level == Level.Level_3).ToListAsync());
             return lists;
         }
+
         public async Task<IEnumerable<HierarchyNode<OCDto>>> GetAllAsTreeView()
         {
             var lists = (await _repo.FindAll().ProjectTo<OCDto>(_configMapper).OrderBy(x => x.Name).ToListAsync()).AsHierarchy(x => x.Id, y => y.ParentId);
@@ -233,6 +235,8 @@ namespace A4KPI._Services.Services
             var delete = _repo.FindById(id);
             _repo.Remove(delete);
 
+            var deleteChild = _repo.FindAll(x => x.ParentId == id).ToList();
+            _repo.RemoveMultiple(deleteChild);
             try
             {
                 await _repo.SaveAll();

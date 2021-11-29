@@ -71,6 +71,7 @@ namespace A4KPI.Controllers
 
             return Ok(await _service.GetStatus());
         }
+
         [HttpGet("{kpiNewId}/{userId}")]
         public async Task<ActionResult> GetActionsForL0(int kpiNewId, int userId)
         {

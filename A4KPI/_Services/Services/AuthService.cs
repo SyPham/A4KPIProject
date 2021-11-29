@@ -24,7 +24,7 @@ namespace A4KPI._Services.Services
 
         public async Task<bool> CheckLock(string username)
         {
-            var account = await _repo.FindAll().FirstOrDefaultAsync(x =>x.Username == username);
+            var account = await _repo.FindAll(x => x.Username == username).FirstOrDefaultAsync();
 
             if (account == null)
                 return false;
@@ -35,7 +35,7 @@ namespace A4KPI._Services.Services
 
         public async Task<Account> Login(string username, string password)
         {
-            var account = await _repo.FindAll().FirstOrDefaultAsync(x => x.Username == username);
+            var account = await _repo.FindAll(x => x.Username == username).FirstOrDefaultAsync();
 
             if (account == null)
                 return null;

@@ -57,6 +57,12 @@ export class OcComponent implements OnInit {
       this.ocService.addOC(this.oc).subscribe(res => {
         this.alertify.success('The OC has been created!!');
         this.modalReference.close();
+        this.oc = {
+          id: 0,
+          name: "",
+          parentID: null,
+          level: 1
+        };
         this.getBuildingsAsTreeView();
       });
     }
@@ -122,7 +128,7 @@ export class OcComponent implements OnInit {
           text: '新增下一階',
           tooltipText: '新增下一階',
           prefixIcon: 'e-add',
-          id: '_gridcontrol_add',
+          id: '_gridcontrol_addsub',
         },
 
         {
@@ -173,7 +179,6 @@ export class OcComponent implements OnInit {
   }
 
   toolbarClick(args) {
-    console.log(args.item.id);
     switch (args.item.id) {
       case "_gridcontrol_add":
         args.cancel = true;
@@ -267,7 +272,7 @@ export class OcComponent implements OnInit {
   }
   openMainModal() {
     this.clearFrom();
-    this.modalReference = this.modalServices.open(this.content, { size: "lg"});
+    this.modalReference = this.modalServices.open(this.content, { size: "sm"});
     this.title = "Add Main OC";
     this.oc = this.oc;
     this.modalReference.result.then((result) => {
@@ -277,7 +282,7 @@ export class OcComponent implements OnInit {
   }
   openSubModal() {
     this.modalReference = this.modalServices.open(this.content, {
-      size: "lg",
+      size: "sm",
     });
     this.title = "Add Sub OC";
     this.oc = this.oc;
