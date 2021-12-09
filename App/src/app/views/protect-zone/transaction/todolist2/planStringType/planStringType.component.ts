@@ -183,11 +183,11 @@ export class PlanStringTypeComponent implements OnInit, AfterViewInit {
         return false;
       }
 
-      if (isNumeric(this.targetValue) === false){
+      if (!isNaN(this.targetValue) === false){
         this.alertify.warning('Next month target value is number');
         return false;
       }
-      if (isNumeric(this.targetYTDValue) === false){
+      if (!isNaN(this.targetYTDValue) === false){
         this.alertify.warning('Target YTD value is number');
         return false;
       }

@@ -80,7 +80,6 @@ namespace A4KPI.Controllers
         [HttpGet("{kpiNewId}/{currentTime}/{userId}")]
         public async Task<ActionResult> GetPDCAForL0(int kpiNewId, DateTime currentTime, int userId)
         {
-
             return Ok(await _service.GetPDCAForL0(kpiNewId, currentTime, userId));
         }
 

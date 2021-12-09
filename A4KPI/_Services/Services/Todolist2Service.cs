@@ -219,11 +219,16 @@ namespace A4KPI._Services.Services
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(thisMonthResult);
 
-            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId && x.AccountId == accountId &&  x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month <= thisMonthResult  )
+            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId 
+                        && x.AccountId == accountId 
+                        &&  x.CreatedTime.Year == thisYearResult 
+                        && x.CreatedTime.Month <= thisMonthResult  )
                         .Where(x=>
                          (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
                         ||
-                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year <= thisYearResult && x.CreatedTime.Month <= thisMonthResult && !c.Submitted) != null)
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year <= thisYearResult 
+                        && x.CreatedTime.Month <= thisMonthResult 
+                        && !c.Submitted) != null)
                         || x.ActionStatus.Count == 0
                         )
 
@@ -408,12 +413,14 @@ namespace A4KPI._Services.Services
             }
             return operationResult;
         }
+
         public async Task<int> AddTarget(Target item)
         {
             _repoTarget.Add(item);
             await _repoTarget.SaveAll();
             return item.Id;
         }
+
         public async Task<OperationResult> SaveAction(ActionRequestDto model)
         {
             var updateActionList = model.Actions.Where(x => x.Id > 0).ToList();

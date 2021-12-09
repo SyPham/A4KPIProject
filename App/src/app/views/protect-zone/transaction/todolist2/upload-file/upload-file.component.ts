@@ -16,6 +16,8 @@ export class UploadFileComponent implements OnInit {
   @Input() data: any;
   @Input() currentTime: any;
   base = environment.apiUrl;
+  totalSize: number = 0;
+  size: string;
   public allowExtensions: string = '.doc, .docx, .xls, .xlsx, .pdf';
   constructor(
     public activeModal: NgbActiveModal,
@@ -53,6 +55,7 @@ loadData() {
   });
 }
 beforeUpload(args) {
+  console.log('beforeUpload',args);
   if(args.response.statusCode == 400) {
     args.statusText = "File already exists ! 此檔案已存在，請更改檔案名稱、重新上傳！";
   }else {
@@ -75,6 +78,13 @@ public onSelected(args : SelectedEventArgs) : void {
   }
   args.isModified = true;
 
+  for (let file of args.filesData) {
+      this.totalSize = this.totalSize + file.size;
+      this.size = this.uploadObj.bytesToSize(this.totalSize);
+  }
+
+  console.log('onSelected',this.size);
+  console.log('onSelected',this.totalSize);
 }
 
 }

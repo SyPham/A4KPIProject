@@ -169,6 +169,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
   }
   validate(isSubmit) {
     if(this.typeText !== 'string' && isSubmit === true) {
+
       if (!this.target) {
         this.alertify.warning('Please input next month target');
         return false;
@@ -177,6 +178,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         this.alertify.warning('Please input target YTD');
         return false;
       }
+
       if (!isNaN(this.targetValue) === false){
         this.alertify.warning('請填寫下個月目標 (不可含有符號)');
         return false;
@@ -185,6 +187,7 @@ export class PlanComponent implements OnInit, AfterViewInit {
         this.alertify.warning('請填寫目標YTD (不可含有符號)');
         return false;
       }
+
     }
     // const dataSource = (this.grid.dataSource as Action[]) || [];
     const dataSource = (this.grid.dataSource as Action[]) || [];
@@ -275,7 +278,6 @@ export class PlanComponent implements OnInit, AfterViewInit {
       targetYTD: this.targetYTD,
       currentTime: (this.currentTime as Date).toLocaleDateString()
     };
-    console.log(request);
     this.todolist2Service.saveAction(request).subscribe(
       (res) => {
         if (res.success === true) {

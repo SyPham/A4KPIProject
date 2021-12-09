@@ -130,12 +130,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
   // life cycle ejs-grid
   createdManager($event, data) {
     this.managers = this.accounts;
-    this.managers = this.managers.filter(x=> x.id !== data.id);
+    this.managers = this.managers.filter(x => x.id !== data.id);
   }
 
   createdLeader($event, data) {
-    this.leaders = this.accounts.filter(x=> x.isLeader);
-    this.leaders = this.leaders.filter(x=> x.id !== data.id);
+    this.leaders = this.accounts.filter(x => x.isLeader);
+    this.leaders = this.leaders.filter(x => x.id !== data.id);
   }
 
   onDoubleClick(args: any): void {
@@ -187,9 +187,11 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
   }
   actionBegin(args) {
+
     if (args.requestType === 'add') {
       this.initialModel();
     }
+
     if (args.requestType === 'beginEdit') {
       const item = args.rowData;
       this.updateModel(item);
@@ -205,9 +207,12 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
         this.dataOclv5 = this.dataOc.filter(x => x.parentId === this.centerId)
         this.dataOclv5.unshift({ name: "N/A", id: 0 });
+
       }
     }
+
     if (args.requestType === 'save' && args.action === 'add') {
+
       this.accountCreate = {
         id: 0,
         username: args.data.username ,
@@ -237,16 +242,19 @@ export class AccountComponent extends BaseComponent implements OnInit {
         args.cancel = true;
         return;
       }
+
       if (args.data.password === undefined) {
         this.alertify.error('Please key in a password! <br> Vui lòng nhập mật khẩu!');
         args.cancel = true;
         return;
       }
+
       if (this.factId === 0) {
         this.alertify.error('Please Select Factory! <br> Vui lòng chọn Factory!');
         args.cancel = true;
         return;
       }
+
       if (this.roleID > 0) {
         this.create();
       } else {
@@ -256,6 +264,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       }
       // this.create();
     }
+
     if (args.requestType === 'save' && args.action === 'edit') {
       this.accountUpdate = {
         id: args.data.id,
@@ -282,6 +291,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       };
       this.update();
     }
+
     if (args.requestType === 'delete') {
       this.delete(args.data[0].id);
     }
@@ -326,29 +336,40 @@ export class AccountComponent extends BaseComponent implements OnInit {
   getAccounts() {
     this.service.getAccounts().subscribe(data => {
       this.accounts = data;
-      this.leaders = data.filter(x=> x.isLeader);
+      this.leaders = data.filter(x => x.isLeader);
       this.managers = data;
     });
   }
+
   loadAccountGroupData() {
     this.accountGroupService.getAll().subscribe(data => {
       this.accountGroupData = data;
     });
   }
-  delete(id) {
-    this.service.delete(id).subscribe(
-      (res) => {
-        if (res.success === true) {
-          this.alertify.success(MessageConstants.DELETED_OK_MSG);
-          this.loadData();
-        } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-        }
-      },
-      (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
-    );
 
+  delete(id) {
+    this.alertify.delete("Delete Account",'Are you sure you want to delete this account "' + id + '" ?')
+    .then((result) => {
+      if (result) {
+        this.service.delete(id).subscribe(
+          (res) => {
+            if (res.success === true) {
+              this.alertify.success(MessageConstants.DELETED_OK_MSG);
+              this.loadData();
+            } else {
+              this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+            }
+          },
+          (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
+        );
+      }
+    })
+    .catch((err) => {
+      this.loadData();
+      this.grid.refresh();
+    });
   }
+
   mapUserRole(userID: number, roleID: number) {
     this.roleService.mapUserRole(userID, roleID).subscribe((res: any) => {
       if (res.status) {
@@ -360,6 +381,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       }
     });
   }
+
   create() {
     this.service.add(this.accountCreate).subscribe(
       (res) => {
@@ -371,7 +393,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
           this.accountCreate = {} as Account;
         } else {
-           this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
         }
 
       },
@@ -380,6 +402,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
       }
     );
   }
+
   update() {
     this.service.update(this.accountUpdate).subscribe(
       (res) => {

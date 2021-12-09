@@ -224,7 +224,7 @@
                 <tr>
                   <th class="text-center" width="5%">
                     <ng-container>
-                      <span  data-toggle="tooltip" title="{{'meetingPertooltip' | translate}}">{{"meetingPer" | translate}}</span>
+                      <span  data-tooltip title="{{'meetingPertooltip' | translate}}">{{"meetingPer" | translate}}</span>
 
                     </ng-container>
 
@@ -276,7 +276,7 @@
                 <tr>
                   <th class="text-center" width="8%">
                     <ng-container>
-                      <span class="d-inline-block" data-toggle="tooltip" title="{{'LY PCMC tooltip' | translate}}" >{{"LY PCMC" | translate}}  </span>
+                      <span class="d-inline-block" data-tooltip title="{{'LY PCMC tooltip' | translate}}" >{{"LY PCMC" | translate}}  </span>
                     </ng-container>
 
 
@@ -296,7 +296,7 @@
                 <tr>
                   <th class="text-center" width="8%">
                     <ng-container>
-                      <span class="d-inline-block" data-toggle="tooltip" title="{{'LY YTD tooltip' | translate}}" >{{"LY YTD" | translate}} </span>
+                      <span class="d-inline-block" data-tooltip title="{{'LY YTD tooltip' | translate}}" >{{"LY YTD" | translate}} </span>
                     </ng-container>
 
 
@@ -556,7 +556,12 @@
               <th scope="col" class="text-center" style="width: 100px;">{{"meetingTarget" | translate}} </th>
               <th scope="col" class="text-center" style="width: 50px;">{{"meetingDeadline" | translate}}</th>
               <th scope="col" class="text-center" style="width: 210px">{{"meetingDo" | translate}}</th>
-              <th scope="col" class="text-center" style="width: 50px">{{"meetingPcmc" | translate}}</th>
+              <th scope="col" class="text-center" style="width: 50px">
+                <ng-container>
+                  <span data-tooltip2 title="{{'meetingPertooltip' | translate}}">{{"meetingPcmc" | translate}}</span>
+                </ng-container>
+
+              </th>
               <th scope="col" class="text-center" style="width: 80px">{{"meetingStatus" | translate}}</th>
               <th scope="col" class="text-center" style="width: 210px">{{"meetingCheck" | translate}}</th>
 
@@ -566,7 +571,7 @@
 
               <th scope="col" class="text-center" style="width: 50px;">
                 <ng-container>
-                  <span  data-toggle="tooltip" title="{{'meetingAtts' | translate}}">{{"meetingAtt" | translate}}</span>
+                  <span data-tooltip2  title="{{'meetingAtts' | translate}}">{{"meetingAtt" | translate}}</span>
 
                 </ng-container>
 

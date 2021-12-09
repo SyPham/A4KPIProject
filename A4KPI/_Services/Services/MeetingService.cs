@@ -15,8 +15,8 @@ using A4KPI._Repositories.Interface;
 
 namespace A4KPI._Services.Services
 {
-   
-    public class MeetingService :  IMeetingService
+
+    public class MeetingService : IMeetingService
     {
         private readonly IPICRepository _repo;
         private readonly IAccountRepository _repoAc;
@@ -49,7 +49,7 @@ namespace A4KPI._Services.Services
             IResultRepository repoResult,
             IActionRepository repoAction,
             IStatusRepository repoStatus,
-            IMapper mapper, 
+            IMapper mapper,
             MapperConfiguration configMapper
             )
         {
@@ -72,12 +72,13 @@ namespace A4KPI._Services.Services
         }
 
 
-       
+
         public async Task<object> GetAllKPI(int userId)
         {
             var data = new List<KPINewDto>();
 
-            data = (await _repoKPINew.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto {
+            data = (await _repoKPINew.FindAll().OrderBy(x => x.Name).ToListAsync()).Select(x => new KPINewDto
+            {
 
                 Id = x.Id,
                 Name = x.Name,
@@ -110,7 +111,7 @@ namespace A4KPI._Services.Services
 
 
 
-        public async Task<ChartDtoDateTime> GetChartWithDateTime(int kpiId, DateTime currentTime)
+        public async Task<ChartDtoDateTime> GetChartWithDateTime2(int kpiId, DateTime currentTime)
         {
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
@@ -251,37 +252,37 @@ namespace A4KPI._Services.Services
                         (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
                         || x.ActionStatus.Count == 0
                         )
-                           select new UpdatePDCADto
-                           {
-                               ActionId = a.Id,
-                               StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                               a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
-                               ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                               a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
-                           }).ToList();
+                                  select new UpdatePDCADto
+                                  {
+                                      ActionId = a.Id,
+                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
+                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
+                                  }).ToList();
                 //end
 
                 if (undoneList.Count > 0)
                 {
                     //star công việc tháng hiện tại
                     currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
-                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
-                             from sub in ab.DefaultIfEmpty()
-                             select new UpdatePDCADto
-                             {
-                                 Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                                 ActionId = a.Id,
-                                 DoId = sub == null ? 0 : sub.Id,
-                                 Content = a.Content,
-                                 CreatedTime = a.CreatedTime,
-                                 DoContent = sub == null ? "" : sub.Content,
-                                 ResultContent = sub == null ? "" : sub.ReusltContent,
-                                 Achievement = sub == null ? "" : sub.Achievement,
-                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                 StatusId = a.StatusId,
-                                 StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
-                                 Target = a.Target,
-                             }).ToList();
+                                        join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                                        from sub in ab.DefaultIfEmpty()
+                                        select new UpdatePDCADto
+                                        {
+                                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                            ActionId = a.Id,
+                                            DoId = sub == null ? 0 : sub.Id,
+                                            Content = a.Content,
+                                            CreatedTime = a.CreatedTime,
+                                            DoContent = sub == null ? "" : sub.Content,
+                                            ResultContent = sub == null ? "" : sub.ReusltContent,
+                                            Achievement = sub == null ? "" : sub.Achievement,
+                                            Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                            StatusId = a.StatusId,
+                                            StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
+                                            Target = a.Target,
+                                        }).ToList();
                     //end
 
                     //start => thêm list công việc chưa làm xong của tháng trước vào tháng hiện tại
@@ -293,7 +294,7 @@ namespace A4KPI._Services.Services
                             ActionId = itemAcs.ActionId,
                             Content = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Content,
                             CreatedTime = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().CreatedTime,
-                            DoContent = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Content,
+                            DoContent = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Content,
                             ResultContent = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().ReusltContent,
                             Achievement = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Achievement,
                             Deadline = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Deadline.Value.ToString("MM/dd"),
@@ -307,45 +308,369 @@ namespace A4KPI._Services.Services
                 {
                     //start => công việc tháng hiện tại
                     currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item)
-                             join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
-                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
-                             from sub in ab.DefaultIfEmpty()
-                             select new UpdatePDCADto
-                             {
-                                 Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                                 ActionId = a.Id,
-                                 DoId = sub == null ? 0 : sub.Id,
-                                 Content = a.Content,
-                                 DoContent = sub == null ? "" : sub.Content,
-                                 ResultContent = sub == null ? "" : sub.ReusltContent,
-                                 Achievement = sub == null ? "" : sub.Achievement,
-                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                 StatusId = a.StatusId,
-                                 StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && a.CreatedTime.Month == item).Status.Name.Trim(),
-                                 Target = a.Target,
+                                        join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
+                                        join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                                        from sub in ab.DefaultIfEmpty()
+                                        select new UpdatePDCADto
+                                        {
+                                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                            ActionId = a.Id,
+                                            DoId = sub == null ? 0 : sub.Id,
+                                            Content = a.Content,
+                                            DoContent = sub == null ? "" : sub.Content,
+                                            ResultContent = sub == null ? "" : sub.ReusltContent,
+                                            Achievement = sub == null ? "" : sub.Achievement,
+                                            Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                            StatusId = a.StatusId,
+                                            StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && a.CreatedTime.Month == item).Status.Name.Trim(),
+                                            Target = a.Target,
 
-                             }).ToList();
+                                        }).ToList();
                     //end
                 }
 
                 var nextMonthData = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1)
-                             join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
-                             from sub in ab.DefaultIfEmpty()
-                             select new UpdatePDCADto
-                             {
-                                 Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                                 ActionId = a.Id,
-                                 DoId = sub == null ? 0 : sub.Id,
-                                 Content = a.Content,
-                                 DoContent = sub == null ? "" : sub.Content,
-                                 ResultContent = sub == null ? "" : sub.ReusltContent,
-                                 Achievement = sub == null ? "" : sub.Achievement,
-                                 Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                 StatusId = a.StatusId,
-                                 StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
-                                 Target = a.Target
+                                    join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
+                                    from sub in ab.DefaultIfEmpty()
+                                    select new UpdatePDCADto
+                                    {
+                                        Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                        ActionId = a.Id,
+                                        DoId = sub == null ? 0 : sub.Id,
+                                        Content = a.Content,
+                                        DoContent = sub == null ? "" : sub.Content,
+                                        ResultContent = sub == null ? "" : sub.ReusltContent,
+                                        Achievement = sub == null ? "" : sub.Achievement,
+                                        Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                        StatusId = a.StatusId,
+                                        StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                        Target = a.Target
 
-                             };
+                                    };
+
+                var dataAdd = new DataTable()
+                {
+                    Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                    CurrentMonthData = currentMonthData.OrderBy(x => x.CreatedTime),
+                    Content = content,
+                    Date = $"{thisYearResult}/{item}/01",
+                    KpiId = kpiId,
+                    NextMonthData = nextMonthData
+                };
+                dataTable.Add(dataAdd);
+            }
+
+
+            return new ChartDtoDateTime
+            {
+                labels = listLabels.ToArray(),
+                perfomances = listPerfomance.ToArray(),
+                targets = listTarget.ToArray(),
+                ytds = listYTD.ToArray(),
+                YTD = YTD,
+                TypeId = typeId,
+                TargetYTD = TargetYTD,
+                DataTable = dataTable,
+                Policy = policy
+            };
+        }
+
+        public async Task<ChartDtoDateTime> GetChartWithDateTime(int kpiId, DateTime currentTime)
+        {
+            var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
+            var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
+            var typeId = _repoKPINew.FindById(kpiId).TypeId;
+            List<string> listLabels = new List<string>();
+            List<int> listLabel = new List<int>();
+            List<int> listLabelData = new List<int>();
+            List<double> listTarget = new List<double>();
+            List<double> listPerfomance = new List<double>();
+            List<double> listYTD = new List<double>();
+            var dataTable = new List<DataTable>();
+            var kpiModel = await _repoKPINew.FindAll(x => x.Id == kpiId).FirstOrDefaultAsync();
+            var parentKpi = await _repoKPINew.FindAll(x => x.Id == kpiModel.ParentId).ProjectTo<KPINewDto>(_configMapper).FirstOrDefaultAsync();
+            var policy = parentKpi.Name;
+            var data = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Year == thisYearResult).ToListAsync();
+
+            for (int i = 1; i <= 12; i++)
+            {
+                listLabel.Add(i);
+            }
+            for (int i = 1; i <= thisMonthResult; i++)
+            {
+                listLabelData.Add(i);
+            }
+
+            foreach (var a in listLabel)
+            {
+                switch (a)
+                {
+                    case 1:
+                        listLabels.Add("Jan");
+                        break;
+                    case 2:
+                        listLabels.Add("Feb"); break;
+                    case 3:
+                        listLabels.Add("Mar"); break;
+                    case 4:
+                        listLabels.Add("Apr"); break;
+                    case 5:
+                        listLabels.Add("May");
+                        break;
+                    case 6:
+                        listLabels.Add("Jun"); break;
+                    case 7:
+                        listLabels.Add("Jul"); break;
+                    case 8:
+                        listLabels.Add("Aug"); break;
+                    case 9:
+                        listLabels.Add("Sep");
+                        break;
+                    case 10:
+                        listLabels.Add("Oct"); break;
+                    case 11:
+                        listLabels.Add("Nov"); break;
+                    case 12:
+                        listLabels.Add("Dec"); break;
+                }
+            }
+
+            foreach (var item in listLabel)
+            {
+                var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
+                if (dataExist.Count > 0)
+                {
+                    double dataTarget = data.FirstOrDefault(x => x.TargetTime.Month == item).Value;
+                    listTarget.Add(dataTarget);
+
+                }
+                else
+                {
+                    listTarget.Add(0);
+                }
+
+            }
+
+            foreach (var item in listLabel)
+            {
+                var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
+                if (dataExist.Count > 0)
+                {
+                    var dataPerfomance = data.FirstOrDefault(x => x.TargetTime.Month == item).Performance;
+                    listPerfomance.Add(dataPerfomance);
+
+                }
+                else
+                {
+                    listPerfomance.Add(0);
+                }
+            }
+
+            foreach (var item in listLabel)
+            {
+                var dataExist = data.Where(x => x.TargetTime.Month == item).ToList();
+                if (dataExist.Count > 0)
+                {
+                    double dataYTD = data.FirstOrDefault(x => x.TargetTime.Month == item).YTD;
+                    listYTD.Add(dataYTD);
+
+                }
+                else
+                {
+                    listYTD.Add(0);
+                }
+
+            }
+
+            double YTD = 0;
+            var YTDs = _repoTargetYTD.FindAll(x => x.KPIId == kpiId).ToList();
+            if (YTDs.Count > 0)
+            {
+                YTD = _repoTargetYTD.FindAll(x => x.KPIId == kpiId).FirstOrDefault().Value;
+            }
+            double TargetYTD = 0;
+
+            var TargetYTDs = await _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).ToListAsync();
+            if (TargetYTDs.Count > 0)
+            {
+                TargetYTD = _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).FirstOrDefault().YTD;
+            }
+
+            foreach (var item in listLabelData)
+            {
+                string content = null;
+                var contentExist = await _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToListAsync();
+                if (contentExist.Count > 0)
+                {
+                    content = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).FirstOrDefault().Content.Trim();
+                }
+                var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
+                var currentMonthData = new List<UpdatePDCADto>();
+                var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
+                var undoneList = new List<UpdatePDCADto>();
+                //start => tìm lại list công việc của tháng trước chưa hoàn thành
+                if (item == 1)
+                {
+                    undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month <= 12)
+                        .Where(x =>
+                         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
+                        ||
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12 && !c.Submitted) != null)
+                        || x.ActionStatus.Count == 0
+                        )
+                                  select new UpdatePDCADto
+                                  {
+                                      ActionId = a.Id,
+                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12).StatusId : null,
+                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12).Id : null
+                                  }).ToList();
+                }
+                else
+                {
+                    undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
+                        .Where(x =>
+                         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
+                        ||
+                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
+                        || x.ActionStatus.Count == 0
+                        )
+                                  select new UpdatePDCADto
+                                  {
+                                      ActionId = a.Id,
+                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
+                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
+                                  }).ToList();
+                }
+                //undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
+                //        .Where(x =>
+                //         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
+                //        ||
+                //        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
+                //        || x.ActionStatus.Count == 0
+                //        )
+                //                  select new UpdatePDCADto
+                //                  {
+                //                      ActionId = a.Id,
+                //                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                //                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
+                //                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
+                //                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
+                //                  }).ToList();
+                //end
+
+                if (undoneList.Count > 0)
+                {
+                    if (item == 1)
+                    {
+                        currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == 12)
+                                            join b in _repoDo.FindAll(x => x.CreatedTime.Month == 12) on a.Id equals b.ActionId into ab
+                                            from sub in ab.DefaultIfEmpty()
+                                            select new UpdatePDCADto
+                                            {
+                                                Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(12),
+                                                ActionId = a.Id,
+                                                DoId = sub == null ? 0 : sub.Id,
+                                                Content = a.Content,
+                                                CreatedTime = a.CreatedTime,
+                                                DoContent = sub == null ? "" : sub.Content,
+                                                ResultContent = sub == null ? "" : sub.ReusltContent,
+                                                Achievement = sub == null ? "" : sub.Achievement,
+                                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                                StatusId = a.StatusId,
+                                                StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= 12).Status.Name.Trim(),
+                                                Target = a.Target,
+                                            }).ToList();
+                    }
+                    else
+                    {
+                        //star công việc tháng hiện tại
+                        currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item)
+                                            join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                                            from sub in ab.DefaultIfEmpty()
+                                            select new UpdatePDCADto
+                                            {
+                                                Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                                ActionId = a.Id,
+                                                DoId = sub == null ? 0 : sub.Id,
+                                                Content = a.Content,
+                                                CreatedTime = a.CreatedTime,
+                                                DoContent = sub == null ? "" : sub.Content,
+                                                ResultContent = sub == null ? "" : sub.ReusltContent,
+                                                Achievement = sub == null ? "" : sub.Achievement,
+                                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                                StatusId = a.StatusId,
+                                                StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
+                                                Target = a.Target,
+                                            }).ToList();
+                        //end
+                    }
+
+                    //start => thêm list công việc chưa làm xong của tháng trước vào tháng hiện tại
+                    foreach (var itemAcs in undoneList)
+                    {
+                        currentMonthData.Add(new UpdatePDCADto
+                        {
+                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                            ActionId = itemAcs.ActionId,
+                            Content = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Content,
+                            CreatedTime = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().CreatedTime,
+                            DoContent = _repoDo.FindAll().Where(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Content,
+                            ResultContent = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().ReusltContent,
+                            Achievement = _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).ToList().Count == 0 ? "" : _repoDo.FindAll(x => x.ActionId == itemAcs.ActionId && x.CreatedTime.Month == item).FirstOrDefault().Achievement,
+                            Deadline = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Deadline.Value.ToString("MM/dd"),
+                            StatusName = _repoStatus.FindAll(x => x.Id == itemAcs.StatusId).ToList().Count == 0 ? "" : _repoStatus.FindAll(x => x.Id == itemAcs.StatusId).FirstOrDefault().Name.Trim(),
+                            Target = _repoAction.FindAll(x => x.Id == itemAcs.ActionId).FirstOrDefault().Target,
+                        });
+                    }
+                    //end
+                }
+                else
+                {
+                    //start => công việc tháng hiện tại
+                    currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item)
+                                        join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
+                                        join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                                        from sub in ab.DefaultIfEmpty()
+                                        select new UpdatePDCADto
+                                        {
+                                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                            ActionId = a.Id,
+                                            DoId = sub == null ? 0 : sub.Id,
+                                            Content = a.Content,
+                                            DoContent = sub == null ? "" : sub.Content,
+                                            ResultContent = sub == null ? "" : sub.ReusltContent,
+                                            Achievement = sub == null ? "" : sub.Achievement,
+                                            Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                            StatusId = a.StatusId,
+                                            StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && a.CreatedTime.Month == item).Status.Name.Trim(),
+                                            Target = a.Target,
+
+                                        }).ToList();
+                    //end
+                }
+
+                var nextMonthData = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item + 1)
+                                    join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
+                                    from sub in ab.DefaultIfEmpty()
+                                    select new UpdatePDCADto
+                                    {
+                                        Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                        ActionId = a.Id,
+                                        DoId = sub == null ? 0 : sub.Id,
+                                        Content = a.Content,
+                                        DoContent = sub == null ? "" : sub.Content,
+                                        ResultContent = sub == null ? "" : sub.ReusltContent,
+                                        Achievement = sub == null ? "" : sub.Achievement,
+                                        Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                        StatusId = a.StatusId,
+                                        StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                        Target = a.Target
+
+                                    };
 
                 var dataAdd = new DataTable()
                 {

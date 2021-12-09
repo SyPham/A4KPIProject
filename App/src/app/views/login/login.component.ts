@@ -1,3 +1,4 @@
+import { Host, Image } from './../../_core/enum/FactoryHost';
 import { PermissionService } from 'src/app/_core/_service/permission.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertifyService } from '../../_core/_service/alertify.service';
@@ -24,6 +25,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   username = '';
   password = '';
   loginError = false;
+  host: any
+
+  SHC_host = Host.SHC
+  SHC_Image = Image.SHC
+
+  CB_host = Host.CB
+  CB_Image = Image.CB
+
+  SPC_host = Host.SPC
+  SPC_Image = Image.SPC
+
+  TSH_host = Host.TSH
+  TSH_Image= Image.TSH
+
   private subscription: Subscription;
 
   user: UserForLogin = {
@@ -61,9 +76,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     }
     this.uri = this.route.snapshot.queryParams.uri || '/transaction/todolist2';
+    this.host = window.location.hostname
   }
   role: number;
   ngOnInit(): void {
+    // const categories = 'alpha beta beta gamma gamma gamma delta alpha beta beta gamma gamma gamma delta'.split(' ');
+    // const unique = Array.from(new Set(categories));
+    // console.log(unique);
+    // console.log(unique.join(' '));
     const accessToken = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refresh_token');
     if (accessToken && refreshToken && this.route.routeConfig.path === 'login') {
@@ -94,6 +114,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       localStorage.setItem('level', JSON.stringify(roleUser));
       this.authService.setRoleValue(roleUser as IRole);
       const currentLang = localStorage.getItem('lang');
+
       if (currentLang) {
         localStorage.setItem('lang', currentLang);
         await this.permissionService.getMenuByLangID(userId, currentLang).toPromise();
@@ -108,9 +129,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       localStorage.setItem("functions", JSON.stringify(functions));
       this.authService.setFunctions(functions as any);
 
-
-
-
       if (this.remember) {
         this.cookieService.set('remember', 'Yes');
         this.cookieService.set('username', this.user.username);
@@ -122,6 +140,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.cookieService.set('password', '');
         this.cookieService.set('systemCode', '');
       }
+
       setTimeout(() => {
         const check = this.checkRole();
         if (check) {

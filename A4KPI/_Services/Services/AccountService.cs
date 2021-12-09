@@ -25,6 +25,7 @@ namespace A4KPI._Services.Services
         private readonly IOCRepository _repoOc;
         private readonly IUserRoleRepository _repoUserRole;
         private readonly IRoleRepository _repoRole;
+        private readonly IKPINewRepository _repoKPINew;
         private readonly IAccountGroupAccountRepository _repoAccountGroupAccount;
         private readonly IMapper _mapper;
         private readonly IMailExtension _mailHelper;
@@ -36,6 +37,7 @@ namespace A4KPI._Services.Services
             IAccountRepository repo,
             IOCRepository repoOC,
             IUserRoleRepository repoUserRole,
+            IKPINewRepository repoKPINew,
             IRoleRepository repoRole,
             IAccountGroupAccountRepository repoAccountGroupAccount,
             IMapper mapper,
@@ -46,6 +48,7 @@ namespace A4KPI._Services.Services
         {
             _repo = repo;
             _repoOc = repoOC;
+            _repoKPINew = repoKPINew;
             _repoUserRole = repoUserRole;
             _repoRole = repoRole;
             _repoAccountGroupAccount = repoAccountGroupAccount;
@@ -293,6 +296,12 @@ namespace A4KPI._Services.Services
 
         public async Task<OperationResult> DeleteAsync(int id)
         {
+            var dataKPIAc = _repoKPINew.FindAll(x => x.CreateBy == id).ToList();
+            if (dataKPIAc.Count > 0)
+            {
+                _repoKPINew.RemoveMultiple(dataKPIAc);
+            }
+
             var delete = _repo.FindById(id);
             _repo.Remove(delete);
 

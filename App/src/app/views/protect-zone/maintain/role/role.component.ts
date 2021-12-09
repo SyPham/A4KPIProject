@@ -62,13 +62,20 @@ export class RoleComponent extends BaseComponent implements OnInit {
     });
   }
   delete(id) {
-    this.alertify.confirm('Delete role', 'Are you sure you want to delete this role "' + id + '" ?', () => {
-      this.roleService.delete(id).subscribe(() => {
-        this.getAllRole();
-        this.alertify.success(MessageConstants.DELETED_OK_MSG);
-      }, error => {
-        this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
-      });
+    this.alertify.delete("Delete role",'Are you sure you want to delete this role "' + id + '" ?')
+    .then((result) => {
+      if (result) {
+        this.roleService.delete(id).subscribe(() => {
+          this.getAllRole();
+          this.alertify.success(MessageConstants.DELETED_OK_MSG);
+        }, error => {
+          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+        });
+      }
+    })
+    .catch((err) => {
+      this.getAllRole();
+      this.grid.refresh();
     });
   }
   // end api
@@ -109,7 +116,7 @@ export class RoleComponent extends BaseComponent implements OnInit {
   actionComplete(e: any): void {
     if (e.requestType === 'add') {
       (e.form.elements.namedItem('name') as HTMLInputElement).focus();
-      (e.form.elements.namedItem('id') as HTMLInputElement).disabled = true;
+      // (e.form.elements.namedItem('id') as HTMLInputElement).disabled = true;
     }
   }
   // end event

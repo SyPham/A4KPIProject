@@ -3,7 +3,12 @@
   <p class="loading">Loading data...</p>
 </ngx-spinner>
 
-<div class="app-body">
+<div class="app-body"
+[style.background-image]="
+host === CB_host ? 'url(' + CB_Image + ')' :
+host === SPC_host ? 'url(' + SPC_Image + ')' :
+host === TSH_host ? 'url(' + TSH_Image + ')' : 'url(' + SHC_Image + ')'"
+style="background-repeat: no-repeat; height: 100%;width: 100%; display: block; background-size: 100% 100%;">
   <main class="main d-flex align-items-center" style="margin-top: 20vh;">
     <div class="container">
       <div class="row">

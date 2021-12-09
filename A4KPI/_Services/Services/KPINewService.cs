@@ -228,12 +228,22 @@ namespace A4KPI._Services.Services
                 var picOver = _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).FirstOrDefault().Id;
                 List<int> kpiPicOver = _repoKPIAc.FindAll(x => x.AccountId == picOver).Select(x => x.KpiId).ToList();
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-                var tamp = lists.Where(x => x.LevelOcCreateBy == Level.Level_1 || x.LevelOcCreateBy == Level.Level_2 || x.LevelOcCreateBy == Level.Level_3).ToList();
-                list = tamp.Where(x => x.CreateBy == accountId || kpiPicOver.Contains(x.Id) || kpiMyPic.Contains(x.Id) || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
+                var tamp = lists.Where(
+                    x => x.LevelOcCreateBy == Level.Level_1 
+                    || x.LevelOcCreateBy == Level.Level_2 
+                    || x.LevelOcCreateBy == Level.Level_3).ToList();
+                list = tamp.Where(
+                    x => x.CreateBy == accountId 
+                    || kpiPicOver.Contains(x.Id) 
+                    || kpiMyPic.Contains(x.Id) 
+                    || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
             }
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
             {
-                List<int> picOver = _repoAc.FindAll(x => x.FactId == dataAc.FactId && x.CenterId == dataAc.CenterId && x.DeptId == 0).Select(x => x.Id).ToList();
+                List<int> picOver = _repoAc.FindAll(
+                    x => x.FactId == dataAc.FactId 
+                    && x.CenterId == dataAc.CenterId 
+                    && x.DeptId == 0).Select(x => x.Id).ToList();
                 var kpiPicOver = new List<int>();
                 foreach (var item in picOver)
                 {
@@ -241,7 +251,10 @@ namespace A4KPI._Services.Services
                     kpiPicOver.AddRange(datas);
                 }
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
-                list = lists.Where(x => x.CreateBy == accountId || kpiMyPic.Contains(x.Id) || kpiPicOver.Contains(x.Id)).ToList();
+                list = lists.Where(
+                    x => x.CreateBy == accountId 
+                    || kpiMyPic.Contains(x.Id) 
+                    || kpiPicOver.Contains(x.Id)).ToList();
 
                 foreach (var item in list)
                 {
@@ -398,7 +411,6 @@ namespace A4KPI._Services.Services
                 item.UpdateBy = model.UpdateBy;
                 item.UpdateDate = DateTime.Now;
                 _repo.Update(item);
-
                 var removingList = await _repoKPIAc.FindAll(x => x.KpiId == model.Id).ToListAsync();
                 _repoKPIAc.RemoveMultiple(removingList);
 
@@ -459,7 +471,6 @@ namespace A4KPI._Services.Services
             }
             catch (Exception ex)
             {
-
                 return false;
             }
            

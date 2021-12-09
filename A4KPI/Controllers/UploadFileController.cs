@@ -25,6 +25,7 @@ namespace A4KPI.Controllers
             _currentEnvironment = currentEnvironment;
             _context = context;
         }
+
         [AcceptVerbs("Post")]
         public void Save(int kpiId, DateTime uploadTime)
         {
@@ -79,6 +80,7 @@ namespace A4KPI.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = e.Message;
             }
         }
+
         [AcceptVerbs("Post")]
         public void Remove(int kpiId, DateTime uploadTime)
         {
@@ -124,6 +126,7 @@ namespace A4KPI.Controllers
                 Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Falied to remove!";
             }
         }
+
         [HttpGet]
         public IActionResult Download(int kpiId, DateTime uploadTime)
         {
@@ -140,16 +143,17 @@ namespace A4KPI.Controllers
             }
 
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAttackFiles(int kpiId, DateTime uploadTime)
         {
-              var kpiid = kpiId;
+            var kpiid = kpiId;
             var month = uploadTime.Month == 1 ? 12 : uploadTime.Month - 1;
             var year = uploadTime.Month == 1 ? uploadTime.Year - 1 : uploadTime.Year;
             var ut = new DateTime(year, month, 1);
 
             var data = await _context.UploadFiles.Where(x => x.KPIId == kpiid && x.UploadTime == ut).ToListAsync();
-            var files = data.Select(x=> x.Path ).ToList();
+            var files = data.Select(x => x.Path ).ToList();
             var fileInfoList = new List<PreloadFileDto>();
                 files.ForEach(file =>
                     {
@@ -219,6 +223,7 @@ namespace A4KPI.Controllers
             });
             return Ok(list);
         }
+
         #region Download File  
         private (string fileType, byte[] archiveData, string archiveName) DownloadFiles(int kpiId , DateTime uploadTime)
         {
@@ -230,7 +235,7 @@ namespace A4KPI.Controllers
             var ut = new DateTime(year, month, 1);
 
             var data = _context.UploadFiles.Where(x => x.KPIId == kpiid && x.UploadTime == ut).ToList();
-            var files = data.Select(x=> x.Path ).ToList();
+            var files = data.Select(x => x.Path ).ToList();
             
             using (var memoryStream = new MemoryStream())
             {
@@ -248,7 +253,7 @@ namespace A4KPI.Controllers
             }
 
         }
-          private string GetContentType(string path)
+        private string GetContentType(string path)
         {
             var types = GetMimeTypes();
             var ext = Path.GetExtension(path).ToLowerInvariant();
@@ -272,6 +277,7 @@ namespace A4KPI.Controllers
                 {".csv", "text/csv"}
             };
         }
+
         #endregion
     }
 }

@@ -103,16 +103,12 @@ export class SettingMonthlyComponent extends BaseComponent implements OnInit {
       this.updateModel(item);
     }
     if (args.requestType === 'save' && args.action === 'add') {
-
       const model = {
         CreatedBy: JSON.parse(localStorage.getItem('user')).id,
         Month: this.datePipe.transform(this.monthTime, "YYYY-MM-dd"),
         DisplayTime: this.datePipe.transform(this.displayTime, "YYYY-MM-dd")
       }
-
-
       this.create(model);
-
     }
     if (args.requestType === 'save' && args.action === 'edit') {
       const model = {
