@@ -361,7 +361,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     this.unitId = data.typeId
     this.unitName = data.typeName
     this.kpiId = data.id
-    this.loadDataModel2(this.kpiId)
+    this.loadDataModel2(this.kpiId,this.typeText)
     this.modalRef = this.modalService.open(model, { size: 'lg', backdrop: 'static' });
     this.modalRef.result.then((result) => {
       this.perfomance = []
@@ -499,7 +499,9 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   }
   download(date, model) {
     this.modalRef = this.modalService.open(model, { size: 'sm', backdrop: 'static' });
-    this.todolist2Service.getDownloadFilesMeeting(this.kpiId,date).subscribe((res: any) => {
+    this.todolist2Service
+    .getDownloadFilesMeeting(this.kpiId,date)
+    .subscribe((res: any) => {
       const files = res as any || [];
       this.files = files.map(x=> {
         return {
@@ -520,6 +522,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     //   link.click();
     // });
   }
+
   headerCellInfo(args) {
     if ( args.cell.column.field === 'CustomerID') {
      const toolcontent = args.cell.column.headerText;
@@ -529,9 +532,12 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
     tooltip.appendTo(args.node);
     }
  }
-  loadDataModel2(id) {
+
+  loadDataModel2(id, typeText) {
     this.spinner.show()
-    this.meetingService.getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm")).subscribe((res: any) => {
+    this.meetingService
+    .getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm"))
+    .subscribe((res: any) => {
       this.ytds = res.ytds
       this.policyTitle = res.policy
       this.typeId = res.typeId,
@@ -544,11 +550,13 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
       const dataTable = res.dataTable.filter(x => x.currentMonthData.length > 0)
 
-      this.createChart(
-        'planet-chart',
-        this.labels,
-        this.unitName
-      )
+      if(typeText !== 'string') {
+        this.createChart(
+          'planet-chart',
+          this.labels,
+          this.unitName
+        )
+      }
       // this.changeLocalHome.push(this.dataService.currentMessage.subscribe((res: any)=>{
       //   if(res === 0)
       //     return
@@ -707,11 +715,11 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   // life cycle ejs-grid
   createdManager($event, data) {
     this.managers = this.accounts;
-    this.managers = this.managers.filter(x=> x.id !== data.id);
+    this.managers = this.managers.filter(x => x.id !== data.id);
   }
   createdLeader($event, data) {
-    this.leaders = this.accounts.filter(x=> x.isLeader);
-    this.leaders = this.leaders.filter(x=> x.id !== data.id);
+    this.leaders = this.accounts.filter(x => x.isLeader);
+    this.leaders = this.leaders.filter(x => x.id !== data.id);
   }
   onDoubleClick(args: any): void {
     this.setFocus = args.column; // Get the column from Double click event
@@ -722,6 +730,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   updateModel(data) {
     this.accountGroupItem = data.factory;
   }
+
   actionBegin(args) {
     if (args.requestType === 'add') {
       this.initialModel();
@@ -757,6 +766,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.delete(args.data[0].id);
     }
   }
+
  deleteOption(id) {
   this.ocPolicyService.deletePolicy(id).subscribe(res => {
     if(res) {
@@ -819,6 +829,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
       this.accountGroupData = data;
     });
   }
+
   delete(id) {
     this.ocPolicyService.deletePolicy(id).subscribe(res => {
       if(res) {
