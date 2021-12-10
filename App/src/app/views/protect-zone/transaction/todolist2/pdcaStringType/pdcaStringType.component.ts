@@ -235,7 +235,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   }
   loadPDCAAndResultData() {
     this.gridData = [];
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime, this.userId).subscribe(res => {
       this.gridData = res.data;
       this.result = res.result;
@@ -244,13 +244,13 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   }
   loadActionData() {
     this.actions = [];
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getActionsForUpdatePDCA(this.data.id || 0, currentTime, this.userId ).subscribe(res => {
       this.actions = res.actions as Action[] || [];
     });
   }
   loadKPIData() {
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
       this.typeText = res.typeText
       this.type  = res.type
@@ -261,7 +261,7 @@ export class PdcaStringTypeComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   loadTargetData() {
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;

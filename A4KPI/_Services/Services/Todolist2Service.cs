@@ -214,12 +214,18 @@ namespace A4KPI._Services.Services
             var accountId = userId;
             var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
             var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
-
+            List<int> listLabelData = new List<int>();
             var thisMonthResult = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var thisYearResult = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
             var month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(thisMonthResult);
+            var model = new List<UpdatePDCADto>();
 
-            var model = from a in _repoAction.FindAll(x => x.KPIId == kpiNewId 
+            for (int i = 1; i <= thisMonthResult; i++)
+            {
+                listLabelData.Add(i);
+            }
+            
+            model = (from a in _repoAction.FindAll(x => x.KPIId == kpiNewId 
                         && x.AccountId == accountId 
                         &&  x.CreatedTime.Year == thisYearResult 
                         && x.CreatedTime.Month <= thisMonthResult  )
@@ -250,8 +256,48 @@ namespace A4KPI._Services.Services
                             ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
                             a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Id : null,
                             Target = a.Target
-                        };
-            var data = await model.ToListAsync();
+                        }).ToList();
+
+            foreach (var item in listLabelData)
+            {
+                if (item == 1)
+                {
+                    var model2 = (from a in _repoAction.FindAll(x => x.KPIId == kpiNewId
+                            && x.AccountId == accountId
+                            && x.CreatedTime.Year == thisYearResult - 1
+                            && x.CreatedTime.Month <= 12)
+                            .Where(x =>
+                             (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
+                            ||
+                            (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year <= thisYearResult - 1
+                            && x.CreatedTime.Month <= 12
+                            && !c.Submitted) != null)
+                            || x.ActionStatus.Count == 0
+                            )
+
+                                  select new UpdatePDCADto
+                                  {
+                                      ActionId = a.Id,
+                                      DoId = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Id : 0,
+                                      Content = a.Content,
+                                      DoContent = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Content : "",
+                                      ResultContent = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).ReusltContent : "",
+                                      Achievement = a.Does.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.Does.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Achievement : "",
+                                      Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd/yyyy") : "",
+                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).StatusId : null,
+                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == thisMonthResult).Id : null,
+                                      Target = a.Target
+                                  }).ToList();
+                    model.AddRange(model2);
+                }
+            }
+            var data = model.OrderBy(x => x.ActionId);
             return new
             {
                 Data = data,
@@ -304,6 +350,7 @@ namespace A4KPI._Services.Services
             var month = date.Month;
             //  && x.Actions.Any() == false
             List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
+            //DISPLAY ACTION
             var actions = await _repoKPIAc.FindAll(x => x.AccountId == accountId && x.IsActionSubmit == false ).Select(x => new
             {
                 Id = x.KpiId,
@@ -314,11 +361,11 @@ namespace A4KPI._Services.Services
                 Type = "Action",
                 CurrentTarget = false,
             }).Where(x => x.Level != Level.Level_1).ToListAsync();
-         
+            //END
             var latestMonth = ct.Month - 1;
             var month2 = currentTime.Month == 1 ? 12 : currentTime.Month - 1;
             var year = currentTime.Month == 1 ? currentTime.Year - 1 : currentTime.Year;
-
+            //Display update PDCA
             var updatePDCA = await _repoKPIAc.FindAll(x => x.AccountId == accountId && x.IsActionSubmit).Select(x => new
             {
                 Id = x.KpiId,
@@ -329,7 +376,7 @@ namespace A4KPI._Services.Services
                 Type = "UpdatePDCA",
                 CurrentTarget = _repoTargetPIC.FindAll().Any(y => y.targetId == x.KPINew.Targets.FirstOrDefault(a => a.TargetTime.Year == currentTime.Year && a.TargetTime.Month == currentTime.Month).Id && y.AccountId == accountId && y.IsSubmit) ? false : true,
             }).Where(x => x.CurrentTarget && x.Level != Level.Level_1).ToListAsync();
-
+            // end
             var setting = await _repoSettingMonthly.FindAll(x => x.Month.Date <= ct).OrderByDescending(x => x.DisplayTime).FirstOrDefaultAsync();
 
             if (setting != null)

@@ -495,121 +495,86 @@ namespace A4KPI._Services.Services
             {
                 TargetYTD = _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).FirstOrDefault().YTD;
             }
-
             foreach (var item in listLabelData)
             {
-                string content = null;
-                var contentExist = await _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).ToListAsync();
-                if (contentExist.Count > 0)
-                {
-                    content = _repoResult.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == item + 1).FirstOrDefault().Content.Trim();
-                }
-                var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
-                var currentMonthData = new List<UpdatePDCADto>();
+                var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
-                var undoneList = new List<UpdatePDCADto>();
-                //start => tìm lại list công việc của tháng trước chưa hoàn thành
-                if (item == 1)
+
+                var currentMonthData = new List<UpdatePDCADto>();// list công việc tháng hiện tại
+                var undoneList = new List<UpdatePDCADto>(); // list công việc chưa hoàn thành
+
+                //start
+                if (item == SystemMonth.Jan) // nếu là tháng 1 thì tìm list công việc chưa hoàn thành bắt đầu từ tháng 12 trở về trước của năm trước
                 {
-                    undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month <= 12)
-                        .Where(x =>
-                         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
-                        ||
-                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12 && !c.Submitted) != null)
-                        || x.ActionStatus.Count == 0
-                        )
-                                  select new UpdatePDCADto
-                                  {
-                                      ActionId = a.Id,
-                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12) ?
-                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12).StatusId : null,
-                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12) ?
-                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult - 1 && x.CreatedTime.Month == 12).Id : null
-                                  }).ToList();
+                    undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year < thisYearResult && x.CreatedTime.Month <= SystemMonth.Dec)
+                        select new UpdatePDCADto
+                        {
+                            ActionId = a.Id,
+                            StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year < thisYearResult && x.CreatedTime.Month <= SystemMonth.Dec) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year < thisYearResult && x.CreatedTime.Month <= SystemMonth.Dec).StatusId : null,
+                            ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year < thisYearResult&& x.CreatedTime.Month <= SystemMonth.Dec) ?
+                            a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year < thisYearResult && x.CreatedTime.Month <= SystemMonth.Dec).Id : null
+                        }).Where(y => !hideStatus.Contains((int)y.StatusId)).ToList();
                 }
                 else
                 {
-                    undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
-                        .Where(x =>
-                         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
-                        ||
-                        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
-                        || x.ActionStatus.Count == 0
-                        )
-                                  select new UpdatePDCADto
+                    //tìm list công việc của năm trước chưa hoàn thành => add vào undoneList
+                    var undoneListPreiousYear = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year < thisYearResult && x.CreatedTime.Month <= SystemMonth.Dec)
+                                                 select new UpdatePDCADto
+                                                 {
+                                                     ActionId = a.Id,
+                                                     StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item) ?
+                                                     a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item).StatusId : null,
+                                                     ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item) ?
+                                                     a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item).Id : null
+                                                 }).Where(y => !hideStatus.Contains((int)y.StatusId)).ToList();
+                    if (undoneListPreiousYear.Count > 0)
+                    {
+                        undoneList.AddRange(undoneListPreiousYear);
+                    }
+                    //end
+
+                    //tìm list công việc của năm hiện tại chưa hoàn thành => add vào undoneList
+                    var undoneListCurrentYear = 
+                    (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
+                     select new UpdatePDCADto
                                   {
                                       ActionId = a.Id,
-                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
-                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
-                                  }).ToList();
+                                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item).StatusId : null,
+                                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item) ?
+                                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item).Id : null
+                                  }).Where(y => !hideStatus.Contains((int)y.StatusId)).ToList();
+                    undoneList.AddRange(undoneListCurrentYear);
+                    //end
                 }
-                //undoneList = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month < item)
-                //        .Where(x =>
-                //         (x.ActionStatus.FirstOrDefault(c => hideStatus.Contains(c.StatusId)) == null && x.ActionStatus.Count > 0)
-                //        ||
-                //        (x.ActionStatus.FirstOrDefault(c => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1 && !c.Submitted) != null)
-                //        || x.ActionStatus.Count == 0
-                //        )
-                //                  select new UpdatePDCADto
-                //                  {
-                //                      ActionId = a.Id,
-                //                      StatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                //                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).StatusId : null,
-                //                      ActionStatusId = a.ActionStatus.Any(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1) ?
-                //                      a.ActionStatus.FirstOrDefault(x => x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item - 1).Id : null
-                //                  }).ToList();
                 //end
 
+                //start
                 if (undoneList.Count > 0)
                 {
-                    if (item == 1)
-                    {
-                        currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Month == 12)
-                                            join b in _repoDo.FindAll(x => x.CreatedTime.Month == 12) on a.Id equals b.ActionId into ab
-                                            from sub in ab.DefaultIfEmpty()
-                                            select new UpdatePDCADto
-                                            {
-                                                Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(12),
-                                                ActionId = a.Id,
-                                                DoId = sub == null ? 0 : sub.Id,
-                                                Content = a.Content,
-                                                CreatedTime = a.CreatedTime,
-                                                DoContent = sub == null ? "" : sub.Content,
-                                                ResultContent = sub == null ? "" : sub.ReusltContent,
-                                                Achievement = sub == null ? "" : sub.Achievement,
-                                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                                StatusId = a.StatusId,
-                                                StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= 12).Status.Name.Trim(),
-                                                Target = a.Target,
-                                            }).ToList();
-                    }
-                    else
-                    {
-                        //star công việc tháng hiện tại
-                        currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item)
-                                            join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
-                                            from sub in ab.DefaultIfEmpty()
-                                            select new UpdatePDCADto
-                                            {
-                                                Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
-                                                ActionId = a.Id,
-                                                DoId = sub == null ? 0 : sub.Id,
-                                                Content = a.Content,
-                                                CreatedTime = a.CreatedTime,
-                                                DoContent = sub == null ? "" : sub.Content,
-                                                ResultContent = sub == null ? "" : sub.ReusltContent,
-                                                Achievement = sub == null ? "" : sub.Achievement,
-                                                Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
-                                                StatusId = a.StatusId,
-                                                StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
-                                                Target = a.Target,
-                                            }).ToList();
-                        //end
-                    }
+                    //star => tìm list công việc tháng hiện tại
+                    currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item)
+                                        join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
+                                        from sub in ab.DefaultIfEmpty()
+                                        select new UpdatePDCADto
+                                        {
+                                            Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                            ActionId = a.Id,
+                                            DoId = sub == null ? 0 : sub.Id,
+                                            Content = a.Content,
+                                            CreatedTime = a.CreatedTime,
+                                            DoContent = sub == null ? "" : sub.Content,
+                                            ResultContent = sub == null ? "" : sub.ReusltContent,
+                                            Achievement = sub == null ? "" : sub.Achievement,
+                                            Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                            StatusId = a.StatusId,
+                                            StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month <= item).Status.Name.Trim(),
+                                            Target = a.Target,
+                                        }).ToList();
+                    //end
 
-                    //start => thêm list công việc chưa làm xong của tháng trước vào tháng hiện tại
+                    //thêm list công việc chưa làm xong của tháng trước vào tháng hiện tại
                     foreach (var itemAcs in undoneList)
                     {
                         currentMonthData.Add(new UpdatePDCADto
@@ -630,7 +595,7 @@ namespace A4KPI._Services.Services
                 }
                 else
                 {
-                    //start => công việc tháng hiện tại
+                    //tìm công việc tháng hiện tại
                     currentMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item)
                                         join c in _repoAcs.FindAll(x => x.CreatedTime.Month == item) on a.Id equals c.ActionId
                                         join b in _repoDo.FindAll(x => x.CreatedTime.Month == item) on a.Id equals b.ActionId into ab
@@ -652,8 +617,36 @@ namespace A4KPI._Services.Services
                                         }).ToList();
                     //end
                 }
+                //end
 
-                var nextMonthData = from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item + 1)
+                var nextMonthData = new List<UpdatePDCADto>(); // list công việc tháng tiếp theo
+
+
+                if (item == SystemMonth.Dec) // nếu là tháng 12 thì list công việc tháng tiếp theo sẽ là tháng 1
+                {
+                    nextMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult + 1 && x.CreatedTime.Month == SystemMonth.Jan)
+                                     join b in _repoDo.FindAll(x => x.CreatedTime.Month == SystemMonth.Jan) on a.Id equals b.ActionId into ab
+                                     from sub in ab.DefaultIfEmpty()
+                                     select new UpdatePDCADto
+                                     {
+                                         Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
+                                         ActionId = a.Id,
+                                         DoId = sub == null ? 0 : sub.Id,
+                                         Content = a.Content,
+                                         DoContent = sub == null ? "" : sub.Content,
+                                         ResultContent = sub == null ? "" : sub.ReusltContent,
+                                         Achievement = sub == null ? "" : sub.Achievement,
+                                         Deadline = a.Deadline.HasValue ? a.Deadline.Value.ToString("MM/dd") : "",
+                                         StatusId = a.StatusId,
+                                         StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
+                                         Target = a.Target
+
+                                     }).ToList();
+                }
+                else 
+                {
+
+                    nextMonthData = (from a in _repoAction.FindAll(x => x.KPIId == kpiId && x.CreatedTime.Year == thisYearResult && x.CreatedTime.Month == item + 1)
                                     join b in _repoDo.FindAll(x => x.CreatedTime.Month == item + 1) on a.Id equals b.ActionId into ab
                                     from sub in ab.DefaultIfEmpty()
                                     select new UpdatePDCADto
@@ -670,13 +663,13 @@ namespace A4KPI._Services.Services
                                         StatusName = a.ActionStatus.FirstOrDefault(x => x.ActionId == a.Id && x.CreatedTime.Month == item).Status.Name.Trim(),
                                         Target = a.Target
 
-                                    };
+                                    }).ToList();
+                }
 
                 var dataAdd = new DataTable()
                 {
                     Month = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item),
                     CurrentMonthData = currentMonthData.OrderBy(x => x.CreatedTime),
-                    Content = content,
                     Date = $"{thisYearResult}/{item}/01",
                     KpiId = kpiId,
                     NextMonthData = nextMonthData

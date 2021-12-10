@@ -94,7 +94,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "yyyy-MM-dd HH:mm");
     let systemRole = 1;
     // if (this.content === '') {
     //   this.content = this.accountGroupData[0]?.name;
@@ -136,7 +136,7 @@ export class Todolist2Component implements OnInit, OnDestroy {
   }
 
   selected(args) {
-    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm");
+    this.currentTimeRequest = this.datePipe.transform(this.currentTime, "yyyy-MM-dd HH:mm");
     const index = args.selectedIndex + 1;
     this.index = index;
     let systemRole = 0;

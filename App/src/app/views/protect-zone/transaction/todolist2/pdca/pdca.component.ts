@@ -11,7 +11,6 @@ import { AlertifyService } from 'src/app/_core/_service/alertify.service';
 import { Todolist2Service } from 'src/app/_core/_service/todolist2.service';
 import { Subscription } from 'rxjs';
 declare var $: any;
-
 @Component({
   selector: 'app-pdca',
   templateUrl: './pdca.component.html',
@@ -54,7 +53,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   ytdValue;
   thisMonthYTDValue;
   subscription: Subscription[] = [];
-  base = environment.apiUrl.replace('/api/', '');
+  base: any
   public allowExtensions: string = '.doc, .docx, .xls, .xlsx, .pdf';
   files = [];
   filesLeft = [];
@@ -72,7 +71,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     public modalService: NgbModal,
     private env: EnvService
   ) {
-    this.base = this.env.apiUrl
+    this.base = this.env.apiUrl.replace('/api/', '')
    }
   ngOnDestroy(): void {
     this.subscription.forEach(item => item.unsubscribe());
@@ -83,6 +82,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     })
 
   }
+
   ngOnInit() {
     this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     this.dpParams = { params: {
@@ -96,12 +96,14 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadStatusData();
     this.loadData();
   }
+
   dataBound(args){
     var headercelldiv = this.grid.element.getElementsByClassName("e-headercelldiv") as any;
     for (var i=0; i<headercelldiv.length; i++){
       headercelldiv[i].style.height = 'auto';
     };
   }
+
   openUploadModalComponent() {
     const modalRef = this.modalService.open(UploadFileComponent, { size: 'md', backdrop: 'static', keyboard: false });
     modalRef.componentInstance.data = this.data;
@@ -110,9 +112,11 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     }, (reason) => {
     });
   }
+
   NO(index) {
     return (this.grid.pageSettings.currentPage - 1) * this.pageSettings.pageSize + Number(index) + 1;
   }
+
   onChangeThisMonthPerformance(value) {
     if (this.thisMonthPerformance != null) {
       this.thisMonthPerformance.performance = +value;
@@ -130,6 +134,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
   }
+
   onChangeThisMonthTarget(value) {
     if (this.thisMonthTarget != null) {
       this.thisMonthTarget.value = +value;
@@ -147,6 +152,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
   }
+
   onChangeNextMonthTarget(value) {
     if (this.nextMonthTarget != null) {
       this.nextMonthTarget.value = +value;
@@ -165,6 +171,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
   }
+
   onChangeThisMonthYTD(value) {
     if (this.thisMonthYTD != null) {
       this.thisMonthYTD.yTD = +value;
@@ -182,6 +189,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
   }
+
   download() {
     this.todolist2Service.download(this.data.id, (this.currentTime as Date).toLocaleDateString() ).subscribe((data: any) => {
       const blob = new Blob([data],
@@ -201,24 +209,27 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.targetYTD != null) {
       this.targetYTD.value = +value;
     } else {
-    this.targetYTD = {
-      id: 0,
-      value: +value,
-      createdTime: new Date().toISOString(),
-      modifiedBy: null,
-      modifiedTime: null,
-      createdBy: +JSON.parse(localStorage.getItem('user')).id,
-      kPIId: this.data.id
-    };
+      this.targetYTD = {
+        id: 0,
+        value: +value,
+        createdTime: new Date().toISOString(),
+        modifiedBy: null,
+        modifiedTime: null,
+        createdBy: +JSON.parse(localStorage.getItem('user')).id,
+        kPIId: this.data.id
+      };
+    }
   }
-  }
+
   onChangeContent(value, i) {
     this.gridData[i].doContent = value;
   }
+
   onChangeArchivement(value, i) {
     this.gridData[i].achievement = value;
 
   }
+
   onChangeStatus(value, i, item) {
     this.addOrUpdateStatus(item, (res) => {
       this.gridData[i].statusId = JSON.parse(value);
@@ -230,14 +241,16 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   onChangeResult(value, i) {
     this.gridData[i].resultContent = value;
   }
+
   loadData() {
     this.loadKPIData();
     this.loadTargetData();
     this.loadPDCAAndResultData();
     this.loadActionData();
   }
+
   loadPDCAAndResultData() {
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     console.log('currentTime',currentTime);
     this.gridData = [];
     this.todolist2Service.getPDCAForL0(this.data.id || 0, currentTime, this.userId).subscribe(res => {
@@ -247,15 +260,17 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.content = this.result?.content;
     });
   }
+
   loadActionData() {
     this.actions = [];
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getActionsForUpdatePDCA(this.data.id || 0, currentTime, this.userId).subscribe(res => {
       this.actions = res.actions as Action[] || [];
     });
   }
+
   loadKPIData() {
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getKPIForUpdatePDC(this.data.id || 0, currentTime).subscribe(res => {
       this.typeText = res.typeText
       this.type  = res.type
@@ -266,7 +281,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadTargetData() {
-    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "YYYY-MM-dd");
+    const currentTime = this.datePipe.transform((this.currentTime as Date).toLocaleDateString(), "yyyy-MM-dd");
     this.todolist2Service.getTargetForUpdatePDCA(this.data.id || 0, currentTime).subscribe(res => {
       this.thisMonthYTD = res.thisMonthYTD;
       this.thisMonthPerformance = res.thisMonthPerformance;
@@ -281,6 +296,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.thisMonthYTDValue = this.thisMonthYTD?.ytd !== 0 ? this.thisMonthYTD?.ytd : null
     });
   }
+
   loadStatusData() {
     this.status = [];
     this.todolist2Service.getStatus().subscribe(res => {
@@ -288,15 +304,18 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     });
   }
+
   submit() {
     this.post(true);
   }
+
   back() {
     //this.post(false);
     this.save(false);
     // this.activeModal.close();
 
   }
+
   validate(submitted) {
     if (this.typeText !== 'string' && submitted === true) {
 
@@ -351,6 +370,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return true;
   }
+
   actionBegin(args) {
     if(args.requestType === 'save' && args.action === 'edit') {
       for (let item in this.grid.dataSource) {
@@ -371,6 +391,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   }
+
   delete(id) {
     this.todolist2Service.deleteAc(id).subscribe(
       (res) => {
@@ -385,6 +406,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
   }
+
   save(submitted) {
     this.grid.editModule.endEdit()
     if (this.validate(submitted) == false) return;
@@ -481,6 +503,7 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       (err) => this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG)
     );
   }
+
   post(submitted) {
     this.grid.editModule.endEdit()
     if (this.validate(submitted) == false) return;
@@ -598,12 +621,14 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.todolist2Service.getDownloadFiles(this.data.id, (this.currentTime as Date).toLocaleDateString()).subscribe(res => {
       this.files = [];
       const files = res as any || [];
+
       this.files = files.map(x=> {
         return {
           name: x.name,
           path: this.base + x.path
         }
       });
+      console.log('files' , this.files);
       this.filesLeft = [];
       this.filesRight = [];
       let i = 0;
@@ -617,4 +642,5 @@ export class PdcaComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
+
 }

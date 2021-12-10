@@ -536,7 +536,7 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
   loadDataModel2(id, typeText) {
     this.spinner.show()
     this.meetingService
-    .getChartWithTime(id,this.datePipe.transform(this.currentTime, "YYYY-MM-dd HH:mm"))
+    .getChartWithTime(id,this.datePipe.transform(this.currentTime, "yyyy-MM-dd HH:mm"))
     .subscribe((res: any) => {
       this.ytds = res.ytds
       this.policyTitle = res.policy
@@ -557,28 +557,6 @@ export class MeetingComponent extends BaseComponent implements OnInit , AfterVie
           this.unitName
         )
       }
-      // this.changeLocalHome.push(this.dataService.currentMessage.subscribe((res: any)=>{
-      //   if(res === 0)
-      //     return
-      //   if(res.value > 0 || res.value !== undefined)
-      //     this.dataHeight = []
-      //     this.dataHeight.push(
-      //       {
-      //         value: res.value,
-      //         actionId: res.actionId,
-      //         month: res.month
-      //       }
-      //     )
-      //     for (let item of dataTable) {
-      //         for (let items in item.nextMonthData) {
-      //           let i = Number(items);
-      //           if(item.nextMonthData[i].actionId === res.actionId && item.nextMonthData[i].month === res.month) {
-      //             item.nextMonthData[i].heightA = res.value
-      //             break;
-      //           }
-      //         }
-      //     }
-      // }))
       this.changeLocalHome.push(this.dataService.currentMessagesTarget.subscribe((res: any)=>{
         if(res === 0)
           return
