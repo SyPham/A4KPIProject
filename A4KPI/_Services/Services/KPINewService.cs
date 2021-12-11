@@ -159,7 +159,7 @@ namespace A4KPI._Services.Services
             return data;
         }
 
-        public async Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd(string lang , int userId)
+        public async Task<object> GetAllAsTreeView2nd3rd(string lang , int userId)
         {
 
             var accountId = userId;
@@ -225,17 +225,22 @@ namespace A4KPI._Services.Services
             {
                 List<int> OcIdUnder = _repoOc.FindAll(x => x.ParentId == dataAc.CenterId).Select(x => x.Id).ToList();
                 var OcIdOver = _repoOc.FindAll(x => x.Id == dataAc.CenterId).FirstOrDefault().ParentId;
-                var picOver = _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0).FirstOrDefault().Id;
+                var picOver = _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0 && x.Manager > 0).FirstOrDefault() != null 
+                    ? _repoAc.FindAll(x => x.FactId == OcIdOver && x.CenterId == 0 && x.DeptId == 0 && x.Manager > 0).FirstOrDefault().Id : 0;
+                if (picOver == 0)
+                {
+                    return false;
+                }
                 List<int> kpiPicOver = _repoKPIAc.FindAll(x => x.AccountId == picOver).Select(x => x.KpiId).ToList();
                 List<int> kpiMyPic = _repoKPIAc.FindAll(x => x.AccountId == accountId).Select(x => x.KpiId).ToList();
                 var tamp = lists.Where(
-                    x => x.LevelOcCreateBy == Level.Level_1 
-                    || x.LevelOcCreateBy == Level.Level_2 
+                    x => x.LevelOcCreateBy == Level.Level_1
+                    || x.LevelOcCreateBy == Level.Level_2
                     || x.LevelOcCreateBy == Level.Level_3).ToList();
                 list = tamp.Where(
-                    x => x.CreateBy == accountId 
-                    || kpiPicOver.Contains(x.Id) 
-                    || kpiMyPic.Contains(x.Id) 
+                    x => x.CreateBy == accountId
+                    || kpiPicOver.Contains(x.Id)
+                    || kpiMyPic.Contains(x.Id)
                     || OcIdUnder.Contains(x.OcIdCreateBy.ToInt())).ToList();
             }
             if (dataAc.FactId > 0 && dataAc.CenterId > 0 && dataAc.DeptId > 0)
@@ -459,10 +464,21 @@ namespace A4KPI._Services.Services
         {
             var item = _repo.FindById(id);
             var itemChild = _repo.FindAll(x => x.ParentId == id).ToList();
+            var itemSubChild = new List<KPINew>();
             if (itemChild != null)
             {
+                foreach (var items in itemChild)
+                {
+                    var itemSubChilds = _repo.FindAll(x => x.ParentId == items.Id).ToList();
+                    if (itemSubChilds != null)
+                    {
+                        itemSubChild.AddRange(itemSubChilds);
+                    }
+                }
+                _repo.RemoveMultiple(itemSubChild);
                 _repo.RemoveMultiple(itemChild);
             }
+            
             try
             {
                 _repo.Remove(item);

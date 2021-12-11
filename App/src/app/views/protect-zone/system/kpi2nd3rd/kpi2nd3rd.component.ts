@@ -396,6 +396,8 @@ export class Kpi2nd3rdComponent implements OnInit {
   getBuildingsAsTreeView() {
     const lang = localStorage.getItem('lang');
     this.kpiNewService.getTree2nd3rd(lang, this.userId).subscribe((res) => {
+      if (res === false)
+        this.alertify.warning("Please add manager for Factory Head account to view KPIs!!!");
       this.data = res;
     });
   }

@@ -41,6 +41,7 @@ namespace A4KPI
                  options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
                  options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
              });
+
             var connetionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DataContext>(options =>
             {
@@ -166,9 +167,11 @@ namespace A4KPI
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors(x => x.AllowAnyHeader()
-               .AllowAnyMethod()
-               .AllowAnyOrigin());
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
             app.UseSwagger();
             app.UseAuthentication();
             app.UseAuthorization();

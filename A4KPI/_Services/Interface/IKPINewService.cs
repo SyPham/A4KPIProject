@@ -25,7 +25,7 @@ namespace A4KPI._Services.Services
         Task<OperationResult> AddAsync(KPINewDto model);
         Task<OperationResult> UpdateAsync(KPINewDto model);
         Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView(string lang);
-        Task<IEnumerable<HierarchyNode<KPINewDto>>> GetAllAsTreeView2nd3rd(string lang, int userId);
+        Task<object> GetAllAsTreeView2nd3rd(string lang, int userId);
     }
     
 }

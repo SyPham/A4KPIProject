@@ -33,6 +33,8 @@ namespace A4KPI.DTO
         public string UpdateName { get; set; }
 
         public string UpdateDate { get; set; }
+        //public string StartDisplayMeetingTime { get; set; }
+        //public string EndDisplayMeetingTime { get; set; }
 
         public int? FactId { get; set; }
         public int? CenterId { get; set; }
@@ -41,6 +43,7 @@ namespace A4KPI.DTO
         public string FactName { get; set; }
         public string CenterName { get; set; }
         public string DeptName { get; set; }
+        //public bool IsManager { get; set; }
 
         public List<int> KpiIds { get; set; }
 

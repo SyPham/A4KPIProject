@@ -495,12 +495,14 @@ namespace A4KPI._Services.Services
             {
                 TargetYTD = _repoTarget.FindAll(x => x.KPIId == kpiId && x.TargetTime.Month == thisMonthResult && x.CreatedTime.Year == thisYearResult).FirstOrDefault().YTD;
             }
+
             foreach (var item in listLabelData)
             {
                 var displayStatus = new List<int> { Constants.Status.Processing, Constants.Status.NotYetStart, Constants.Status.Postpone };
                 var hideStatus = new List<int> { Constants.Status.Complete, Constants.Status.Terminate };
 
-                var currentMonthData = new List<UpdatePDCADto>();// list công việc tháng hiện tại
+
+                var currentMonthData = new List<UpdatePDCADto>(); // list công việc tháng hiện tại
                 var undoneList = new List<UpdatePDCADto>(); // list công việc chưa hoàn thành
 
                 //start
@@ -665,6 +667,8 @@ namespace A4KPI._Services.Services
 
                                     }).ToList();
                 }
+
+
 
                 var dataAdd = new DataTable()
                 {
