@@ -1,5 +1,7 @@
+import { DatePipe } from '@angular/common'
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap'
+import { IEditCell } from '@syncfusion/ej2-angular-grids'
 import { TreeGridComponent } from '@syncfusion/ej2-angular-treegrid'
 import { getValue, isNullOrUndefined } from '@syncfusion/ej2-base'
 import { ModalDirective } from 'ngx-bootstrap/modal'
@@ -14,7 +16,8 @@ import { OcService } from './../../../../_core/_service/oc.service'
 @Component({
   selector: 'app-kpi2nd3rd',
   templateUrl: './kpi2nd3rd.component.html',
-  styleUrls: ['./kpi2nd3rd.component.scss']
+  styleUrls: ['./kpi2nd3rd.component.scss'],
+  providers:[DatePipe]
 })
 export class Kpi2nd3rdComponent implements OnInit {
 
@@ -55,6 +58,9 @@ export class Kpi2nd3rdComponent implements OnInit {
   kpiname: any = null
   userId: number
   currentLevel: any
+  startTime = new Date();
+  endTime = new Date();
+  public dpParams: IEditCell;
   constructor(
     private ocService: OcService,
     private modalServices: NgbModal,
@@ -62,6 +68,7 @@ export class Kpi2nd3rdComponent implements OnInit {
     private accountService: Account2Service,
     private kpiNewService: KpinewService,
     private alertify: AlertifyService,
+    private datePipe: DatePipe
 
   ) {}
 
@@ -70,6 +77,11 @@ export class Kpi2nd3rdComponent implements OnInit {
     if (localStorage.getItem('user') !== null) {
       this.userId = Number(JSON.parse(localStorage.getItem('user')).id);
     }
+    this.dpParams = { params: {
+      value: new Date() ,
+      min: new Date()
+    } };
+
     this.editing = { allowDeleting: true, allowEditing: true, mode: "Row" };
     this.toolbar = ["Delete", "Search", "Update", "Cancel"];
     this.optionTreeGrid();
@@ -131,7 +143,9 @@ export class Kpi2nd3rdComponent implements OnInit {
       Level: this.level,
       Pic: this.picId,
       UpdateBy: this.userId,
-      KpiIds: this.picItem
+      KpiIds: this.picItem,
+      StartDisplayMeetingTime: this.datePipe.transform(this.startTime, "yyy-MM-dd"),
+      EndDisplayMeetingTime: this.datePipe.transform(this.endTime, "yyy-MM-dd")
     }
     if (this.validation()) {
       this.kpiNewService.add(model).subscribe(res => {
@@ -324,6 +338,11 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.typeId = data.typeId
     this.picId = data.pic
     this.picItem = data.pics;
+    console.log(data);
+    if(data.startDisplayMeetingTime !== null)
+      this.startTime = new Date(data.startDisplayMeetingTime)
+    if(data.endDisplayMeetingTime !== null)
+      this.endTime = new Date(data.endDisplayMeetingTime)
   }
   actionComplete(args) {
     if (args.requestType === 'beginEdit') {
@@ -346,7 +365,9 @@ export class Kpi2nd3rdComponent implements OnInit {
         ParentId: args.data.entity.parentId,
         Pic: this.picId,
         UpdateBy: this.userId,
-        KpiIds: this.picItem
+        KpiIds: this.picItem,
+        StartDisplayMeetingTime: this.datePipe.transform(this.startTime, "yyy-MM-dd"),
+        EndDisplayMeetingTime: this.datePipe.transform(this.endTime, "yyy-MM-dd")
       }
       this.update(model);
     }

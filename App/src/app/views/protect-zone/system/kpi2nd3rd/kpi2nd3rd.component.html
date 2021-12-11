@@ -49,17 +49,7 @@
                 {{"KPI Name 2" | translate}}
               </ng-template>
             </e-column>
-            <!-- <e-column field="policyName" headerText="Policy" textAlign='Center'>
-              <ng-template #headerTemplate let-data>
-                {{"PolicyNew" | translate}}
-              </ng-template>
-              <ng-template #template let-data>
-                {{data.entity.policyName}}
-              </ng-template>
-              <ng-template #editTemplate let-data>
-                <ejs-dropdownlist [(ngModel)]='policyId' [allowFiltering]='true' [fields]="policyFields" placeholder='Select a policy' [dataSource]='policyData'></ejs-dropdownlist>
-              </ng-template>
-            </e-column> -->
+
             <e-column field="typeName" headerText="Type" textAlign='Center'>
               <ng-template #headerTemplate let-data>
                 {{"TypeNew" | translate}}
@@ -103,6 +93,7 @@
                 {{data.entity.updateName}}
               </ng-template>
             </e-column>
+
             <e-column field="entity.updateDate" headerText="The last edit date" textAlign='Center'>
               <ng-template #headerTemplate let-data>
                 {{"editdate" | translate}}
@@ -115,6 +106,32 @@
                 {{data.entity.updateDate | date: 'MM/dd/yyyy'}}
               </ng-template>
             </e-column>
+
+            <e-column field='entity.startDisplayMeetingTime' width=150 editType= 'datepickeredit' [edit]='dpParams' headerText='Start Meeting Display Time' type='date' format='MM/dd/yyyy' editType='datepickeredit'>
+              <ng-template #template let-data>
+                {{data.entity.startDisplayMeetingTime | date: 'MM/dd/yyyy'}}
+
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <kendo-datepicker style="width: 100%;"
+                    [(ngModel)]="startTime"
+                    >
+                  </kendo-datepicker>
+              </ng-template>
+
+            </e-column>
+
+            <e-column field='entity.endDisplayMeetingTime' width=150  headerText='End Meeting Display Time' type='date' >
+              <ng-template #template let-data>
+                {{data.entity.endDisplayMeetingTime | date: 'MM/dd/yyyy'}}
+
+              </ng-template>
+              <ng-template #editTemplate let-data>
+                <kendo-datepicker style="width: 100%;" [(ngModel)]="endTime"  >
+                </kendo-datepicker>
+              </ng-template>
+            </e-column>
+
           </e-columns>
         </ejs-treegrid>
 
@@ -152,6 +169,22 @@
                   <label for="">{{"PICNew" | translate}}</label>
                   <ejs-multiselect [(ngModel)]='picItem' [fields]="picFields" [showDropDownIcon]='true' mode='CheckBox' placeholder='Select PIC' [dataSource]='accountData'></ejs-multiselect>
                   <!-- <ejs-dropdownlist [(ngModel)]='picId' [allowFiltering]='true' [fields]="picFields" placeholder='Select a manager' [dataSource]='accountData'></ejs-dropdownlist> -->
+                </div>
+
+                <div class="form-group">
+                  <label for="">Start Meeting Display Time</label>
+                  <kendo-datepicker style="width: 100%;"
+                    [(ngModel)]="startTime"
+                    >
+                  </kendo-datepicker>
+                </div>
+
+                <div class="form-group">
+                  <label for="">End Meeting Display Time</label>
+                  <kendo-datepicker style="width: 100%;"
+                    [(ngModel)]="endTime"
+                    >
+                  </kendo-datepicker>
                 </div>
               </div>
             </div>

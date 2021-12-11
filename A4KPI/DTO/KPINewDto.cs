@@ -33,8 +33,10 @@ namespace A4KPI.DTO
         public string UpdateName { get; set; }
 
         public string UpdateDate { get; set; }
-        //public string StartDisplayMeetingTime { get; set; }
-        //public string EndDisplayMeetingTime { get; set; }
+
+        public DateTime? StartDisplayMeetingTime { get; set; }
+
+        public DateTime? EndDisplayMeetingTime { get; set; }
 
         public int? FactId { get; set; }
         public int? CenterId { get; set; }

@@ -180,6 +180,8 @@ namespace A4KPI._Services.Services
                     OcIdCreateBy = x.OcIdCreateBy,
                     TypeId = x.TypeId,
                     Level = x.Level,
+                    StartDisplayMeetingTime = x.StartDisplayMeetingTime,
+                    EndDisplayMeetingTime = x.EndDisplayMeetingTime,
                     TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameEn,
                     PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                     UpdateDate = x.UpdateDate.ToString(),
@@ -205,6 +207,8 @@ namespace A4KPI._Services.Services
                     OcIdCreateBy = x.OcIdCreateBy,
                     TypeId = x.TypeId,
                     Level = x.Level,
+                    StartDisplayMeetingTime = x.StartDisplayMeetingTime,
+                    EndDisplayMeetingTime = x.EndDisplayMeetingTime,
                     TypeName = x.TypeId == 0 ? "" : _repoType.FindAll(y => y.Id == x.TypeId).FirstOrDefault().NameZh,
                     PICName = x.KPIAccounts.Count > 0 ? String.Join(" , ", x.KPIAccounts.Select(x => _repoAc.FindById(x.AccountId).FullName)) : null,
                     UpdateDate = x.UpdateDate.ToString(),
@@ -284,6 +288,8 @@ namespace A4KPI._Services.Services
                 PICName = x.PICName,
                 UpdateName = x.UpdateName,
                 FactId = x.FactId,
+                StartDisplayMeetingTime = x.StartDisplayMeetingTime,
+                EndDisplayMeetingTime = x.EndDisplayMeetingTime,
                 CenterId = x.CenterId,
                 DeptId = x.DeptId,
                 UpdateDate = x.UpdateDate,
@@ -364,6 +370,8 @@ namespace A4KPI._Services.Services
                 model.LevelOcCreateBy = levelCreateBy;
                 model.CreateBy = model.UpdateBy;
                 model.UpdateBy = model.UpdateBy;
+                model.StartDisplayMeetingTime = model.StartDisplayMeetingTime;
+                model.EndDisplayMeetingTime = model.EndDisplayMeetingTime;
                 var item = _mapper.Map<KPINew>(model);
                 item.UpdateDate = DateTime.Now;
 
@@ -415,6 +423,8 @@ namespace A4KPI._Services.Services
                 item.TypeId = model.TypeId;
                 item.UpdateBy = model.UpdateBy;
                 item.UpdateDate = DateTime.Now;
+                item.StartDisplayMeetingTime = model.StartDisplayMeetingTime;
+                item.EndDisplayMeetingTime = model.EndDisplayMeetingTime;
                 _repo.Update(item);
                 var removingList = await _repoKPIAc.FindAll(x => x.KpiId == model.Id).ToListAsync();
                 _repoKPIAc.RemoveMultiple(removingList);

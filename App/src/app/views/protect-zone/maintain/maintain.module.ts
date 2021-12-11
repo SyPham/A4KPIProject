@@ -30,7 +30,7 @@ import { AccountGroupComponent } from '../system/account-group/account-group.com
 import { AccountComponent } from '../system/account/account.component';
 import { TreeViewAllModule, TreeViewModule } from '@syncfusion/ej2-angular-navigations';
 import { NgxSpinnerModule } from 'ngx-spinner';
-
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 // import { PeriodComponent } from './period/period.component';
 export function HttpLoaderFactory(http: HttpClient) {
@@ -99,6 +99,7 @@ loadCldr(
     MultiSelectAllModule,
     TreeViewAllModule,
     TreeViewModule ,
+    DatePickerModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
