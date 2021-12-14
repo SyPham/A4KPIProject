@@ -13,6 +13,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using A4KPI.Constants;
+using A4KPI._Services.Interface;
 
 namespace A4KPI._Services.Services
 {

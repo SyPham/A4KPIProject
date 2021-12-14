@@ -17,7 +17,7 @@ using Microsoft.Extensions.Configuration;
 using A4KPI._Repositories.Repositories;
 using A4KPI.Data;
 
-namespace A4KPI._Repositories.Interface
+namespace A4KPI._Repositories.Repositories
 {
 
     public class AccountRepository : RepositoryBase<Account>, IAccountRepository

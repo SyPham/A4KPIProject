@@ -14,6 +14,7 @@ namespace A4KPI.Constants
         public static string DeleteSuccess = "Xóa thành công";
         public static string DeleteError = "Xóa thất bại";
         public static string NotFoundData = "Dữ liệu không còn tồn tại trong hệ thống";
+        public static string DataExist = "Data already exists on the system";
 
         public static string LockSuccess = "Khóa tài khoản thành công";
         public static string UnlockSuccess = "Mở khóa tài khoản thành công";

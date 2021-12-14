@@ -338,7 +338,6 @@ export class Kpi2nd3rdComponent implements OnInit {
     this.typeId = data.typeId
     this.picId = data.pic
     this.picItem = data.pics;
-    console.log(data);
     if(data.startDisplayMeetingTime !== null)
       this.startTime = new Date(data.startDisplayMeetingTime)
     if(data.endDisplayMeetingTime !== null)

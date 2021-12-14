@@ -2,7 +2,7 @@
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../_core/_service/auth.service';
 import { AlertifyService } from '../../_core/_service/alertify.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from 'src/app/_core/_service/header.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CalendarsService } from 'src/app/_core/_service/calendars.service';
@@ -22,6 +22,10 @@ import * as signalr from '../../../assets/js/ec-client.js';
 import { HubConnectionState } from '@microsoft/signalr';
 import { navItems, navItemsEN, navItemsVI } from 'src/app/_nav';
 import { Authv2Service } from 'src/app/_core/_service/authv2.service';
+import { Account2Service } from 'src/app/_core/_service/account2.service';
+import { Account } from 'src/app/_core/_model/account';
+import { IRole } from 'src/app/_core/_model/role';
+import { FunctionSystem } from 'src/app/_core/_model/application-user';
 
 @Component({
   selector: 'app-dashboard',
@@ -53,17 +57,23 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   zh: any;
   menus: any;
   modalReference: any;
+  remember: any;
   @HostListener('window:scroll', ['$event'])
   onScroll(e) {
-    console.log('window', e);
   }
   online: number;
   userID: number;
   userName: any;
   data: [] = [];
   firstItem: any;
+  userData: any;
+  functions: FunctionSystem[];
+  fieldsRole: object = { text: 'fullName', value: 'username' };
+  uri: any;
+  values: string
   constructor(
-    private authService: AuthService,
+    private versionService: VersionService,
+    private authService: Authv2Service,
     private authenticationService: Authv2Service,
     private roleService: RoleService,
     private alertify: AlertifyService,
@@ -75,58 +85,46 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
     private dataService: DataService,
     private spinner: NgxSpinnerService,
     private cookieService: CookieService,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
+    private service: Account2Service,
+
     public translate: TranslateService
 
   ) {
-    // this.vi = require('../../../assets/ej2-lang/vi.json');
-    // this.en = require('../../../assets/ej2-lang/en.json');
-    // this.role = JSON.parse(localStorage.getItem('level'));
-    // this.value = localStorage.getItem('lang');
-    // const user = JSON.parse(localStorage.getItem("user"));
-    // this.userName = user?.fullName;
-    // this.userID = user?.id;
-    // const navs = this.value == 'vi'? navItemsVI : this.value === 'en'? navItemsEN : navItems;
-    // this.navItems = navs
+
 
     this.vi = require('../../../assets/ej2-lang/vi.json');
     this.en = require('../../../assets/ej2-lang/en.json');
     this.role = JSON.parse(localStorage.getItem('level'));
     this.value = localStorage.getItem('lang');
     const user = JSON.parse(localStorage.getItem("user"));
-    this.userName = user?.fullName;
+    if(localStorage.getItem('anonymous') === "yes") {
+      this.userName = "admin";
+    }
+    else {
+      this.userName = user?.fullName;
+    }
+    // this.values = user?.username;
     this.userID = user?.id;
+    this.uri = this.route.snapshot.queryParams.uri || '/transaction/todolist2';
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
   }
   onActivate(event) {
     window.scroll(0,0);
-    console.log(event);
     //or document.body.scrollTop = 0;
     //or document.querySelector('body').scrollTo(0,0)
   }
   ngOnInit(): void {
-    if (signalr.CONNECTION_HUB.state === HubConnectionState.Connected) {
-      signalr.CONNECTION_HUB
-        .invoke('CheckOnline', this.userID, this.userName)
-        .catch(error => {
-          console.log(`CheckOnline error: ${error}`);
-        }
-        );
-      signalr.CONNECTION_HUB.on('Online', (users) => {
-        this.online = users;
-      });
 
-      signalr.CONNECTION_HUB.on('UserOnline', (userNames: any) => {
-        const userNameList = JSON.stringify(userNames);
-        localStorage.setItem('userOnline', userNameList);
-      });
-    }
-    // this.versionService.getAllVersion().subscribe((item: any) => {
-    //   this.data = item;
-    //   this.firstItem = item[0] || {};
-    // });
+    this.getAccounts()
+
+    this.versionService.getAllVersion().subscribe((item: any) => {
+      this.data = item;
+      this.firstItem = item[0] || {};
+    });
 
     this.langsData = [, { id: 'zh', name: '中文' },
      { id: 'en', name: 'EN' },
@@ -135,6 +133,7 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
 
     // this.getAvatar();
     this.currentUser = JSON.parse(localStorage.getItem('user')).fullName;
+    this.values = JSON.parse(localStorage.getItem('user')).username;
     this.page = 1;
     this.pageSize = 10;
 
@@ -147,7 +146,86 @@ export class DefaultLayoutComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // this.getBuilding();
   }
+  onChangeRole(args) {
+    // this.userID = data.id;
+    this.userName = args.itemData.username;
+    this.loginAnonymous()
+  }
+  authentication() {
+    return this.authService
+      .loginAnonymous(this.userName).toPromise();
+  }
+  async loginAnonymous() {
+    // this.authenticationService.logOut();
+    this.spinner.show();
 
+    try {
+      await this.authentication();
+      const userId = JSON.parse(localStorage.getItem('user')).id;
+      const currentLang = localStorage.getItem('lang');
+
+      const roleUser = await this.roleService.getRoleByUserID(userId).toPromise();
+      localStorage.setItem('level', JSON.stringify(roleUser));
+      this.authService.setRoleValue(roleUser as IRole);
+
+      if (currentLang) {
+        localStorage.setItem('lang', currentLang);
+        await this.permissionService.getMenuByLangID(userId, currentLang).toPromise();
+      } else {
+        localStorage.setItem('lang', 'zh');
+        await this.permissionService.getMenuByLangID(userId, 'zh').toPromise();
+
+      }
+
+      const functions = await this.permissionService.getActionInFunctionByRoleID(roleUser.id).toPromise();
+      this.functions = functions as FunctionSystem[];
+      localStorage.setItem("functions", JSON.stringify(functions));
+      this.authService.setFunctions(functions as any);
+
+      if (this.remember) {
+        this.cookieService.set('remember', 'Yes');
+        this.cookieService.set('username', this.userName);
+      } else {
+        this.cookieService.set('remember', 'No');
+        this.cookieService.set('username', '');
+        this.cookieService.set('password', '');
+        this.cookieService.set('systemCode', '');
+      }
+      setTimeout(() => {
+        const check = this.checkRole();
+        if (check) {
+          const uri = decodeURI(this.uri);
+          this.router.navigate([uri]);
+        } else {
+          this.router.navigate([this.functions[0].url]);
+        }
+
+      });
+      window.location.reload()
+      this.spinner.hide();
+
+    } catch (error) {
+      this.spinner.hide();
+    }
+  }
+  checkRole(): boolean {
+    const uri = decodeURI(this.uri);
+    const permissions = this.functions.map(x => x.url);
+    for (const url of permissions) {
+      if (uri.includes(url)) {
+        return true;
+      }
+    }
+    return false;
+
+  }
+  getAccounts() {
+    this.service.getAll().subscribe(data => {
+      this.userData = data;
+      this.userData.unshift({ username: "admin", fullName: "Default(Admin)" });
+    });
+
+  }
   getMenu() {
     const navs = JSON.parse(localStorage.getItem('navs'));
     if (navs === null) {

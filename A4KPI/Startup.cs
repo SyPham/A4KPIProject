@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using A4KPI._Repositories.Interface;
 using A4KPI._Repositories.Repositories;
+using A4KPI._Services.Interface;
 
 namespace A4KPI
 {
@@ -127,6 +128,7 @@ namespace A4KPI
             services.AddScoped<ITodolist2Repository, Todolist2Repository>();
             services.AddScoped<IActionStatusRepository, ActionStatusRepository>();
             services.AddScoped<IActionRepository, ActionRepository>();
+            services.AddScoped<IVersionRepository, VersionRepository>();
 
             //Services
             services.AddScoped<IMailExtension, MailExtension>();
@@ -151,6 +153,7 @@ namespace A4KPI
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IKPINewService, KPINewService>();
             services.AddScoped<IToDoList2Service, Todolist2Service>();
+            services.AddScoped<IVersionService, VersionService>();
 
         }
 

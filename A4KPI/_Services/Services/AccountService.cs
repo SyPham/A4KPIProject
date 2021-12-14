@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Extensions.Configuration;
 using A4KPI._Repositories.Interface;
+using A4KPI._Services.Interface;
 
 namespace A4KPI._Services.Services
 {
@@ -122,6 +123,17 @@ namespace A4KPI._Services.Services
         {
             try
             {
+                var accountCheck = _repo.FindAll(x => x.Username == model.Username).FirstOrDefault();
+                if (accountCheck != null)
+                {
+                    operationResult = new OperationResult
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = MessageReponse.DataExist,
+                        Success = false
+                    };
+                    return operationResult;
+                }
                 var item = _mapper.Map<Account>(model);
                 item.Password = item.Password.ToEncrypt();
                 _repo.Add(item);

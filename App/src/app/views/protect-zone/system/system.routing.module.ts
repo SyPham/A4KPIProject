@@ -1,3 +1,4 @@
+import { VersionComponent } from './version/version.component';
 import { ViewKPIComponent } from './viewKPI/viewKPI.component';
 import { Kpi2nd3rdComponent } from './kpi2nd3rd/kpi2nd3rd.component';
 import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
@@ -15,6 +16,7 @@ import { AccountGroupComponent } from './account-group/account-group.component'
 import { AccountComponent } from './account/account.component'
 import { ProgressComponent } from './progress/progress.component'
 import { PeriodTypeComponent } from './period-type/period-type.component'
+import { VersionAddComponent } from './version/version-add/version-add.component';
 
 // import { PeriodComponent } from './period/period.component';
 const routes: Routes = [
@@ -150,6 +152,34 @@ const routes: Routes = [
           title: 'KPI View',
         },
         // canActivate: [AuthGuard]
+      },
+      {
+        path: 'version',
+        data: {
+          title: 'Verison',
+          breadcrumb: 'Verison',
+          functionCode: 'Version'
+        },
+        children: [
+          {
+            path: '',
+            component: VersionComponent
+          },
+         {
+            path: 'add',
+            component: VersionAddComponent,
+            data: {
+              title: 'Add'
+            }
+         },
+          {
+            path: 'edit/:id',
+            component: VersionAddComponent,
+            data: {
+              title: 'Edit'
+            }
+          }
+        ]
       }
 
     ]

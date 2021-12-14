@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using A4KPI._Repositories.Interface;
 
-namespace A4KPI._Services.Services
+namespace A4KPI._Services.Interface
 {
     public interface ISettingMonthService 
     {

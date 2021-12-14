@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Collections;
 using System.Threading;
+using A4KPI._Services.Interface;
 
 namespace A4KPI.Controllers
 {

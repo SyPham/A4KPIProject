@@ -18,11 +18,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
       console.log('error',error);
         if (error.status === 0) {
             // A client-side or network error occurred. Handle it accordingly.
-            // alert(`Hệ thống không hoạt động vì lỗi mạng. Vui lòng nhấn F5 để thử lại.
-            //          The system does not work due to network error. Please press F5 to try again!
-            //   `);
-            // console.error('An error occurred: status = 0');
-
+            alert(`The server is down or disconnected. Please check again ! 服務器已關閉或斷開連接。請再次檢查!`);
             return throwError(
               'Something bad happened; please try again later.');
         } else {
@@ -39,7 +35,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                     console.error(error.error);
                     break;
                 case 500:
-                    console.error("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau!<br> The server error. Please try again after sometime!");
+                    alert(`The server error. Please try again after sometime!`);
                     break;
             }
             // The response body may contain clues as to what went wrong.

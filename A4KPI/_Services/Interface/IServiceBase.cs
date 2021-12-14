@@ -12,7 +12,7 @@ using System.Net;
 using A4KPI.Constants;
 using A4KPI.Models;
 
-namespace A4KPI._Repositories.Interface
+namespace A4KPI._Services.Interface
 {
     public interface IServiceBase<T, TDto>
     {

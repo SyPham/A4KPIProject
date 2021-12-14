@@ -118,6 +118,25 @@ export class Authv2Service implements OnDestroy {
       );
   }
 
+  loginAnonymous(username: string) {
+    return this.http
+      .post<ApplicationUser>(`${this.apiUrl}/loginAnonymous`, { username})
+      .pipe(
+        map((x: any) => {
+          // localStorage.clear();
+          const loginResult = x as ApplicationUser;
+          const user = x.user;
+          localStorage.setItem('anonymous', "yes");
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', x.token);
+          this._user.next(loginResult as ApplicationUser);
+          this.currentUser = user;
+          this.startTokenTimer();
+          return loginResult;
+        })
+      );
+  }
+
   logout() {
     this.http
       .post<unknown>(`${this.apiUrl}/logout`, {})

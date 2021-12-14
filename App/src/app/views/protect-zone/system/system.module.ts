@@ -1,3 +1,5 @@
+import { VersionAddComponent } from './version/version-add/version-add.component';
+import { VersionComponent } from './version/version.component';
 import { ViewKPIComponent } from './viewKPI/viewKPI.component';
 import { Kpi2nd3rdComponent } from './kpi2nd3rd/kpi2nd3rd.component';
 import { KpiCreate2Component } from './kpi-create2/kpi-create2.component';
@@ -25,6 +27,8 @@ import { AccountComponent } from './account/account.component'
 import { AccountGroupComponent } from './account-group/account-group.component'
 import { SystemRoutingModule } from './system.routing.module'
 import { ProgressComponent } from './progress/progress.component'
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
 // import { PeriodComponent } from './period/period.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -66,9 +70,13 @@ loadCldr(
     AccountComponent,
     AccountGroupComponent,
     AccountGroupPeriodComponent,
-    ProgressComponent
+    ProgressComponent,
+    VersionComponent,
+    VersionAddComponent
   ],
   imports: [
+    CKEditorModule,
+    RichTextEditorAllModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

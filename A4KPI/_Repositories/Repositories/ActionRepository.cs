@@ -6,7 +6,7 @@ using A4KPI.Models;
 using A4KPI._Repositories.Interface;
 using A4KPI._Repositories.Repositories;
 
-namespace A4KPI._Repositories.Interface
+namespace A4KPI._Repositories.Repositories
 {
 
     public class ActionRepository : RepositoryBase<Models.Action>, IActionRepository

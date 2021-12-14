@@ -16,10 +16,9 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.authService.loggedIn()) {
       if (this.checkRole(route) === false) {
-        this.authService.logOut();
-        this.router.navigate(['login']);
-        this.alertify.error("Access-denied", true);
-        return false;
+        const functions = JSON.parse(localStorage.getItem('functions'));
+        this.router.navigate([functions[0].url]);
+        return true;
       }
       return true;
     }

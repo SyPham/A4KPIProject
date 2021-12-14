@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using A4KPI.Helpers;
 using A4KPI._Repositories.Interface;
+using A4KPI._Services.Interface;
 
 namespace A4KPI._Services.Services
 {
@@ -42,6 +43,15 @@ namespace A4KPI._Services.Services
             if (account.Password.ToDecrypt() == password)
                 return account;
             return null;
+
+        }
+
+        public async Task<Account> LoginAnonymous(string username)
+        {
+            var account = await _repo.FindAll(x => x.Username == username).FirstOrDefaultAsync();
+            if (account == null)
+                return null;
+            return account;
 
         }
 

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using NetUtility;
 using System.Globalization;
 
-namespace A4KPI._Services.Services
+namespace A4KPI._Services.Interface
 {
     public interface IToDoList2Service
     {

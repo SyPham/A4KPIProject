@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using A4KPI.Helpers;
 using A4KPI._Repositories.Interface;
+using A4KPI._Services.Interface;
 
 namespace A4KPI._Services.Services
 {

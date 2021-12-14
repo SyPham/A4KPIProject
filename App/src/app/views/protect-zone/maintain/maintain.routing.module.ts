@@ -183,6 +183,7 @@ const routes: Routes = [
       {
         path: 'change-password',
         component: ChangePasswordComponent,
+        canActivate: [AuthGuard],
         data: {
           title: 'Change Password',
           breadcrumb: 'Change Password',

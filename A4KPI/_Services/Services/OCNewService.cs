@@ -14,13 +14,13 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using A4KPI._Repositories.Interface;
+using A4KPI._Services.Interface;
 
 namespace A4KPI._Services.Services
 {
   
     public class OCNewService : IOCNewService
     {
-        private OperationResult operationResult;
 
         private readonly IOCNewRepository _repo;
         private readonly IOCAccountRepository _repoOCAccount;

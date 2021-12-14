@@ -105,8 +105,8 @@ export class SettingMonthlyComponent extends BaseComponent implements OnInit {
     if (args.requestType === 'save' && args.action === 'add') {
       const model = {
         CreatedBy: JSON.parse(localStorage.getItem('user')).id,
-        Month: this.datePipe.transform(this.monthTime, "YYYY-MM-dd"),
-        DisplayTime: this.datePipe.transform(this.displayTime, "YYYY-MM-dd")
+        Month: this.datePipe.transform(this.monthTime, "yyyy-MM-dd"),
+        DisplayTime: this.datePipe.transform(this.displayTime, "yyyy-MM-dd")
       }
       this.create(model);
     }
@@ -114,10 +114,10 @@ export class SettingMonthlyComponent extends BaseComponent implements OnInit {
       const model = {
         ID: args.data.id,
         CreatedBy: args.data.createdBy,
-        CreatedTime: this.datePipe.transform(args.data.createdTime, "YYYY-MM-dd"),
+        CreatedTime: this.datePipe.transform(args.data.createdTime, "yyyy-MM-dd"),
         ModifiedBy: JSON.parse(localStorage.getItem('user')).id,
-        Month: this.datePipe.transform(this.monthTime, "YYYY-MM-dd"),
-        DisplayTime: this.datePipe.transform(this.displayTime, "YYYY-MM-dd")
+        Month: this.datePipe.transform(this.monthTime, "yyyy-MM-dd"),
+        DisplayTime: this.datePipe.transform(this.displayTime, "yyyy-MM-dd")
       }
       this.update(model);
     }

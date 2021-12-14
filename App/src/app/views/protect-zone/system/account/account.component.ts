@@ -385,6 +385,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
   create() {
     this.service.add(this.accountCreate).subscribe(
       (res) => {
+        console.log(res);
         if (res.success === true) {
           this.mapUserRole(res.data, this.roleID)
           this.alertify.success(MessageConstants.CREATED_OK_MSG);
@@ -393,7 +394,7 @@ export class AccountComponent extends BaseComponent implements OnInit {
 
           this.accountCreate = {} as Account;
         } else {
-          this.alertify.warning(MessageConstants.SYSTEM_ERROR_MSG);
+          this.alertify.warning(res.message);
         }
 
       },
